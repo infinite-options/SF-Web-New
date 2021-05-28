@@ -1,0 +1,25 @@
+Create a new folder called component
+everything in Nav.jsx, put them into component folder
+create a folder for each component.
+Each folder contain a jsx file.
+
+
+Some a small components use repeatedly, also need a 
+folder for future access. For example navBar. 
+
+For example, on "/" page can be split into
+
+1: home folder for home page itself
+2: LandingNavBar
+3: DeliveryLocationSearch
+4: ProductDisplay 
+5: Farmers
+6: Testimonial
+7: Order
+
+Make 7 folders under /src/component folder. 
+
+I think /Auth folder contain too many function
+Each component can move to its own folder. 
+
+
