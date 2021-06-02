@@ -1,18 +1,18 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import DisplayProducts from './customer/productSelectionPage/produce/displayProduct';
-import Store from './customer/Store';
-import Landing from './home/Landing';
-import Signup from './auth/Signup';
-import SocialSignUp from './auth/SocialSignUp';
+import DisplayProducts from './components/ProductSelectionPage/ProduceProductSelection/displayProduct';
+import Store from './components/Store/Store';
+import Landing from './components/Home/Landing';
+import Signup from './components/SignUp/Signup';
+import SocialSignUp from './components/SignUp/SocialSignUp';
 import AuthAdminRoute from './auth/AuthAdminRoute';
 import AuthAdminLoginRoute from './auth/AuthAdminLoginRoute';
-import AdminSocialSignup from './admin/AdminSocialSignup';
-import AdminSignup from './admin/AdminSignup';
-import AdminLogin from './auth/AdminLogin';
-import Admin from './admin/Admin';
-import ProfileInfo from './customer/Profile-Info/ProfileInfo';
-import TermsAndConditions from './customer/TermsAndConditions/TermsAndConditions';
+import AdminSocialSignup from './components/Admin/AdminSocialSignup';
+import AdminSignup from './components/Admin/AdminSignup';
+import AdminLogin from './components/LogIn/AdminLogin';
+import Admin from './components/Admin/Admin';
+import ProfileInfo from './components/Profile-Info/ProfileInfo';
+import TermsAndConditions from './components/TermsAndConditions/TermsAndConditions';
 import MobilePaypalCheckout from './mobile/MobilePaypalCheckout';
 
 // Nav here will take all the adress from children page to this and give
@@ -27,7 +27,11 @@ function Nav(authLevel, isAuth) {
       <Route exact path="/products" component={DisplayProducts} />
       <Route exact path="/store" component={Store} />
       <Route exact path="/profile-info" component={ProfileInfo} />
-      <Route exact path="/terms-and-conditions" component={TermsAndConditions} />
+      <Route
+        exact
+        path="/terms-and-conditions"
+        component={TermsAndConditions}
+      />
       <Route path="/payment/paypal:props" component={MobilePaypalCheckout} />
       <AuthAdminRoute
         path="/admin"

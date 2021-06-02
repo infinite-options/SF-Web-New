@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Cookies from 'universal-cookie';
 import Nav from './Nav';
-import { AdminFarmContext } from './admin/AdminFarmContext';
+import { AdminFarmContext } from './components/Admin/AdminFarmContext';
 import { ConfirmationServiceProvider } from './services/ConfirmationService';
 
 import { AuthContext } from './auth/AuthContext';
@@ -162,8 +162,10 @@ function App() {
                 setIsAuth,
                 authLevel,
                 setAuthLevel,
-                profile, setProfile,
-                cartTotal, setCartTotal,
+                profile,
+                setProfile,
+                cartTotal,
+                setCartTotal,
               }}
             >
               {authLevel >= 1 ? (
