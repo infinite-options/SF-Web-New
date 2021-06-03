@@ -127,6 +127,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Entry(props) {
+  console.log('entry');
   const [hearted, setHearted] = useState(false);
   const [isShown, setIsShown] = useState(false);
   const [isInDay, setIsInDay] = useState(false);
@@ -176,7 +177,7 @@ function Entry(props) {
     store.dayClicked,
     productSelect.farmsClicked,
     productSelect.categoriesClicked,
-    store.cartItems,
+    //store.cartItems,
   ]);
 
   function decrease() {
