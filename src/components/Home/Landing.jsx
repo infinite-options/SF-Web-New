@@ -723,7 +723,12 @@ const Landing = ({ ...props }) => {
         </Box>
 
         <Box style={{ backgroundColor: 'rgb(251,132,0)' }}>
-          <Footer />
+        <Footer 
+          isLoginShown={isLoginShown}
+          setIsLoginShown={setIsLoginShown}
+          isSignUpShown={isSignUpShown}
+          setIsSignUpShown={setIsSignUpShown}
+          />
         </Box>
       </div>
     </div>

@@ -11,7 +11,7 @@
 .modal {
   position: fixed;
   top: 70px;
-  left: 40%;
+  left: 28%;
   width: auto;
   height: auto;
   z-index: 10000;
@@ -26,7 +26,7 @@
 .modalSuccess {
   position: fixed;
   top: 70px;
-  left: 40%;
+  left: 28%;
   width: auto;
   height: auto;
   z-index: 10000;

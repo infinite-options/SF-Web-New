@@ -13,33 +13,51 @@ import AmbasadorModal from '../Modal/AmbasadorModal';
 import LoginAmbasador from '../Modal/loginAmbasador';
 import storeContext from '../Store/storeContext';
 
-const Footer = () => {
-  let [ambasadorModal, ambasadorModalMessage] = useState('');
-  let [loginambasadorModal, loginambasadorModalMessage] = useState('');
+const Footer = ({...props}) => {
+  let [ambasadorModal,ambasadorModalMessage] = useState('');
+  let [loginambasadorModal,loginambasadorModalMessage] = useState('');
   const auth = useContext(AuthContext);
-
+  
   const [userInfo, setUserInfo] = useState(auth.profile);
-
-  const becomeAmbassador = () => {
-    if (auth.isAuth) {
-      ambasadorModalMessage('true');
-    } else {
-      loginambasadorModalMessage('true');
-    }
+ 
+  const loginClicked = () => {
+    props.setIsSignUpShown(false);
+    props.setIsLoginShown(!props.isLoginShown);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   };
 
-  const modalClose = () => {
+  const signUpClicked = () => {
+    props.setIsLoginShown(false);
+    props.setIsSignUpShown(!props.isSignUpShown);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
+  const becomeAmbassador=()=>{
+    if(auth.isAuth){
+      ambasadorModalMessage("true");
+      
+    }
+    else{
+      loginambasadorModalMessage('true'); 
+    }
+  }
+  
+  const modalClose=()=>{
     ambasadorModalMessage(null);
     loginambasadorModalMessage(null);
-  };
+  }
 
   return (
     <div className="containerFooter" style={{ margin: 0 }}>
       <div className="container">
-        {ambasadorModal && <AmbasadorModal close={modalClose}></AmbasadorModal>}
-        {loginambasadorModal && (
-          <LoginAmbasador close={modalClose}></LoginAmbasador>
-        )}
+        {ambasadorModal && <AmbasadorModal  close={modalClose}></AmbasadorModal>}
+        {loginambasadorModal && <LoginAmbasador showSignup={signUpClicked} showLogin={loginClicked} close={modalClose}></LoginAmbasador>}
         <Container>
           <Row>
             <Col lg={3} md={2}>
@@ -51,7 +69,7 @@ const Footer = () => {
                   src="./logos/SF.png"
                   style={{
                     float: 'left',
-                    marginTop: '35px',
+                    marginTop:'35px'
                   }}
                 />
               </Hidden>
@@ -98,10 +116,10 @@ const Footer = () => {
             >
               Find Us<br></br>
               <IconButton
-                onClick={(event) =>
-                  (window.location.href =
-                    'https://www.facebook.com/ServingFresh')
-                }
+              onClick={(event) =>
+                (window.location.href =
+                  'https://www.facebook.com/ServingFresh')
+              }
                 edge="end"
                 className="link"
                 style={{
@@ -118,8 +136,8 @@ const Footer = () => {
                   aria-label="Facebook"
                   style={{ color: 'white' }}
                 />
-              </IconButton>
-              <IconButton
+                </IconButton>
+                <IconButton
                 onClick={(event) =>
                   (window.location.href =
                     'https://www.instagram.com/servingfresh/')
@@ -129,7 +147,7 @@ const Footer = () => {
                 style={{
                   color: 'white',
                 }}
-              >
+                >
                 <InstagramIcon
                   fontSize="large"
                   // onClick={(event) =>

@@ -77,104 +77,111 @@ export default function LandingNavBar({ ...props }) {
   };
 
   return (
-    <div className={classes.root} style={{ backgroundColor: '#2F787F' }}>
-      <AppBar
-        position="static"
-        elevation={0}
-        style={{
-          borderBottom: '1px solid ' + appColors.secondary,
-        }}
-      >
-        <Toolbar style={{ backgroundColor: '#2F787F' }}>
-          <MenuNavButton style={{ color: 'white' }} />
+    <div className={classes.root} style={{backgroundColor:'#2F787F'}}>
+    <AppBar
+     
+      position="static"
+      elevation={0}
+      style={{
+        borderBottom: '1px solid ' + appColors.secondary,
+      }}
+    >
+      
 
-          <Box flexGrow={1}>
-            <div style={{ float: 'center' }}>
-              <img style={{}} src={sf}></img>
-            </div>
+      <Toolbar style={{backgroundColor:'#2F787F'}}>
+      
+        <MenuNavButton style={{color:'white'}}/>
+        
+        <Box flexGrow={1} >
+          <div style={{marginRight:'50px',marginLeft:'150px'}}>
+          
+          <img style={{marginRight:'50px',marginLeft:'150px'}} src={sf}></img>
+          
+          </div>
           </Box>
+        
+        <Box hidden={auth.isAuth} style={{width:'18%'}}>
+        
+          <Button
+            className={classes.authButton}
+            variant="contained"
+            size="small"
+            color="primary"
+            onClick={signUpClicked}
+          >
+            Sign Up
+          </Button>
+          <Button
+            className={classes.authButton}
+            variant="contained"
+            size="small"
+            color="primary"
+            onClick={loginClicked}
+          >
+            Login
+          </Button>
+          
+        </Box>
+        <Box hidden={!auth.isAuth} style={{width:'18%'}}>
 
-          <Box hidden={auth.isAuth}>
-            <Button
-              className={classes.authButton}
-              variant="contained"
-              size="small"
-              color="primary"
-              onClick={signUpClicked}
-            >
-              Sign Up
-            </Button>
-            <Button
-              className={classes.authButton}
-              variant="contained"
-              size="small"
-              color="primary"
-              onClick={loginClicked}
-            >
-              Login
-            </Button>
-          </Box>
-          <Box hidden={!auth.isAuth} style={{ width: '18%' }}>
-            <div
-              style={{ width: '50%', float: 'left' }}
-              hidden={window.width < 1024 ? true : false}
-            >
-              <p style={{ color: 'white' }}>{customerName}</p>
-            </div>
-
-            <div style={{ width: '50%', float: 'right' }}>
-              {/* <Button
-                  className={classes.authButton}
-                  variant="contained"
-                  size="small"
-                  color="primary"
-                  style={{
-                    marginLeft: '2rem',
-                    height: '2rem',
-                    marginTop: '0.5rem',
-                    
-                  }}
-                  onClick={handleClickLogOut}
-                >
-                  Log Out
-                </Button> */}
-              <Button
+        <div style={{width:'50%',float:'left'}} hidden={(window.width < 1024) ? true : false}>
+        <p style={{color:'white'}}>{customerName}</p>
+        </div>
+          
+          <div style={{width:'50%',float:'right'}}>  
+          {/* <Button
                 className={classes.authButton}
                 variant="contained"
                 size="small"
                 color="primary"
+                style={{
+                  marginLeft: '2rem',
+                  height: '2rem',
+                  marginTop: '0.5rem',
+                  
+                }}
                 onClick={handleClickLogOut}
-                style={{ marginTop: '.5rem' }}
               >
-                Logout
-              </Button>
-            </div>
-          </Box>
+                Log Out
+              </Button> */}
+              <Button
+            className={classes.authButton}
+            variant="contained"
+            size="small"
+            color="primary"
+            onClick={handleClickLogOut}
+            style={{marginTop:'.5rem'}}
+          >
+            Logout
+          </Button>
+              </div>
+          
+        </Box>
 
-          <Box hidden={!(auth.isAuth || auth.isGuest)}>
-            {/* <IconButton edge="end" className="link">
-              <StorefrontIcon
-                  fontSize="large"
-                  color={'default'}
-                  onClick={handleCartClick}
-                  aria-hidden="false"
-                  aria-label = 'Go to store'
+        <Box hidden={!(auth.isAuth || auth.isGuest)}>
+          {/* <IconButton edge="end" className="link">
+            <StorefrontIcon
+                fontSize="large"
+                color={'default'}
+                onClick={handleCartClick}
+                aria-hidden="false"
+                aria-label = 'Go to store'
+            />
+          </IconButton>
+          <IconButton edge="end" className="link">
+            <Badge badgeContent={badgeContent} color="primary">
+              <ShoppingCartIcon
+                fontSize="large"
+                color={'default'}
+                onClick={handleStoreClick}
+                aria-hidden="false"
+                aria-label = 'Go to shopping cart'
               />
-            </IconButton>
-            <IconButton edge="end" className="link">
-              <Badge badgeContent={badgeContent} color="primary">
-                <ShoppingCartIcon
-                  fontSize="large"
-                  color={'default'}
-                  onClick={handleStoreClick}
-                  aria-hidden="false"
-                  aria-label = 'Go to shopping cart'
-                />
-              </Badge>
-            </IconButton> */}
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </div>
+            </Badge>
+          </IconButton> */}
+        </Box>
+      </Toolbar>
+    </AppBar>
+  </div>
   );
 }

@@ -18,6 +18,7 @@ import { AuthContext } from '../../auth/AuthContext';
 import { TrendingUpRounded } from '@material-ui/icons';
 import PlacesAutocomplete, {
   geocodeByAddress,
+  geocodeByPlaceId,
   getLatLng,
 } from 'react-places-autocomplete';
 import BusiApiReqs from '../../utils/BusiApiReqs';
@@ -114,16 +115,32 @@ const Order = (props) => {
     const results = await geocodeByAddress(value);
     const latLng = await getLatLng(results[0]);
     setAddress(value);
-    setCoordinates(latLng);
+    // setCoordinates(latLng);
     let addr = value.split(',');
-    console.log(addr);
+    console.log(results[0].place_id);
+    const results1 = await geocodeByPlaceId(results[0].place_id);
+    const array_fragment = results1[0].address_components;
+    const zipCode1 = array_fragment[array_fragment.length - 1];
+    const zipCode2 = array_fragment[array_fragment.length - 2];
+    console.log(zipCode1, zipCode2);
+    console.log(array_fragment);
+
+    // const google_pack=new window.google.maps.places.Autocomplete(value);
+    // const zipResult= await (google_pack);
+
+    // =await fetch("api.postcodes.io/postcodes?lon="+latLng.lng+"&lat="+latLng.lat,
+    // {
+    //   "method":"GET"
+    // }
+    // );
+    // console.log(zipResult.getPlace());
     guestProfile = {
       longitude: latLng.lng,
       latitude: latLng.lat,
       address: addr[0],
       city: addr[1],
       state: addr[2],
-      zip: '',
+      zip: zipCode1.length == 5 ? zipCode1.long_name : zipCode2.long_name,
     };
     console.log(latLng);
     const res = await BusiMethods.getLocationBusinessIds(
@@ -153,6 +170,7 @@ const Order = (props) => {
       console.log(guestProfile);
     }
   };
+
 
   // const searchAddress= async (res)=>{
   //   // console.log(value);
@@ -202,6 +220,15 @@ const Order = (props) => {
     //   history.push('/store');
     console.log(guestProfile);
   };
+
+  const google = window.google;
+  const searchOptions = {
+    location: new google.maps.LatLng(37, -121),
+    radius: 15,
+    types: ['address'],
+  };
+
+
 
   const errorHandleModal = () => {
     setModalErrorMessage(null);
@@ -275,6 +302,7 @@ const Order = (props) => {
           value={address}
           onChange={setAddress}
           onSelect={handleSelect}
+          searchOptions={searchOptions}
         >
           {({
             getInputProps,
