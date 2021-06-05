@@ -33,6 +33,8 @@ import StripeElement from '../PaymentDetails/StripeElement';
 
 import TermsAndConditions from './TermsAndConditions';
 import Cookies from 'js-cookie';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+
 
 import DeliveryInfoTab from './DeliveryInfoTab';
 import LocationSearchInput from '../../utils/LocationSearchInput';
@@ -414,6 +416,7 @@ export default function CheckoutTab(props) {
   // DONE: make taxes not applied to the delivery fee
   const [subtotal, setSubtotal] = useState(calculateSubTotal(cartItems));
   const [promoApplied, setPromoApplied] = useState(0);
+  const [ambassadorDiscount, setAmbassadorDiscount] = useState(0);
   const [deliveryFee, setDeliveryFee] = useState(
     cartItems.length > 0 ? origDeliveryFee : 0
   );
@@ -428,7 +431,8 @@ export default function CheckoutTab(props) {
       deliveryFee +
       serviceFee +
       parseFloat(driverTip !== '' ? driverTip : 0) +
-      tax
+      tax 
+      
   );
   useEffect(() => {
     const total =
@@ -440,7 +444,8 @@ export default function CheckoutTab(props) {
               deliveryFee +
               serviceFee +
               tax +
-              parseFloat(driverTip !== '' ? driverTip : 0)
+              parseFloat(driverTip !== '' ? driverTip : 0) -
+              ambassadorDiscount
             ).toFixed(2)
           )
         : 0;
@@ -449,7 +454,7 @@ export default function CheckoutTab(props) {
       ...prev,
       discount: promoApplied,
     }));
-  }, [subtotal, promoApplied, deliveryFee, driverTip]);
+  }, [subtotal, promoApplied, deliveryFee, driverTip, ambassadorDiscount]);
 
   useEffect(() => {
     setPaymentDetails((prev) => ({
@@ -595,6 +600,29 @@ export default function CheckoutTab(props) {
     }
   }
 
+//  const ambassadorEmail = document.getElementById("email").value
+function ambassador(){
+
+  let reqBodyAmbassadorPost = {
+    code:userInfo.email,
+    info: document.getElementById("email").value,
+    IsGuest:"False",
+  };
+  const postAmbassadorRequest = async() => {
+    console.log("ambassador", reqBodyAmbassadorPost)
+    try{
+    const response = await axios.post(BASE_URL + 'brandAmbassador/discount_checker', reqBodyAmbassadorPost)
+    console.log("ambassador",response.data.discount)
+    setAmbassadorDiscount(response.data.discount)
+
+      }catch(err) {
+        console.log(err.response || err);
+      }
+  }
+
+  postAmbassadorRequest();
+}
+
   return (
     <Box
       className="responsive-checkout-tab"
@@ -602,7 +630,7 @@ export default function CheckoutTab(props) {
       flexDirection="column"
     >
       {/* START: Expected Delivery */}
-      <TermsAndConditions opened={viewTermsAndConds} />
+      {/* <TermsAndConditions opened={viewTermsAndConds} /> */}
 
       <Box hidden={store.expectedDelivery !== ''} m={2} />
       <Box hidden={store.expectedDelivery === ''}>
@@ -1001,6 +1029,25 @@ export default function CheckoutTab(props) {
         <Box>Taxes</Box>
         <Box flexGrow={1} />
         <Box>${tax.toFixed(2)}</Box>
+      </Box>
+      <Box display="flex" mb={1} mt={1} >
+     <TextField id="email" label="Outlined" 
+
+            //  id="email"
+           //   value={ambassadorEmail}
+              name="ambassador"
+              label="Enter Ambassador Code"
+              variant="outlined"
+              size="small"
+              fullWidth
+             // onChange={}
+             >
+          Enter Ambassador Code
+        </TextField>
+        <Button onClick={ambassador}>
+          <InfoOutlinedIcon
+           style={{ color: appColors.secondary }}/>
+        </Button>
       </Box>
       <Box className={classes.section} fontWeight="bold" display="flex">
         <Box>Total</Box>

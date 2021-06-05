@@ -191,7 +191,7 @@ export default function Coupons(props) {
 
   useEffect(() => {
     loadCoupons();
-  }, [store.profile.email]);
+  }, []);
 
   const CreateCouponCard = (coupProps) => {
     return (

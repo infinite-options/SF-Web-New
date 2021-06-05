@@ -71,11 +71,11 @@ const DateCard = (props) => {
   };
 
   const onConfirmDayChange = () => {
-    // localStorage.removeItem('selectedDay');
+     localStorage.removeItem('selectedDay');
     if (isClicked) {
       if (store.cartTotal !== 0) {
-        // displayDialog(clearCartAndDay);
-        clearCartAndDay();
+       displayDialog(clearCartAndDay);
+      //  clearCartAndDay();
       } else {
         clearCartAndDay();
       }
@@ -136,7 +136,7 @@ const DateCard = (props) => {
     );
     // store.setCartTotal(0);
     //store.setCartItems({});
-    //localStorage.setItem('selectedDay', props.id);
+    localStorage.setItem('selectedDay', props.id);
   }
 
   useEffect(() => {

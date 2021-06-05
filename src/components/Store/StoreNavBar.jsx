@@ -142,13 +142,14 @@ export default function StoreNavBar(props) {
                 </Button>
               </Box>
             </Box>
-            {/* <Box hidden={auth.isAuth}>
+            <Box hidden={auth.isAuth}>
               <Button
                 className={classes.authButton}
                 variant="contained"
                 size="small"
                 color="primary"
-                //  onClick={signUpClicked}
+                onClick={() => { store.setIsCheckoutSignUp(!store.isCheckoutSignUp)
+                }}
               >
                 Sign Up
               </Button>
@@ -158,11 +159,12 @@ export default function StoreNavBar(props) {
                 variant="contained"
                 size="small"
                 color="primary"
-                //  onClick={loginClicked}
+                onClick={ () => {store.setIsCheckoutLogin(!store.isCheckoutLogin) 
+                }}
               >
                 Login
               </Button>
-            </Box> */}
+            </Box>
           </Box>
           <Box hidden={store.orderConfirmation}>
             <IconButton

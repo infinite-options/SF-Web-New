@@ -56,7 +56,8 @@ function CartItem(props) {
   //   setIsInDay,
   //  } = useContext(storeContext);
 
-  const [isInDay, setIsInDay] = useState(false);
+  const [isInDay, setIsInDay] = useState(true);
+
 
   useEffect(() => {
     let isInDay = false;
@@ -76,7 +77,7 @@ function CartItem(props) {
     store.dayClicked,
     productSelect.farmsClicked,
     productSelect.categoriesClicked,
-    //  store.cartItems,
+    store.cartItems,
   ]);
 
   return (

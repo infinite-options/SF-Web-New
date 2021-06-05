@@ -6,6 +6,7 @@ import StoreNavBar from '../Store/StoreNavBar';
 import StoreContext from '../Store/storeContext';
 import appColors from '../../styles/AppColors';
 import Background from '../../icon/Rectangle.svg';
+import { AuthContext } from '../../auth/AuthContext';
 
 const useStyles = makeStyles((theme) => ({
   termsAndCondsContainer: {
@@ -39,14 +40,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TermsAndConditions(props) {
   const classes = useStyles();
+  const auth = useContext(AuthContext); 
   const storeContext = useContext(StoreContext);
 
   return (
     <Dialog fullScreen open={props.opened}>
-      <StoreNavBar
+      {/* <StoreNavBar
         storePage={storeContext.storePage}
         setStorePage={storeContext.setStorePage}
-      />
+      /> */}
+
+        <Box hidden={!auth.isAuth}>
+          <StoreNavBar storePage={storeContext.storePage} setStorePage={storeContext.setStorePage} />
+        </Box>
 
       <Box className={classes.termsAndCondsContainer}>
         <Typography className={classes.pageLabel}>

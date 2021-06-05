@@ -27,11 +27,7 @@ function Nav(authLevel, isAuth) {
       <Route exact path="/products" component={DisplayProducts} />
       <Route exact path="/store" component={Store} />
       <Route exact path="/profile-info" component={ProfileInfo} />
-      <Route
-        exact
-        path="/terms-and-conditions"
-        component={TermsAndConditions}
-      />
+      <Route exact path="/terms-and-conditions" component={TermsAndConditions}/>
       <Route path="/payment/paypal:props" component={MobilePaypalCheckout} />
       <AuthAdminRoute
         path="/admin"

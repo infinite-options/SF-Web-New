@@ -44,8 +44,8 @@ export default function TermsAndConditionsNavBar() {
     Cookies.remove('login-session');
     Cookies.remove('customer_uid');
 
-    auth.setIsAuth(false);
-    auth.setAuthLevel(0);
+    //  auth.setIsAuth(false);
+    //  auth.setAuthLevel(0);
     history.push('/');
   };
   return (
