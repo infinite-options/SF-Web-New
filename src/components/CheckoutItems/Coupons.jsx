@@ -189,9 +189,9 @@ export default function Coupons(props) {
       });
   };
 
-  useEffect(() => {
+  useMemo(() => {
     loadCoupons();
-  }, []);
+  }, [store.profile.email]);
 
   const CreateCouponCard = (coupProps) => {
     return (
@@ -271,7 +271,7 @@ export default function Coupons(props) {
               {coupProps.title}
             </Box>
             <Box
-              hidden={coupProps.status !== 'unavailable'}
+              
               fontSize="12px"
               fontWeight="bold"
             >

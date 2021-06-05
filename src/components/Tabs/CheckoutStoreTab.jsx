@@ -600,27 +600,31 @@ export default function CheckoutTab(props) {
     }
   }
 
+  //const [myValue, setValue] = useState('')
+  
+
 //  const ambassadorEmail = document.getElementById("email").value
 function ambassador(){
 
   let reqBodyAmbassadorPost = {
     code:userInfo.email,
-    info: document.getElementById("email").value,
+    info:document.getElementById("email").value,
     IsGuest:"False",
   };
   const postAmbassadorRequest = async() => {
     console.log("ambassador", reqBodyAmbassadorPost)
     try{
     const response = await axios.post(BASE_URL + 'brandAmbassador/discount_checker', reqBodyAmbassadorPost)
-    console.log("ambassador",response.data.discount)
-    setAmbassadorDiscount(response.data.discount)
+    console.log("ambassador",response)
+  //  console.log("ambassador",response.data.sub.discount_amount)
+    setAmbassadorDiscount(response.data.sub.discount_amount)
 
       }catch(err) {
         console.log(err.response || err);
       }
   }
 
-  postAmbassadorRequest();
+  setTimeout(()=> postAmbassadorRequest(),5000);
 }
 
   return (
@@ -1034,20 +1038,23 @@ function ambassador(){
      <TextField id="email" label="Outlined" 
 
             //  id="email"
-           //   value={ambassadorEmail}
+            //  value={myValue}
               name="ambassador"
               label="Enter Ambassador Code"
               variant="outlined"
               size="small"
               fullWidth
-             // onChange={}
+              onChange={ambassador}
              >
           Enter Ambassador Code
         </TextField>
-        <Button onClick={ambassador}>
+        <Button >
           <InfoOutlinedIcon
            style={{ color: appColors.secondary }}/>
         </Button>
+        <Box mt={1}>
+          -${ambassadorDiscount > 0 ? ambassadorDiscount.toFixed(2) : '0.00' }
+        </Box>
       </Box>
       <Box className={classes.section} fontWeight="bold" display="flex">
         <Box>Total</Box>

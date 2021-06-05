@@ -107,10 +107,8 @@ function MenuListComposition(props) {
           pathname: '/store',
           state: { rightTabChosen: 4 },
         });
-      case 'home':
-          history.push({
-          pathname: '',
-        });
+      case 'Home':
+        history.push('/');
         break;
       default:
         break;
@@ -286,7 +284,7 @@ function MenuListComposition(props) {
                         handleMenuItem(e, 'Refund');
                       }}
                     >
-                            <div style={{display:'flex'}}>
+                      <div style={{display:'flex'}}>
                       <div>
                       <MoneyOffOutlinedIcon
                        fontSize="Medium"
