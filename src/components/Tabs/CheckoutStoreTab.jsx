@@ -35,7 +35,6 @@ import TermsAndConditions from './TermsAndConditions';
 import Cookies from 'js-cookie';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
-
 import DeliveryInfoTab from './DeliveryInfoTab';
 import LocationSearchInput from '../../utils/LocationSearchInput';
 import { StreetviewTwoTone } from '@material-ui/icons';
@@ -431,8 +430,7 @@ export default function CheckoutTab(props) {
       deliveryFee +
       serviceFee +
       parseFloat(driverTip !== '' ? driverTip : 0) +
-      tax 
-      
+      tax
   );
   useEffect(() => {
     const total =
@@ -596,32 +594,35 @@ export default function CheckoutTab(props) {
       }
       postRequest();
     } else {
-      alert('Please add items to your card before processing payment');
+      var alert_uid = '701-000005';
+      await BusiApiMethods.getAlert(alert_uid);
+      //alert('Please add items to your card before processing payment');
     }
   }
 
-//  const ambassadorEmail = document.getElementById("email").value
-function ambassador(){
-
-  let reqBodyAmbassadorPost = {
-    code:userInfo.email,
-    info: document.getElementById("email").value,
-    IsGuest:"False",
-  };
-  const postAmbassadorRequest = async() => {
-    console.log("ambassador", reqBodyAmbassadorPost)
-    try{
-    const response = await axios.post(BASE_URL + 'brandAmbassador/discount_checker', reqBodyAmbassadorPost)
-    console.log("ambassador",response.data.discount)
-    setAmbassadorDiscount(response.data.discount)
-
-      }catch(err) {
+  //  const ambassadorEmail = document.getElementById("email").value
+  function ambassador() {
+    let reqBodyAmbassadorPost = {
+      code: userInfo.email,
+      info: document.getElementById('email').value,
+      IsGuest: 'False',
+    };
+    const postAmbassadorRequest = async () => {
+      console.log('ambassador', reqBodyAmbassadorPost);
+      try {
+        const response = await axios.post(
+          BASE_URL + 'brandAmbassador/discount_checker',
+          reqBodyAmbassadorPost
+        );
+        console.log('ambassador', response.data.discount);
+        setAmbassadorDiscount(response.data.discount);
+      } catch (err) {
         console.log(err.response || err);
       }
-  }
+    };
 
-  postAmbassadorRequest();
-}
+    postAmbassadorRequest();
+  }
 
   return (
     <Box
@@ -1030,23 +1031,23 @@ function ambassador(){
         <Box flexGrow={1} />
         <Box>${tax.toFixed(2)}</Box>
       </Box>
-      <Box display="flex" mb={1} mt={1} >
-     <TextField id="email" label="Outlined" 
-
-            //  id="email"
-           //   value={ambassadorEmail}
-              name="ambassador"
-              label="Enter Ambassador Code"
-              variant="outlined"
-              size="small"
-              fullWidth
-             // onChange={}
-             >
+      <Box display="flex" mb={1} mt={1}>
+        <TextField
+          id="email"
+          label="Outlined"
+          //  id="email"
+          //   value={ambassadorEmail}
+          name="ambassador"
+          label="Enter Ambassador Code"
+          variant="outlined"
+          size="small"
+          fullWidth
+          // onChange={}
+        >
           Enter Ambassador Code
         </TextField>
         <Button onClick={ambassador}>
-          <InfoOutlinedIcon
-           style={{ color: appColors.secondary }}/>
+          <InfoOutlinedIcon style={{ color: appColors.secondary }} />
         </Button>
       </Box>
       <Box className={classes.section} fontWeight="bold" display="flex">

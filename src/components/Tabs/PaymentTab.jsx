@@ -17,7 +17,7 @@ import checkoutContext from '../CheckoutPage/CheckoutContext';
 import PayPal from '../PaymentDetails/Paypal';
 import StripeElement from '../PaymentDetails/StripeElement';
 import DeliveryInfoTab from './DeliveryInfoTab';
-
+import BusiApiReqs from '../../utils/BusiApiReqs';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -97,6 +97,8 @@ const PaymentTab = () => {
   const history = useHistory();
   const store = useContext(storeContext);
   const auth = useContext(AuthContext);
+  const BusiMethods = new BusiApiReqs();
+
   const [paymentType, setPaymentType] = useState('NONE');
   const { profile, cartItems, setCartItems, startDeliveryDate, setCartTotal } =
     useContext(storeContext);
@@ -194,7 +196,10 @@ const PaymentTab = () => {
       }
       setPaymentType(type);
     } else {
-      alert('Please add items to your card before processing payment');
+      var alert_uid = '701-000005';
+      await BusiMethods.getAlert(alert_uid);
+
+      //alert('Please add items to your card before processing payment');
     }
   }
 

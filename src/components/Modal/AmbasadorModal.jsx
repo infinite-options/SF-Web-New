@@ -20,6 +20,8 @@ const AmbasadorModal = (props) => {
   let createAmbassador = async () => {
     let ambassadorEmail = document.getElementById('ambassadorEmail').value;
     await BusiMethods.create_ambassador(ambassadorEmail);
+    var alert_uid = '701-000029';
+    await BusiMethods.getAlert(alert_uid);
   };
 
   //     await BusiMethods.create_ambassador(ambassadorEmail)

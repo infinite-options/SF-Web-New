@@ -148,18 +148,20 @@ export default function StoreNavBar(props) {
                 variant="contained"
                 size="small"
                 color="primary"
-                onClick={() => { store.setIsCheckoutSignUp(!store.isCheckoutSignUp)
+                onClick={() => {
+                  store.setIsCheckoutSignUp(!store.isCheckoutSignUp);
                 }}
               >
                 Sign Up
               </Button>
               <Button
-                style={{ marginLeft: '1rem' }}
+                //style={{ marginLeft: '1rem' }}
                 className={classes.authButton}
                 variant="contained"
                 size="small"
                 color="primary"
-                onClick={ () => {store.setIsCheckoutLogin(!store.isCheckoutLogin) 
+                onClick={() => {
+                  store.setIsCheckoutLogin(!store.isCheckoutLogin);
                 }}
               >
                 Login
