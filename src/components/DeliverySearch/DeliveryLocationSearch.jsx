@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 //   state: '',
 //   zip: '',
 // }
-const DeliveryLocationSearch = (props) => {
+const DeliveryLocationSearch = ({...props}) => {
   const [address, setAddress] = React.useState('');
   // const [coordinates, setCoordinates] = React.useState({
   //   lat: null,
@@ -254,6 +254,18 @@ const DeliveryLocationSearch = (props) => {
     setModalSuccessMessage(null);
   };
 
+  const signUpClicked = () => {
+    props.setIsLoginShown(false);
+    props.setIsSignUpShown(!props.isSignUpShown);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
+
+
+
   // const options = {
   //   location: google1.LatLng(-34, 151),
   //   radius: 2000,
@@ -281,6 +293,7 @@ const DeliveryLocationSearch = (props) => {
           title={modalSuccess.title}
           body={modalSuccess.body}
           onConfirm={login}
+          onSign={signUpClicked}
           modalClear={errorHandleModal}
         ></SuccessModal>
       )}

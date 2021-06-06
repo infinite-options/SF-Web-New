@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Order = (props) => {
+const Order = ({...props}) => {
   const [address, setAddress] = React.useState('');
   const [coordinates, setCoordinates] = React.useState({
     lat: null,
@@ -234,6 +234,16 @@ const Order = (props) => {
     setModalErrorMessage(null);
     setModalSuccessMessage(null);
   };
+
+
+  const signUpClicked = () => {
+    props.setIsLoginShown(false);
+    props.setIsSignUpShown(!props.isSignUpShown);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
   return (
     <div
       style={{
@@ -248,6 +258,7 @@ const Order = (props) => {
           title={modalSuccess.title}
           body={modalSuccess.body}
           onConfirm={login}
+          onSign={signUpClicked}
           modalClear={errorHandleModal}
           style={{ zIndex: '100000' }}
         ></SuccessModal>

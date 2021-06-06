@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
   authModal: {
     position: 'absolute',
     width: '500px',
+    zIndex:'20000'
   },
   infoSection: {
     width: '33.33%',
@@ -468,7 +469,13 @@ const Landing = ({ ...props }) => {
         >
           Local produce delivered to your doorstep
         </p>
-        <DeliveryLocationSearch />
+        <DeliveryLocationSearch 
+        isLoginShown={isLoginShown}
+        setIsLoginShown={setIsLoginShown}
+        isSignUpShown={isSignUpShown}
+        setIsSignUpShown={setIsSignUpShown}
+        
+        />
       </Box>
 
       {/* START: Info Section */}
@@ -719,7 +726,13 @@ const Landing = ({ ...props }) => {
           <Testimonial></Testimonial>
         </Box>
         <Box style={{ marginBottom: '20px' }}>
-          <Order />
+          <Order
+          isLoginShown={isLoginShown}
+          setIsLoginShown={setIsLoginShown}
+          isSignUpShown={isSignUpShown}
+          setIsSignUpShown={setIsSignUpShown}
+          
+          />
         </Box>
 
         <Box style={{ backgroundColor: 'rgb(251,132,0)' }}>

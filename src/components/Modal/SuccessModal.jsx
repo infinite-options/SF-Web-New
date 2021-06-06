@@ -84,7 +84,7 @@ const SuccessModal = (props) => {
         </div>
         <div>
           <button
-            onClick={modalSign}
+            onClick={props.onSign}
             style={{
               width: '300px',
               marginBottom: '20px',
@@ -100,7 +100,7 @@ const SuccessModal = (props) => {
           </button>
         </div>
 
-        {modalSignup && <Signup />}
+        
       </Card>
     </>
   );
