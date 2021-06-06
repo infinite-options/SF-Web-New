@@ -244,7 +244,7 @@ const DeliveryLocationSearch = ({...props}) => {
   };
   const google = window.google;
   const searchOptions = {
-    location: new google.maps.LatLng(37, -121),
+    location: new google.maps.LatLng(37.2366, -121.887),
     radius: 15,
     types: ['address'],
   };

@@ -7,8 +7,12 @@ import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
 import Signup from '../SignUp/Signup';
 import { Paper } from '@material-ui/core';
+import AuthUtils from '../../utils/AuthUtils';
+import { AuthContext } from '../../auth/AuthContext';
 
 const SuccessModal = (props) => {
+  const AuthMethods = new AuthUtils();
+  const auth = useContext(AuthContext);
   let [modalSignup, modalSignupMessage] = useState('');
   const modalSign = () => {
     modalSignupMessage('true');
@@ -82,8 +86,9 @@ const SuccessModal = (props) => {
             Explore Local Produce
           </button>
         </div>
-        <div>
+        <div hidden={auth.isAuth}>
           <button
+          
             onClick={props.onSign}
             style={{
               width: '300px',
@@ -98,6 +103,24 @@ const SuccessModal = (props) => {
           >
             Sign Up
           </button>
+          {/* <div hidden={!auth.isAuth}>
+          <button
+          
+            onClick={props.onSign}
+            style={{
+              width: '300px',
+              marginBottom: '20px',
+              height: '60px',
+              borderRadius: '15px',
+              backgroundColor: '#FF8500',
+              border: ' 1px solid #E1E7E7',
+              color: 'white',
+              fontSize: '20px',
+            }}
+          >
+            Login
+          </button>
+          </div> */}
         </div>
 
         
