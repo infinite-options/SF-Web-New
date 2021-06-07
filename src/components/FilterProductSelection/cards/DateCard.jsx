@@ -71,13 +71,13 @@ const DateCard = (props) => {
   };
 
   const onConfirmDayChange = () => {
-     localStorage.removeItem('selectedDay');
+    // localStorage.removeItem('selectedDay');
     if (isClicked) {
       if (store.cartTotal !== 0) {
-       displayDialog(clearCartAndDay);
+       //displayDialog(clearCartAndDay);
       //  clearCartAndDay();
       } else {
-        clearCartAndDay();
+       // clearCartAndDay();
       }
     } else {
       if (store.dayClicked != '' && store.cartTotal !== 0) {

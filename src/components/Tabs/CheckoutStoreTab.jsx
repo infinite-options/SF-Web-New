@@ -22,6 +22,8 @@ import { useConfirmation } from '../../services/ConfirmationService';
 import ProductSelectContext from '../ProductSelectionPage/ProdSelectContext';
 import AdminLogin from '../LogIn/AdminLogin';
 import Signup from '../SignUp/Signup';
+import AmbasadorModal from  '../Modal/AmbasadorModal';
+
 
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -38,7 +40,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import DeliveryInfoTab from './DeliveryInfoTab';
 import LocationSearchInput from '../../utils/LocationSearchInput';
-import { StreetviewTwoTone } from '@material-ui/icons';
+import { MyLocation, SettingsOverscanOutlined, StreetviewTwoTone } from '@material-ui/icons';
 
 const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 
@@ -600,21 +602,28 @@ export default function CheckoutTab(props) {
     }
   }
 
-  //const [myValue, setValue] = useState('')
-  
+  const [myValue, setValue] = useState('')
+  const [ambassadorModal, setAmbassadorModal] = useState(false)
 
 //  const ambassadorEmail = document.getElementById("email").value
-function ambassador(){
-
+useMemo(()=> {
+ 
   let reqBodyAmbassadorPost = {
-    code:userInfo.email,
-    info:document.getElementById("email").value,
-    IsGuest:"False",
+    code: auth.isAuth ? userInfo.email : myValue,
+    info: auth.isAuth ? myValue : userInfo.address.concat(',').concat(userInfo.city).concat(',').concat(userInfo.state).concat(',').concat(userInfo.zip), //document.getElementById("email").value,
+    IsGuest:auth.isAuth ? "False" : "TRUE",
   };
+
+  // let reqBodyAmbassadorGuestPost = {
+  //   code:myValue,
+  //   info:userInfo.address.concat(',').concat(userInfo.city).concat(',').concat(userInfo.state).concat(',').concat(userInfo.zip), //document.getElementById("email").value,
+  //   IsGuest:"True",
+  // };
+
   const postAmbassadorRequest = async() => {
     console.log("ambassador", reqBodyAmbassadorPost)
     try{
-    const response = await axios.post(BASE_URL + 'brandAmbassador/discount_checker', reqBodyAmbassadorPost)
+    const response = await axios.post(BASE_URL + 'brandAmbassador/discount_checker', reqBodyAmbassadorPost )
     console.log("ambassador",response)
   //  console.log("ambassador",response.data.sub.discount_amount)
     setAmbassadorDiscount(response.data.sub.discount_amount)
@@ -624,8 +633,12 @@ function ambassador(){
       }
   }
 
-  setTimeout(()=> postAmbassadorRequest(),5000);
-}
+  postAmbassadorRequest();
+},[myValue])
+
+
+  
+
 
   return (
     <Box
@@ -1040,18 +1053,21 @@ function ambassador(){
             //  id="email"
             //  value={myValue}
               name="ambassador"
-              label="Enter Ambassador Code"
+              label={myValue !== '' ?"Thankyou" :"Enter Ambassador Code"}
               variant="outlined"
               size="small"
               fullWidth
-              onChange={ambassador}
+              onChange={event => setValue(event.target.value)}
              >
           Enter Ambassador Code
         </TextField>
-        <Button >
+        <Button onClick = {() => setAmbassadorModal(!ambassadorModal)} >
           <InfoOutlinedIcon
            style={{ color: appColors.secondary }}/>
         </Button>
+        <Box hidden={!ambassadorModal}>
+          <AmbasadorModal/>
+          </Box>
         <Box mt={1}>
           -${ambassadorDiscount > 0 ? ambassadorDiscount.toFixed(2) : '0.00' }
         </Box>
