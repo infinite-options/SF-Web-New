@@ -56,7 +56,7 @@ function CartItem(props) {
   //   setIsInDay,
   //  } = useContext(storeContext);
 
-  const [isInDay, setIsInDay] = useState(false);
+  const [isInDay, setIsInDay] = useState(true);
 
   useEffect(() => {
     let isInDay = false;
@@ -101,6 +101,8 @@ function CartItem(props) {
         }}
       />
       <Box display="flex" flexGrow={1} py={4.5}>
+      <p>{store.dayClicked}</p>
+        <p>{isInDay.toString()}</p>
         {props.isCountChangeable ? (
           <Box
             width="50%"
@@ -116,7 +118,10 @@ function CartItem(props) {
               textDecorationStyle: 'solid',
             }}
           >
-            <Box>{props.name} </Box>
+
+            <Box>
+              
+              {props.name} </Box>
 
             {props.unit !== undefined && props.unit !== ''
               ? '($' +
