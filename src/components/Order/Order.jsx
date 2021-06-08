@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Order = (props) => {
+const Order = ({...props}) => {
   const [address, setAddress] = React.useState('');
   const [coordinates, setCoordinates] = React.useState({
     lat: null,
@@ -223,7 +223,7 @@ const Order = (props) => {
 
   const google = window.google;
   const searchOptions = {
-    location: new google.maps.LatLng(37, -121),
+    location: new google.maps.LatLng(37.2366, -121.887),
     radius: 15,
     types: ['address'],
   };
@@ -233,6 +233,16 @@ const Order = (props) => {
   const errorHandleModal = () => {
     setModalErrorMessage(null);
     setModalSuccessMessage(null);
+  };
+
+
+  const signUpClicked = () => {
+    props.setIsLoginShown(false);
+    props.setIsSignUpShown(!props.isSignUpShown);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   };
   return (
     <div
@@ -248,6 +258,7 @@ const Order = (props) => {
           title={modalSuccess.title}
           body={modalSuccess.body}
           onConfirm={login}
+          onSign={signUpClicked}
           modalClear={errorHandleModal}
           style={{ zIndex: '100000' }}
         ></SuccessModal>
