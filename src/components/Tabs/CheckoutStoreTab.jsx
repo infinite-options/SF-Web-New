@@ -37,7 +37,6 @@ import TermsAndConditions from './TermsAndConditions';
 import Cookies from 'js-cookie';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
-
 import DeliveryInfoTab from './DeliveryInfoTab';
 import LocationSearchInput from '../../utils/LocationSearchInput';
 import { MyLocation, SettingsOverscanOutlined, StreetviewTwoTone } from '@material-ui/icons';
@@ -433,8 +432,7 @@ export default function CheckoutTab(props) {
       deliveryFee +
       serviceFee +
       parseFloat(driverTip !== '' ? driverTip : 0) +
-      tax 
-      
+      tax
   );
   useEffect(() => {
     const total =
@@ -598,7 +596,9 @@ export default function CheckoutTab(props) {
       }
       postRequest();
     } else {
-      alert('Please add items to your card before processing payment');
+      var alert_uid = '701-000005';
+      await BusiApiMethods.getAlert(alert_uid);
+      //alert('Please add items to your card before processing payment');
     }
   }
 
@@ -625,7 +625,7 @@ useMemo(()=> {
       }catch(err) {
         console.log(err.response || err);
       }
-  }
+    };
 
   postAmbassadorRequest();
 },[myValue])
