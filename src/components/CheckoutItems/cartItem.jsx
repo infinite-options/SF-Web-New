@@ -60,7 +60,7 @@ function CartItem(props) {
 
 
   useEffect(() => {
-    let isInDay = false;
+    let  isInDay = false;
     console.log('props name day', props.business_uid);
 
     // for (const farm in props.itm_business_uid) {
@@ -77,7 +77,9 @@ function CartItem(props) {
     store.dayClicked,
     productSelect.farmsClicked,
     productSelect.categoriesClicked,
-    store.cartItems,
+   // store.cartItems,
+    store.products,
+   // store.cartTotal
   ]);
 
   return (

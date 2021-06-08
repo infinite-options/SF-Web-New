@@ -467,7 +467,7 @@ export default function CheckoutTab(props) {
 
   useEffect(() => {
     setSubtotal(calculateSubTotal(cartItems));
-  }, [cartItems, store.dayClicked]);
+  }, [cartItems, store.dayClicked, store.products ]);
 
   useEffect(() => {
     setTax(0);
@@ -476,35 +476,35 @@ export default function CheckoutTab(props) {
       ...prev,
       subtotal: subtotal,
     }));
-  }, [subtotal]);
+  }, [subtotal, store.products]);
 
   useEffect(() => {
     setPaymentDetails((prev) => ({
       ...prev,
       deliveryFee: deliveryFee,
     }));
-  }, [deliveryFee]);
+  }, [deliveryFee, store.products]);
 
   useEffect(() => {
     setPaymentDetails((prev) => ({
       ...prev,
       serviceFee: serviceFee,
     }));
-  }, [serviceFee]);
+  }, [serviceFee, store.products]);
 
   useEffect(() => {
     setPaymentDetails((prev) => ({
       ...prev,
       driverTip: parseFloat(driverTip),
     }));
-  }, [driverTip]);
+  }, [driverTip, store.products]);
 
   useEffect(() => {
     setPaymentDetails((prev) => ({
       ...prev,
       taxes: tax,
     }));
-  }, [tax]);
+  }, [tax, store.products]);
 
   function onAddItemsClicked() {
     store.setStorePage(0);
@@ -609,16 +609,10 @@ export default function CheckoutTab(props) {
 useMemo(()=> {
  
   let reqBodyAmbassadorPost = {
-    code: auth.isAuth ? userInfo.email : myValue,
-    info: auth.isAuth ? myValue : userInfo.address.concat(',').concat(userInfo.city).concat(',').concat(userInfo.state).concat(',').concat(userInfo.zip), //document.getElementById("email").value,
+    code:  myValue,
+    info: auth.isAuth ? userInfo.email : userInfo.address.concat(',').concat(userInfo.city).concat(',').concat(userInfo.state).concat(',').concat(userInfo.zip), //document.getElementById("email").value,
     IsGuest:auth.isAuth ? "False" : "TRUE",
   };
-
-  // let reqBodyAmbassadorGuestPost = {
-  //   code:myValue,
-  //   info:userInfo.address.concat(',').concat(userInfo.city).concat(',').concat(userInfo.state).concat(',').concat(userInfo.zip), //document.getElementById("email").value,
-  //   IsGuest:"True",
-  // };
 
   const postAmbassadorRequest = async() => {
     console.log("ambassador", reqBodyAmbassadorPost)

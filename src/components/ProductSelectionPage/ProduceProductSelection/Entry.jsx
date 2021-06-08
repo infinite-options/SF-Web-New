@@ -177,7 +177,9 @@ function Entry(props) {
     store.dayClicked,
     productSelect.farmsClicked,
     productSelect.categoriesClicked,
-    //store.cartItems,
+  //  store.cartItems,
+  //  store.products
+
   ]);
 
   function decrease() {

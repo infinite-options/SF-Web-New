@@ -152,7 +152,7 @@ const Store = ({ ...props }) => {
 
   const [productsLoading, setProductsLoading] = useState(true);
 
-  const [isInDay, setIsInDay] = useState(true);
+  const [isInDay, setIsInDay] = useState(false);
 
   const [farmsList, setFarmsList] = useState([]);
   const [dayTimeDict, setDayTimeDict] = useState({});
@@ -444,9 +444,9 @@ const Store = ({ ...props }) => {
     setFarmDaytimeDict(_farmDaytimeDict);
     setAcceptDayHour(_acceptDayHour);
     if (_farmList.length > 0 && updatedProfile.zone !== profile.zone) {
-      localStorage.removeItem('selectedDay');
-      localStorage.removeItem('cartTotal');
-      localStorage.removeItem('cartItems');
+     // localStorage.removeItem('selectedDay');
+    //  localStorage.removeItem('cartTotal');
+    //  localStorage.removeItem('cartItems');
       setProfile(updatedProfile);
     }
 
