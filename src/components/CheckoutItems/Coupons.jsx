@@ -249,8 +249,8 @@ export default function Coupons(props) {
         <Box
           onClick={onCouponClick}
           style={{
-            width: '212px',
-            height: '115px',
+            width: '14rem',
+            height: '8rem',
             backgroundImage: `url(${
               './coupon_img/' + coupProps.status + '.png'
             })`,
@@ -267,11 +267,11 @@ export default function Coupons(props) {
             justifyContent="center"
             marginLeft="2rem"
           >
-            <Box fontSize="16px" pr={1} fontWeight="bold" marginTop="1rem">
+            <Box fontSize="16px" pr={1} fontWeight="bold" marginTop="0.5rem" textAlign='left'>
               {coupProps.title}
             </Box>
             <Box
-              
+              textAlign='left'
               fontSize="12px"
               fontWeight="bold"
             >
@@ -414,11 +414,7 @@ export default function Coupons(props) {
             centerMode={true}
             swipeable={true}
             centerSlidePercentage={
-              window.innerWidth < 1200
-                ? window.innerWidth < 500
-                  ? 100
-                  : 30
-                : 60
+              window.innerWidth < 1200 ? window.innerWidth < 500 ? 100 : 30 : 80
             }
             width="100%"
           >
