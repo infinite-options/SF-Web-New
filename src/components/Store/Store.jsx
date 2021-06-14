@@ -149,6 +149,7 @@ const Store = ({ ...props }) => {
   const [productsFruit, setProductsFruit] = useState([]);
   const [productsVegetable, setProductsVegetable] = useState([]);
   const [productsDessert, setProductsDessert] = useState([]);
+  const [productsGiftCard, setProductsGiftCard] = useState([]);
 
   const [productsLoading, setProductsLoading] = useState(true);
 
@@ -460,6 +461,7 @@ const Store = ({ ...props }) => {
       const _vegetable = [];
       const _fruit = [];
       const _dessert = [];
+      const _giftCard = [];
       const itemDict = {};
       if (itemRes !== undefined) {
         for (const item of itemRes) {
@@ -518,20 +520,14 @@ const Store = ({ ...props }) => {
                 _products.push(item);
 
                 if (item.item_type.toString() === 'vegetable') {
-                  //_products.push(item);
                   _vegetable.push(item);
                 } else if (item.item_type.toString() === 'fruit') {
                   _fruit.push(item);
-                }
-                //else if (item.item_type.toString() === 'dessert') {
-
-                //   _dessert.push(item);
-
-                // }
-                else {
+                } else if (item.item_type.toString() === 'giftcard') {
+                   _giftCard.push(item);
+                } else {
                   _dessert.push(item);
                 }
-                // _products.push(item);
               }
             }
           } catch (error) {
@@ -552,11 +548,6 @@ const Store = ({ ...props }) => {
               )
                 _products[i].favorite = 'TRUE';
             }
-            // if (products[i].item_name == item.favorite_produce){
-            //       products[i].favorite = "TRUE"
-            //     console.log("Favorite get", item.favorite_produce)
-            //    }
-            // }
           }
         }
       });
@@ -565,7 +556,7 @@ const Store = ({ ...props }) => {
       setProductsFruit(_fruit.sort());
       setProductsVegetable(_vegetable.sort());
       setProductsDessert(_dessert.sort());
-      //    console.log('productsssssss----',_products)
+      setProductsGiftCard(_giftCard.sort());
       setProductsLoading(false);
     });
   }
@@ -590,6 +581,7 @@ const Store = ({ ...props }) => {
           productsFruit,
           productsVegetable,
           productsDessert,
+          productsGiftCard,
           productsLoading,
           storePage,
           setStorePage,

@@ -480,20 +480,6 @@ export default function CheckoutTab() {
           </Button>
         </Box>
 
-        {/* {cartItems.length > 0 && (
-          <Box className={classes.section} display="flex"> */}
-        {/* <Box width="130px"></Box> */}
-        {/* <Box width="52%" textAlign="left">
-              Name
-            </Box>
-            <Box width="38%" textAlign="center">
-              Quantity
-            </Box>
-            <Box width="10%" textAlign="left">
-              Price
-            </Box>
-          </Box>
-        )} */}
         <Box my={1} px={1}>
           {cartItems.map(listItem)}
         </Box>
@@ -528,11 +514,6 @@ export default function CheckoutTab() {
       {/* END: Coupons */}
 
       {/* START: Pricing */}
-      {/* <Box className={classes.section} display="flex">
-        <Box>Subtotal</Box>
-        <Box flexGrow={1} />
-        <Box>${subtotal.toFixed(2)}</Box>
-      </Box> */}
       <Box className={classes.section} display="flex">
         <Box>Delivery Fee</Box>
         <Box flexGrow={1} />
@@ -625,27 +606,7 @@ export default function CheckoutTab() {
 
         <Box flexGrow={1} />
       </Box>
-      {/* <Box className={classes.section} display="flex">
-        <Box>Driver Tip (Optional - Click to edit)</Box>
-        <Box flexGrow={1} />
-        <Box width="70px">
-          <CurrencyTextField
-            
-            variant="standard"
-            modifyValueOnWheel={false}
-            value={driverTip}
-            currencySymbol="$"
-            minimumValue="0"
-            outputFormat="string"
-            decimalCharacter="."
-            digitGroupSeparator=","
-            onChange={(event, value) => {
-              setDriverTip(value);
-            }}
-          ></CurrencyTextField>
-        
-        </Box>
-      </Box> */}
+   
       <Box className={classes.section} display="flex">
         <Box>Taxes</Box>
         <Box flexGrow={1} />
@@ -738,10 +699,6 @@ export default function CheckoutTab() {
           Sign Up
         </Button>
       </Box>
-
-      {/* <Box hidden =  {loggingIn}>
-        <SignUp />
-      </Box> */}
 
       {/* Login dialog opens here based on login state */}
       <Dialog

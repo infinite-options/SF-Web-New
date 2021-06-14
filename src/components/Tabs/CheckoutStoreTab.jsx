@@ -798,65 +798,6 @@ useMemo(()=> {
           />
         </Box>
       </Box>
-      {/* <Box mt={spacing + 3} />
-        <FormHelperText error={true} style={{ textAlign: 'center' }}>
-          {passwordErrorMessage}
-        </FormHelperText> */}
-      {/* <FormHelperText style={{ textAlign: 'center' }}>
-          Minimum eight and maximum thirty-two characters, at least one letter
-          and one number:
-        </FormHelperText> */}
-      {/* <Box mb={0.5} />
-        <Box mb={spacing || 1}>
-          <CssTextField
-            error={passwordError}
-            label="Password"
-            type="password"
-            variant="outlined"
-            size="small"
-            fullWidth
-            onChange={onPasswordChange}
-          />
-        </Box>
-        <Box mb={spacing || 1}>
-          <CssTextField
-            error={confirmPasswordError}
-            name="confirm"
-            label="Confirm Password"
-            type="password"
-            variant="outlined"
-            size="small"
-            fullWidth
-            onChange={onPasswordChange}
-          />
-        </Box> */}
-
-      {/* <LoadScript googleMapsApiKey={'AIzaSyBGgoTWGX2mt4Sp8BDZZntpgxW8Cq7Qq90'}>
-          <GoogleMap
-            mapContainerStyle={{
-              width: '100%',
-              height: '200px',
-            }}
-            center={{
-              lat: userInfo.lat,
-              lng: userInfo.long,
-            }}
-            zoom={10}
-            onLoad={onLoad}
-            onUnmount={onUnmount}
-          >
-            <></>
-          </GoogleMap>
-        </LoadScript> */}
-
-      {/* <DeliveryInfoTab/> */}
-
-      {/* <Box>
-        <input style={{ display:"flex", type:"text", value:"text", width:"100%", height:"2rem"}}  placeholder= "Delivery Instructions (ex: gate code, leave on porch)"
-          autoComplete="on" maxLength="100" cols="20" row="5" borderRadius="2rem">
-           
-          </input>
-        </Box> */}
 
       {/* START: Order Items */}
       <Box>
@@ -878,20 +819,6 @@ useMemo(()=> {
           </Button>
         </Box>
 
-        {/* {cartItems.length > 0 && (
-          <Box className={classes.section} display="flex"> */}
-        {/* <Box width="130px"></Box> */}
-        {/* <Box width="52%" textAlign="left">
-              Name
-            </Box>
-            <Box width="38%" textAlign="center">
-              Quantity
-            </Box>
-            <Box width="10%" textAlign="left">
-              Price
-            </Box>
-          </Box>
-        )} */}
         <Box my={1} px={1}>
           {cartItems.map(listItem)}
         </Box>
@@ -906,8 +833,6 @@ useMemo(()=> {
 
         <Box flexGrow={1} />
       </Box>
-
-      {/* <Box flexGrow={1} /> */}
       {/* END: Order Items */}
 
       {/* START: Coupons */}
@@ -921,11 +846,6 @@ useMemo(()=> {
       {/* END: Coupons */}
 
       {/* START: Pricing */}
-      {/* <Box className={classes.section} display="flex">
-        <Box>Subtotal</Box>
-        <Box flexGrow={1} />
-        <Box>${subtotal.toFixed(2)}</Box>
-      </Box> */}
       <Box className={classes.section} display="flex">
         <Box color={appColors.secondary}>Promo Applied</Box>
         <Box flexGrow={1} />
@@ -1017,25 +937,7 @@ useMemo(()=> {
           ></CurrencyTextField>
         </Box>
       </Box>
-      {/* <Box className={classes.section} display="flex">
-        <Box>Driver Tip (Optional - Click to edit)</Box>
-        <Box flexGrow={1} />
-        <Box width="70px">
-          <CurrencyTextField
-            variant="standard"
-            modifyValueOnWheel={false}
-            value={driverTip}
-            currencySymbol="$"
-            minimumValue="0"
-            outputFormat="string"
-            decimalCharacter="."
-            digitGroupSeparator=","
-            onChange={(event, value) => {
-              setDriverTip(value);
-            }}
-          ></CurrencyTextField>
-        </Box>
-      </Box> */}
+
       <Box className={classes.section} display="flex">
         <Box>Taxes</Box>
         <Box flexGrow={1} />
@@ -1084,7 +986,6 @@ useMemo(()=> {
             variant="contained"
             color="primary"
             onClick={() => {
-              //   setLeftTabChosen(4);
               setDetailsDisplayType(!detailsDisplayType);
             }}
           >

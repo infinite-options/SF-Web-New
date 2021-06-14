@@ -17,11 +17,6 @@ const SomeReactComponent = ({ text }) => {
 
 
 export default class MapComponent extends Component {
- 
-
-    // componentDidMount() {
-    //     console.log("latitude from props: ", this.props.latitude);
-    //   }
 
     static defaultProps = {
         center: {
@@ -30,7 +25,6 @@ export default class MapComponent extends Component {
         },
         zoom: 14
     };
- 
 
   render() {
     const center = {lat:parseFloat(this.props.latitude) ? parseFloat(this.props.latitude) : 37.236720, lng: parseFloat(this.props.longitude)? parseFloat(this.props.longitude) : -121.887370}
@@ -41,44 +35,15 @@ export default class MapComponent extends Component {
                 <GoogleMapReact
                 bootstrapURLKeys={{ key: 'AIzaSyBGgoTWGX2mt4Sp8BDZZntpgxW8Cq7Qq90' }}
                     center={center}
-                  //  defaultCenter={center}
-                    defaultZoom={this.props.zoom}
-                      
+                    defaultZoom={this.props.zoom}                      
                 >
 
-        <SomeReactComponent
+          <SomeReactComponent
            lat = {parseFloat(this.props.latitude) ? parseFloat(this.props.latitude) : 37.236720}
            lng = {parseFloat(this.props.longitude)? parseFloat(this.props.longitude) : -121.887370}
           />
-           
            </GoogleMapReact>
-
-        {/* <Map 
-          google={this.props.google}
-          style={{width: '375px', height: '180px', marginTop:'24px', borderRadius:"24px"}}
-          initialCenter={{
-            lat: this.props.latitude,
-            lng: this.props.longitude,
-          }}
-          center={{
-            lat: this.props.latitude,
-            lng: this.props.longitude,
-          }}
-        >
-          <Marker 
-            position={{
-              lat: this.props.latitude ,
-              lng: this.props.longitude
-            }} />
-        </Map> */}
-
       </div>
     )
   }
 }
-
-// export default GoogleApiWrapper({
-//     apiKey: ('AIzaSyBGgoTWGX2mt4Sp8BDZZntpgxW8Cq7Qq90')
-//   })(MapComponent)
-
-//export default MapComponent;

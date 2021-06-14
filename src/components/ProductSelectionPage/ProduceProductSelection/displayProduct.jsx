@@ -14,8 +14,8 @@ import appColors from '../../../styles/AppColors';
 import { set } from 'js-cookie';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import ItemCategory from '../../FilterProductSelection/ItemCategory';
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; 
+import { Carousel } from 'react-responsive-carousel';
 import GridList from '@material-ui/core/GridList';
 
 const theme2 = createMuiTheme({
@@ -49,65 +49,6 @@ const theme2 = createMuiTheme({
 
 console.log('Theme2 = ', theme2.breakpoints);
 
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     display: 'flex',
-//     flexWrap: 'wrap',
-//     justifyContent: 'space-around',
-//     overflow: 'hidden',
-//     backgroundColor: theme.palette.background.paper,
-//   },
-//   gridList: {
-//     flexWrap: 'nowrap',
-//     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-//     transform: 'translateZ(0)',
-//   },
-//   title: {
-//     color: theme.palette.primary.light,
-//   },
-//   titleBar: {
-//     background:
-//       'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-//   },
-// }));
-
-var responsive = {
-  superLargeDesktop: {
-    // the naming can be any, depends on you.
-    breakpoint: { max: 40, min: 3000 },
-    items: 5,
-  },
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 5,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 7,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-  },
-};
-
-// const responsive = {
-//   desktop: {
-//     breakpoint: { max: 3000, min: 1024 },
-//     items: 3,
-
-//   },
-//   tablet: {
-//     breakpoint: { max: 1024, min: 464 },
-//     items: 2,
-
-//   },
-//   mobile: {
-//     breakpoint: { max: 464, min: 0 },
-//     items: 1,
-//   }
-// };
-
 const useStyles = makeStyles((theme) => ({
   itemDisplayContainer: {
     backgroundColor: '#F1F4F4',
@@ -125,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 
   imageItem: {
     borderRadius: 10,
-    marginLeft: '6rem',
+    paddingLeft: '6rem',
   },
 
   entryContainer: {
@@ -205,9 +146,11 @@ function DisplayProduct() {
   const productSelect = useContext(ProdSelectContext);
   const store = useContext(storeContext);
 
-  const [FruitDisplayType, setFruitDisplayType] = useState(true);
-  const [OtherDisplayType, setOtherDisplayType] = useState(true);
-  const [VegetableDisplayType, setVegetableDisplayType] = useState(true);
+  const [FruitDisplayType, setFruitDisplayType] = useState(false);
+  const [OtherDisplayType, setOtherDisplayType] = useState(false);
+  const [VegetableDisplayType, setVegetableDisplayType] = useState(false);
+  const [GiftCardDisplayType, setGiftCardDisplayType] = useState(false);
+
 
   const [windowHeight, setWindowHeight] = React.useState(window.innerHeight);
 
@@ -254,6 +197,10 @@ function DisplayProduct() {
     setOtherDisplayType(!OtherDisplayType);
   }
 
+  function handleClickGiftCard() {
+    setGiftCardDisplayType(!GiftCardDisplayType);
+  }
+
   function handleClickFruit() {
     setFruitDisplayType(!FruitDisplayType);
   }
@@ -270,10 +217,6 @@ function DisplayProduct() {
             {displayMessage}
           </Box>
 
-          {/* <Box style={{ backgroundColor: appColors.componentBg }}>
-            <p> Grid Test </p>
-          </Box> */}
-
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h1
               style={{
@@ -286,14 +229,14 @@ function DisplayProduct() {
               Vegetables
             </h1>
             <div style={{ display: 'flex' }}>
-              {/* <Button
+              <Button
                 varient="text"
                 style={{ color: '#ff8500' }}
                 onClick={handleClickVegetable}
               >
                 See all Vegetables
-              </Button> */}
-              {/* <Box
+              </Button>
+              <Box
                 style={{
                   width: '1rem',
                   height: '1rem',
@@ -303,26 +246,34 @@ function DisplayProduct() {
                     ? `url(${'./store_img/seeAllUp.png'})`
                     : `url(${'./store_img/seeAllDown.png'})`,
                 }}
-              ></Box> */}
+              ></Box>
             </div>
           </div>
-          {/* <Box hidden={VegetableDisplayType}>
+
+          <Box  width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}  hidden={VegetableDisplayType}>
             <Carousel
-              // itemClass={classes.imageItem}
-              // centerMode={true}
-              responsive={responsive}
+               itemClass={classes.imageItem}
+               showArrows={true}
+               autoPlay={true}
+               interval ={2000}
+               showIndicators={false}
+               centerMode={true}
+               swipeable={false}
+               infiniteLoop={true}
+               centerSlidePercentage={
+                 window.innerWidth < 1200 ?
+                 window.innerWidth < 600 ? 100 : 40 : 30
+              }
+              width= "100%"
             >
               {store.productsVegetable.map(createProduct2)}
-            </Carousel>
-          </Box> */}
+            </Carousel> 
+          </Box>
+          
           <Box
             className="responsive-display-produce"
-            // width="100%"
-            hidden={!FruitDisplayType}
+            hidden={!VegetableDisplayType}
             height={windowHeight - 165}
-            // ml={2}
-            // p={3}
-            // pb={5}
             mb={2}
             style={{
               backgroundColor: appColors.componentBg,
@@ -344,8 +295,6 @@ function DisplayProduct() {
               <Box width="97%" justifyContent="center">
                 <Box
                   className={classes.entryContainer}
-                  // spacing={5}
-                  // spacing={2}
                 >
                   {store.productsVegetable.map(createProduct2)}
                 </Box>
@@ -368,8 +317,8 @@ function DisplayProduct() {
               Fruits{' '}
             </h1>
             <div style={{ display: 'flex' }}>
-              {/* <Button style={{color:"#ff8500"}}  onClick = {handleClickFruit}> See all Fruits </Button>
- <Box  style={{
+              <Button style={{color:"#ff8500"}}  onClick = {handleClickFruit}> See all Fruits </Button>
+            <Box  style={{
             width: '1rem',
             height: '1rem',
             marginTop:'2rem',
@@ -379,28 +328,33 @@ function DisplayProduct() {
                 './store_img/seeAllDown.png'
             })`,}}>
 
-</Box> */}
+          </Box>
             </div>
           </div>
-          {/* <Box hidden={ FruitDisplayType  }>
-
-<Carousel
-    itemClass={classes.imageItem}
-    centerMode={true} 
-    responsive={responsive}>
-  
-  {store.productsFruit.map(createProduct2)}
-    
-  </Carousel> 
-  </Box>  */}
+          <Box  width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500} hidden={FruitDisplayType}>
+            <Carousel
+               itemClass={classes.imageItem}
+               showArrows={true}
+               autoPlay={true}
+               interval ={2000}
+               showIndicators={false}
+               centerMode={true}
+               swipeable={false}
+               infiniteLoop={true}
+               centerSlidePercentage={
+                 window.innerWidth < 1200 ?
+                 window.innerWidth < 600 ? 100 : 40 : 30
+              }
+              width= "100%"
+            >
+              {store.productsFruit.map(createProduct2)}
+            </Carousel> 
+          </Box>
+          
           <Box
             className="responsive-display-produce"
-            // width="100%"
             hidden={!FruitDisplayType}
             height={windowHeight - 165}
-            // ml={2}
-            // p={3}
-            // pb={5}
             mb={2}
             style={{
               backgroundColor: appColors.componentBg,
@@ -439,11 +393,88 @@ function DisplayProduct() {
               }}
             >
               {' '}
+              GiftCards{' '}
+            </h1>
+            <div style={{ display: 'flex' }}>
+              <Button style={{color:"#ff8500"}}  onClick = {handleClickGiftCard}> See all GiftCards </Button>
+            <Box  style={{
+            width: '1rem',
+            height: '1rem',
+            marginTop:'2rem',
+            backgroundSize:'1rem',
+            backgroundImage: GiftCardDisplayType? `url(${
+              './store_img/seeAllUp.png' })` : `url(${
+                './store_img/seeAllDown.png'
+            })`,}}>
+          </Box>
+            </div>
+          </div>
+          <Box  width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}  hidden={GiftCardDisplayType}>
+            <Carousel
+               itemClass={classes.imageItem}
+               showArrows={true}
+               autoPlay={true}
+               interval ={2000}
+               showIndicators={false}
+               centerMode={true}
+               swipeable={false}
+               infiniteLoop={true}
+               centerSlidePercentage={
+                 window.innerWidth < 1200 ?
+                 window.innerWidth < 600 ? 100 : 40 : 30
+              }
+              width= "100%"
+            >
+              {store.productsGiftCard.map(createProduct2)}
+            </Carousel> 
+          </Box>
+          <Box
+            className="responsive-display-produce"
+            hidden={!GiftCardDisplayType}
+            height={windowHeight - 165}
+            mb={2}
+            style={{
+              backgroundColor: appColors.componentBg,
+              borderRadius: 10,
+              paddingBottom: '95px',
+            }}
+          >
+            <Box mt={2} />
+
+            <Paper
+              elevation={0}
+              style={{
+                backgroundColor: appColors.componentBg,
+                maxHeight: '100%',
+                width: '100%',
+                overflow: 'auto',
+              }}
+            >
+              <Box width="97%" justifyContent="center">
+                <Box className={classes.entryContainer}>
+                  {store.productsGiftCard.map(createProduct2)}
+                </Box>
+              </Box>
+            </Paper>
+          </Box>
+        </Box>
+
+        <Box style={{ backgroundColor: appColors.componentBg }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h1
+              style={{
+                textDecoration: 'underline',
+                color: appColors.secondary,
+                paddingLeft: '2rem',
+                paddingRight: '2rem',
+              }}
+            >
+              {' '}
               Others{' '}
             </h1>
             <div style={{ display: 'flex' }}>
-              {/* <Button style={{color:"#ff8500"}}  onClick = {handleClickOther}> See all Others </Button>
- <Box  style={{
+              <Button style={{color:"#ff8500"}}  onClick = {handleClickOther}> See all Others </Button>
+            <Box  style={{
             width: '1rem',
             height: '1rem',
             marginTop:'2rem',
@@ -452,29 +483,32 @@ function DisplayProduct() {
               './store_img/seeAllUp.png' })` : `url(${
                 './store_img/seeAllDown.png'
             })`,}}>
-
-</Box> */}
+          </Box>
             </div>
           </div>
-          {/* <Box hidden={ OtherDisplayType  }>
-
-<Carousel
-    itemClass={classes.imageItem}
-    centerMode={true} 
-    responsive={responsive}>
-  
-  {store.products.map(createProduct2)}
-    
-  </Carousel> 
-  </Box>  */}
+          <Box  width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}  hidden={OtherDisplayType}>
+            <Carousel
+               itemClass={classes.imageItem}
+               showArrows={true}
+               autoPlay={true}
+               interval ={2000}
+               showIndicators={false}
+               centerMode={true}
+               swipeable={false}
+               infiniteLoop={true}
+               centerSlidePercentage={
+                 window.innerWidth < 1200 ?
+                 window.innerWidth < 600 ? 100 : 40 : 30
+              }
+              width= "100%"
+            >
+              {store.productsDessert.map(createProduct2)}
+            </Carousel> 
+          </Box>
           <Box
             className="responsive-display-produce"
-            // width="100%"
             hidden={!OtherDisplayType}
             height={windowHeight - 165}
-            // ml={2}
-            // p={3}
-            // pb={5}
             mb={2}
             style={{
               backgroundColor: appColors.componentBg,
@@ -502,79 +536,6 @@ function DisplayProduct() {
           </Box>
         </Box>
       </>
-      //       <Box
-      //         className = {classes.itemDisplayContainer}
-      //       >
-
-      // <Simple/>
-      //         {/* <Paper
-      //           elevation={0}
-      //           className = {classes.productsPaperContainer}
-      //         >
-      //           <Box justifyContent="center">
-      //             <Grid container direction="row" justify="flex-start"
-      //               // spacing={5}
-      //             >
-      //               {store.productsFruit.map(createProduct2)}
-      //             </Grid>
-      //           </Box>
-      //         </Paper> */}
-      // <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Vegetables </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //     <Carousel
-      //             itemClass={classes.imageItem}
-      //             centerMode={true}
-      //             responsive={responsive}>
-
-      //            {store.productsVegetable.map(createProduct2)}
-
-      //           </Carousel>
-
-      //           <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Fruits </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //          <Carousel
-      //         itemClass={classes.imageItem}
-      //         centerMode={true}
-      //         responsive={responsive}>
-
-      //         {store.productsFruit.map(createProduct2)}
-      //         </Carousel>
-
-      //           <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Desserts </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //            <Carousel
-      //             itemClass={classes.imageItem}
-      //             centerMode={true}
-      //             responsive={responsive}>
-
-      //            {store.productsDessert.map(createProduct2)}
-
-      //           </Carousel>
-
-      //           <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Other </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //            <Carousel
-      //             itemClass={classes.imageItem}
-      //             centerMode={true}
-      //             responsive={responsive}>
-
-      //             {store.products.map(createProduct2)}
-
-      //           </Carousel>
-
-      //       </Box>
     );
   } else {
     return (
