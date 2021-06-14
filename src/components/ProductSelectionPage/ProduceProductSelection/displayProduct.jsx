@@ -231,7 +231,10 @@ function DisplayProduct() {
             <div style={{ display: 'flex' }}>
               <Button
                 varient="text"
-                style={{ color: '#ff8500' }}
+                size="small"
+                style={{ color: '#ff8500', backgroundColor:'#ffffff',
+      
+              }}
                 onClick={handleClickVegetable}
               >
                 See all Vegetables
@@ -317,7 +320,9 @@ function DisplayProduct() {
               Fruits{' '}
             </h1>
             <div style={{ display: 'flex' }}>
-              <Button style={{color:"#ff8500"}}  onClick = {handleClickFruit}> See all Fruits </Button>
+              <Button   varient="text"
+                size="small"
+                style={{ color: '#ff8500', backgroundColor:'#ffffff',}}  onClick = {handleClickFruit}> See all Fruits </Button>
             <Box  style={{
             width: '1rem',
             height: '1rem',
@@ -396,7 +401,9 @@ function DisplayProduct() {
               GiftCards{' '}
             </h1>
             <div style={{ display: 'flex' }}>
-              <Button style={{color:"#ff8500"}}  onClick = {handleClickGiftCard}> See all GiftCards </Button>
+              <Button   varient="text"
+                size="small"
+                style={{ color: '#ff8500', backgroundColor:'#ffffff',}}  onClick = {handleClickGiftCard}> See all GiftCards </Button>
             <Box  style={{
             width: '1rem',
             height: '1rem',
@@ -473,7 +480,9 @@ function DisplayProduct() {
               Others{' '}
             </h1>
             <div style={{ display: 'flex' }}>
-              <Button style={{color:"#ff8500"}}  onClick = {handleClickOther}> See all Others </Button>
+              <Button  varient="text"
+                size="small"
+                style={{ color: '#ff8500', backgroundColor:'#ffffff',}}  onClick = {handleClickOther}> See all Others </Button>
             <Box  style={{
             width: '1rem',
             height: '1rem',
