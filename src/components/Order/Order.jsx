@@ -1,28 +1,20 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Container, Row, Col } from 'react-grid-system';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Visible, Hidden } from 'react-grid-system';
 import {
-  Box,
   Button,
   InputAdornment,
-  FormHelperText,
-  Collapse,
 } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import appColors from '../../styles/AppColors';
 import CssTextField from '../../utils/CssTextField';
-import FindLongLatWithAddr from '../../utils/FindLongLatWithAddr';
 import { AuthContext } from '../../auth/AuthContext';
-import { TrendingUpRounded } from '@material-ui/icons';
 import PlacesAutocomplete, {
   geocodeByAddress,
   geocodeByPlaceId,
   getLatLng,
 } from 'react-places-autocomplete';
 import BusiApiReqs from '../../utils/BusiApiReqs';
-import ProductDisplay from '../ProductDisplay/ProductDisplay';
 import Mymodal from '../Modal/Modal';
 import SuccessModal from '../Modal/SuccessModal';
 let modalProp = true;
@@ -47,10 +39,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Order = ({...props}) => {
   const [address, setAddress] = React.useState('');
-  const [coordinates, setCoordinates] = React.useState({
-    lat: null,
-    lng: null,
-  });
   const [modalError, setModalErrorMessage] = useState('');
   const [modalSuccess, setModalSuccessMessage] = useState('');
   var guestProfile = {};
@@ -60,13 +48,8 @@ const Order = ({...props}) => {
 
   // // For Guest Procedure
   // const [deliverylocation, setDeliverylocation] = useState('');
-  const [errorValue, setError] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const classes = useStyles();
-  function createError(message) {
-    setError('Invalid Input');
-    setErrorMessage(message);
-  }
+
   // const onFieldChange = (event) => {
   //   const { value } = event.target;
   //   setDeliverylocation(value);
@@ -140,7 +123,7 @@ const Order = ({...props}) => {
       address: addr[0],
       city: addr[1],
       state: addr[2],
-      zip: zipCode1.length == 5 ? zipCode1.long_name : zipCode2.long_name,
+      zip: zipCode1.length === 5 ? zipCode1.long_name : zipCode2.long_name,
     };
     console.log(latLng);
     const res = await BusiMethods.getLocationBusinessIds(
