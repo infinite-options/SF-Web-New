@@ -7,14 +7,12 @@ import {
   Box,
   Badge,
   Grid,
-  Dialog,
-  Button,
+
   Hidden,
   IconButton,
   Drawer,
 } from '@material-ui/core';
 import ProdSelectContext from './ProdSelectContext';
-import axios from 'axios';
 import storeContext from '../Store/storeContext';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import OrderConfirmation from '../PurchaseComplete/OrderConfirmation';
@@ -22,29 +20,11 @@ import AdminLogin from '../LogIn/AdminLogin';
 import { AuthContext } from 'auth/AuthContext';
 import Signup from '../SignUp/Signup';
 
-const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI + '';
-
-//this function calculate the number of items in the cart and set it to global hook context
-function calTotal() {
-  var amount = 0,
-    keys = Object.keys(localStorage),
-    index = keys.length;
-  for (var i = 0; i < index; i++) {
-    if (keys[i].length > 30) {
-      var quantity = window.localStorage.getItem(keys[i]);
-      amount += parseInt(quantity);
-      // arr.push(JSON.parse(keys[i]));
-    }
-  }
-  return amount;
-}
-
 const ProductSelectionPage = (props) => {
   const store = useContext(storeContext);
   const auth = useContext(AuthContext);
 
   const { checkingOut, setCheckingOut } = useContext(storeContext);
-  const profile = store.profile;
 
   const [loggingIn, setLoggingIn] = React.useState(false);
   const [signingUp, setSigningUp] = React.useState(false);
@@ -80,11 +60,11 @@ const ProductSelectionPage = (props) => {
           setLoggingIn,
           signingUp,
           setSigningUp,
-          itemError,
-          itemIsLoading,
+          itemError, setHasError,
+          itemIsLoading, setIsLoading,
           farms,
-          busIsLoad,
-          busError,
+          busIsLoad, setBusLoading,
+          busError, setBusError,
           farmsClicked,
           setFarmsClicked,
           categoriesClicked,
