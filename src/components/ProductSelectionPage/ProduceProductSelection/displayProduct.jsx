@@ -5,18 +5,13 @@ import storeContext from '../../Store/storeContext';
 import {
   Box,
   Button,
-  ButtonBase,
-  Grid,
   Paper,
   Typography,
 } from '@material-ui/core';
 import appColors from '../../../styles/AppColors';
-import { set } from 'js-cookie';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
-import ItemCategory from '../../FilterProductSelection/ItemCategory';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; 
 import { Carousel } from 'react-responsive-carousel';
-import GridList from '@material-ui/core/GridList';
 
 const theme2 = createMuiTheme({
   breakpoints: {
@@ -191,6 +186,7 @@ function DisplayProduct() {
     store.products,
     store.productsLoading,
     store.cartTotal,
+    store.expectedDelivery,
   ]);
 
   function handleClickOther() {
