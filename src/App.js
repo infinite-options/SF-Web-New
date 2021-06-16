@@ -7,6 +7,7 @@ import Cookies from 'universal-cookie';
 import Nav from './Nav';
 import { AdminFarmContext } from './components/Admin/AdminFarmContext';
 import { ConfirmationServiceProvider } from './services/ConfirmationService';
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 import { AuthContext } from './auth/AuthContext';
 import axios from 'axios';
@@ -151,6 +152,10 @@ function App() {
 
   return (
     <Router>
+      <MessengerCustomerChat
+          pageId="110111434630375"
+          appId="941694233292147"
+      />
       <ThemeProvider theme={theme}>
         <div className="App">
           <ConfirmationServiceProvider>
