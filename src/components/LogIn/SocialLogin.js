@@ -1,15 +1,14 @@
-import React, { Component, useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { Grid, Paper, Button, Typography, Box } from '@material-ui/core';
+import { Grid, Button } from '@material-ui/core';
 import { AuthContext } from '../../auth/AuthContext';
 import { withRouter } from 'react-router';
 import Google from '../../icon/Google/Glogin.png';
 import Fb_Login from '../../icon/Facebook/Flogin.png';
 import Apple_Login from '../../icon/Apple/Alogin.png';
-import { SiFacebook } from 'react-icons/si';
 
 function SocialLogin(props) {
   const Auth = useContext(AuthContext);
@@ -43,7 +42,7 @@ function SocialLogin(props) {
     else if (urlParams.has('media')) {
       console.log(urlParams.get('media'));
     }
-  }, []);
+  }, [Auth, props]);
 
   const responseGoogle = (response) => {
     console.log(response);
@@ -182,6 +181,7 @@ function SocialLogin(props) {
               src={Fb_Login}
               onClick={renderProps.onClick}
               disabled={renderProps.disabled}
+              alt = {''}
             ></img>
           )}
         />
@@ -201,6 +201,7 @@ function SocialLogin(props) {
                 src={Google}
                 onClick={renderProps.onClick}
                 disabled={renderProps.disabled}
+                alt = {''}
               ></img>
             )}
           />
@@ -211,6 +212,7 @@ function SocialLogin(props) {
         <img
           src={Apple_Login}
           variant="contained"
+          alt = {''}
           onClick={() => {
             window.AppleID.auth.signIn();
           }}
