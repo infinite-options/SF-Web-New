@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import NumberFormat from 'react-number-format';
-import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-// import Input from '@material-ui/core/Input';
 import axios from 'axios';
 import appColors from '../../styles/AppColors';
 import { AdminFarmContext } from '../Admin/AdminFarmContext';
@@ -14,9 +12,6 @@ import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-// import UploadPreview from 'material-ui-upload/UploadPreview';
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import ImageUploading from 'react-images-uploading';
 import blankImg from '../../images/blank_img.svg';
 
 const BUSINESS_DETAILS_URL =

@@ -1,34 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import NumberFormat from 'react-number-format';
-// import FavoriteIcon from '@material-ui/icons/Favorite';
-import StarRateIcon from '@material-ui/icons/StarRate';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-// import {Grid, Paper, Button, Typography, Card, CardActions, CardMedia, CardContent, Modal, TextField, CircularProgress} from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Box from '@material-ui/core/Box';
 import Checkbox from '@material-ui/core/Checkbox';
-// import Switch from '@material-ui/core/Switch';
 import { makeStyles } from '@material-ui/core/styles';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Grid,
-  Modal,
-  TextField,
-} from '@material-ui/core';
+import { Button, Grid, TextField } from '@material-ui/core';
 import Axios from 'axios';
-
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-
 import { AuthContext } from '../../auth/AuthContext';
 import appColors from 'styles/AppColors';
 

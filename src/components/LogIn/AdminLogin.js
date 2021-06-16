@@ -1,17 +1,10 @@
-import React, { Component, useState, useContext, useEffect } from 'react';
-import FacebookLogin from 'react-facebook-login';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import GoogleLogin from 'react-google-login';
+import React, { useState, useContext, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
 import axios from 'axios';
-import TextField from '@material-ui/core/TextField';
 import { Grid, Paper, Button, Typography, Box } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
-import { sizing } from '@material-ui/system';
 import { AuthContext } from '../../auth/AuthContext';
 import CssTextField from '../../utils/CssTextField';
-import RevenueHighchart from '../Admin/HighchartTemplate';
 import appColors from '../../styles/AppColors';
 import SocialLogin from './SocialLogin';
 

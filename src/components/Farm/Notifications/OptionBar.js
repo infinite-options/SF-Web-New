@@ -2,18 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-
-// import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-// import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
 import Modal from '@material-ui/core/Modal';
-
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Axios from 'axios';
-// import {BrowserRouter as Router,Switch,Route,Link} from "react-router-dom";
 
 const theme = createMuiTheme({
   palette: {
@@ -31,7 +25,7 @@ const theme = createMuiTheme({
     },
   },
 });
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   button: {
     marginRight: theme.spacing(1),
   },
@@ -59,7 +53,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function OptionBar({ notification, setNotification, ...props }) {
-  const handleNotificationChange = event => {
+  const handleNotificationChange = (event) => {
     console.log(event.target.value);
     setNotification(event.target.value);
   };
@@ -72,13 +66,13 @@ function OptionBar({ notification, setNotification, ...props }) {
   useEffect(() => {
     Axios.get(
       'https://phaqvwjbw6.execute-api.us-west-1.amazonaws.com/dev/api/v1/saved_notification_message'
-    ).then(res => {
+    ).then((res) => {
       console.log(res);
       setSavedMessages(res.data.Items);
     });
     Axios.get(
       'https://phaqvwjbw6.execute-api.us-west-1.amazonaws.com/dev/api/v1/saved_notification_group'
-    ).then(res => {
+    ).then((res) => {
       console.log(res.data.Items);
       setSavedGroups(res.data.Items);
     });

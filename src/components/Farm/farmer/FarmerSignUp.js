@@ -1,8 +1,7 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { Grid, Paper, Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
-import { sizing } from '@material-ui/system';
+import { Grid, Paper } from '@material-ui/core';
+
 const paperStyle = {
   height: '700px',
   width: '90%',

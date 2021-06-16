@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import AdminNavBar from './AdminNavBar';
