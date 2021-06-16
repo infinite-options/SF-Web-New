@@ -26,6 +26,7 @@ import Store from '../Store/Store';
 import RevenueHighchart from '../Admin/HighchartTemplate';
 import Analytics from '../Admin/Analytics';
 import Notifications from './Notifications';
+import AdminDashboard from '../Admin/AdminDashboard';
 // import FarmerNavBar from './FarmerNavBar';
 
 export default function Farmer({ tab, ...props }) {
@@ -94,6 +95,7 @@ export default function Farmer({ tab, ...props }) {
         {tab === 7 && <Zones />}
         {tab === 8 && <PriceCompare />}
         {tab === 9 && <ReplaceProduce />}
+        {tab === 10 && <AdminDashboard />}
       </React.Fragment>
     );
   };

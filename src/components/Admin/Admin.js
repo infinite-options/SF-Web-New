@@ -1,11 +1,21 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import Box from '@material-ui/core/Box';
 import axios from 'axios';
-import AdminNavBar from './AdminNavBar';
+import AdminNavBarNew from './AdminNavBarNew';
 import Farmer from '../Farm/Farmer';
 import { AdminFarmContext } from './AdminFarmContext';
 import { AuthContext } from '../../auth/AuthContext';
+import AdminDashboard from './AdminDashboard';
+import FarmerHome from '../Farm/FarmerHome';
+import FarmerReport from '../Farm/FarmerReport';
+import FarmerSettings from '../Farm/FarmerSettings';
+import FarmProfiles from './FarmProfiles';
+import FarmOrders from './FarmOrders';
+import Items from './Items';
+import Customers from './Customers';
+import OrderSummary from './OrderSummary';
 //within this admin page, we need ability to display any farmer page
 //the option to select which farm to view is in AdminNavBar
 //get selected farm from AdmiNavBar and use it in Farmer
@@ -13,9 +23,10 @@ import { AuthContext } from '../../auth/AuthContext';
 
 //TODO: order purchase amounts by business total, Item total, amount paid
 //TODO: Add date to delivery day
-function Admin() {
+function Admin(authLevel, isAuth) {
   const Auth = useContext(AuthContext);
   const [farmID, setFarmID] = useState('');
+  const [showNav, setShowNav] = useState(false);
   const [farmList, setFarmList] = useState([]);
   const [farmDict, setFarmDict] = useState({});
   const [timeChange, setTimeChange] = useState({});
@@ -24,6 +35,18 @@ function Admin() {
   const [tab, setTab] = useState(
     Number(localStorage.getItem('farmerTab')) || 0
   );
+  const farmName = (() => {
+    switch (farmID) {
+      case '200-000003':
+        return 'Esquivel Farm';
+      case '200-000004':
+        return 'Resendiz Family';
+      case '200-0000016':
+        return 'Royal Greens Farms';
+      default:
+        return null;
+    }
+  })();
 
   useEffect(() => {
     if (farmID !== '') localStorage.setItem('farmID', farmID);
@@ -96,9 +119,11 @@ function Admin() {
     setFarmID(event.target.value);
   };
   return (
-    <>
+    <React.Fragment>
       <AdminFarmContext.Provider
         value={{
+          showNav,
+          setShowNav,
           farmID,
           setFarmID,
           timeChange,
@@ -111,10 +136,44 @@ function Admin() {
           handleChangeFarm,
         }}
       >
-        <AdminNavBar tab={tab} setTab={setTab} />
-        {Auth.authLevel >= 1 && <Farmer tab={tab} />}
+        <AdminNavBarNew />
+        {/* {Auth.authLevel >= 1 && <Farmer tab={tab} />} */}
+        <Switch>
+          <Route exact path="/admin">
+            <AdminDashboard />
+          </Route>
+
+          <Route exact path="/admin/farmerhome">
+            <FarmerHome farmID={farmID} farmName={farmName} />
+          </Route>
+          <Route exact path="/admin/farmerreport">
+            <FarmerReport
+              farmID={farmID}
+              deliveryTime={deliveryTime}
+              farmName={farmName}
+            />
+          </Route>
+          <Route exact path="/admin/farmersettings">
+            <FarmerSettings farmID={farmID} farmName={farmName} />
+          </Route>
+          <Route exact path="/admin/farmprofiles">
+            <FarmProfiles />
+          </Route>
+          <Route exact path="/admin/farmorders">
+            <FarmOrders />
+          </Route>
+          <Route exact path="/admin/items">
+            <Items />
+          </Route>
+          <Route exact path="/admin/ordersummary">
+            <OrderSummary />
+          </Route>
+          <Route exact path="/admin/customers">
+            <Customers />
+          </Route>
+        </Switch>
       </AdminFarmContext.Provider>
-    </>
+    </React.Fragment>
   );
 }
 

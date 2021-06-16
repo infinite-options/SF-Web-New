@@ -81,7 +81,7 @@ function MenuListComposition(props) {
       case 'Rewards':
         history.push({
           pathname: '/store',
-          state: { rightTabChosen: 0  },
+          state: { rightTabChosen: 0 },
         });
         break;
       case 'Payment Details':
@@ -162,11 +162,12 @@ function MenuListComposition(props) {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-            <MenuIcon style={{color:"white",width:'3rem',height:'3rem'}} 
-              aria-hidden="false"
-              aria-label = 'Menu list'
-            />
-          </IconButton>
+          <MenuIcon
+            style={{ color: 'white', width: '3rem', height: '3rem' }}
+            aria-hidden="false"
+            aria-label="Menu list"
+          />
+        </IconButton>
         <Popper
           open={open}
           anchorEl={anchorRef.current}
@@ -215,44 +216,55 @@ function MenuListComposition(props) {
                         handleMenuItem(e, 'Store');
                       }}
                     >
-                      <div style={{display:'flex'}}>
-                      <div>
-                      <StorefrontIcon
-                       fontSize="Medium"
-                       key={props.storePage || ''}
-                       aria-hidden="false"
-                       aria-label="Shopping cart"
-                       style={{ color: 'white' }}
-                      />
+                      <div style={{ display: 'flex' }}>
+                        <div>
+                          <StorefrontIcon
+                            fontSize="Medium"
+                            key={props.storePage || ''}
+                            aria-hidden="false"
+                            aria-label="Shopping cart"
+                            style={{ color: 'white' }}
+                          />
+                        </div>
+
+                        <div
+                          style={{
+                            marginLeft: '1rem',
+                            fontSize: '18px',
+                            color: 'white',
+                          }}
+                        >
+                          Store
+                        </div>
                       </div>
-            
-                      <div style={{marginLeft:'1rem', fontSize:'18px', color:'white'}}>
-                      Store
-                      </div>
-                      </div>
-                      
                     </MenuItem>
-                  
+
                     <MenuItem
                       disabled={isDisabled}
                       onClick={(e) => {
                         handleMenuItem(e, 'Rewards');
                       }}
                     >
-                      <div style={{display:'flex'}}>
-                      <div>
-                      <ShoppingCartOutlinedIcon
-                       fontSize="Medium"
-                       key={props.storePage || ''}
-                       aria-hidden="false"
-                       aria-label="Shopping cart"
-                       style={{ color: 'white' }}
-                      />
-                      </div>
-            
-                      <div style={{marginLeft:'1rem', fontSize:'18px', color:'white'}}>
-                      Cart
-                      </div>
+                      <div style={{ display: 'flex' }}>
+                        <div>
+                          <ShoppingCartOutlinedIcon
+                            fontSize="Medium"
+                            key={props.storePage || ''}
+                            aria-hidden="false"
+                            aria-label="Shopping cart"
+                            style={{ color: 'white' }}
+                          />
+                        </div>
+
+                        <div
+                          style={{
+                            marginLeft: '1rem',
+                            fontSize: '18px',
+                            color: 'white',
+                          }}
+                        >
+                          Cart
+                        </div>
                       </div>
                     </MenuItem>
                     <MenuItem
@@ -261,20 +273,26 @@ function MenuListComposition(props) {
                         handleMenuItem(e, 'History');
                       }}
                     >
-                           <div style={{display:'flex'}}>
-                      <div>
-                      <HistoryOutlinedIcon
-                       fontSize="Medium"
-                       key={props.storePage || ''}
-                       aria-hidden="false"
-                       aria-label="Shopping cart"
-                       style={{ color: 'white' }}
-                      />
-                      </div>
-            
-                      <div style={{marginLeft:'1rem', fontSize:'18px', color:'white'}}>
-                      History
-                      </div>
+                      <div style={{ display: 'flex' }}>
+                        <div>
+                          <HistoryOutlinedIcon
+                            fontSize="Medium"
+                            key={props.storePage || ''}
+                            aria-hidden="false"
+                            aria-label="Shopping cart"
+                            style={{ color: 'white' }}
+                          />
+                        </div>
+
+                        <div
+                          style={{
+                            marginLeft: '1rem',
+                            fontSize: '18px',
+                            color: 'white',
+                          }}
+                        >
+                          History
+                        </div>
                       </div>
                     </MenuItem>
 
@@ -284,20 +302,26 @@ function MenuListComposition(props) {
                         handleMenuItem(e, 'Refund');
                       }}
                     >
-                      <div style={{display:'flex'}}>
-                      <div>
-                      <MoneyOffOutlinedIcon
-                       fontSize="Medium"
-                       key={props.storePage || ''}
-                       aria-hidden="false"
-                       aria-label="Shopping cart"
-                       style={{ color: 'white' }}
-                      />
-                      </div>
-            
-                      <div style={{marginLeft:'1rem', fontSize:'18px', color:'white'}}>
-                      Refund
-                      </div>
+                      <div style={{ display: 'flex' }}>
+                        <div>
+                          <MoneyOffOutlinedIcon
+                            fontSize="Medium"
+                            key={props.storePage || ''}
+                            aria-hidden="false"
+                            aria-label="Shopping cart"
+                            style={{ color: 'white' }}
+                          />
+                        </div>
+
+                        <div
+                          style={{
+                            marginLeft: '1rem',
+                            fontSize: '18px',
+                            color: 'white',
+                          }}
+                        >
+                          Refund
+                        </div>
                       </div>
                     </MenuItem>
 
@@ -307,20 +331,26 @@ function MenuListComposition(props) {
                         handleMenuItem(e, 'Profile Info');
                       }}
                     >
-                      <div style={{display:'flex'}}>
-                      <div>
-                      <AccountCircleOutlinedIcon
-                       fontSize="Medium"
-                       key={props.storePage || ''}
-                       aria-hidden="false"
-                       aria-label="Shopping cart"
-                       style={{ color: 'white' }}
-                      />
-                      </div>
-            
-                      <div style={{marginLeft:'1rem', fontSize:'18px', color:'white'}}>
-                      Profile
-                      </div>
+                      <div style={{ display: 'flex' }}>
+                        <div>
+                          <AccountCircleOutlinedIcon
+                            fontSize="Medium"
+                            key={props.storePage || ''}
+                            aria-hidden="false"
+                            aria-label="Shopping cart"
+                            style={{ color: 'white' }}
+                          />
+                        </div>
+
+                        <div
+                          style={{
+                            marginLeft: '1rem',
+                            fontSize: '18px',
+                            color: 'white',
+                          }}
+                        >
+                          Profile
+                        </div>
                       </div>
                     </MenuItem>
                     {/* <MenuItem
@@ -341,53 +371,63 @@ function MenuListComposition(props) {
 
                       Checkout
                     </MenuItem> */}
-                 
-                 
+
                     {auth.isAuth && (
                       <MenuItem
                         disabled={isDisabled}
                         onClick={handleClickLogOut}
                       >
-                          <div style={{display:'flex'}}>
-                      <div>
-                      <ExitToAppOutlinedIcon
-                       fontSize="Medium"
-                       key={props.storePage || ''}
-                       aria-hidden="false"
-                       aria-label="Shopping cart"
-                       style={{ color: 'white' }}
-                      />
-                      </div>
-            
-                      <div style={{marginLeft:'1rem', fontSize:'18px', color:'white'}}>
-                      Logout
-                      </div>
-                      </div>
+                        <div style={{ display: 'flex' }}>
+                          <div>
+                            <ExitToAppOutlinedIcon
+                              fontSize="Medium"
+                              key={props.storePage || ''}
+                              aria-hidden="false"
+                              aria-label="Shopping cart"
+                              style={{ color: 'white' }}
+                            />
+                          </div>
+
+                          <div
+                            style={{
+                              marginLeft: '1rem',
+                              fontSize: '18px',
+                              color: 'white',
+                            }}
+                          >
+                            Logout
+                          </div>
+                        </div>
                       </MenuItem>
-                        )}
-                       <MenuItem
-                       disabled={isDisabled}
-                       onClick={(e) => {
-                         handleMenuItem(e, 'Home');
-                       }}
-                     >
-                       <div style={{display:'flex'}}>
-                       <div>
-                       <HomeOutlinedIcon
-                        fontSize="Medium"
-                        key={props.storePage || ''}
-                        aria-hidden="false"
-                        aria-label="Shopping cart"
-                        style={{ color: 'white' }}
-                       />
-                       </div>
-             
-                       <div style={{marginLeft:'1rem', fontSize:'18px', color:'white'}}>
-                       Return to Home
-                       </div>
-                       </div>
-                     </MenuItem>
-                  
+                    )}
+                    <MenuItem
+                      disabled={isDisabled}
+                      onClick={(e) => {
+                        handleMenuItem(e, 'Home');
+                      }}
+                    >
+                      <div style={{ display: 'flex' }}>
+                        <div>
+                          <HomeOutlinedIcon
+                            fontSize="Medium"
+                            key={props.storePage || ''}
+                            aria-hidden="false"
+                            aria-label="Shopping cart"
+                            style={{ color: 'white' }}
+                          />
+                        </div>
+
+                        <div
+                          style={{
+                            marginLeft: '1rem',
+                            fontSize: '18px',
+                            color: 'white',
+                          }}
+                        >
+                          Return to Home
+                        </div>
+                      </div>
+                    </MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
