@@ -246,7 +246,7 @@ function DisplayProduct() {
     return (
       <>
         {foodTypeArr.map(ft =>
-        <Box marginLeft="1rem" marginRight="0.2rem">
+        <Box marginLeft="1rem" marginRight="0.2rem" display = 'flex' flexDirection = 'column' border = '2px solid red'>
           <Box fontSize={22} color={appColors.paragraphText}>
             {displayMessage}
           </Box>
@@ -287,8 +287,8 @@ function DisplayProduct() {
 
           <Box
             // width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}
-            width='100%'
-            hidden={ft.displayType}>
+            hidden={ft.displayType}
+          >
             <Carousel
                itemClass={classes.imageItem}
                showArrows={true}
@@ -302,7 +302,6 @@ function DisplayProduct() {
                  window.innerWidth < 1200 ?
                  window.innerWidth < 600 ? 100 : 40 : 30
               }
-              width= "100%"
             >
               {ft.products.map(createProduct2)}
             </Carousel> 
@@ -330,7 +329,7 @@ function DisplayProduct() {
                 overflow: 'auto',
               }}
             >
-              <Box width="97%" justifyContent="center">
+              <Box justifyContent="center">
                 <Box
                   className={classes.entryContainer}
                 >
