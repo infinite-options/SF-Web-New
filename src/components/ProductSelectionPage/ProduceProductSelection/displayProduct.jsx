@@ -218,8 +218,6 @@ function DisplayProduct() {
               style={{
                 textDecoration: 'underline',
                 color: appColors.secondary,
-                paddingLeft: '2rem',
-                paddingRight: '2rem',
               }}
             >
               Vegetables
@@ -249,7 +247,10 @@ function DisplayProduct() {
             </div>
           </div>
 
-          <Box  width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}  hidden={VegetableDisplayType}>
+          <Box
+            // width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}
+            width='100%'
+            hidden={VegetableDisplayType}>
             <Carousel
                itemClass={classes.imageItem}
                showArrows={true}
@@ -302,18 +303,15 @@ function DisplayProduct() {
           </Box>
         </Box>
 
-        <Box style={{ backgroundColor: appColors.componentBg }}>
+        <Box style={{ backgroundColor: appColors.componentBg }} marginLeft="1rem" marginRight="0.2rem">
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h1
               style={{
                 textDecoration: 'underline',
                 color: appColors.secondary,
-                paddingLeft: '2rem',
-                paddingRight: '2rem',
               }}
             >
-              {' '}
-              Fruits{' '}
+              Fruits
             </h1>
             <div style={{ display: 'flex' }}>
               <Button   varient="text"
@@ -332,7 +330,10 @@ function DisplayProduct() {
           </Box>
             </div>
           </div>
-          <Box  width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500} hidden={FruitDisplayType}>
+          <Box
+            // width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}
+            width = '100%'
+            hidden={FruitDisplayType}>
             <Carousel
                itemClass={classes.imageItem}
                showArrows={true}
@@ -383,18 +384,15 @@ function DisplayProduct() {
           </Box>
         </Box>
 
-        <Box style={{ backgroundColor: appColors.componentBg }}>
+        <Box style={{ backgroundColor: appColors.componentBg }} marginLeft="1rem" marginRight="0.2rem" >
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h1
               style={{
                 textDecoration: 'underline',
                 color: appColors.secondary,
-                paddingLeft: '2rem',
-                paddingRight: '2rem',
               }}
             >
-              {' '}
-              GiftCards{' '}
+              GiftCards
             </h1>
             <div style={{ display: 'flex' }}>
               <Button   varient="text"
@@ -412,7 +410,10 @@ function DisplayProduct() {
           </Box>
             </div>
           </div>
-          <Box  width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}  hidden={GiftCardDisplayType}>
+          <Box
+            // width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}
+            width = '100%'
+            hidden={GiftCardDisplayType}>
             <Carousel
                itemClass={classes.imageItem}
                showArrows={true}
@@ -462,18 +463,15 @@ function DisplayProduct() {
           </Box>
         </Box>
 
-        <Box style={{ backgroundColor: appColors.componentBg }}>
+        <Box style={{ backgroundColor: appColors.componentBg }} marginLeft="1rem" marginRight="0.2rem">
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h1
               style={{
                 textDecoration: 'underline',
                 color: appColors.secondary,
-                paddingLeft: '2rem',
-                paddingRight: '2rem',
               }}
             >
-              {' '}
-              Others{' '}
+              Others
             </h1>
             <div style={{ display: 'flex' }}>
               <Button  varient="text"
@@ -491,7 +489,10 @@ function DisplayProduct() {
           </Box>
             </div>
           </div>
-          <Box  width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}  hidden={OtherDisplayType}>
+          <Box
+            // width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}
+            width = '100%'
+            hidden={OtherDisplayType}>
             <Carousel
                itemClass={classes.imageItem}
                showArrows={true}
