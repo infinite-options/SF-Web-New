@@ -201,13 +201,51 @@ function DisplayProduct() {
     setFruitDisplayType(!FruitDisplayType);
   }
 
-  function handleClickVegetable() {
-    setVegetableDisplayType(!VegetableDisplayType);
+  function handleClickDisplayType(category) {
+    switch(category) {
+      case 'Vegetables':
+        setVegetableDisplayType(!VegetableDisplayType);
+        break;
+      case 'Fruits':
+        setFruitDisplayType(!FruitDisplayType);
+        break;
+      case 'Gift Cards':
+        setGiftCardDisplayType(!GiftCardDisplayType);
+        break;
+      case 'Others':
+        setOtherDisplayType(!OtherDisplayType);
+    }
   }
+
+  const foodTypeArr = [
+    {
+      name: 'Vegetables',
+      displayType: VegetableDisplayType,
+      products: store.productsVegetable,
+    },
+    {
+      name: 'Fruits',
+      displayType: FruitDisplayType,
+      products: store.productsFruit,
+    },
+    {
+      name: 'Gift Cards',
+      displayType: GiftCardDisplayType,
+      products: store.productsGiftCard,
+    },
+    {
+      name: 'Others',
+      displayType: OtherDisplayType,
+      products: store.productsDessert,
+    },
+  ];
+
+  console.warn('ftArr = ', foodTypeArr);
 
   if (!store.productsLoading && !productSelect.itemError) {
     return (
       <>
+        {foodTypeArr.map(ft =>
         <Box marginLeft="1rem" marginRight="0.2rem">
           <Box fontSize={22} color={appColors.paragraphText}>
             {displayMessage}
@@ -220,7 +258,7 @@ function DisplayProduct() {
                 color: appColors.secondary,
               }}
             >
-              Vegetables
+              {ft.name}
             </h1>
             <div style={{ display: 'flex' }}>
               <Button
@@ -229,9 +267,9 @@ function DisplayProduct() {
                 style={{ color: '#ff8500', backgroundColor:'#ffffff',
       
               }}
-                onClick={handleClickVegetable}
+                onClick={() => handleClickDisplayType(ft.name)}
               >
-                See all Vegetables
+                {`See all ${ft.name}`}
               </Button>
               <Box
                 style={{
@@ -239,7 +277,7 @@ function DisplayProduct() {
                   height: '1rem',
                   marginTop: '2rem',
                   backgroundSize: '1rem',
-                  backgroundImage: VegetableDisplayType
+                  backgroundImage: ft.displayType
                     ? `url(${'./store_img/seeAllUp.png'})`
                     : `url(${'./store_img/seeAllDown.png'})`,
                 }}
@@ -250,7 +288,7 @@ function DisplayProduct() {
           <Box
             // width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}
             width='100%'
-            hidden={VegetableDisplayType}>
+            hidden={ft.displayType}>
             <Carousel
                itemClass={classes.imageItem}
                showArrows={true}
@@ -266,13 +304,13 @@ function DisplayProduct() {
               }
               width= "100%"
             >
-              {store.productsVegetable.map(createProduct2)}
+              {ft.products.map(createProduct2)}
             </Carousel> 
           </Box>
           
           <Box
             className="responsive-display-produce"
-            hidden={!VegetableDisplayType}
+            hidden={!ft.displayType}
             height={windowHeight - 165}
             mb={2}
             style={{
@@ -296,251 +334,12 @@ function DisplayProduct() {
                 <Box
                   className={classes.entryContainer}
                 >
-                  {store.productsVegetable.map(createProduct2)}
+                  {ft.products.map(createProduct2)}
                 </Box>
               </Box>
             </Paper>
           </Box>
-        </Box>
-
-        <Box style={{ backgroundColor: appColors.componentBg }} marginLeft="1rem" marginRight="0.2rem">
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h1
-              style={{
-                textDecoration: 'underline',
-                color: appColors.secondary,
-              }}
-            >
-              Fruits
-            </h1>
-            <div style={{ display: 'flex' }}>
-              <Button   varient="text"
-                size="small"
-                style={{ color: '#ff8500', backgroundColor:'#ffffff',}}  onClick = {handleClickFruit}> See all Fruits </Button>
-            <Box  style={{
-            width: '1rem',
-            height: '1rem',
-            marginTop:'2rem',
-            backgroundSize:'1rem',
-            backgroundImage: FruitDisplayType? `url(${
-              './store_img/seeAllUp.png' })` : `url(${
-                './store_img/seeAllDown.png'
-            })`,}}>
-
-          </Box>
-            </div>
-          </div>
-          <Box
-            // width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}
-            width = '100%'
-            hidden={FruitDisplayType}>
-            <Carousel
-               itemClass={classes.imageItem}
-               showArrows={true}
-               autoPlay={true}
-               interval ={2000}
-               showIndicators={false}
-               centerMode={true}
-               swipeable={false}
-               infiniteLoop={true}
-               centerSlidePercentage={
-                 window.innerWidth < 1200 ?
-                 window.innerWidth < 600 ? 100 : 40 : 30
-              }
-              width= "100%"
-            >
-              {store.productsFruit.map(createProduct2)}
-            </Carousel> 
-          </Box>
-          
-          <Box
-            className="responsive-display-produce"
-            hidden={!FruitDisplayType}
-            height={windowHeight - 165}
-            mb={2}
-            style={{
-              backgroundColor: appColors.componentBg,
-              borderRadius: 10,
-              paddingBottom: '95px',
-            }}
-          >
-            <Box mt={2} />
-
-            <Paper
-              elevation={0}
-              style={{
-                backgroundColor: appColors.componentBg,
-                maxHeight: '100%',
-                width: '100%',
-                overflow: 'auto',
-              }}
-            >
-              <Box width="97%" justifyContent="center">
-                <Box className={classes.entryContainer}>
-                  {store.productsFruit.map(createProduct2)}
-                </Box>
-              </Box>
-            </Paper>
-          </Box>
-        </Box>
-
-        <Box style={{ backgroundColor: appColors.componentBg }} marginLeft="1rem" marginRight="0.2rem" >
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h1
-              style={{
-                textDecoration: 'underline',
-                color: appColors.secondary,
-              }}
-            >
-              GiftCards
-            </h1>
-            <div style={{ display: 'flex' }}>
-              <Button   varient="text"
-                size="small"
-                style={{ color: '#ff8500', backgroundColor:'#ffffff',}}  onClick = {handleClickGiftCard}> See all GiftCards </Button>
-            <Box  style={{
-            width: '1rem',
-            height: '1rem',
-            marginTop:'2rem',
-            backgroundSize:'1rem',
-            backgroundImage: GiftCardDisplayType? `url(${
-              './store_img/seeAllUp.png' })` : `url(${
-                './store_img/seeAllDown.png'
-            })`,}}>
-          </Box>
-            </div>
-          </div>
-          <Box
-            // width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}
-            width = '100%'
-            hidden={GiftCardDisplayType}>
-            <Carousel
-               itemClass={classes.imageItem}
-               showArrows={true}
-               autoPlay={true}
-               interval ={2000}
-               showIndicators={false}
-               centerMode={true}
-               swipeable={false}
-               infiniteLoop={true}
-               centerSlidePercentage={
-                 window.innerWidth < 1200 ?
-                 window.innerWidth < 600 ? 100 : 40 : 30
-              }
-              width= "100%"
-            >
-              {store.productsGiftCard.map(createProduct2)}
-            </Carousel> 
-          </Box>
-          <Box
-            className="responsive-display-produce"
-            hidden={!GiftCardDisplayType}
-            height={windowHeight - 165}
-            mb={2}
-            style={{
-              backgroundColor: appColors.componentBg,
-              borderRadius: 10,
-              paddingBottom: '95px',
-            }}
-          >
-            <Box mt={2} />
-
-            <Paper
-              elevation={0}
-              style={{
-                backgroundColor: appColors.componentBg,
-                maxHeight: '100%',
-                width: '100%',
-                overflow: 'auto',
-              }}
-            >
-              <Box width="97%" justifyContent="center">
-                <Box className={classes.entryContainer}>
-                  {store.productsGiftCard.map(createProduct2)}
-                </Box>
-              </Box>
-            </Paper>
-          </Box>
-        </Box>
-
-        <Box style={{ backgroundColor: appColors.componentBg }} marginLeft="1rem" marginRight="0.2rem">
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h1
-              style={{
-                textDecoration: 'underline',
-                color: appColors.secondary,
-              }}
-            >
-              Others
-            </h1>
-            <div style={{ display: 'flex' }}>
-              <Button  varient="text"
-                size="small"
-                style={{ color: '#ff8500', backgroundColor:'#ffffff',}}  onClick = {handleClickOther}> See all Others </Button>
-            <Box  style={{
-            width: '1rem',
-            height: '1rem',
-            marginTop:'2rem',
-            backgroundSize:'1rem',
-            backgroundImage: OtherDisplayType? `url(${
-              './store_img/seeAllUp.png' })` : `url(${
-                './store_img/seeAllDown.png'
-            })`,}}>
-          </Box>
-            </div>
-          </div>
-          <Box
-            // width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}
-            width = '100%'
-            hidden={OtherDisplayType}>
-            <Carousel
-               itemClass={classes.imageItem}
-               showArrows={true}
-               autoPlay={true}
-               interval ={2000}
-               showIndicators={false}
-               centerMode={true}
-               swipeable={false}
-               infiniteLoop={true}
-               centerSlidePercentage={
-                 window.innerWidth < 1200 ?
-                 window.innerWidth < 600 ? 100 : 40 : 30
-              }
-              width= "100%"
-            >
-              {store.productsDessert.map(createProduct2)}
-            </Carousel> 
-          </Box>
-          <Box
-            className="responsive-display-produce"
-            hidden={!OtherDisplayType}
-            height={windowHeight - 165}
-            mb={2}
-            style={{
-              backgroundColor: appColors.componentBg,
-              borderRadius: 10,
-              paddingBottom: '95px',
-            }}
-          >
-            <Box mt={2} />
-
-            <Paper
-              elevation={0}
-              style={{
-                backgroundColor: appColors.componentBg,
-                maxHeight: '100%',
-                width: '100%',
-                overflow: 'auto',
-              }}
-            >
-              <Box width="97%" justifyContent="center">
-                <Box className={classes.entryContainer}>
-                  {store.productsDessert.map(createProduct2)}
-                </Box>
-              </Box>
-            </Paper>
-          </Box>
-        </Box>
+        </Box>)}
       </>
     );
   } else {
