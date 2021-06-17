@@ -64,8 +64,9 @@ do
 			echo "$CURR_KEY not found in ./src"
 
 			if [[ "$1" == "-d" || "$1" == "--delete" ]]; then
-				if [[ "$#" == "1" || "$CURR_KEY" == "$2" ]]; then
-					DEL_REGEX="/$2/d"
+				if [[ "$#" == "1" ]] || [[ "$CURR_KEY" == "$2" ]]; then
+					echo "Deleting $CURR_KEY from package.json"
+					DEL_REGEX="/$CURR_KEY/d"
 					sed -i "$DEL_REGEX" ./package.json
 				fi
 			fi
