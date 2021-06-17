@@ -47,7 +47,7 @@ do
 		echo "All dependencies have been searched."
 	elif [[ "$CURR_KEY" == "dependencies" ]]; then
 		PARSING_DEPS="TRUE"
-	elif [[ "$PARSING_DEPS" == "TRUE" ]]; then	
+	elif [[ "$PARSING_DEPS" == "TRUE" ]] && [[ "$CURR_KEY" != "react-scripts" ]]; then	
 		ret="$(grep -nr "$CURR_KEY" ./src)"
 		
 		if [[ "$1" == "-v" || "$1" == "--verbose" ]]; then
@@ -64,9 +64,10 @@ do
 			echo "$CURR_KEY not found in ./src"
 
 			if [[ "$1" == "-d" || "$1" == "--delete" ]]; then
-				if [[ "$#" == "1" ]] || [[ "$CURR_KEY" == "$2" ]]; then
-					echo "Deleting $CURR_KEY from package.json"
-					DEL_REGEX="/$CURR_KEY/d"
+				if [[ "$#" == "1" || "$CURR_KEY" == "$2" ]]; then
+					RE_CURR_KEY="$(echo $CURR_KEY | sed "s~\(['\"\/\$\^\.]\)~\\\\\1~g")"
+					echo "Deleting $CURR_KEY from package.json as regex $RE_CURR_KEY"
+					DEL_REGEX="/$RE_CURR_KEY/d"
 					sed -i "$DEL_REGEX" ./package.json
 				fi
 			fi
