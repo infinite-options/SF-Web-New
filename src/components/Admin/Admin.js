@@ -1,10 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import Box from '@material-ui/core/Box';
 import axios from 'axios';
+import { makeStyles } from '@material-ui/core/styles';
 import AdminNavBarNew from './AdminNavBarNew';
-import Farmer from '../Farm/Farmer';
 import { AdminFarmContext } from './AdminFarmContext';
 import { AuthContext } from '../../auth/AuthContext';
 import AdminDashboard from './AdminDashboard';
@@ -13,9 +12,10 @@ import FarmerReport from '../Farm/FarmerReport';
 import FarmerSettings from '../Farm/FarmerSettings';
 import FarmProfiles from './FarmProfiles';
 import FarmOrders from './FarmOrders';
-import Items from './Items';
+import AdminItems from './AdminItems';
 import Customers from './Customers';
 import OrderSummary from './OrderSummary';
+import AdminMenu from './AdminMenu';
 //within this admin page, we need ability to display any farmer page
 //the option to select which farm to view is in AdminNavBar
 //get selected farm from AdmiNavBar and use it in Farmer
@@ -23,7 +23,17 @@ import OrderSummary from './OrderSummary';
 
 //TODO: order purchase amounts by business total, Item total, amount paid
 //TODO: Add date to delivery day
+const useStyles = makeStyles((theme) => ({
+  content: {
+    flexGrow: 1,
+    paddingLeft: 240,
+    paddingTop: 70,
+  },
+}));
+
 function Admin(authLevel, isAuth) {
+  const classes = useStyles();
+
   const Auth = useContext(AuthContext);
   const [farmID, setFarmID] = useState('');
   const [showNav, setShowNav] = useState(false);
@@ -119,61 +129,65 @@ function Admin(authLevel, isAuth) {
     setFarmID(event.target.value);
   };
   return (
-    <React.Fragment>
-      <AdminFarmContext.Provider
-        value={{
-          showNav,
-          setShowNav,
-          farmID,
-          setFarmID,
-          timeChange,
-          setTimeChange,
-          deliveryTime,
-          setDeliveryTime,
-          farmDict,
-          farmList,
-          setFarmList,
-          handleChangeFarm,
-        }}
-      >
-        <AdminNavBarNew />
-        {/* {Auth.authLevel >= 1 && <Farmer tab={tab} />} */}
-        <Switch>
-          <Route exact path="/admin">
-            <AdminDashboard />
-          </Route>
+    <div className={classes.root}>
+      <React.Fragment>
+        <AdminFarmContext.Provider
+          value={{
+            showNav,
+            setShowNav,
+            farmID,
+            setFarmID,
+            timeChange,
+            setTimeChange,
+            deliveryTime,
+            setDeliveryTime,
+            farmDict,
+            farmList,
+            setFarmList,
+            handleChangeFarm,
+          }}
+        >
+          <AdminNavBarNew />
+          <AdminMenu />
+          <div className={classes.content}>
+            <Switch>
+              <Route exact path="/admin">
+                <AdminDashboard />
+              </Route>
 
-          <Route exact path="/admin/farmerhome">
-            <FarmerHome farmID={farmID} farmName={farmName} />
-          </Route>
-          <Route exact path="/admin/farmerreport">
-            <FarmerReport
-              farmID={farmID}
-              deliveryTime={deliveryTime}
-              farmName={farmName}
-            />
-          </Route>
-          <Route exact path="/admin/farmersettings">
-            <FarmerSettings farmID={farmID} farmName={farmName} />
-          </Route>
-          <Route exact path="/admin/farmprofiles">
-            <FarmProfiles />
-          </Route>
-          <Route exact path="/admin/farmorders">
-            <FarmOrders />
-          </Route>
-          <Route exact path="/admin/items">
-            <Items />
-          </Route>
-          <Route exact path="/admin/ordersummary">
-            <OrderSummary />
-          </Route>
-          <Route exact path="/admin/customers">
-            <Customers />
-          </Route>
-        </Switch>
-      </AdminFarmContext.Provider>
-    </React.Fragment>
+              <Route exact path="/admin/farmerhome">
+                <FarmerHome farmID={farmID} farmName={farmName} />
+              </Route>
+              <Route exact path="/admin/farmerreport">
+                <FarmerReport
+                  farmID={farmID}
+                  deliveryTime={deliveryTime}
+                  farmName={farmName}
+                />
+              </Route>
+              <Route exact path="/admin/farmersettings">
+                <FarmerSettings farmID={farmID} farmName={farmName} />
+              </Route>
+              <Route exact path="/admin/farmprofiles">
+                <FarmProfiles />
+              </Route>
+              <Route exact path="/admin/farmorders">
+                <FarmOrders />
+              </Route>
+              <Route exact path="/admin/adminitems">
+                <AdminItems />
+              </Route>
+              <Route exact path="/admin/ordersummary">
+                <OrderSummary />
+              </Route>
+              <Route exact path="/admin/customers">
+                <Customers />
+              </Route>
+            </Switch>
+          </div>
+        </AdminFarmContext.Provider>
+      </React.Fragment>
+    </div>
   );
 }
 

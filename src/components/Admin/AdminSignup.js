@@ -1,8 +1,7 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Box } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-// import Background from '../welcome-bg.png'
 import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router';
 import axios from 'axios';

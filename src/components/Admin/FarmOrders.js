@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 function FarmOrders() {
   return <div>Farm Orders</div>;

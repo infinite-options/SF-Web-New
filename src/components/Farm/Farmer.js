@@ -1,33 +1,17 @@
-import React, { Component, useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { AdminFarmContext } from '../Admin/AdminFarmContext';
-// import axios from "axios";
-import {
-  Grid,
-  Paper,
-  Button,
-  Typography,
-  Card,
-  CardMedia,
-  CardContent,
-  Modal,
-  TextField,
-  CircularProgress,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Paper } from '@material-ui/core';
 import Zones from '../Admin/Zones';
 import PriceCompare from '../Admin/Price_Compare/PriceCompare';
 import ReplaceProduce from '../Admin/ReplaceProduce';
 import FarmerHome from './FarmerHome';
 import FarmerReport from './FarmerReport';
 import FarmerSettings from './FarmerSettings';
-import Chart from './chart';
-import Revenue from './revenue';
 import Store from '../Store/Store';
 import RevenueHighchart from '../Admin/HighchartTemplate';
 import Analytics from '../Admin/Analytics';
 import Notifications from './Notifications';
 import AdminDashboard from '../Admin/AdminDashboard';
-// import FarmerNavBar from './FarmerNavBar';
 
 export default function Farmer({ tab, ...props }) {
   const { farmID, deliveryTime } = useContext(AdminFarmContext);

@@ -17,7 +17,6 @@ import Box from '@material-ui/core/Box';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { useConfirmation } from '../../services/ConfirmationService';

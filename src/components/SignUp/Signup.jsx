@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { withStyles } from '@material-ui/styles';
-import TextField from '@material-ui/core/TextField';
 import { Box, Button } from '@material-ui/core';
 import { withRouter } from 'react-router';
 import Paper from '@material-ui/core/Paper';
 import CssTextField from '../../utils/CssTextField';
 import appColors from '../../styles/AppColors';
 import SocialLogin from '../LogIn/SocialLogin';
-import cross from '../../icon/cross.svg';
 
 class Signup extends Component {
   constructor(props) {

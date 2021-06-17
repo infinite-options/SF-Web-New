@@ -1,22 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import { Typography } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
 import { AuthContext } from '../../auth/AuthContext';
 import { AdminFarmContext } from './AdminFarmContext';
 import appColors from 'styles/AppColors';
-import AdminMenu from './AdminMenu';
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -47,10 +44,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#136D74',
       color: '#FF8500',
     },
-    '&.active': {
-      backgroundColor: '#136D74',
-      color: '#FF8500',
-    },
   },
   rightButtons: {
     position: 'absolute',
@@ -61,10 +54,15 @@ const useStyles = makeStyles((theme) => ({
   farmSelect: {
     marginRight: theme.spacing(2),
   },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
 }));
 
 function AdminNavBarNew({ tab, setTab, ...props }) {
   const history = useHistory();
+
+  const anchorRef = React.useRef(null);
   const {
     showNav,
     setShowNav,
@@ -165,8 +163,9 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
     <div className={classes.root}>
       <ThemeProvider theme={theme}>
         <AppBar
+          className={classes.appBar}
           color="white"
-          position="static"
+          position="fixed"
           elevation={0}
           style={{
             borderBottom: '1px solid ' + appColors.secondary,
@@ -188,7 +187,15 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
                 style={{ cursor: 'pointer' }}
               />
             </Box>
-            <AdminMenu />
+            <Box>
+              <IconButton ref={anchorRef} aria-haspopup="true">
+                <MenuIcon
+                  style={{ color: '#1c6d74', width: '3rem', height: '3rem' }}
+                  aria-hidden="false"
+                  aria-label="Menu list"
+                />
+              </IconButton>
+            </Box>
             {Auth.authLevel >= 1 && (
               <React.Fragment>
                 <Box>

@@ -1,16 +1,9 @@
-import React, { Component, useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from 'auth/AuthContext';
 import AuthUtils from '../../utils/AuthUtils';
-
-import {
-  Box,
-  Button,
-  Typography,
-  TextField,
-  Avatar,
-  Dialog,
-} from '@material-ui/core';
+import { Box, Button, Typography, Avatar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CustomerSrc from '../../sf-svg-icons/Polygon1.svg';
 
@@ -29,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   usrInfo: {
     display: 'flex',
     flexDirection: 'row',
-    marginLeft: '20rem',
+    marginLeft: '5.5rem',
   },
   currUserPic: {
     margin: '1rem',
@@ -38,24 +31,24 @@ const useStyles = makeStyles((theme) => ({
   },
   usrTitle: {
     textAlign: 'center',
-    font: 'normal normal 600 16px/19px SF Pro Display',
-    fontSize: '20px',
+    fontSize: '0.9rem',
+    fontWeight: 'bold',
     letterSpacing: '0.25px',
     color: '#1C6D74',
     opacity: 1,
-    alignItems: 'center',
+    justifyContent: 'start',
+    padding: '10px',
   },
   usrDesc: {
     textAlign: 'center',
-    font: 'normal normal 600 20px/23px SF Pro Text',
+    fontSize: '0.9rem',
     letterSpacing: '-0.48px',
     color: '#000000D9',
     opacity: 1,
+    alignItems: 'center',
+    padding: '5px',
   },
-  table: {
-    minWidth: 650,
-    borderColor: 'white',
-  },
+  table: {},
 }));
 
 function CustomerInfo() {
@@ -64,6 +57,9 @@ function CustomerInfo() {
   const Auth = useContext(AuthContext);
   const { profile, setProfile, isAuth, setIsAuth, setAuthLevel, cartTotal } =
     Auth;
+  const [startDate, setStartDate] = React.useState(new Date('2020-11-25'));
+  const [endDate, setEndDate] = React.useState(new Date());
+  const [custList, setCustList] = useState([]);
   React.useEffect(() => {
     console.warn('In useEffect');
     if (Auth.isAuth) {
@@ -101,12 +97,34 @@ function CustomerInfo() {
       });
     }
   }, []);
-  /* React.useEffect(()=.{
-      console.warn('In useEffect');
-      if(Auth.isAuth{
-    
+
+  useEffect(() => {
+    axios
+      .get(
+        'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/summary_reports/customer' +
+          ',' +
+          startDate +
+          ',' +
+          endDate
+      )
+      .then((res) => {
+        setCustList(
+          res.data.result.sort(function (a, b) {
+            var textA = a.delivery_first_name.toUpperCase();
+            var textB = b.delivery_first_name.toUpperCase();
+            return textA < textB ? -1 : textA > textB ? 1 : 0;
+          })
+        );
+        console.log(JSON.stringify({ res }));
       })
-  }) */
+      .catch((err) => {
+        if (err.res) {
+          console.log(err.res);
+        }
+        console.log(err);
+      });
+  }, []);
+
   return (
     <div className={classes.root}>
       <Box className={classes.currUserInf}>
@@ -120,19 +138,16 @@ function CustomerInfo() {
         <Box>
           <Box style={{ display: 'flex', alignItems: 'center' }}>
             <Typography
-              display="block"
               variant="caption"
               style={{
                 font: 'var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-600) 24px/29px SF Pro Display',
                 textAlign: 'left',
                 font: 'normal normal 600 24px/29px SF Pro Display',
-                letterSpacing: '0.38px',
                 color: '#1C6D74',
                 opacity: 1,
               }}
             >
-              {profile.firstName} &nbsp;
-              {profile.lastName}
+              {profile.firstName} {profile.lastName}
             </Typography>
             <Button>
               <img style={{ marginBottom: '10px' }} src={CustomerSrc} />
@@ -141,7 +156,6 @@ function CustomerInfo() {
 
           <Typography
             variant="title"
-            display="block"
             style={{
               font: 'var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-600) 16px/19px SF Pro Display',
               textTransform: 'none',
@@ -152,58 +166,39 @@ function CustomerInfo() {
               opacity: 1,
             }}
           >
-            <a>Send Message</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a>Send Message</a>&nbsp;&nbsp;
             <a>Issue Coupon</a>
           </Typography>
         </Box>
       </Box>
       <Box className={classes.usrInfo}>
         <Box className={classes.currUserInf}>
-          <Box>
-            <Typography className={classes.usrTitle}>Phone Number</Typography>
-            <Typography className={classes.usrDesc}>
-              {profile.phoneNum}
-            </Typography>
-          </Box>
-        </Box>
-        <Box className={classes.currUserInf}>
-          <Box>
-            <Typography className={classes.usrTitle}>
-              Delivery Address
-            </Typography>
-            <Typography className={classes.usrDesc}>
-              {profile.address},&nbsp;
-              <br /> {profile.city},&nbsp; {profile.state}&nbsp; {profile.zip}
-            </Typography>
-          </Box>
-        </Box>
-        <Box className={classes.currUserInf}>
-          <Box>
-            <Typography className={classes.usrTitle}>Delivery Zone</Typography>
-            <Typography className={classes.usrDesc}>{profile.zone}</Typography>
-          </Box>
-        </Box>
-        <Box className={classes.currUserInf}>
-          <Box>
-            <Typography className={classes.usrTitle}>
-              Last Order Received
-            </Typography>
-            <Typography className={classes.usrDesc}>{profile.zone}</Typography>
-          </Box>
-        </Box>
-        <Box className={classes.currUserInf}>
-          <Box>
-            <Typography className={classes.usrTitle}>
-              Total no. of Orders
-            </Typography>
-            <Typography className={classes.usrDesc}>{profile.zone}</Typography>
-          </Box>
-        </Box>
-        <Box className={classes.currUserInf}>
-          <Box>
-            <Typography className={classes.usrTitle}>Total Revenue</Typography>
-            <Typography className={classes.usrDesc}>{profile.zone}</Typography>
-          </Box>
+          <table>
+            <thead>
+              <tr>
+                <td className={classes.usrTitle}>Phone Number</td>
+                <td className={classes.usrTitle}>Delivery Address </td>
+                <td className={classes.usrTitle}>Delivery Zone</td>
+                <td className={classes.usrTitle}>Last Order Received</td>
+                <td className={classes.usrTitle}>Total no. of Orders</td>
+                <td className={classes.usrTitle}>Total Revenue</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className={classes.usrDesc}>{profile.phoneNum}</td>
+                <td className={classes.usrDesc}>
+                  {profile.address},&nbsp;
+                  <br /> {profile.city},&nbsp; {profile.state}&nbsp;{' '}
+                  {profile.zip}
+                </td>
+                <td className={classes.usrDesc}>{profile.zone}</td>
+                <td className={classes.usrDesc}>{profile.phoneNum}</td>
+                <td className={classes.usrDesc}>{profile.phoneNum}</td>
+                <td className={classes.usrDesc}>{profile.phoneNum}</td>
+              </tr>
+            </tbody>
+          </table>
         </Box>
       </Box>
     </div>

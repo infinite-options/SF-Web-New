@@ -1,14 +1,5 @@
-import React, { Component } from 'react';
-import {
-  Box,
-  Badge,
-  Grid,
-  Dialog,
-  Button,
-  Hidden,
-  IconButton,
-  Drawer,
-} from '@material-ui/core';
+import React from 'react';
+import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CustomerInfo from './CustomerInfo';
 
@@ -47,7 +38,7 @@ function Customers() {
           style={{
             display: 'flex',
             marginBottom: '1rem',
-            marginRight: '4.8rem',
+            marginRight: '3rem',
             flexDirection: 'column',
             background: '#FFFFFF 0% 0% no-repeat padding-box',
             borderRadius: '20px',
@@ -61,7 +52,7 @@ function Customers() {
           style={{
             display: 'flex',
             marginBottom: '1rem',
-            marginRight: '4.8rem',
+            marginRight: '3rem',
             flexDirection: 'column',
             background: '#FFFFFF 0% 0% no-repeat padding-box',
             borderRadius: '20px',

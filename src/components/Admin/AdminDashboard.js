@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 function AdminDashboard() {
   return <div>Dashboard</div>;
