@@ -414,6 +414,7 @@ export default function Coupons(props) {
             centerMode={true}
             swipeable={true}
             centerSlidePercentage={
+              // window.innerWidth > 1800 ? 10 : window.innerWidth > 1500 ? 30 : 50
               window.innerWidth < 1200 ? window.innerWidth < 500 ? 100 : 30 : 65
             }
             width="100%"
