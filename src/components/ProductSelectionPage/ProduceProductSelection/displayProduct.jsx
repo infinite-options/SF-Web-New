@@ -246,7 +246,7 @@ function DisplayProduct() {
     return (
       <>
         {foodTypeArr.map(ft =>
-        <Box marginLeft="1rem" marginRight="0.2rem" display = 'flex' flexDirection = 'column' border = '2px solid red'>
+        <Box marginLeft="1rem" marginRight="0.2rem" display = 'flex' flexDirection = 'column'>
           <Box fontSize={22} color={appColors.paragraphText}>
             {displayMessage}
           </Box>
