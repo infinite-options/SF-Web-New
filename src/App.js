@@ -152,12 +152,13 @@ function App() {
 
   return (
     <Router>
-      <MessengerCustomerChat
-          pageId="110111434630375"
-          appId="941694233292147"
-      />
+
       <ThemeProvider theme={theme}>
         <div className="App">
+          <MessengerCustomerChat
+              pageId="110111434630375"
+              appId="941694233292147"
+          />
           <ConfirmationServiceProvider>
             <AuthContext.Provider
               value={{

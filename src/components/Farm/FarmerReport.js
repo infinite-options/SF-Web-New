@@ -23,6 +23,7 @@ import axios from 'axios';
 import { useConfirmation } from '../../services/ConfirmationService';
 import { AdminFarmContext } from '../Admin/AdminFarmContext';
 import { AuthContext } from 'auth/AuthContext';
+import './FarmerReport.css';
 
 const BASE_URL =
   'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/';
@@ -814,30 +815,34 @@ function OrderRow({ order, type, farmID, ...props }) {
         <TableCell>{count}</TableCell>
 
         <TableCell>
-          <Button
-            size="small"
-            variant="contained" // value="orders"
-            style={{ ...tinyButtonStyle, backgroundColor: '#007bff' }}
-            onClick={(e) =>
-              props.functions.handleShowOrders(e, order, setHidden)
-            }
-          >
-            orders
-          </Button>
-          <br />
-          <Button
-            size="small"
-            variant="contained" // value="cancel"
-            style={{ ...tinyButtonStyle, backgroundColor: '#6c757d' }}
-            onClick={(e) =>
-              props.functions[
-                type === 'FALSE' ? 'handleDeliver' : 'handleCancel'
-              ](e, order, props.index)
-            }
-          >
-            {type === 'FALSE' ? 'deliver' : 'cancel'}
-          </Button>
-          <br />
+          <TableRow className="btn-group">
+
+              <Button
+                  size="small"
+                  variant="contained" // value="orders"
+                  style={{ ...tinyButtonStyle, backgroundColor: '#007bff', display: "inline-block"}}
+                  onClick={(e) =>
+                      props.functions.handleShowOrders(e, order, setHidden)
+                  }
+              >
+                orders
+              </Button>
+
+
+            <Button
+                size="small"
+                variant="contained" // value="cancel"
+                style={{ ...tinyButtonStyle, backgroundColor: '#6c757d', display: "inline-block" }}
+                onClick={(e) =>
+                    props.functions[
+                        type === 'FALSE' ? 'handleDeliver' : 'handleCancel'
+                        ](e, order, props.index)
+                }
+            >
+              {type === 'FALSE' ? 'deliver' : 'cancel'}
+            </Button>
+          </TableRow>
+
           {farmID === 'all' && (
             <>
               <Button
