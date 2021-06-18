@@ -156,8 +156,8 @@ function App() {
       <ThemeProvider theme={theme}>
         <div className="App">
           <MessengerCustomerChat
-              pageId="104500298544015"
-              appId="310703600593674"
+              pageId="123466412386867"
+              appId="257223515515874"
           />
           <ConfirmationServiceProvider>
             <AuthContext.Provider
