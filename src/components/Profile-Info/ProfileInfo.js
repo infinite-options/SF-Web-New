@@ -390,7 +390,7 @@ function ProfileInfo() {
           <TextField
             className={classes.profileEditField}
             variant="outlined"
-            placeholder={profile.unit === '' ? 'Appt number' : profile.unit}
+            placeholder={profile.unit === '' ? 'Apt number' : profile.unit}
             onChange={(event) =>
               setProfile({ ...profile, unit: event.target.value })
             }
