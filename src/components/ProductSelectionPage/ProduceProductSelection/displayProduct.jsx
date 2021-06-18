@@ -64,6 +64,16 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: '6rem',
   },
 
+  foodCatDisplayType: {
+    color: '#ff8500',
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: appColors.componentBg,
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
+
   entryContainer: {
     display: 'grid',
     // gridTemplateColumns: '1fr 1fr 1fr',
@@ -240,8 +250,6 @@ function DisplayProduct() {
     },
   ];
 
-  console.warn('ftArr = ', foodTypeArr);
-
   if (!store.productsLoading && !productSelect.itemError) {
     return (
       <>
@@ -260,17 +268,14 @@ function DisplayProduct() {
             >
               {ft.name}
             </h1>
-            <div style={{ display: 'flex' }}>
-              <Button
-                varient="text"
-                size="small"
-                style={{ color: '#ff8500', backgroundColor:'#ffffff',
-      
-              }}
+
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <Typography
+                className = {classes.foodCatDisplayType}
                 onClick={() => handleClickDisplayType(ft.name)}
               >
                 {`See all ${ft.name}`}
-              </Button>
+              </Typography>
               <Box
                 style={{
                   width: '1rem',
