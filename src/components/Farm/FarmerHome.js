@@ -51,6 +51,7 @@ export default function FarmerHome({ farmID, farmName, ...props }) {
           return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
         setData(response.data.result.result);
+        console.log(response.data.result.result);
       })
       .catch((err) => {
         console.log(err);

@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ItemCategory from './ItemCategory';
-import FarmCategory from './Farm';
 import DaysCategory from './Days';
 import ItemStack from './itemStack';
 import appColors from '../../styles/AppColors';

@@ -1,23 +1,15 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
 import Cookies from 'universal-cookie';
 import StoreNavBar from './StoreNavBar';
 import { AuthContext } from '../../auth/AuthContext';
 import storeContext from './storeContext';
 import { Box } from '@material-ui/core';
-
-import CheckoutPage from '../CheckoutPage';
 import ProductSelectionPage from '../ProductSelectionPage';
 import AuthUtils from '../../utils/AuthUtils';
 import BusiApiReqs from '../../utils/BusiApiReqs';
-import LandingNavBar from '../LandingNavBar/LandingNavBar';
-import AdminLogin from '../LogIn/AdminLogin';
-import Signup from '../SignUp/Signup';
 import { makeStyles } from '@material-ui/core/styles';
-
-import { set } from 'js-cookie';
 
 const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 const cookies = new Cookies();
@@ -444,9 +436,9 @@ const Store = ({ ...props }) => {
     setFarmDaytimeDict(_farmDaytimeDict);
     setAcceptDayHour(_acceptDayHour);
     if (_farmList.length > 0 && updatedProfile.zone !== profile.zone) {
-     // localStorage.removeItem('selectedDay');
-    //  localStorage.removeItem('cartTotal');
-    //  localStorage.removeItem('cartItems');
+      // localStorage.removeItem('selectedDay');
+      //  localStorage.removeItem('cartTotal');
+      //  localStorage.removeItem('cartItems');
       setProfile(updatedProfile);
     }
 

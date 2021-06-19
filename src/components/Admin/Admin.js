@@ -13,7 +13,7 @@ import FarmerSettings from '../Farm/FarmerSettings';
 import FarmProfiles from './FarmProfiles';
 import FarmOrders from './FarmOrders';
 import AdminItems from './AdminItems';
-import Customers from './Customers';
+import Customers from './Customers/Customers';
 import OrderSummary from './OrderSummary';
 import AdminMenu from './AdminMenu';
 //within this admin page, we need ability to display any farmer page
@@ -36,11 +36,13 @@ function Admin(authLevel, isAuth) {
 
   const Auth = useContext(AuthContext);
   const [farmID, setFarmID] = useState('');
-  const [showNav, setShowNav] = useState(false);
   const [farmList, setFarmList] = useState([]);
   const [farmDict, setFarmDict] = useState({});
   const [timeChange, setTimeChange] = useState({});
   const [deliveryTime, setDeliveryTime] = useState({});
+  const [custID, setCustID] = useState('');
+  const [custList, setCustList] = useState([]);
+  const [custDict, setCustDict] = useState({});
 
   const [tab, setTab] = useState(
     Number(localStorage.getItem('farmerTab')) || 0
@@ -57,6 +59,9 @@ function Admin(authLevel, isAuth) {
         return null;
     }
   })();
+  useEffect(() => {
+    if (custID !== '') localStorage.setItem('custID', custID);
+  }, [custID]);
 
   useEffect(() => {
     if (farmID !== '') localStorage.setItem('farmID', farmID);
@@ -68,6 +73,30 @@ function Admin(authLevel, isAuth) {
 
   useEffect(() => {
     if (Auth.authLevel >= 2) {
+      axios
+        .get(process.env.REACT_APP_SERVER_BASE_URI + 'adminCustomerInfo')
+        .then((res) => {
+          setCustList(
+            res.data.result.sort(function (a, b) {
+              var textA = a.customer_first_name.toUpperCase();
+              var textB = b.customer_first_name.toUpperCase();
+              return textA < textB ? -1 : textA > textB ? 1 : 0;
+            })
+          );
+          setCustID(localStorage.getItem('custID'));
+
+          const _custDict = {};
+          for (const cust of res.data.result) {
+            _custDict[cust.customer_first_name] = cust.customer_first_name;
+          }
+          setCustDict(_custDict);
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response);
+          }
+          console.log(err);
+        });
       axios
         .get(process.env.REACT_APP_SERVER_BASE_URI + 'all_businesses')
         .then((res) => {
@@ -127,16 +156,26 @@ function Admin(authLevel, isAuth) {
 
   const handleChangeFarm = (event) => {
     setFarmID(event.target.value);
+    console.log(event.target.value);
   };
+  const handleCustChange = (event) => {
+    setCustID(event.currentTarget.value);
+    console.log(event.currentTarget.value);
+  };
+
   return (
     <div className={classes.root}>
       <React.Fragment>
         <AdminFarmContext.Provider
           value={{
-            showNav,
-            setShowNav,
             farmID,
             setFarmID,
+            custID,
+            setCustID,
+            custList,
+            setCustList,
+            custDict,
+            setCustDict,
             timeChange,
             setTimeChange,
             deliveryTime,
@@ -145,6 +184,7 @@ function Admin(authLevel, isAuth) {
             farmList,
             setFarmList,
             handleChangeFarm,
+            handleCustChange,
           }}
         >
           <AdminNavBarNew />
@@ -181,7 +221,7 @@ function Admin(authLevel, isAuth) {
                 <OrderSummary />
               </Route>
               <Route exact path="/admin/customers">
-                <Customers />
+                <Customers custID={custID} />
               </Route>
             </Switch>
           </div>

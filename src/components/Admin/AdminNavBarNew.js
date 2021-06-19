@@ -14,6 +14,9 @@ import { withRouter } from 'react-router';
 import { AuthContext } from '../../auth/AuthContext';
 import { AdminFarmContext } from './AdminFarmContext';
 import appColors from 'styles/AppColors';
+
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -122,8 +125,7 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
   };
 
   const classes = useStyles();
-
-  /*  const businessList = () => {
+  const businessList = () => {
     if (Auth.authLevel >= 2) {
       // Complete business list for admin roles
 
@@ -157,8 +159,7 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
       );
     }
     return null;
-  }; */
-
+  };
   return (
     <div className={classes.root}>
       <ThemeProvider theme={theme}>
@@ -224,6 +225,7 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
                     </Typography>
                   )}
                 </Box>
+                {businessList()}
                 <Box>
                   <Button
                     size={'small'}
