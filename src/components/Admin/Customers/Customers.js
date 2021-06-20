@@ -3,7 +3,7 @@ import moment from 'moment';
 import { AuthContext } from '../../../auth/AuthContext';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CustomerSrc from '../../../sf-svg-icons/Polygon1.svg';
 import { AdminFarmContext } from '../AdminFarmContext';
@@ -57,11 +57,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function fetchCustomers(setPayments, id) {
+  fetch(`https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/payment_profit_customer/${id}`, {
+    method: 'GET',
+  })
+      .then((response) => {
+        if (!response.ok) {
+          throw response;
+        }
+
+        return response.json();
+      })
+      .then((json) => {
+        const payments = json.result;
+        // console.log('payments: ', payments);
+
+        setPayments(payments);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+}
+
 function Customers() {
   const classes = useStyles();
   const Auth = useContext(AuthContext);
   const { custID, custList, setCustList } = useContext(AdminFarmContext);
   const [selectedCustomer, setSelectedCustomer] = useState([]);
+  const [payments, setPayments] = useState([]);
+
+  console.log('payments-state-variable: ', payments);
+
   /* const fetchCustInfo = async () => {
     const res = await fetch(
       'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/adminCustomerInfo'
@@ -109,9 +135,12 @@ function Customers() {
                   style={{ cursor: 'pointer' }}
                   //onClick={() => deletequestion(profile.customer_uid)}
                   onClick={() =>
-                    setSelectedCustomer({
-                      selectedCustomer: profile.customer_uid,
-                    })
+                    {
+                       fetchCustomers(setPayments, profile.customer_uid);
+                    }
+                    // setSelectedCustomer({
+                    //   selectedCustomer: profile.customer_uid,
+                    // })
                   }
                 >
                   <td className={classes.usrDesc}>
@@ -231,6 +260,8 @@ function Customers() {
           }}
         >
           Payment Made
+
+          {payments.map(payment => <Typography>{payment.amount_paid}</Typography>)}
         </Grid>
         <Grid lg={3}>
           <Grid
