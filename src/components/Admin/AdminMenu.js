@@ -8,7 +8,7 @@ import ListItem from '@material-ui/core/ListItem';
 import { AuthContext } from '../../auth/AuthContext';
 import { makeStyles } from '@material-ui/core/styles';
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const useStyles = makeStyles((theme) => ({
   root: {

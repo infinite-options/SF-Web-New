@@ -26,7 +26,7 @@ import AdminMenu from './AdminMenu';
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
-    paddingLeft: 240,
+    paddingLeft: 200,
     paddingTop: 70,
   },
 }));

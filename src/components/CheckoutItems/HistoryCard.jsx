@@ -68,12 +68,6 @@ const HistoryCard = (props) => {
         {props.deliveryDate.toLocaleString('default', { month: 'long' })}{' '}
         {props.deliveryDate.toLocaleString('default', { day: 'numeric' })},{' '}
         {props.deliveryDate.getFullYear()}
-        {/* {' at '}
-        {props.deliveryDate.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: 'numeric',
-          hour12: true,
-        })} */}
       </Box>
       <Box className={classes.date}>
         Purchase Date:{' '}
