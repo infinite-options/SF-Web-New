@@ -671,7 +671,7 @@ useMemo(()=> {
         fontWeight="700"
         fontSize="16px"
       >
-        <Box fontSize="18px" color={appColors.primary}>
+        <Box fontSize="18px" color={appColors.primary} mb={2}>
           Delivery Address
         </Box>
         <Box hidden={!auth.isAuth}>
@@ -716,6 +716,7 @@ useMemo(()=> {
             size="small"
             fullWidth
             onChange={onFieldChange}
+
           />
         </Box>
 
@@ -842,6 +843,7 @@ useMemo(()=> {
         subtotal={subtotal}
         originalDeliveryFee={origDeliveryFee}
         classes={classes}
+        styles={{display: 'inline-block'}}
       />
       {/* END: Coupons */}
 
