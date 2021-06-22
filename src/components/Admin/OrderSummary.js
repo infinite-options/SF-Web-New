@@ -1,12 +1,14 @@
-import React, { useContext, useState,useEffect } from 'react';
-import moment from 'moment';
-import { AuthContext } from '../../auth/AuthContext';
-import Popover from '@material-ui/core/Popover';
-import IconButton from '@material-ui/core/IconButton';
-import { Grid, Typography } from '@material-ui/core';
+import React, {useState,useEffect } from 'react';
+import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import CustomerSrc from '../../sf-svg-icons/Polygon1.svg';
-import { AdminFarmContext } from './AdminFarmContext';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Dialog from "@material-ui/core/Dialog";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,20 +55,58 @@ const useStyles = makeStyles((theme) => ({
     borderCollapse: 'collapse',
   },
   
+  original: {
+    color: "orange"
+  },
+
+  replacement: {
+    color: "purple"
+  },
+  
 }));
-
-
-
 
 function OrderSummary() {
   const classes = useStyles();
-  const Auth = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
-  const [orderList, setOrderList] = useState([]);
-  const [color, setColor] = useState([]);
-  //test
+  const [open, setOpen] = useState(false);
+  const [farm, setFarm] = useState();
+  const [produce, setProduce] = useState();
+  const [deliveryDate, setDeliveryDate] = useState('2021-06-20')
+  
+  
+  const handleToClose = value => () => {
+    console.log("in close",value)
+    if (value === "yes"){
+      //call endpoint
+      console.log("endpoint called for ",farm,produce)
+      fetch('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/replace_produce_admin/'+String(farm)+','+String(produce)+','+String(deliveryDate), {
+      method: 'GET',
+    })
+        .then((response) => {
+          if (!response.ok) {
+            throw response;
+          }
+  
+          return response.json();
+        })
+        .then((json) => {
+          console.log('farm replaced')
+          
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+
+    }
+
+
+    setOpen(false);
+
+  };
+  
+  
   useEffect(() => {
-    fetch('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/order_summary_page/2021-06-20', {
+    fetch('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/order_summary_page/'+deliveryDate, {
       method: 'GET',
     })
         .then((response) => {
@@ -84,7 +124,16 @@ function OrderSummary() {
           console.error(error);
         })
       },[])
- 
+  
+  const handleChangeFarm = (event) => {
+    console.log(event)
+    const { myValue } = event.currentTarget.dataset;
+    setFarm(event.target.value)
+    setProduce(myValue)
+    setOpen(true)
+    
+  };
+  
   return (
         <div className={classes.root}>
           <Grid container>
@@ -130,6 +179,7 @@ function OrderSummary() {
                 marginTop: '1rem',
               }}> 
               <table className={classes.table}>
+              <tbody>
                     <tr className={classes.tr}>
                       <td className={classes.usrTitle}>Name</td>
                       <td className={classes.usrTitle}>Picture</td>
@@ -154,7 +204,27 @@ function OrderSummary() {
                           </img>
                         </td>
                         <td className={classes.usrDesc}>{orderVal.unit}</td>
-                        <td className={classes.usrDesc}>{orderVal.business_name} </td>
+                        <td className={classes.usrDesc}>
+                         
+                            <Select
+                              defaultValue={orderVal.business_name}
+                              onChange={handleChangeFarm}
+                              
+                            >
+                              
+                                {(orderVal.farms.split(",").slice(0,-1)).map((item,index) => {
+                                  return (
+                                    <MenuItem className={item===orderVal.business_name? classes.original:classes.replacement} 
+                                              key={index} 
+                                              value={item}
+                                              data-my-value={orderVal.name}>
+                                      {item}
+                                  </MenuItem>
+                                        );
+                                })}
+                            </Select>  
+                        </td>
+
                         <td className={classes.usrDesc}>{orderVal.farms.split(",")[orderVal.farms.split(",").length-1]}</td>
                         <td className={classes.usrDesc}>${Number(orderVal.business_price).toFixed(2)}</td>
                         <td className={classes.usrDesc}>${Number(orderVal.price).toFixed(2)}</td>
@@ -167,12 +237,36 @@ function OrderSummary() {
                         <td className={classes.usrDesc}>${Number(orderVal.total_profit).toFixed(2)}</td>
                       </tr>
                       ))}
-
+              </tbody>
               </table>
               </div>
             </Grid>
           
           </Grid>
+          
+          <div>
+            <Dialog open={open} onClose={handleToClose("no")}>
+              <DialogTitle>{"Caution!!"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  If you click Okay then farm will change for the selected produce
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleToClose("yes")}
+                        
+                        color="primary" autoFocus>
+                  Okay
+                </Button>
+                <Button onClick={handleToClose("no")} 
+                        
+                        color="primary" autoFocus>
+                  Cancel
+                </Button>
+              </DialogActions>
+        </Dialog>
+          </div>
+
         </div>
       );
     }
