@@ -59,7 +59,7 @@ function CartItem(props) {
   const [isInDay, setIsInDay] = useState(true);
 
   useEffect(() => {
-    let  isInDay = false;
+    let isInDay = false;
     console.log('props name day', props.business_uid);
 
     // for (const farm in props.itm_business_uid) {
@@ -76,9 +76,9 @@ function CartItem(props) {
     store.dayClicked,
     productSelect.farmsClicked,
     productSelect.categoriesClicked,
-   // store.cartItems,
+    // store.cartItems,
     store.products,
-   // store.cartTotal
+    // store.cartTotal
   ]);
 
   return (
@@ -103,7 +103,7 @@ function CartItem(props) {
         }}
       />
       <Box display="flex" flexGrow={1} py={4.5}>
-      {/* <p>{store.dayClicked}</p>
+        {/* <p>{store.dayClicked}</p>
         <p>{isInDay.toString()}</p> */}
         {props.isCountChangeable ? (
           <Box
@@ -120,10 +120,7 @@ function CartItem(props) {
               textDecorationStyle: 'solid',
             }}
           >
-
-            <Box>
-              
-              {props.name} </Box>
+            <Box>{props.name} </Box>
 
             {props.unit !== undefined && props.unit !== ''
               ? '($' +
@@ -221,7 +218,6 @@ function CartItem(props) {
                 }}
                 hidden={isInDay}
               >
-                {' '}
                 Item not avaliable on this day
               </Box>
             </Box>
