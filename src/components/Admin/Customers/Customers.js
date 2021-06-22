@@ -5,13 +5,26 @@ import { AuthContext } from '../../../auth/AuthContext';
 import storeContext from '../../Store/storeContext';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
-import { Grid, Typography, Box, Avatar } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import {
+  Grid,
+  Typography,
+  Box,
+  Avatar,
+  Button,
+  Paper,
+} from '@material-ui/core';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CustomerSrc from '../../../sf-svg-icons/Polygon1.svg';
 import { AdminFarmContext } from '../AdminFarmContext';
 import CartItem from '../../CheckoutItems/cartItem';
 import appColors from '../../../styles/AppColors';
 import Delivered from '../../../sf-svg-icons/delivered.svg';
+import HistoryTab from '../../Tabs/HistoryTab';
+import RefundTab from '../../Tabs/RefundTab';
+import CheckoutTab from '../../Tabs/CheckoutStoreTab';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -59,13 +72,33 @@ const useStyles = makeStyles((theme) => ({
   infoRow: {
     borderBottom: '1px solid #747474',
   },
+  currUserInf: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  infoTitle: {
+    textAlign: 'center',
+    font: 'normal normal 600 16px SF Pro Display',
+    letterSpacing: '0.25px',
+    color: ' #1C6D74',
+    opacity: 1,
+    padding: '10px 16px',
+  },
+  desc: {
+    textAlign: 'center',
+    font: 'normal normal 600 16px SF Pro Text',
+    letterSpacing: '-0.48px',
+    color: '#000000D9',
+    opacity: 1,
+    alignItems: 'center',
+    padding: '10px 16px',
+  },
   header: {
     textAlign: 'left',
     font: 'normal normal bold 20px/28px SF Pro Display',
     letterSpacing: '0.32px',
     color: '#F5841F',
     opacity: 1,
-    padding: '1rem',
   },
   paymentTable: { borderCollapse: 'collapse', margin: '10px' },
   paymentHeader: {
@@ -128,13 +161,48 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '16px',
   },
   total: { fontWeight: 'bold' },
-  savingDetails: { fontSize: '18px', fontWeight: 'regular' },
+  savingDetails: {
+    fontSize: '16px',
+    font: 'SFProText-Medium',
+  },
   section: {
     borderBottom: '1px solid' + appColors.checkoutSectionBorder,
     paddingTop: '10px',
     paddingBottom: '10px',
   },
+  buttonRight: {
+    textAlign: 'left',
+    font: 'normal normal bold 20px/28px SF Pro Text',
+    letterSpacing: ' 0px',
+    color: '#F5841F',
+    opacity: 1,
+    textTransform: 'none',
+  },
 }));
+
+const StyledTabs = withStyles({
+  indicator: {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    color: '#F5841F',
+    '& > span': {
+      maxWidth: 80,
+      width: '100%',
+      backgroundColor: '#F5841F',
+    },
+  },
+})((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
+
+const StyledTab = withStyles((theme) => ({
+  root: {
+    textTransform: 'none',
+    color: '#F5841F',
+    opacity: 1,
+    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: theme.typography.pxToRem(15),
+  },
+}))((props) => <Tab disableRipple {...props} />);
 
 function fetchCustomers(setPayments, id) {
   fetch(
@@ -151,15 +219,37 @@ function fetchCustomers(setPayments, id) {
       return response.json();
     })
     .then((json) => {
-      const payments = json.result;
-      // console.log('payments: ', payments);
-
+      const payment_reverse = json.result;
+      const payments = payment_reverse.reverse();
       setPayments(payments);
     })
     .catch((error) => {
       console.error(error);
     });
 }
+function fetchCustomerInfo(setSelectedCustomer, id) {
+  fetch(
+    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/adminCustomerInfo/${id}`,
+    {
+      method: 'GET',
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+
+      return response.json();
+    })
+    .then((json) => {
+      const selectedCustomer = json.result;
+      setSelectedCustomer(selectedCustomer);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
 function fetchHistory(setHistory, id) {
   fetch(
     `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/history/${id}`,
@@ -176,7 +266,6 @@ function fetchHistory(setHistory, id) {
     })
     .then((json) => {
       const history = json.result;
-      // console.log('payments: ', payments);
 
       setHistory(history);
     })
@@ -184,30 +273,26 @@ function fetchHistory(setHistory, id) {
       console.error(error);
     });
 }
-
+/* 
+function getPurchaseID(setPurchaseID, id) {
+  purchaseID = id;
+  setPurchaseID(purchaseID);
+} */
 function Customers(props) {
   const classes = useStyles();
   const Auth = useContext(AuthContext);
-  const { custID, custList, setCustList } = useContext(AdminFarmContext);
-  //const [selectedCustomer, setSelectedCustomer] = useState([]);
+  const { custList } = useContext(AdminFarmContext);
+  const [selectedCustomer, setSelectedCustomer] = useState([]);
   const [payments, setPayments] = useState([]);
   const [history, setHistory] = useState([]);
-  function listItem(item) {
-    return (
-      <>
-        <CartItem
-          name={item.name}
-          unit={item.unit}
-          price={parseFloat(item.price)}
-          count={parseInt(item.qty)}
-          img={item.img}
-          key={item.item_uid}
-          business_uid={item.business_uid}
-          isCountChangeable={false}
-        />
-      </>
-    );
-  }
+  const [purchaseID, setPurchaseID] = useState([]);
+  const [rightTabChosen, setRightTabChosen] = useState(0);
+  console.log('purchase id', purchaseID);
+
+  const handleChange = (event, newValue) => {
+    setRightTabChosen(newValue);
+  };
+
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
       return (
@@ -236,6 +321,10 @@ function Customers(props) {
                   onClick={() => {
                     fetchCustomers(setPayments, profile.customer_uid);
                     fetchHistory(setHistory, profile.customer_uid);
+                    fetchCustomerInfo(
+                      setSelectedCustomer,
+                      profile.customer_uid
+                    );
                   }}
                 >
                   <td className={classes.usrDesc}>
@@ -299,18 +388,18 @@ function Customers(props) {
         >
           <div>
             <Box className={classes.currUserInf}>
-              {/*  <Avatar src={'no-link'} className={classes.currUserPic}>
-                {payments.map((profile) => (
+              <Avatar src={'no-link'} className={classes.currUserPic}>
+                {selectedCustomer.map((info) => (
                   <Typography style={{ fontSize: '38px' }}>
-                    {profile.delivery_first_name || profile.delivery_last_name
-                      ? `${profile.delivery_first_name[0]}${profile.delivery_last_name[0]}`
+                    {info.customer_first_name || info.customer_last_name
+                      ? `${info.customer_first_name[0]}${info.customer_last_name[0]}`
                       : 'JD'}
                   </Typography>
                 ))}
               </Avatar>
               <Box>
-                <Box style={{ display: 'flex', alignItems: 'center' }}>
-                  {payments.map((profile) => (
+                <Box>
+                  {selectedCustomer.map((info) => (
                     <Typography
                       variant="caption"
                       style={{
@@ -321,94 +410,92 @@ function Customers(props) {
                         opacity: 1,
                       }}
                     >
-                      {profile.delivery_first_name} {profile.delivery_last_name}
+                      {info.customer_first_name} {info.customer_last_name}
                     </Typography>
-                  ))} */}
-              <IconButton
-                aria-describedby={id}
-                variant="contained"
-                color="primary"
-                onClick={handleClick}
-              >
-                <img src={CustomerSrc} alt="user pic" />
-              </IconButton>
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorReference="anchorPosition"
-                anchorPosition={{ top: 600, left: 1000 }}
-                anchorOrigin={{
-                  vertical: 'center',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                style={{ borderRadius: '20px' }}
-              >
-                {customerlist()}
-              </Popover>
-              {/*  </Box> */}
-              {/* <Box style={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography
-                    variant="title"
-                    style={{
-                      textTransform: 'none',
-                      textDecorationColor: 'none',
-                      letterSpacing: '0.25px',
-                      color: ' #1C6D74',
-                      opacity: 1,
-                    }}
+                  ))}
+                  <IconButton
+                    aria-describedby={id}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleClick}
                   >
-                    <a>Send Message</a>&nbsp;&nbsp;
-                    <a>Issue Coupon</a>
-                  </Typography>
+                    <img src={CustomerSrc} alt="user pic" />
+                  </IconButton>
+                  <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorReference="anchorPosition"
+                    anchorPosition={{ top: 600, left: 1000 }}
+                    anchorOrigin={{
+                      vertical: 'center',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'center',
+                    }}
+                    style={{ borderRadius: '20px' }}
+                  >
+                    {customerlist()}
+                  </Popover>
                 </Box>
+                <Typography
+                  variant="title"
+                  style={{
+                    textTransform: 'none',
+                    textDecorationColor: 'none',
+                    letterSpacing: '0.25px',
+                    color: ' #1C6D74',
+                    opacity: 1,
+                  }}
+                >
+                  <a>Send Message</a>&nbsp;
+                  <a>Issue Coupon</a>
+                </Typography>
               </Box>
               <Box
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  marginLeft: '13rem',
+                  marginLeft: '6rem',
                 }}
               >
                 <table>
                   <thead>
                     <tr>
-                      <td className={classes.title}>Phone Number</td>
-                      <td className={classes.title}>Delivery Address </td>
-                      <td className={classes.title}>Delivery Zone</td>
-                      <td className={classes.title}>Last Order Received</td>
-                      <td className={classes.title}>Total no. of Orders</td>
-                      <td className={classes.title}>Total Revenue</td>
+                      <td className={classes.infoTitle}>Phone Number</td>
+                      <td className={classes.infoTitle}>Delivery Address </td>
+                      <td className={classes.infoTitle}>Delivery Zone</td>
+                      <td className={classes.infoTitle}>Last Order Received</td>
+                      <td className={classes.infoTitle}>Total no. of Orders</td>
+                      <td className={classes.infoTitle}>Total Revenue</td>
                     </tr>
                   </thead>
-                  {payments.map((profile, key) => (
+                  {selectedCustomer.map((info) => (
                     <tbody>
                       <tr>
                         <td className={classes.desc}>
-                          {profile.delivery_phone_num}
+                          {info.customer_phone_num}
                         </td>
                         <td className={classes.desc}>
-                          {profile.delivery_address},&nbsp;
-                          <br /> {profile.delivery_city},&nbsp;{' '}
-                          {profile.delivery_state}&nbsp; {profile.delivery_zip}
+                          {info.customer_address},&nbsp;
+                          <br /> {info.customer_city},&nbsp;{' '}
+                          {info.customer_state}&nbsp; {info.customer_zip}
                         </td>
-                        <td className={classes.desc}>{profile.zone}</td>
+                        <td className={classes.desc}>{info.zone}</td>
                         <td className={classes.desc}>
-                          {moment(profile.last_order_date).format('LL')}
+                          {moment(info.last_order_date).format('LL')}
                         </td>
-                        <td className={classes.desc}></td>
-                        <td className={classes.desc}></td>
+                        <td className={classes.desc}>{info.total_orders} </td>
+                        <td className={classes.desc}>{info.total_revenue}</td>
                       </tr>
                     </tbody>
                   ))}
                 </table>
-              </Box> */}
+              </Box>
             </Box>
           </div>
         </Grid>
@@ -442,19 +529,21 @@ function Customers(props) {
                 Purchase ID: #{history.purchase_id.substring(4)}
               </Box>
 
-              <Box className={classes.section} display="flex">
-                <Box width="50%" textAlign="left">
-                  Name
-                </Box>
-                <Box width="20%" textAlign="center">
-                  Quantity
-                </Box>
-                <Box width="22%" textAlign="right">
-                  Price
-                </Box>
+              <Box
+                className={clsx(
+                  classes.items,
+                  classes.savingDetails,
+                  classes.section
+                )}
+                display="flex"
+                style={{
+                  fontSize: '20px',
+                  font: 'normal normal bold 20px/22px SF Pro Text',
+                }}
+              >
+                Subtotal
+                <Box flexGrow={1} />${history.subtotal.toFixed(2)}
               </Box>
-              <Box className={classes.items}></Box>
-
               <Box
                 className={clsx(
                   classes.items,
@@ -515,21 +604,7 @@ function Customers(props) {
                 Taxes
                 <Box flexGrow={1} />${history.taxes.toFixed(2)}
               </Box>
-              <Box
-                className={clsx(
-                  classes.items,
-                  classes.savingDetails,
-                  classes.section
-                )}
-                display="flex"
-                style={{
-                  fontSize: '20px',
-                  font: 'normal normal bold 20px/22px SF Pro Text',
-                }}
-              >
-                Subtotal
-                <Box flexGrow={1} />${history.subtotal.toFixed(2)}
-              </Box>
+
               <Box
                 className={clsx(
                   classes.items,
@@ -585,7 +660,12 @@ function Customers(props) {
             </thead>
             <tbody>
               {payments.map((payment) => (
-                <tr className={classes.paymentInfo}>
+                <tr
+                  className={classes.paymentInfo}
+                  onClick={() => {
+                    setPurchaseID(payment.purchase_id);
+                  }}
+                >
                   <td className={classes.td}>
                     #{payment.payment_id.substring(4)}
                   </td>
@@ -607,7 +687,7 @@ function Customers(props) {
         </Grid>
         <Grid
           item
-          xs
+          xs={3}
           style={{
             display: 'flex',
             marginBottom: '1rem',
@@ -617,9 +697,87 @@ function Customers(props) {
             opacity: 1,
           }}
         >
-          <Typography className={classes.header}>Farms Supported</Typography>
+          <Paper elevation={0}>
+            <StyledTabs
+              value={rightTabChosen}
+              onChange={handleChange}
+              indicatorColor="#F5841F"
+              textColor="#F5841F"
+              aria-label="styled tabs example"
+              centered
+            >
+              <StyledTab
+                label="Produce"
+                style={{ fontSize: '20px', fontWeight: '700', minWidth: 100 }}
+              />
 
-          <Typography className={classes.header}>Produce Ordered</Typography>
+              <StyledTab
+                label="Coupon"
+                style={{ fontSize: '20px', fontWeight: '700', minWidth: 100 }}
+              />
+
+              <StyledTab
+                label="Stats"
+                style={{ fontSize: '20px', fontWeight: '700', minWidth: 100 }}
+              />
+            </StyledTabs>
+
+            <Paper
+              elevation={0}
+              style={{
+                marginTop: 10,
+                maxHeight: '92%',
+                overflow: 'auto',
+              }}
+            >
+              <Box hidden={rightTabChosen !== 0}>
+                {history.map((history) => (
+                  <Box className={classes.card}>
+                    <Box className={classes.delivered}>
+                      <img src={Delivered} alt="user pic" />
+                      &nbsp; Order Delivered
+                    </Box>
+                    <Box className={classes.date}>
+                      {moment(history.start_delivery_date).format('LL')} at{' '}
+                      {moment(history.start_delivery_date).format('LT')}{' '}
+                      <br></br>
+                      Purchase ID: #{history.purchase_id.substring(4)}
+                    </Box>
+                    <Box className={classes.section} display="flex">
+                      <Box width="50%" textAlign="left">
+                        Name
+                      </Box>
+                      <Box width="20%" textAlign="center">
+                        Quantity
+                      </Box>
+                      <Box width="22%" textAlign="right">
+                        Price
+                      </Box>
+                    </Box>
+                    <Box className={classes.items}></Box>
+                    {/*   {history.items.map((product) => {
+                      return (
+                        <div key={product.item_uid}>
+                          <p>{product.name}</p>
+                          <p>{product.qty}</p>
+                        </div>
+                      );
+                    })} */}
+                  </Box>
+                ))}
+              </Box>
+              <Box hidden={rightTabChosen !== 1}>Coupon</Box>
+              <Box hidden={rightTabChosen !== 2}>
+                <Typography className={classes.header}>
+                  Farms Supported
+                </Typography>
+
+                <Typography className={classes.header}>
+                  Produce Ordered
+                </Typography>
+              </Box>
+            </Paper>
+          </Paper>
         </Grid>
       </Grid>
     </div>
