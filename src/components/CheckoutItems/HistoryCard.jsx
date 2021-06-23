@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import React, { useContext } from 'react';
 import clsx from 'clsx';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/styles';
@@ -69,12 +68,6 @@ const HistoryCard = (props) => {
         {props.deliveryDate.toLocaleString('default', { month: 'long' })}{' '}
         {props.deliveryDate.toLocaleString('default', { day: 'numeric' })},{' '}
         {props.deliveryDate.getFullYear()}
-        {/* {' at '}
-        {props.deliveryDate.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: 'numeric',
-          hour12: true,
-        })} */}
       </Box>
       <Box className={classes.date}>
         Purchase Date:{' '}

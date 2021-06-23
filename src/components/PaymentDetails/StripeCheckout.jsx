@@ -1,13 +1,11 @@
-import React, { useMemo, useContext, useState, useEffect } from 'react';
+import React, { useMemo, useContext, useState } from 'react';
 import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
-import Stripe from 'stripe';
 import { useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-
 import appColors from '../../styles/AppColors';
 import { onPurchaseComplete } from '../PurchaseComplete/onPurchaseComplete';
 import useResponsiveFontSize from '../../utils/useResponsiveFontSize';
@@ -16,8 +14,6 @@ import CssTextField from '../../utils/CssTextField';
 import { AuthContext } from '../../auth/AuthContext';
 import storeContext from '../Store/storeContext';
 import checkoutContext from '../CheckoutPage/CheckoutContext';
-import OrderConfirmation from '../PurchaseComplete/OrderConfirmation';
-import HistoryTab from '../Tabs/HistoryTab';
 
 const cookies = new Cookies();
 const useOptions = () => {
@@ -49,8 +45,6 @@ const StripeCheckout = (props) => {
   const history = useHistory();
   const store = useContext(storeContext);
   const checkout = useContext(checkoutContext);
-  const confirm = useConfirmation();
-  const location = useLocation();
   const elements = useElements();
   const stripe = useStripe();
   const options = useOptions();

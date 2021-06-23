@@ -1,40 +1,12 @@
-import React, {
-  Component,
-  useContext,
-  useState,
-  useEffect,
-  forwardRef,
-} from 'react';
+import React, { useContext, useState, useEffect, forwardRef } from 'react';
 import AddItemModel from './AddItemModel';
 import AddBusinessToProduct from './AddBusinessToProduct';
 import NumberFormat from 'react-number-format';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Box from '@material-ui/core/Box';
-import Checkbox from '@material-ui/core/Checkbox';
-import Switch from '@material-ui/core/Switch';
-import appColors from '../../styles/AppColors';
 import { AuthContext } from '../../auth/AuthContext';
-import { AdminFarmContext } from '../Admin/AdminFarmContext';
 import axios from 'axios';
-import {
-  Grid,
-  Paper,
-  Button,
-  Typography,
-  Card,
-  CardActions,
-  CardMedia,
-  CardContent,
-  Modal,
-  TextField,
-  CircularProgress,
-} from '@material-ui/core';
+import { Grid, Button, Modal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import AuthUtils from 'utils/AuthUtils';
 
 const booleanVals = new Set(['taxable', 'favorite']);
 

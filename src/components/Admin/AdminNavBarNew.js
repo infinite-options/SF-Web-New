@@ -1,16 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import { Typography } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
+import { AuthContext } from '../../auth/AuthContext';
 import { AdminFarmContext } from './AdminFarmContext';
 import appColors from 'styles/AppColors';
 
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -34,19 +40,41 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     marginRight: theme.spacing(1),
+    backgroundColor: '#136D74',
+    color: 'white',
+    textTransform: 'none',
+    '&:hover': {
+      backgroundColor: '#136D74',
+      color: '#FF8500',
+    },
   },
   rightButtons: {
     position: 'absolute',
     right: '10px',
+    color: 'white',
+    marginRight: '10px',
   },
   farmSelect: {
     marginRight: theme.spacing(2),
   },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
 }));
 
-function AdminNavBar({ tab, setTab, ...props }) {
-  const { farmID, farmList, setFarmList, handleChangeFarm, farmDict } =
-    useContext(AdminFarmContext);
+function AdminNavBarNew({ tab, setTab, ...props }) {
+  const history = useHistory();
+
+  const anchorRef = React.useRef(null);
+  const {
+    showNav,
+    setShowNav,
+    farmID,
+    farmList,
+    setFarmList,
+    handleChangeFarm,
+    farmDict,
+  } = useContext(AdminFarmContext);
 
   const [defaultFarm, setDefaultFarm] = useState(
     farmList.includes(localStorage.getItem('farmID'))
@@ -93,11 +121,10 @@ function AdminNavBar({ tab, setTab, ...props }) {
 
   const handleLogoClick = (event) => {
     console.log(event.target.value);
-    // props.history.push('/store');
+    props.history.push('/store');
   };
 
   const classes = useStyles();
-
   const businessList = () => {
     if (Auth.authLevel >= 2) {
       // Complete business list for admin roles
@@ -133,13 +160,13 @@ function AdminNavBar({ tab, setTab, ...props }) {
     }
     return null;
   };
-
   return (
     <div className={classes.root}>
       <ThemeProvider theme={theme}>
         <AppBar
+          className={classes.appBar}
           color="white"
-          position="static"
+          position="fixed"
           elevation={0}
           style={{
             borderBottom: '1px solid ' + appColors.secondary,
@@ -157,125 +184,90 @@ function AdminNavBar({ tab, setTab, ...props }) {
                 height="50"
                 src="./logos/sf logo_without text.png"
                 alt="logo"
-                onClick={() => setTab(6)}
+                onClick={handleLogoClick}
                 style={{ cursor: 'pointer' }}
               />
             </Box>
+            <Box>
+              <IconButton ref={anchorRef} aria-haspopup="true">
+                <MenuIcon
+                  style={{ color: '#1c6d74', width: '3rem', height: '3rem' }}
+                  aria-hidden="false"
+                  aria-label="Menu list"
+                />
+              </IconButton>
+            </Box>
             {Auth.authLevel >= 1 && (
               <React.Fragment>
-                {Auth.authLevel === 1 && (
-                  <Box fontWeight="bold" mt={-0.5}>
-                    {farmDict[farmID]}
-                  </Box>
-                )}
+                <Box>
+                  {Auth.authLevel === 2 && (
+                    <Typography
+                      style={{
+                        color: '#136D74',
+                        textTransform: 'none',
+                        paddingRight: '30px',
+                      }}
+                    >
+                      Admin
+                    </Typography>
+                  )}
+                </Box>
+                <Box>
+                  {Auth.authLevel === 1 && (
+                    <Typography
+                      style={{
+                        color: '#136D74',
+                        textTransform: 'none',
+                        paddingRight: '30px',
+                      }}
+                    >
+                      Farm
+                    </Typography>
+                  )}
+                </Box>
                 {businessList()}
-                <Button
-                  size={'small'}
-                  className={classes.button}
-                  onClick={() => setTab(0)}
-                  style={{
-                    backgroundColor:
-                      tab === 0 ? appColors.componentBg : 'white',
-                  }}
-                >
-                  Home
-                </Button>
-                <Button
-                  size={'small'}
-                  className={classes.button}
-                  onClick={() => setTab(1)}
-                  style={{
-                    backgroundColor:
-                      tab === 1 ? appColors.componentBg : 'white',
-                  }}
-                >
-                  Reports
-                </Button>
-                <Button
-                  size={'small'}
-                  className={classes.button}
-                  onClick={() => setTab(2)}
-                  style={{
-                    backgroundColor:
-                      tab === 2 ? appColors.componentBg : 'white',
-                  }}
-                >
-                  Settings
-                </Button>
-                <Button
-                  size={'small'}
-                  className={classes.button}
-                  onClick={() => setTab(9)}
-                  style={{
-                    backgroundColor:
-                      tab === 9 ? appColors.componentBg : 'white',
-                  }}
-                >
-                  Replace Product
-                </Button>
+                <Box>
+                  <Button
+                    size={'small'}
+                    className={classes.button}
+                    onClick={() => history.push('/admin/farmerhome')}
+                    //onClick={() => setTab(0)}
+                  >
+                    Items
+                  </Button>
+                  <Button
+                    size={'small'}
+                    className={classes.button}
+                    onClick={() => history.push('/admin/farmerreport')}
+                    //onClick={() => setTab(1)}
+                  >
+                    Orders
+                  </Button>
+                  <Button
+                    size={'small'}
+                    className={classes.button}
+                    onClick={() => history.push('/admin/farmersettings')}
+                    //onClick={() => setTab(2)}
+                  >
+                    Settings
+                  </Button>
+                </Box>
               </React.Fragment>
             )}
             <div className={classes.rightButtons}>
-              {Auth.authLevel >= 2 && (
-                <React.Fragment>
-                  <Button
-                    size={'small'}
-                    className={classes.button}
-                    onClick={() => setTab(8)}
-                    style={{
-                      backgroundColor:
-                        tab === 8 ? appColors.componentBg : 'white',
-                    }}
-                  >
-                    Price Compare
-                  </Button>
-                  <Button
-                    size={'small'}
-                    className={classes.button}
-                    onClick={() => setTab(7)}
-                    style={{
-                      backgroundColor:
-                        tab === 7 ? appColors.componentBg : 'white',
-                    }}
-                  >
-                    Zones
-                  </Button>
-                  <Button
-                    size={'small'}
-                    className={classes.button}
-                    onClick={() => setTab(5)}
-                    style={{
-                      backgroundColor:
-                        tab === 5 ? appColors.componentBg : 'white',
-                    }}
-                  >
-                    Messages
-                  </Button>
-                  <Button
-                    size={'small'}
-                    className={classes.button}
-                    onClick={() => setTab(3)}
-                    style={{
-                      backgroundColor:
-                        tab === 3 ? appColors.componentBg : 'white',
-                    }}
-                  >
-                    Analytics
-                  </Button>
-                  <Button
-                    size={'small'}
-                    className={classes.button}
-                    onClick={() => setTab(4)}
-                    style={{
-                      backgroundColor:
-                        tab === 4 ? appColors.componentBg : 'white',
-                    }}
-                  >
-                    Revenue
-                  </Button>
-                </React.Fragment>
-              )}
-              <Button size={'small'} onClick={handleClickLogOut}>
+              <Button
+                variant="contained"
+                size="small"
+                style={{
+                  backgroundColor: '#F5841F',
+                  color: 'white',
+                  marginLeft: '2rem',
+                  height: '2rem',
+                  marginTop: '0.75rem',
+                  textTransform: 'none',
+                }}
+                onClick={handleClickLogOut}
+              >
                 Logout
               </Button>
             </div>
@@ -286,4 +278,4 @@ function AdminNavBar({ tab, setTab, ...props }) {
   );
 }
 
-export default withRouter(AdminNavBar);
+export default withRouter(AdminNavBarNew);

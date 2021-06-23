@@ -1,15 +1,14 @@
-import React, { Component, useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { Grid, Paper, Button, Typography, Box } from '@material-ui/core';
+import { Grid, Button } from '@material-ui/core';
 import { AuthContext } from '../../auth/AuthContext';
 import { withRouter } from 'react-router';
 import Google from '../../icon/Google/Glogin.png';
 import Fb_Login from '../../icon/Facebook/Flogin.png';
 import Apple_Login from '../../icon/Apple/Alogin.png';
-import { SiFacebook } from 'react-icons/si';
 
 function SocialLogin(props) {
   const Auth = useContext(AuthContext);

@@ -1,10 +1,7 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import axios from 'axios';
-//import Carousel from 'react-multi-carousel';
-// import { Box, makeStyles } from '@material-ui/core';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-
 import { Box } from '@material-ui/core';
 import { AuthContext } from '../../auth/AuthContext';
 import storeContext from '../Store/storeContext';
@@ -270,11 +267,7 @@ export default function Coupons(props) {
             <Box fontSize="16px" pr={1} fontWeight="bold" marginTop="1rem">
               {coupProps.title}
             </Box>
-            <Box
-              
-              fontSize="12px"
-              fontWeight="bold"
-            >
+            <Box fontSize="12px" fontWeight="bold">
               {coupProps.notes}
             </Box>
             <Box
