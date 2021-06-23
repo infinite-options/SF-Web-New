@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 import clsx from 'clsx';
 import moment from 'moment';
 import { AuthContext } from '../../../auth/AuthContext';
-import storeContext from '../../Store/storeContext';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
 import {
@@ -10,20 +10,43 @@ import {
   Typography,
   Box,
   Avatar,
-  Button,
   Paper,
+  Button,
 } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import {
+  ThemeProvider,
+  createMuiTheme,
+  withStyles,
+  makeStyles,
+} from '@material-ui/core/styles';
 import CustomerSrc from '../../../sf-svg-icons/Polygon1.svg';
 import { AdminFarmContext } from '../AdminFarmContext';
-import CartItem from '../../CheckoutItems/cartItem';
 import appColors from '../../../styles/AppColors';
 import Delivered from '../../../sf-svg-icons/delivered.svg';
-import HistoryTab from '../../Tabs/HistoryTab';
-import RefundTab from '../../Tabs/RefundTab';
-import CheckoutTab from '../../Tabs/CheckoutStoreTab';
+import couponUnavaliable from '../../../images/couponUnavaliable.svg';
+const theme = createMuiTheme({
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        '*::-webkit-scrollbar': {
+          width: '10px',
+        },
+        '*::-webkit-scrollbar-thumb ': {
+          background: ' #1C6D74',
+        },
+        '*::-webkit-scrollbar-track': {
+          background: '#BCCDCE',
+        },
+        '*::-webkit-scrollbar-thumb:hover': {
+          background: '#1C6D74',
+        },
+      },
+    },
+  },
+});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,11 +58,14 @@ const useStyles = makeStyles((theme) => ({
   },
   usrInfo: {
     display: 'flex',
+    backgroundClip: 'context-box',
     backgroundColor: '#E8D1BD',
     borderRadius: '20px',
     width: 'auto',
     height: '345px',
-    overflowY: 'scroll',
+    overflowY: 'auto',
+    boxShadow:
+      ' -30px 20px 70px -30px rgba(51, 51, 51, 0.7), 0 50px 100px 0 rgba(51, 51, 51, 0.2)',
   },
   currUserPic: {
     margin: '1rem',
@@ -68,6 +94,7 @@ const useStyles = makeStyles((theme) => ({
   infoTable: {
     marginLeft: '30px',
     borderCollapse: 'collapse',
+    backgroundColor: 'transparent',
   },
   infoRow: {
     borderBottom: '1px solid #747474',
@@ -159,6 +186,8 @@ const useStyles = makeStyles((theme) => ({
   },
   items: {
     fontSize: '16px',
+    padding: '10px',
+    borderBottom: '1px solid' + appColors.checkoutSectionBorder,
   },
   total: { fontWeight: 'bold' },
   savingDetails: {
@@ -170,6 +199,25 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '10px',
     paddingBottom: '10px',
   },
+  sectionHeader: {
+    borderBottom: '1px solid' + appColors.checkoutSectionBorder,
+    paddingTop: '10px',
+    paddingBottom: '10px',
+    color: 'var(--unnamed-color-000000)',
+    textSlign: 'left',
+    font: 'normal normal 600 14px/16px SF Pro Text',
+    fontSize: '16px',
+    letterSpacing: '-0.34px',
+    color: '#000000',
+    opacity: 1,
+  },
+  sectionItem: {
+    color: 'var(--unnamed-color-000000)',
+    textAlign: 'left',
+    letterSpacing: '-0.34px',
+    color: '#000000',
+    opacity: 1,
+  },
   buttonRight: {
     textAlign: 'left',
     font: 'normal normal bold 20px/28px SF Pro Text',
@@ -177,6 +225,25 @@ const useStyles = makeStyles((theme) => ({
     color: '#F5841F',
     opacity: 1,
     textTransform: 'none',
+  },
+  couponInput: {
+    border: '1px solid' + appColors.checkoutSectionBorder,
+    width: '8rem',
+    height: '2rem',
+    padding: '3px',
+    fontSize: '14px',
+    borderRadius: '6px',
+    '&:focus': {
+      outline: 'none',
+    },
+  },
+  btn: {
+    background: ' #FF8500 0% 0% no-repeat padding-box',
+    borderRadius: '8px',
+    opacity: 1,
+    color: 'white',
+    marginBottom: '20px',
+    width: '157px',
   },
 }));
 
@@ -238,7 +305,6 @@ function fetchCustomerInfo(setSelectedCustomer, id) {
       if (!response.ok) {
         throw response;
       }
-
       return response.json();
     })
     .then((json) => {
@@ -250,7 +316,7 @@ function fetchCustomerInfo(setSelectedCustomer, id) {
     });
 }
 
-function fetchHistory(setHistory, id) {
+function fetchHistory(setHistory, setProduce, id) {
   fetch(
     `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/history/${id}`,
     {
@@ -266,28 +332,96 @@ function fetchHistory(setHistory, id) {
     })
     .then((json) => {
       const history = json.result;
-
       setHistory(history);
+
+      console.log('History', history);
+      console.log('History items', JSON.parse(history[0]['items']));
     })
     .catch((error) => {
       console.error(error);
     });
 }
-/* 
-function getPurchaseID(setPurchaseID, id) {
-  purchaseID = id;
-  setPurchaseID(purchaseID);
-} */
-function Customers(props) {
+
+function fetchFarm(setFarms, id) {
+  fetch(
+    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farms_supported/${id},all`,
+    {
+      method: 'GET',
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+
+      return response.json();
+    })
+    .then((json) => {
+      const farms = json.result;
+      setFarms(farms);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+function fetchProduce(setProduceOrdered, id) {
+  fetch(
+    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/produce_ordered/${id},all`,
+    {
+      method: 'GET',
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+
+      return response.json();
+    })
+    .then((json) => {
+      const produceOrdered = json.result;
+      setProduceOrdered(produceOrdered);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+function fetchCoupons(setCoupons, id) {
+  fetch(
+    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/all_coupons`,
+    {
+      method: 'GET',
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+
+      return response.json();
+    })
+    .then((json) => {
+      const coupons = json.result;
+      setCoupons(coupons);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+function Customers({ props }) {
   const classes = useStyles();
   const Auth = useContext(AuthContext);
   const { custList } = useContext(AdminFarmContext);
   const [selectedCustomer, setSelectedCustomer] = useState([]);
   const [payments, setPayments] = useState([]);
   const [history, setHistory] = useState([]);
+  const [farms, setFarms] = useState([]);
   const [purchaseID, setPurchaseID] = useState([]);
+  const [produce, setProduce] = useState([]);
   const [rightTabChosen, setRightTabChosen] = useState(0);
-  console.log('purchase id', purchaseID);
+  const [produceOrdered, setProduceOrdered] = useState([]);
+  const [coupons, setCoupons] = useState([]);
 
   const handleChange = (event, newValue) => {
     setRightTabChosen(newValue);
@@ -296,64 +430,75 @@ function Customers(props) {
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
       return (
-        <Grid lg={12} className={classes.usrInfo}>
-          <table className={classes.infoTable}>
-            <thead>
-              <tr className={classes.infoRow}>
-                <td className={classes.usrTitle}>Customer Name</td>
-                <td className={classes.usrTitle}>Email ID</td>
-                <td className={classes.usrTitle}>Purchase ID</td>
-                <td className={classes.usrTitle}>Last Order(date) </td>
-                <td className={classes.usrTitle}>Customer Since</td>
-                <td className={classes.usrTitle}>Address</td>
-                <td className={classes.usrTitle}>Delivery Zone</td>
-                <td className={classes.usrTitle}>Zip Code</td>
-                <td className={classes.usrTitle}>Phone</td>
-              </tr>
-            </thead>
-            {custList.map((profile) => (
-              <tbody>
-                <tr
-                  key={profile.customer_uid}
-                  className={classes.infoRow}
-                  style={{ cursor: 'pointer' }}
-                  //onClick={() => deletequestion(profile.customer_uid)}
-                  onClick={() => {
-                    fetchCustomers(setPayments, profile.customer_uid);
-                    fetchHistory(setHistory, profile.customer_uid);
-                    fetchCustomerInfo(
-                      setSelectedCustomer,
-                      profile.customer_uid
-                    );
-                  }}
-                >
-                  <td className={classes.usrDesc}>
-                    {profile.customer_first_name}&nbsp;
-                    {profile.customer_last_name}
-                  </td>
-                  <td className={classes.usrDesc}>{profile.customer_email}</td>
-                  <td className={classes.usrDesc}>{profile.purchase_id}</td>
-                  <td className={classes.usrDesc}>
-                    {moment(profile.last_order_date).format('LL')}
-                  </td>
-                  <td className={classes.usrDesc}>
-                    {moment(profile.customer_created_at).format('LL')}
-                  </td>
-                  <td className={classes.usrDesc}>
-                    {profile.customer_address},&nbsp;
-                    <br /> {profile.customer_city},&nbsp;{' '}
-                    {profile.customer_state}
-                  </td>
-                  <td className={classes.usrDesc}>{profile.zone}</td>
-                  <td className={classes.usrDesc}>{profile.customer_zip}</td>
-                  <td className={classes.usrDesc}>
-                    {profile.customer_phone_num}
-                  </td>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Grid lg={12} className={classes.usrInfo}>
+            <table className={classes.infoTable}>
+              <thead>
+                <tr className={classes.infoRow}>
+                  <td className={classes.usrTitle}>Customer Name</td>
+                  <td className={classes.usrTitle}>Email ID</td>
+                  <td className={classes.usrTitle}>Purchase ID</td>
+                  <td className={classes.usrTitle}>Last Order(date) </td>
+                  <td className={classes.usrTitle}>Customer Since</td>
+                  <td className={classes.usrTitle}>Address</td>
+                  <td className={classes.usrTitle}>Delivery Zone</td>
+                  <td className={classes.usrTitle}>Zip Code</td>
+                  <td className={classes.usrTitle}>Phone</td>
                 </tr>
-              </tbody>
-            ))}
-          </table>
-        </Grid>
+              </thead>
+              {custList.map((profile) => (
+                <tbody>
+                  <tr
+                    key={profile.customer_uid}
+                    className={classes.infoRow}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      fetchCustomers(setPayments, profile.customer_uid);
+                      fetchHistory(
+                        setHistory,
+                        setProduce,
+                        profile.customer_uid
+                      );
+                      fetchCustomerInfo(
+                        setSelectedCustomer,
+                        profile.customer_uid
+                      );
+                      fetchFarm(setFarms, profile.customer_uid);
+                      fetchProduce(setProduceOrdered, profile.customer_uid);
+                      fetchCoupons(setCoupons, profile.customer_uid);
+                    }}
+                  >
+                    <td className={classes.usrDesc}>
+                      {profile.customer_first_name}&nbsp;
+                      {profile.customer_last_name}
+                    </td>
+                    <td className={classes.usrDesc}>
+                      {profile.customer_email}
+                    </td>
+                    <td className={classes.usrDesc}>{profile.purchase_id}</td>
+                    <td className={classes.usrDesc}>
+                      {moment(profile.last_order_date).format('LL')}
+                    </td>
+                    <td className={classes.usrDesc}>
+                      {moment(profile.customer_created_at).format('LL')}
+                    </td>
+                    <td className={classes.usrDesc}>
+                      {profile.customer_address},&nbsp;
+                      <br /> {profile.customer_city},&nbsp;{' '}
+                      {profile.customer_state}
+                    </td>
+                    <td className={classes.usrDesc}>{profile.zone}</td>
+                    <td className={classes.usrDesc}>{profile.customer_zip}</td>
+                    <td className={classes.usrDesc}>
+                      {profile.customer_phone_num}
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
+            </table>
+          </Grid>
+        </ThemeProvider>
       );
     }
   };
@@ -371,6 +516,56 @@ function Customers(props) {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
+  const url =
+    'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_Coupons/create';
+  const [createCoupon, setCreateCoupon] = useState({
+    coupon_id: '',
+    valid: '',
+    threshold: '',
+    discount_percent: '',
+    discount_amount: '',
+    discount_shipping: '',
+    expire_date: '',
+    limits: '',
+    coupon_title: '',
+    notes: '',
+    num_used: '',
+    recurring: '',
+    email_id: '',
+    cup_business_uid: '',
+  });
+
+  function submit(e) {
+    e.preventDefault();
+    axios
+      .post(url, {
+        coupon_id: createCoupon.coupon_id,
+        valid: createCoupon.valid,
+        threshold: createCoupon.threshold,
+        discount_percent: createCoupon.discount_percent,
+        discount_amount: createCoupon.discount_amount,
+        discount_shipping: createCoupon.discount_shipping,
+        expire_date: createCoupon.expire_date,
+        limits: createCoupon.limits,
+        coupon_title: createCoupon.coupon_title,
+        notes: createCoupon.notes,
+        num_used: createCoupon.num_used,
+        recurring: 'T',
+        email_id: 'xyz@gmail.com',
+        cup_business_uid: '200-000002',
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+      .then((response) => {
+        console.log(response);
+      });
+  }
+  function handle(e) {
+    const newCoupon = { ...createCoupon };
+    newCoupon[e.target.id] = e.target.value;
+    setCreateCoupon(newCoupon);
+  }
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -436,7 +631,10 @@ function Customers(props) {
                       vertical: 'bottom',
                       horizontal: 'center',
                     }}
-                    style={{ borderRadius: '20px' }}
+                    style={{
+                      backgroundClip: 'context-box',
+                      borderRadius: '20px',
+                    }}
                   >
                     {customerlist()}
                   </Popover>
@@ -512,8 +710,9 @@ function Customers(props) {
             background: '#FFFFFF 0% 0% no-repeat padding-box',
             borderRadius: '20px',
             opacity: 1,
-            height: '80vh',
-            overflowY: 'scroll',
+            minHeight: '80vh',
+            height: 'auto',
+            overflowY: 'hidden',
           }}
         >
           <Typography className={classes.header}>Payment History</Typography>
@@ -695,6 +894,7 @@ function Customers(props) {
             background: '#FFFFFF 0% 0% no-repeat padding-box',
             borderRadius: '20px',
             opacity: 1,
+            overflow: 'hidden',
           }}
         >
           <Paper elevation={0}>
@@ -726,8 +926,9 @@ function Customers(props) {
               elevation={0}
               style={{
                 marginTop: 10,
+                minHeight: '80vh',
                 maxHeight: '92%',
-                overflow: 'auto',
+                overflow: 'hidden',
               }}
             >
               <Box hidden={rightTabChosen !== 0}>
@@ -743,7 +944,7 @@ function Customers(props) {
                       <br></br>
                       Purchase ID: #{history.purchase_id.substring(4)}
                     </Box>
-                    <Box className={classes.section} display="flex">
+                    <Box className={classes.sectionHeader} display="flex">
                       <Box width="50%" textAlign="left">
                         Name
                       </Box>
@@ -754,27 +955,308 @@ function Customers(props) {
                         Price
                       </Box>
                     </Box>
-                    <Box className={classes.items}></Box>
-                    {/*   {history.items.map((product) => {
-                      return (
-                        <div key={product.item_uid}>
-                          <p>{product.name}</p>
-                          <p>{product.qty}</p>
-                        </div>
-                      );
-                    })} */}
+                    <Box className={classes.items}>
+                      {produce.map((item) => {
+                        return <div>{item.qty}</div>;
+                      })}
+                    </Box>
                   </Box>
                 ))}
               </Box>
-              <Box hidden={rightTabChosen !== 1}>Coupon</Box>
-              <Box hidden={rightTabChosen !== 2}>
-                <Typography className={classes.header}>
-                  Farms Supported
-                </Typography>
+              <Box hidden={rightTabChosen !== 1}>
+                <Box
+                  style={{
+                    borderBottom: '3px solid #BCCDCE ',
+                    marginBottom: '20px',
+                  }}
+                >
+                  <form onSubmit={(e) => submit(e)}>
+                    <Box display="flex" mb={1}>
+                      <Box width="50%">
+                        <Typography className={classes.paymentHeader}>
+                          Coupon Title
+                        </Typography>
+                        <input
+                          className={classes.couponInput}
+                          id="coupon_title"
+                          onChange={(e) => handle(e)}
+                          value={createCoupon.coupon_title}
+                          style={{ margin: 6 }}
+                        />
+                      </Box>
+                      <Box width="50%">
+                        <Typography className={classes.paymentHeader}>
+                          Threshold
+                        </Typography>
+                        <input
+                          className={classes.couponInput}
+                          id="threshold"
+                          onChange={(e) => handle(e)}
+                          value={createCoupon.threshold}
+                          style={{ margin: 6 }}
+                        />
+                      </Box>
+                    </Box>
+                    <Box display="flex" mb={1}>
+                      <Box width="50%">
+                        <Typography className={classes.paymentHeader}>
+                          Coupon ID
+                        </Typography>
+                        <input
+                          className={classes.couponInput}
+                          id="coupon_id"
+                          onChange={(e) => handle(e)}
+                          value={createCoupon.coupon_id}
+                          style={{ margin: 6 }}
+                        />
+                      </Box>
+                      <Box width="50%">
+                        <Typography className={classes.paymentHeader}>
+                          Discount Percentage
+                        </Typography>
+                        <input
+                          className={classes.couponInput}
+                          id="discount_percent"
+                          onChange={(e) => handle(e)}
+                          value={createCoupon.discount_percent}
+                          style={{ margin: 6 }}
+                        />
+                      </Box>
+                    </Box>
+                    <Box display="flex" mb={1}>
+                      <Box width="50%">
+                        <Typography className={classes.paymentHeader}>
+                          Valid
+                        </Typography>
+                        <input
+                          className={classes.couponInput}
+                          id="valid"
+                          onChange={(e) => handle(e)}
+                          value={createCoupon.valid}
+                          style={{ margin: 6 }}
+                        />
+                      </Box>
+                      <Box width="50%">
+                        <Typography className={classes.paymentHeader}>
+                          Discount Amount
+                        </Typography>
+                        <input
+                          className={classes.couponInput}
+                          id="discount_amount"
+                          onChange={(e) => handle(e)}
+                          value={createCoupon.discount_amount}
+                          style={{ margin: 6 }}
+                        />
+                      </Box>
+                    </Box>
+                    <Box display="flex" mb={1}>
+                      <Box width="50%">
+                        <Typography className={classes.paymentHeader}>
+                          Expiration Date
+                        </Typography>
+                        <input
+                          className={classes.couponInput}
+                          id="expire_date"
+                          onChange={(e) => handle(e)}
+                          value={createCoupon.expire_date}
+                          style={{ margin: 6 }}
+                        />
+                      </Box>
+                      <Box width="50%">
+                        <Typography className={classes.paymentHeader}>
+                          Discount Shipping
+                        </Typography>
+                        <input
+                          className={classes.couponInput}
+                          id="discount_shipping"
+                          onChange={(e) => handle(e)}
+                          value={createCoupon.discount_shipping}
+                          style={{ margin: 6 }}
+                        />
+                      </Box>
+                    </Box>
+                    <Box display="flex" mb={1}>
+                      <Box width="50%">
+                        <Typography className={classes.paymentHeader}>
+                          Limits
+                        </Typography>
+                        <input
+                          className={classes.couponInput}
+                          id="limits"
+                          onChange={(e) => handle(e)}
+                          value={createCoupon.limits}
+                          style={{ margin: 6 }}
+                        />
+                      </Box>
+                      <Box width="50%">
+                        <Typography className={classes.paymentHeader}>
+                          Notes
+                        </Typography>
+                        <textarea
+                          className={classes.couponInput}
+                          id="notes"
+                          onChange={(e) => handle(e)}
+                          value={createCoupon.notes}
+                          rows={4}
+                          style={{ margin: 6 }}
+                        />
+                      </Box>
+                    </Box>
+                    <Button className={classes.btn}>Submit</Button>
+                  </form>
+                </Box>
 
-                <Typography className={classes.header}>
-                  Produce Ordered
-                </Typography>
+                <Box
+                  className={classes.card}
+                  component="div"
+                  overflow="scroll"
+                  height="600px"
+                >
+                  <Box display="flex" justifyContent="space-between">
+                    <Box width="60%" className={classes.header}>
+                      Current Coupons
+                    </Box>
+                    <Box width="10%">%</Box>
+                    <Box width="10%">$</Box>
+                    <Box width="20%">Shipping</Box>
+                  </Box>
+
+                  {coupons.map((coupon) => (
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      padding="10px 0px"
+                      borderBottom="0.5px solid #747474"
+                    >
+                      <Box
+                        style={{
+                          width: '212px',
+                          height: '115px',
+                          backgroundImage: `url(${couponUnavaliable})`,
+                          backgroundSize: '100% 100%',
+                          backgroundPosition: 'center center',
+                          backgroundRepeat: 'no-repeat',
+                        }}
+                      >
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          alignItems="flex-start"
+                          justifyContent="center"
+                          marginLeft="1.5rem"
+                        >
+                          <Box
+                            fontSize="16px"
+                            pr={1}
+                            fontWeight="bold"
+                            marginTop="1rem"
+                          >
+                            {coupon.coupon_title}
+                          </Box>
+                          <Box fontSize="12px">{coupon.notes}</Box>
+                          <Box fontSize="12px">
+                            Spend $ {coupon.threshold} more to use
+                          </Box>
+                          <Box fontSize="12px">
+                            Expires: {moment(coupon.expire_date).format('LL')}
+                          </Box>
+
+                          <Box fontSize="10px" fontWeight="bold">
+                            Non Eligible
+                          </Box>
+                        </Box>
+                      </Box>
+
+                      <Box width="10%" display="flex" marginLeft="30px">
+                        {coupon.discount_percent}
+                      </Box>
+                      <Box width="10%">{coupon.discount_amount}</Box>
+                      <Box width="20%">{coupon.discount_shipping}</Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+              <Box hidden={rightTabChosen !== 2}>
+                <Box className={classes.card}>
+                  <Typography className={classes.header}>
+                    Farms Supported
+                  </Typography>
+                  <Box className={classes.sectionHeader} display="flex">
+                    <Box width="50%" textAlign="left">
+                      Farm Name
+                    </Box>
+                    <Box width="20%" textAlign="center">
+                      No. of Orders
+                    </Box>
+                    <Box width="22%" textAlign="right">
+                      Revenue
+                    </Box>
+                  </Box>
+                  {farms.map((farm) => (
+                    <Box className={classes.items} display="flex">
+                      <Box width="60%" display="flex" justifyContent="start">
+                        <img
+                          src={farm.business_image}
+                          alt=""
+                          height="50"
+                          width="50"
+                          style={{
+                            borderRadius: '10px',
+                            marginRight: '5px',
+                          }}
+                        />
+
+                        {farm.business_name}
+                      </Box>
+                      <Box width="20%" textAlign="center">
+                        {farm.total_orders}
+                      </Box>
+                      <Box width="20%" textAlign="right">
+                        {farm.Revenue}
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+                <Box className={classes.card}>
+                  <Typography className={classes.header}>
+                    Produce Ordered
+                  </Typography>
+                  <Box className={classes.sectionHeader} display="flex">
+                    <Box width="50%" textAlign="left">
+                      Produce Name
+                    </Box>
+                    <Box width="20%" textAlign="center">
+                      Quantity
+                    </Box>
+                    <Box width="22%" textAlign="right">
+                      Revenue
+                    </Box>
+                  </Box>
+                  {produceOrdered.map((produce) => (
+                    <Box className={classes.items} display="flex">
+                      <Box width="60%" display="flex" justifyContent="start">
+                        <img
+                          src={produce.img}
+                          alt=""
+                          height="50"
+                          width="50"
+                          style={{
+                            borderRadius: '10px',
+                            marginRight: '5px',
+                          }}
+                        />
+
+                        {produce.name}
+                      </Box>
+                      <Box width="20%" textAlign="center">
+                        {produce.quantity}
+                      </Box>
+                      <Box width="20%" textAlign="right">
+                        {produce.revenue}
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
               </Box>
             </Paper>
           </Paper>
