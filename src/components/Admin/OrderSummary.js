@@ -13,6 +13,7 @@ import moment from 'moment';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -97,6 +98,11 @@ const useStyles = makeStyles((theme) => ({
     // postion:"absolute",
     left: "0px",
     width: "30%",
+    justifyContent: "center",
+    alignItems: "center",
+    display:"flex",
+    fontSize:"1.5rem",
+    fontWeight:"bold",
   },
 
   rightHalf: {
@@ -222,11 +228,11 @@ function OrderSummary() {
   const handleChangeFarm = (event) => {
     
     //const { myValue } = event.currentTarget.dataset;
-    console.log("hello",event.target.value.split(",")[0],event.target.value.split(",")[1])
+    // console.log("hello",event.target.value.split(",")[0],event.target.value.split(",")[1])
     setFarm(event.target.value.split(",")[0])
     setProduce(event.target.value.split(",")[1])
-    //setFarm(event.target.value)
-    //setProduce(myValue)
+    // setFarm(event.target.value)
+    // setProduce(myValue)
     setOpen(true)
     
   };
@@ -263,7 +269,7 @@ function OrderSummary() {
                 opacity: 1,
               }}
             >
-              <div className={classes.leftHalf}>Dates and revenue</div>
+              <div className={classes.leftHalf} style={{color:'#1C6D74',textAlign:'center'}}>All Orders</div>
 
               <div className={classes.rightHalf} >
               
@@ -383,24 +389,31 @@ function OrderSummary() {
                                   })}
                           </select>
                         
-
+                        
                             {/* <Select
-                              defaultValue={orderVal.business_name}
-                              onChange={handleChangeFarm}
+                              defaultValue={
+                                () => {
+                                var temp = '';
+                                orderVal.farms.split(",").slice(0,-1).map((item) =>{if(item===orderVal.business_name){temp=item}})
+                                return (temp)
+                              }}
+                               onChange={handleChangeFarm}
                             >
                                 
                                 {(orderVal.farms.split(",").slice(0,-1)).map((item,index) => {
                                   return (
                                     <MenuItem 
                                     className={item===orderVal.business_name? classes.original:classes.replacement} 
-                                              key={index} 
-                                              value={item}
-                                              data-my-value={orderVal.name}>
+                                    key={index} 
+                                    value={item}
+                                    data-my-value={orderVal.name}
+                                    selected={item===orderVal.business_name}>
                                       {item}
                                   </MenuItem>
                                         );
                                 })}
                             </Select> */}
+                           
                         </td>
                 
                         <td className={classes.usrDesc}>{orderVal.farms.split(",")[orderVal.farms.split(",").length-1]}</td>
