@@ -913,12 +913,14 @@ useMemo(()=> {
 
       {/* START: Coupons */}
       <Coupons
+          key={new Date()}
         setDeliveryFee={setDeliveryFee}
         setPromoApplied={setPromoApplied}
         subtotal={subtotal}
         originalDeliveryFee={origDeliveryFee}
         classes={classes}
         styles={{display: 'inline-block'}}
+
       />
       {/* END: Coupons */}
 
