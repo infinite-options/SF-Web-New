@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import clsx from 'clsx';
 import moment from 'moment';
@@ -68,9 +68,9 @@ const useStyles = makeStyles((theme) => ({
       ' -30px 20px 70px -30px rgba(51, 51, 51, 0.7), 0 50px 100px 0 rgba(51, 51, 51, 0.2)',
   },
   currUserPic: {
-    margin: '1rem',
-    width: theme.spacing(9),
-    height: theme.spacing(9),
+    margin: '5px',
+    width: theme.spacing(5),
+    height: theme.spacing(5),
   },
   usrTitle: {
     textAlign: 'center',
@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '10px',
   },
   infoTable: {
-    marginLeft: '30px',
+    marginLeft: '20px',
     borderCollapse: 'collapse',
     backgroundColor: 'transparent',
   },
@@ -109,7 +109,8 @@ const useStyles = makeStyles((theme) => ({
     letterSpacing: '0.25px',
     color: ' #1C6D74',
     opacity: 1,
-    padding: '10px 16px',
+    padding: '5px 5px',
+    fontSize: '14px',
   },
   desc: {
     textAlign: 'center',
@@ -118,7 +119,8 @@ const useStyles = makeStyles((theme) => ({
     color: '#000000D9',
     opacity: 1,
     alignItems: 'center',
-    padding: '10px 16px',
+    padding: '5px 16px',
+    fontSize: '14px',
   },
   header: {
     textAlign: 'left',
@@ -131,7 +133,7 @@ const useStyles = makeStyles((theme) => ({
   paymentHeader: {
     color: 'var(--unnamed-color-000000)',
     textAlign: 'center',
-    fontSize: '16px',
+    fontSize: '14px',
     fontWeight: 600,
     font: 'SF Pro Text',
     letterSpacing: '-0.34px',
@@ -159,14 +161,15 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     borderBottom: '6px solid' + appColors.checkoutSectionBorder,
-    marginBottom: '50px',
+    marginTop: '20px',
+    marginBottom: '20px',
     paddingBottom: '20px',
     paddingLeft: '10px',
     paddingRight: '10px',
   },
   title: {
     textAlign: 'left',
-    fontSize: '22px',
+    fontSize: '16px',
     color: appColors.paragraphText,
     marginBottom: '10px',
   },
@@ -185,13 +188,13 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '10px',
   },
   items: {
-    fontSize: '16px',
+    fontSize: '14px',
     padding: '10px',
     borderBottom: '1px solid' + appColors.checkoutSectionBorder,
   },
   total: { fontWeight: 'bold' },
   savingDetails: {
-    fontSize: '16px',
+    fontSize: '14px',
     font: 'SFProText-Medium',
   },
   section: {
@@ -205,8 +208,8 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: '10px',
     color: 'var(--unnamed-color-000000)',
     textSlign: 'left',
-    font: 'normal normal 600 14px/16px SF Pro Text',
-    fontSize: '16px',
+    font: 'normal normal 600 14px SF Pro Text',
+    fontSize: '14px',
     letterSpacing: '-0.34px',
     color: '#000000',
     opacity: 1,
@@ -267,7 +270,7 @@ const StyledTab = withStyles((theme) => ({
     color: '#F5841F',
     opacity: 1,
     fontWeight: theme.typography.fontWeightRegular,
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(10),
   },
 }))((props) => <Tab disableRipple {...props} />);
 
@@ -316,7 +319,7 @@ function fetchCustomerInfo(setSelectedCustomer, id) {
     });
 }
 
-function fetchHistory(setHistory, setProduce, id) {
+function fetchHistory(setHistory, id) {
   fetch(
     `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/history/${id}`,
     {
@@ -335,7 +338,6 @@ function fetchHistory(setHistory, setProduce, id) {
       setHistory(history);
 
       console.log('History', history);
-      console.log('History items', JSON.parse(history[0]['items']));
     })
     .catch((error) => {
       console.error(error);
@@ -409,7 +411,7 @@ function fetchCoupons(setCoupons, id) {
     });
 }
 
-function Customers({ props }) {
+function Customers() {
   const classes = useStyles();
   const Auth = useContext(AuthContext);
   const { custList } = useContext(AdminFarmContext);
@@ -418,14 +420,23 @@ function Customers({ props }) {
   const [history, setHistory] = useState([]);
   const [farms, setFarms] = useState([]);
   const [purchaseID, setPurchaseID] = useState([]);
-  const [produce, setProduce] = useState([]);
   const [rightTabChosen, setRightTabChosen] = useState(0);
   const [produceOrdered, setProduceOrdered] = useState([]);
   const [coupons, setCoupons] = useState([]);
-
+  const [clicked, setClicked] = useState(false);
   const handleChange = (event, newValue) => {
     setRightTabChosen(newValue);
   };
+  const filterOnClick = (setPurchaseID, pid) => {
+    const purchaseID = pid;
+    setPurchaseID(purchaseID);
+    console.log(clicked);
+  };
+
+  const historyView =
+    purchaseID.length === 0
+      ? history
+      : history.filter((hist) => hist.purchase_id == purchaseID);
 
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
@@ -455,11 +466,7 @@ function Customers({ props }) {
                     style={{ cursor: 'pointer' }}
                     onClick={() => {
                       fetchCustomers(setPayments, profile.customer_uid);
-                      fetchHistory(
-                        setHistory,
-                        setProduce,
-                        profile.customer_uid
-                      );
+                      fetchHistory(setHistory, profile.customer_uid);
                       fetchCustomerInfo(
                         setSelectedCustomer,
                         profile.customer_uid
@@ -585,7 +592,7 @@ function Customers({ props }) {
             <Box className={classes.currUserInf}>
               <Avatar src={'no-link'} className={classes.currUserPic}>
                 {selectedCustomer.map((info) => (
-                  <Typography style={{ fontSize: '38px' }}>
+                  <Typography style={{ fontSize: '30px' }}>
                     {info.customer_first_name || info.customer_last_name
                       ? `${info.customer_first_name[0]}${info.customer_last_name[0]}`
                       : 'JD'}
@@ -598,9 +605,8 @@ function Customers({ props }) {
                     <Typography
                       variant="caption"
                       style={{
-                        font: 'var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-600) 24px/29px SF Pro Display',
                         textAlign: 'left',
-                        font: 'normal normal 600 24px/29px SF Pro Display',
+                        font: 'normal normal 600 20px SF Pro Display',
                         color: '#1C6D74',
                         opacity: 1,
                       }}
@@ -716,7 +722,7 @@ function Customers({ props }) {
           }}
         >
           <Typography className={classes.header}>Payment History</Typography>
-          {history.map((history) => (
+          {historyView.map((history) => (
             <Box className={classes.card}>
               <Box className={classes.delivered}>
                 <img src={Delivered} alt="user pic" />
@@ -736,7 +742,7 @@ function Customers({ props }) {
                 )}
                 display="flex"
                 style={{
-                  fontSize: '20px',
+                  fontSize: '16px',
                   font: 'normal normal bold 20px/22px SF Pro Text',
                 }}
               >
@@ -820,7 +826,7 @@ function Customers({ props }) {
                 className={clsx(classes.items, classes.total, classes.section)}
                 display="flex"
                 style={{
-                  fontSize: '20px',
+                  fontSize: '18px',
                   font: 'normal normal bold 20px/22px SF Pro Text',
                 }}
               >
@@ -862,7 +868,7 @@ function Customers({ props }) {
                 <tr
                   className={classes.paymentInfo}
                   onClick={() => {
-                    setPurchaseID(payment.purchase_id);
+                    filterOnClick(setPurchaseID, payment.purchase_id);
                   }}
                 >
                   <td className={classes.td}>
@@ -908,17 +914,17 @@ function Customers({ props }) {
             >
               <StyledTab
                 label="Produce"
-                style={{ fontSize: '20px', fontWeight: '700', minWidth: 100 }}
+                style={{ fontSize: '16px', fontWeight: '700', minWidth: 100 }}
               />
 
               <StyledTab
                 label="Coupon"
-                style={{ fontSize: '20px', fontWeight: '700', minWidth: 100 }}
+                style={{ fontSize: '16px', fontWeight: '700', minWidth: 100 }}
               />
 
               <StyledTab
                 label="Stats"
-                style={{ fontSize: '20px', fontWeight: '700', minWidth: 100 }}
+                style={{ fontSize: '16px', fontWeight: '700', minWidth: 100 }}
               />
             </StyledTabs>
 
@@ -932,7 +938,7 @@ function Customers({ props }) {
               }}
             >
               <Box hidden={rightTabChosen !== 0}>
-                {history.map((history) => (
+                {historyView.map((history) => (
                   <Box className={classes.card}>
                     <Box className={classes.delivered}>
                       <img src={Delivered} alt="user pic" />
@@ -945,7 +951,7 @@ function Customers({ props }) {
                       Purchase ID: #{history.purchase_id.substring(4)}
                     </Box>
                     <Box className={classes.sectionHeader} display="flex">
-                      <Box width="50%" textAlign="left">
+                      <Box width="60%" textAlign="left">
                         Name
                       </Box>
                       <Box width="20%" textAlign="center">
@@ -956,8 +962,43 @@ function Customers({ props }) {
                       </Box>
                     </Box>
                     <Box className={classes.items}>
-                      {produce.map((item) => {
-                        return <div>{item.qty}</div>;
+                      {JSON.parse(history['items']).map((item) => {
+                        return (
+                          <Box display="flex" justifyContent="start">
+                            <Box
+                              width="60%"
+                              textAlign="left"
+                              display="inline-block"
+                            >
+                              <img
+                                src={item['img']}
+                                alt=""
+                                height="50"
+                                width="50"
+                                style={{
+                                  borderRadius: '10px',
+                                  marginRight: '5px',
+                                  verticalAlign: 'middle',
+                                }}
+                              />
+                              {item['name']}
+                            </Box>
+                            <Box
+                              width="20%"
+                              textAlign="center"
+                              paddingTop="10px"
+                            >
+                              {item['qty']}
+                            </Box>
+                            <Box
+                              width="20%"
+                              textAlign="right"
+                              paddingTop="10px"
+                            >
+                              {item['price']}
+                            </Box>
+                          </Box>
+                        );
                       })}
                     </Box>
                   </Box>
@@ -1143,21 +1184,21 @@ function Customers({ props }) {
                           flexDirection="column"
                           alignItems="flex-start"
                           justifyContent="center"
-                          marginLeft="1.5rem"
+                          marginLeft="1rem"
                         >
                           <Box
-                            fontSize="16px"
+                            fontSize="14px"
                             pr={1}
                             fontWeight="bold"
-                            marginTop="1rem"
+                            marginTop="1.5rem"
                           >
                             {coupon.coupon_title}
                           </Box>
-                          <Box fontSize="12px">{coupon.notes}</Box>
-                          <Box fontSize="12px">
+                          <Box fontSize="10px">{coupon.notes}</Box>
+                          <Box fontSize="10px">
                             Spend $ {coupon.threshold} more to use
                           </Box>
-                          <Box fontSize="12px">
+                          <Box fontSize="10px">
                             Expires: {moment(coupon.expire_date).format('LL')}
                           </Box>
 
@@ -1182,47 +1223,53 @@ function Customers({ props }) {
                     Farms Supported
                   </Typography>
                   <Box className={classes.sectionHeader} display="flex">
-                    <Box width="50%" textAlign="left">
+                    <Box width="60%" textAlign="left">
                       Farm Name
                     </Box>
                     <Box width="20%" textAlign="center">
                       No. of Orders
                     </Box>
-                    <Box width="22%" textAlign="right">
+                    <Box width="20%" textAlign="right">
                       Revenue
                     </Box>
                   </Box>
-                  {farms.map((farm) => (
-                    <Box className={classes.items} display="flex">
-                      <Box width="60%" display="flex" justifyContent="start">
-                        <img
-                          src={farm.business_image}
-                          alt=""
-                          height="50"
-                          width="50"
-                          style={{
-                            borderRadius: '10px',
-                            marginRight: '5px',
-                          }}
-                        />
-
-                        {farm.business_name}
+                  <Box className={classes.items}>
+                    {farms.map((farm) => (
+                      <Box display="flex" justifyContent="start">
+                        <Box
+                          width="60%"
+                          textAlign="left"
+                          display="flex"
+                          paddingTop="10px"
+                        >
+                          <img
+                            src={farm.business_image}
+                            alt=""
+                            height="50"
+                            width="50"
+                            style={{
+                              borderRadius: '10px',
+                              marginRight: '5px',
+                            }}
+                          />
+                          <Typography>{farm.business_name}</Typography>
+                        </Box>
+                        <Box width="20%" paddingTop="10px">
+                          {farm.total_orders}
+                        </Box>
+                        <Box width="20%" paddingTop="10px">
+                          {farm.Revenue}
+                        </Box>
                       </Box>
-                      <Box width="20%" textAlign="center">
-                        {farm.total_orders}
-                      </Box>
-                      <Box width="20%" textAlign="right">
-                        {farm.Revenue}
-                      </Box>
-                    </Box>
-                  ))}
+                    ))}
+                  </Box>
                 </Box>
                 <Box className={classes.card}>
                   <Typography className={classes.header}>
                     Produce Ordered
                   </Typography>
                   <Box className={classes.sectionHeader} display="flex">
-                    <Box width="50%" textAlign="left">
+                    <Box width="60%" textAlign="left">
                       Produce Name
                     </Box>
                     <Box width="20%" textAlign="center">
@@ -1232,30 +1279,37 @@ function Customers({ props }) {
                       Revenue
                     </Box>
                   </Box>
-                  {produceOrdered.map((produce) => (
-                    <Box className={classes.items} display="flex">
-                      <Box width="60%" display="flex" justifyContent="start">
-                        <img
-                          src={produce.img}
-                          alt=""
-                          height="50"
-                          width="50"
-                          style={{
-                            borderRadius: '10px',
-                            marginRight: '5px',
-                          }}
-                        />
+                  <Box className={classes.items}>
+                    {produceOrdered.map((produce) => (
+                      <Box display="flex" justifyContent="start">
+                        <Box
+                          width="60%"
+                          display="inline-block"
+                          textAlign="left"
+                        >
+                          <img
+                            src={produce.img}
+                            alt=""
+                            height="50"
+                            width="50"
+                            style={{
+                              borderRadius: '10px',
+                              marginRight: '5px',
+                              verticalAlign: 'middle',
+                            }}
+                          />
 
-                        {produce.name}
+                          {produce.name}
+                        </Box>
+                        <Box width="20%" textAlign="center" paddingTop="10px">
+                          {produce.quantity}
+                        </Box>
+                        <Box width="20%" textAlign="right" paddingTop="10px">
+                          {produce.revenue}
+                        </Box>
                       </Box>
-                      <Box width="20%" textAlign="center">
-                        {produce.quantity}
-                      </Box>
-                      <Box width="20%" textAlign="right">
-                        {produce.revenue}
-                      </Box>
-                    </Box>
-                  ))}
+                    ))}
+                  </Box>
                 </Box>
               </Box>
             </Paper>
