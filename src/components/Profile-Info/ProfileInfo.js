@@ -24,6 +24,11 @@ import AdminLogin from '../LogIn/AdminLogin';
 import Signup from '../SignUp/Signup';
 import Footer from '../Footer/Footer';
 
+import {
+  geocodeByAddress,
+  getLatLng,
+} from 'react-places-autocomplete';
+
 import Cookies from 'js-cookie';
 
 // Donovan_0521 empty commit
@@ -144,10 +149,6 @@ function ProfileInfo() {
   const [newPassword, setNewPassword] = React.useState('');
   const [confirmedPassword, setConfirmedPassword] = React.useState('');
 
-  console.log('newPassword = ', newPassword);
-  console.log('confirmPass = ', confirmedPassword);
-  console.log('profile = ', profile);
-
   const loginTypeMapping = {
     NULL: (
       <Box>
@@ -251,8 +252,14 @@ function ProfileInfo() {
     history.push('/');
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     const AuthMethods = new AuthUtils();
+
+    const addy = `${profile.address}, ${profile.city}, ${profile.state}, ${profile.zip}`;
+    const res = await geocodeByAddress(addy);
+    const coords = await getLatLng(res[0]);
+
+    const newProfile = {...profile, latitude: coords.lat.toString(), longitude: coords.lng.toString()};
 
     if (newPassword !== '' && newPassword === confirmedPassword) {
       const cred = {
@@ -261,7 +268,7 @@ function ProfileInfo() {
       };
 
       Promise.all([
-        AuthMethods.updateProfile(profile),
+        AuthMethods.updateProfile(newProfile),
         AuthMethods.updatePassword(cred),
       ])
         .then((authRes) => {
@@ -275,7 +282,7 @@ function ProfileInfo() {
       console.log('here');
     } else {
       console.log('else');
-      AuthMethods.updateProfile(profile)
+      AuthMethods.updateProfile(newProfile)
         .then((authRes) => {
           console.warn('authRes = ', authRes);
           window.location.reload();
@@ -286,7 +293,7 @@ function ProfileInfo() {
     }
   };
 
-  console.log('Auth = ', Auth);
+  console.log('Shackles = ', profile);
 
   return (
     <Box className={classes.profileInfoContainer}>
