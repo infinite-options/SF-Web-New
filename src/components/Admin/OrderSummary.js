@@ -119,7 +119,7 @@ function OrderSummary() {
   const [open, setOpen] = useState(false);
   const [farm, setFarm] = useState();
   const [produce, setProduce] = useState();
-  const [deliveryDate, setDeliveryDate] = useState(() => { return (moment().clone().startOf('week').format('YYYY-MM-DD')) })
+  const [deliveryDate, setDeliveryDate] = useState(() => { return (moment().clone().add(1, 'weeks').startOf('week').format('YYYY-MM-DD')) })
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalProfit, setTotalProfit] = useState(0);
@@ -439,7 +439,7 @@ function OrderSummary() {
               <DialogTitle>{"Caution!!"}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  If you click Okay then {produce} will have {farm} as it's business
+                  If you click Okay then <b>{produce}</b> will have <b>{farm}</b> as it's business for delivery date <b>{deliveryDate}</b>
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
