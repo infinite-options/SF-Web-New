@@ -24,9 +24,8 @@ class Signup extends Component {
       zip: '',
       message: '',
     };
-  }
-
-  _onSubmit = (event) => {
+  };
+   _onSubmit = (event) => {
     event.preventDefault();
     console.log('_onSubmit');
     console.log(this.state);
@@ -112,19 +111,20 @@ class Signup extends Component {
                         message: 'success',
                       });
                       console.log(res);
+                      console.log("state"+this.state);
                     })
                     .catch((err) => {
                       if (err.response) {
                         console.log(err.response);
                       }
-                      console.log(err);
+                      console.log("err"+err);
                     });
                 }
               })
               .catch((err) => {
                 console.log(err);
                 if (err.response) {
-                  console.log(err.response);
+                  console.log("err+"+err.response);
                 }
               });
           }
@@ -221,10 +221,11 @@ class Signup extends Component {
 
   render() {
     return (
+      
       <Paper
         style={{
           width: 480,
-          height: 800,
+          height: 'auto',
           padding: 20,
           backgroundColor: '#E0E6E6F2',
           textAlign: 'center',
@@ -317,7 +318,11 @@ class Signup extends Component {
               fullWidth
             />
           </Box>
-          {/* <Box display="flex" mb={1}>
+          
+          {this.state.message === 'success' && (
+            <>
+          
+           <Box display="flex" mb={1}>
             <CssTextField
               value={this.state.firstName}
               onChange={this._firstNameChange}
@@ -391,13 +396,16 @@ class Signup extends Component {
             variant="outlined"
             size="small"
             fullWidth
-          /> */}
+          /> 
           <br />
           <br />
+          </>
+          )}
           <div>
             <Button
               variant="contained"
               type="submit"
+              
               style={{
                 backgroundColor: appColors.primary,
                 color: 'white',
@@ -421,12 +429,7 @@ class Signup extends Component {
               Reset
             </Button> */}
           </div>
-          {this.state.message === 'success' && (
-            <div>
-              Sign up successful. Please confirm sign up process by following
-              link in your email.
-            </div>
-          )}
+          
           {/* <Box my={2}>
             <Box>or</Box>
           </Box> */}
