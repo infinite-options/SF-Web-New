@@ -9,7 +9,8 @@ import appColors from '../../styles/AppColors';
 import LandingNavBar from '../LandingNavBar/LandingNavBar';
 import CheckoutStoreTab from '../Tabs/CheckoutStoreTab';
 import AdminLogin from '../LogIn/AdminLogin';
-import Signup from '../SignUp/Signup';
+// import Signup from '../SignUp/Signup';
+import Signup from '../SignUp/newSignUp';
 import ProductDisplay from '../ProductDisplay/ProductDisplay';
 import DeliveryLocationSearch from '../DeliverySearch/DeliveryLocationSearch';
 import Farmers from '../Farmers/Farmers';
@@ -23,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
   authModal: {
     position: 'absolute',
     width: '500px',
-    zIndex:'20000'
+    zIndex:'20000',
+    height:'auto'
   },
   infoSection: {
     width: '33.33%',
@@ -198,7 +200,12 @@ const Landing = ({ ...props }) => {
               className={classes.authModal}
               hidden={!isSignUpShown}
             >
-              <Signup />
+              <Signup 
+              isLoginShown={isLoginShown}
+              setIsLoginShown={setIsLoginShown}
+              isSignUpShown={isSignUpShown}
+              setIsSignUpShown={setIsSignUpShown}
+              />
             </Box>
           </Box>
         </Box>
