@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import axios from 'axios';
 import { Box, Button } from '@material-ui/core';
 import { withRouter } from 'react-router';
@@ -25,7 +26,8 @@ const Signup = ({...props}) => {
     city: '',
     state: '',
     zip: '',
-    message: ''
+    message: '',
+    confirmemail:''
     
     
     });
@@ -43,6 +45,7 @@ const Signup = ({...props}) => {
     event.preventDefault();
     console.log('_onSubmit');
     console.log(customer);
+    if(customer.email===customer.confirmemail){
     if (
       customer.password === customer.confirmPassword &&
       customer.password.length > 0
@@ -127,7 +130,7 @@ const Signup = ({...props}) => {
                       });
                       console.log(res);
                       console.log("state"+customer);
-                      alert("Confirmation email sent. Please check and click the link included.");
+                      alert("Confirmation email sent. Please log in to continue.");
                       props.setIsSignUpShown(false);
                       props.setIsLoginShown(true);
                     })
@@ -156,7 +159,12 @@ const Signup = ({...props}) => {
     } else {
       console.log('Passwords not matching');
     }
-  };
+}
+else{
+    alert("Email do not match")
+}
+  
+};
 
 
 
@@ -168,7 +176,14 @@ const Signup = ({...props}) => {
     });
     console.log(customer);
   };
-
+  const _confirmemailChange = (event) => {
+    setCustomer({
+        ...customer,
+        confirmemail: event.target.value,
+    });
+    
+    console.log(customer);
+  };
   const _passwordChange = (event) => {
     setCustomer({
         ...customer,
@@ -320,8 +335,8 @@ const Signup = ({...props}) => {
         </Box>
         <Box mb={1} style={{ marginBottom: '20px' }}>
           <CssTextField
-            value={customer.email}
-            onChange={_emailChange}
+            value={customer.confirmemail}
+            onChange={_confirmemailChange}
             label="Confirm Email"
             variant="outlined"
             size="small"
