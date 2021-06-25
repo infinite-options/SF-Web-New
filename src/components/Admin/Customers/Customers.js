@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     fontSize: '0.9rem',
     letterSpacing: '-0.48px',
-    color: '#1C6D74',
+
     opacity: 1,
     alignItems: 'center',
     padding: '10px',
@@ -97,7 +97,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'transparent',
   },
   infoRow: {
+    color: '#1C6D74',
     borderBottom: '1px solid #747474',
+    '&:active': {
+      boxShadow: 'none',
+      backgroundColor: '#1C6D74',
+      color: 'white',
+    },
   },
   currUserInf: {
     display: 'flex',
@@ -131,7 +137,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paymentTable: { borderCollapse: 'collapse', margin: '10px' },
   paymentHeader: {
-    color: 'var(--unnamed-color-000000)',
     textAlign: 'center',
     fontSize: '14px',
     fontWeight: 600,
@@ -149,7 +154,13 @@ const useStyles = makeStyles((theme) => ({
     color: '#000000D9',
     opacity: 1,
     borderBottom: ' 1px solid #0000001A',
-    opacity: 1,
+    cursor: 'pointer',
+    '&:active': {
+      boxShadow: 'none',
+      backgroundColor: '#1C6D74',
+      borderColor: '#005cbf',
+      color: 'white',
+    },
   },
   td: {
     padding: '10px',
@@ -175,7 +186,6 @@ const useStyles = makeStyles((theme) => ({
   },
   delivered: {
     textAlign: 'left',
-    fontSize: '16px',
     color: '#136D74',
     marginBottom: '10px',
     fontSize: '20px',
@@ -206,7 +216,6 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: '1px solid' + appColors.checkoutSectionBorder,
     paddingTop: '10px',
     paddingBottom: '10px',
-    color: 'var(--unnamed-color-000000)',
     textSlign: 'left',
     font: 'normal normal 600 14px SF Pro Text',
     fontSize: '14px',
@@ -215,7 +224,6 @@ const useStyles = makeStyles((theme) => ({
     opacity: 1,
   },
   sectionItem: {
-    color: 'var(--unnamed-color-000000)',
     textAlign: 'left',
     letterSpacing: '-0.34px',
     color: '#000000',
@@ -423,21 +431,7 @@ function Customers() {
   const [rightTabChosen, setRightTabChosen] = useState(0);
   const [produceOrdered, setProduceOrdered] = useState([]);
   const [coupons, setCoupons] = useState([]);
-  const [clicked, setClicked] = useState(false);
-  const handleChange = (event, newValue) => {
-    setRightTabChosen(newValue);
-  };
-  const filterOnClick = (setPurchaseID, pid) => {
-    const purchaseID = pid;
-    setPurchaseID(purchaseID);
-    console.log(clicked);
-  };
-
-  const historyView =
-    purchaseID.length === 0
-      ? history
-      : history.filter((hist) => hist.purchase_id == purchaseID);
-
+  //console.log('Selected Customer: ', selectedCustomer[0].customer_email);
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
       return (
@@ -512,7 +506,9 @@ function Customers() {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
+  const handleClick = (setPurchaseID, event) => {
+    const purchaseID = [];
+    setPurchaseID(purchaseID);
     setAnchorEl(event.currentTarget);
   };
 
@@ -522,6 +518,19 @@ function Customers() {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
+
+  const handleChange = (event, newValue) => {
+    setRightTabChosen(newValue);
+  };
+  const filterOnClick = (setPurchaseID, pid) => {
+    const purchaseID = pid;
+    setPurchaseID(purchaseID);
+  };
+
+  const historyView =
+    purchaseID.length === 0
+      ? history
+      : history.filter((hist) => hist.purchase_id == purchaseID);
 
   const url =
     'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_Coupons/create';
@@ -536,10 +545,10 @@ function Customers() {
     limits: '',
     coupon_title: '',
     notes: '',
-    num_used: '',
-    recurring: '',
+    num_used: '0',
+    recurring: 'T',
     email_id: '',
-    cup_business_uid: '',
+    cup_business_uid: '200-000002',
   });
 
   function submit(e) {
@@ -557,9 +566,9 @@ function Customers() {
         coupon_title: createCoupon.coupon_title,
         notes: createCoupon.notes,
         num_used: createCoupon.num_used,
-        recurring: 'T',
-        email_id: 'xyz@gmail.com',
-        cup_business_uid: '200-000002',
+        recurring: createCoupon.recurring,
+        email_id: createCoupon.email_id,
+        cup_business_uid: createCoupon.cup_business_uid,
       })
       .catch((error) => {
         console.log(error.message);
@@ -572,6 +581,8 @@ function Customers() {
     const newCoupon = { ...createCoupon };
     newCoupon[e.target.id] = e.target.value;
     setCreateCoupon(newCoupon);
+
+    console.log(newCoupon);
   }
   return (
     <div className={classes.root}>
@@ -618,7 +629,9 @@ function Customers() {
                     aria-describedby={id}
                     variant="contained"
                     color="primary"
-                    onClick={handleClick}
+                    onClick={(e) => {
+                      handleClick(setPurchaseID, e);
+                    }}
                   >
                     <img src={CustomerSrc} alt="user pic" />
                   </IconButton>
@@ -880,11 +893,15 @@ function Customers() {
                   <td className={classes.td}>
                     {moment(payment.start_delivery_date).format('LL')}
                   </td>
-                  <td className={classes.td}>{payment.subtotal}</td>
-                  <td className={classes.td}>{payment.driver_tip} </td>
-                  <td className={classes.td}>{payment.taxes}</td>
-                  <td className={classes.td}>{payment.profit}</td>
-                  <td className={classes.td}>{payment.amount_paid}</td>
+                  <td className={classes.td}>${payment.subtotal.toFixed(2)}</td>
+                  <td className={classes.td}>
+                    ${payment.driver_tip.toFixed(2)}{' '}
+                  </td>
+                  <td className={classes.td}>${payment.taxes.toFixed(2)}</td>
+                  <td className={classes.td}>${payment.profit.toFixed(2)}</td>
+                  <td className={classes.td}>
+                    ${payment.amount_paid.toFixed(2)}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -1004,7 +1021,7 @@ function Customers() {
                   </Box>
                 ))}
               </Box>
-              <Box hidden={rightTabChosen !== 1}>
+              <Box id="coupon" hidden={rightTabChosen !== 1}>
                 <Box
                   style={{
                     borderBottom: '3px solid #BCCDCE ',
@@ -1019,6 +1036,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
+                          type="text"
                           id="coupon_title"
                           onChange={(e) => handle(e)}
                           value={createCoupon.coupon_title}
@@ -1031,6 +1049,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
+                          type="text"
                           id="threshold"
                           onChange={(e) => handle(e)}
                           value={createCoupon.threshold}
@@ -1045,6 +1064,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
+                          type="text"
                           id="coupon_id"
                           onChange={(e) => handle(e)}
                           value={createCoupon.coupon_id}
@@ -1057,6 +1077,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
+                          type="text"
                           id="discount_percent"
                           onChange={(e) => handle(e)}
                           value={createCoupon.discount_percent}
@@ -1071,6 +1092,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
+                          type="text"
                           id="valid"
                           onChange={(e) => handle(e)}
                           value={createCoupon.valid}
@@ -1083,6 +1105,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
+                          type="text"
                           id="discount_amount"
                           onChange={(e) => handle(e)}
                           value={createCoupon.discount_amount}
@@ -1097,6 +1120,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
+                          type="date"
                           id="expire_date"
                           onChange={(e) => handle(e)}
                           value={createCoupon.expire_date}
@@ -1109,6 +1133,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
+                          type="text"
                           id="discount_shipping"
                           onChange={(e) => handle(e)}
                           value={createCoupon.discount_shipping}
@@ -1123,6 +1148,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
+                          type="text"
                           id="limits"
                           onChange={(e) => handle(e)}
                           value={createCoupon.limits}
@@ -1135,6 +1161,7 @@ function Customers() {
                         </Typography>
                         <textarea
                           className={classes.couponInput}
+                          type="text"
                           id="notes"
                           onChange={(e) => handle(e)}
                           value={createCoupon.notes}
