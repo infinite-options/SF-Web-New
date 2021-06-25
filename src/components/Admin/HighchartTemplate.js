@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { DateRangePicker} from 'rsuite';
 import axios from 'axios';
-
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Box from '@material-ui/core/Box';
 import Select from '@material-ui/core/Select';
@@ -52,35 +50,56 @@ function RevenueHighchart() {
   const [barsType, setBarType] = useState('customer');
   const [priceType, setPriceType] = useState('item');
 
-  const [months] = useState(['Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
-  const [datemonths] = useState({'Jan':"2021-01-01,2021-01-31",'Feb':"2021-02-01,2021-02-28",
-                                 'Mar':"2021-03-01,2021-03-31", 'Apr':"2021-04-01,2021-04-30",
-                                  'May':"2021-05-01,2021-05-31", 'Jun':"2021-06-01,2021-06-30",
-                                 'Jul':"2021-07-01,2021-07-31", 'Aug':"2021-08-01,2021-08-31",
-                                  'Sep':"2021-09-01,2021-09-30", 'Oct':"2021-10-01,2021-10-31",
-                                   'Nov':"2021-11-01,2021-11-30", 'Dec':"2021-12-01,2021-12-31"})
-  const [selectedMonth, setSelectedMonth] = useState("Jan")
-  const [reportLink, setReportLink] = useState(" https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farmer_revenue_inventory_report_all_month/summary,"+datemonths['Jan'])
+  const [months] = useState([
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]);
+  const [datemonths] = useState({
+    Jan: '2021-01-01,2021-01-31',
+    Feb: '2021-02-01,2021-02-28',
+    Mar: '2021-03-01,2021-03-31',
+    Apr: '2021-04-01,2021-04-30',
+    May: '2021-05-01,2021-05-31',
+    Jun: '2021-06-01,2021-06-30',
+    Jul: '2021-07-01,2021-07-31',
+    Aug: '2021-08-01,2021-08-31',
+    Sep: '2021-09-01,2021-09-30',
+    Oct: '2021-10-01,2021-10-31',
+    Nov: '2021-11-01,2021-11-30',
+    Dec: '2021-12-01,2021-12-31',
+  });
+  const [selectedMonth, setSelectedMonth] = useState('Jan');
+  const [reportLink, setReportLink] = useState(
+    ' https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farmer_revenue_inventory_report_all_month/summary,' +
+      datemonths['Jan']
+  );
 
   const handleChange = (event) => {
     const { value, name } = event.target;
     if (name === 'type') setBarType(value);
     else if (name === 'business') setBusinessId(value);
     else if (name === 'price') setPriceType(value);
-    else if (name === 'month'){ 
-      setSelectedMonth(value); 
-      setReportLink(" https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farmer_revenue_inventory_report_all_month/summary,"+datemonths[value]);
+    else if (name === 'month') {
+      setSelectedMonth(value);
+      setReportLink(
+        ' https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farmer_revenue_inventory_report_all_month/summary,' +
+          datemonths[value]
+      );
     }
   };
   const onReportClick = () => {
-    
-      return (
-      <a href= {reportLink} target="_blank" rel="noreferrer"></a>
-      )
-    
-    
-  
-    };
+    return <a href={reportLink} target="_blank" rel="noreferrer"></a>;
+  };
 
   // TODO: First need to get all the dates that has customer activities, sort them
   // TODO: Get code from Allan
@@ -386,8 +405,10 @@ function RevenueHighchart() {
     },
   };
 
-  const onChange = title => (...args) => console.log(title, args);
-  
+  const onChange =
+    (title) =>
+    (...args) =>
+      console.log(title, args);
 
   return (
     <>
@@ -439,20 +460,16 @@ function RevenueHighchart() {
             <MenuItem value={'business'}>Business</MenuItem>
           </Select>
         </FormControl>
-        
-        
-        <Box display="flex" marginLeft = "100px" justify-content = "center">
-    
-          
-        <FormControl className={classes.formControl}>
+
+        <Box display="flex" marginLeft="100px" justify-content="center">
+          <FormControl className={classes.formControl}>
             <FormHelperText>Month</FormHelperText>
             <Select
               labelId="demo-controlled-open-select-label"
               id="demo-controlled-open-select"
               name="month"
-              value = {selectedMonth}
+              value={selectedMonth}
               onChange={handleChange}
-              
             >
               {months.map((month) => {
                 return (
@@ -461,20 +478,15 @@ function RevenueHighchart() {
                   </MenuItem>
                 );
               })}
-              
             </Select>
           </FormControl>
-          
-          
-          <a href = {reportLink} style = {{textDecoration:"none"}}> 
-            <button style = {{marginTop:"25px"}}>Generate Revenue Report</button>
+
+          <a href={reportLink} style={{ textDecoration: 'none' }}>
+            <button style={{ marginTop: '25px' }}>
+              Generate Revenue Report
+            </button>
           </a>
-         
         </Box>
-        
-        
-        
-        
       </Box>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </>

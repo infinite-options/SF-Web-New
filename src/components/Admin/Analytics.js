@@ -2,11 +2,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import axios from 'axios';
-import {
-  DateRangePicker,
-  DateRange,
-  DateRangeDelimiter,
-} from '@material-ui/pickers';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Box from '@material-ui/core/Box';

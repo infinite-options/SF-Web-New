@@ -4,7 +4,6 @@ import Box from '@material-ui/core/Box';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import makeStyles from '@material-ui/styles/makeStyles';
 import { DataGrid } from '@material-ui/data-grid';
-
 import ZoneModal from './utils/ZoneModal';
 import { AdminFarmContext } from './AdminFarmContext';
 
