@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  DatePicker,
-  TimePicker,
-  DateTimePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import ReactApexChart from 'react-apexcharts';
 import axios from 'axios';
-// import {setDayOfYear} from "date-fns";
 /*
 *Chart function to display analytics and Revenue
 ! using Material UI to implement Month Year picker

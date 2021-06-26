@@ -13,7 +13,6 @@ import Select from '@material-ui/core/Select';
 import makeStyles from '@material-ui/styles/makeStyles';
 import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
-
 import { AdminFarmContext } from '../AdminFarmContext';
 import appColors from '../../../styles/AppColors';
 import CssTextField from '../../../utils/CssTextField';

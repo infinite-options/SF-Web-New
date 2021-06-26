@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-
 import appColors from '../../styles/AppColors';
 import { onPurchaseComplete } from '../PurchaseComplete/onPurchaseComplete';
 import useResponsiveFontSize from '../../utils/useResponsiveFontSize';

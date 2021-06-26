@@ -14,6 +14,7 @@ import Admin from './components/Admin/Admin';
 import ProfileInfo from './components/Profile-Info/ProfileInfo';
 import TermsAndConditions from './components/TermsAndConditions/TermsAndConditions';
 import MobilePaypalCheckout from './mobile/MobilePaypalCheckout';
+import AdminDashboard from './components/Admin/AdminDashboard';
 
 // Nav here will take all the adress from children page to this and give
 // it to the switch route
@@ -27,7 +28,12 @@ function Nav(authLevel, isAuth) {
       <Route exact path="/products" component={DisplayProducts} />
       <Route exact path="/store" component={Store} />
       <Route exact path="/profile-info" component={ProfileInfo} />
-      <Route exact path="/terms-and-conditions" component={TermsAndConditions}/>
+      <Route
+        exact
+        path="/terms-and-conditions"
+        component={TermsAndConditions}
+      />
+
       <Route path="/payment/paypal:props" component={MobilePaypalCheckout} />
       <AuthAdminRoute
         path="/admin"

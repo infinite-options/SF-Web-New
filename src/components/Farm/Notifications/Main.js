@@ -6,7 +6,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import MaterialTable from 'material-table';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import Check from '@material-ui/icons/Check';
