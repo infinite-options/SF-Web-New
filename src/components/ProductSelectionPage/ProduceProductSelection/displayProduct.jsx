@@ -307,6 +307,7 @@ function DisplayProduct() {
                  window.innerWidth < 1200 ?
                  window.innerWidth < 600 ? 100 : 40 : 30
               }
+              showThumbs={false}
             >
               {ft.products.map(createProduct2)}
             </Carousel> 
