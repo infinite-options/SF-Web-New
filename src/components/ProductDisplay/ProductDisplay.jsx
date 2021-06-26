@@ -89,6 +89,7 @@ const ProductDisplay = () => {
         infinite={true}
         draggable={true}
         responsive={responsive}
+        showThumbs={false}
       >
         {itemsList.map((product, i) => {
           return (
