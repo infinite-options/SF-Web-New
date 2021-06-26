@@ -424,6 +424,7 @@ export default function Coupons(props) {
               currDims.width > 1400 ? 70 : 75
             }
             width="100%"
+            showThumbs={false}
           >
             {avaiCouponData.concat(unavaiCouponData).map(CreateCouponCard)}
           </Carousel>
