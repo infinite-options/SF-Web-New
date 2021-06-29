@@ -15,38 +15,12 @@ import {
 } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import {
-  ThemeProvider,
-  createMuiTheme,
-  withStyles,
-  makeStyles,
-} from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import CustomerSrc from '../../../sf-svg-icons/Polygon1.svg';
 import { AdminFarmContext } from '../AdminFarmContext';
 import appColors from '../../../styles/AppColors';
 import Delivered from '../../../sf-svg-icons/delivered.svg';
 import couponUnavaliable from '../../../images/couponUnavaliable.svg';
-const theme = createMuiTheme({
-  overrides: {
-    MuiCssBaseline: {
-      '@global': {
-        '*::-webkit-scrollbar': {
-          width: '10px',
-        },
-        '*::-webkit-scrollbar-thumb ': {
-          background: ' #1C6D74',
-        },
-        '*::-webkit-scrollbar-track': {
-          background: '#BCCDCE',
-        },
-        '*::-webkit-scrollbar-thumb:hover': {
-          background: '#1C6D74',
-        },
-      },
-    },
-  },
-});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -435,71 +409,67 @@ function Customers() {
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
       return (
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Grid lg={12} className={classes.usrInfo}>
-            <table className={classes.infoTable}>
-              <thead>
-                <tr className={classes.infoRow}>
-                  <td className={classes.usrTitle}>Customer Name</td>
-                  <td className={classes.usrTitle}>Email ID</td>
-                  <td className={classes.usrTitle}>Purchase ID</td>
-                  <td className={classes.usrTitle}>Last Order(date) </td>
-                  <td className={classes.usrTitle}>Customer Since</td>
-                  <td className={classes.usrTitle}>Address</td>
-                  <td className={classes.usrTitle}>Delivery Zone</td>
-                  <td className={classes.usrTitle}>Zip Code</td>
-                  <td className={classes.usrTitle}>Phone</td>
+        <Grid lg={12} className={classes.usrInfo}>
+          <table className={classes.infoTable}>
+            <thead>
+              <tr className={classes.infoRow}>
+                <td className={classes.usrTitle}>Customer Name</td>
+                <td className={classes.usrTitle}>Email ID</td>
+                <td className={classes.usrTitle}>Purchase ID</td>
+                <td className={classes.usrTitle}>Last Order(date) </td>
+                <td className={classes.usrTitle}>Customer Since</td>
+                <td className={classes.usrTitle}>Address</td>
+                <td className={classes.usrTitle}>Delivery Zone</td>
+                <td className={classes.usrTitle}>Zip Code</td>
+                <td className={classes.usrTitle}>Phone</td>
+              </tr>
+            </thead>
+            {custList.map((profile) => (
+              <tbody>
+                <tr
+                  key={profile.customer_uid}
+                  className={classes.infoRow}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    fetchCustomers(setPayments, profile.customer_uid);
+                    fetchHistory(setHistory, profile.customer_uid);
+                    fetchCustomerInfo(
+                      setSelectedCustomer,
+                      profile.customer_uid
+                    );
+                    fetchFarm(setFarms, profile.customer_uid);
+                    fetchProduce(setProduceOrdered, profile.customer_uid);
+                    fetchCoupons(setCoupons, profile.customer_uid);
+                    handleClose();
+                  }}
+                >
+                  <td className={classes.usrDesc}>
+                    {profile.customer_first_name}&nbsp;
+                    {profile.customer_last_name}
+                  </td>
+                  <td className={classes.usrDesc}>{profile.customer_email}</td>
+                  <td className={classes.usrDesc}>{profile.purchase_id}</td>
+                  <td className={classes.usrDesc}>
+                    {moment(profile.last_order_date).format('LL')}
+                  </td>
+                  <td className={classes.usrDesc}>
+                    {moment(profile.customer_created_at).format('LL')}
+                  </td>
+                  <td className={classes.usrDesc}>
+                    {profile.customer_address},&nbsp;
+                    <br /> {profile.customer_city},&nbsp;{' '}
+                    {profile.customer_state}
+                  </td>
+                  <td className={classes.usrDesc}>{profile.zone}</td>
+                  <td className={classes.usrDesc}>{profile.customer_zip}</td>
+                  <td className={classes.usrDesc}>
+                    {profile.customer_phone_num}
+                  </td>
                 </tr>
-              </thead>
-              {custList.map((profile) => (
-                <tbody>
-                  <tr
-                    key={profile.customer_uid}
-                    className={classes.infoRow}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => {
-                      fetchCustomers(setPayments, profile.customer_uid);
-                      fetchHistory(setHistory, profile.customer_uid);
-                      fetchCustomerInfo(
-                        setSelectedCustomer,
-                        profile.customer_uid
-                      );
-                      fetchFarm(setFarms, profile.customer_uid);
-                      fetchProduce(setProduceOrdered, profile.customer_uid);
-                      fetchCoupons(setCoupons, profile.customer_uid);
-                    }}
-                  >
-                    <td className={classes.usrDesc}>
-                      {profile.customer_first_name}&nbsp;
-                      {profile.customer_last_name}
-                    </td>
-                    <td className={classes.usrDesc}>
-                      {profile.customer_email}
-                    </td>
-                    <td className={classes.usrDesc}>{profile.purchase_id}</td>
-                    <td className={classes.usrDesc}>
-                      {moment(profile.last_order_date).format('LL')}
-                    </td>
-                    <td className={classes.usrDesc}>
-                      {moment(profile.customer_created_at).format('LL')}
-                    </td>
-                    <td className={classes.usrDesc}>
-                      {profile.customer_address},&nbsp;
-                      <br /> {profile.customer_city},&nbsp;{' '}
-                      {profile.customer_state}
-                    </td>
-                    <td className={classes.usrDesc}>{profile.zone}</td>
-                    <td className={classes.usrDesc}>{profile.customer_zip}</td>
-                    <td className={classes.usrDesc}>
-                      {profile.customer_phone_num}
-                    </td>
-                  </tr>
-                </tbody>
-              ))}
-            </table>
-          </Grid>
-        </ThemeProvider>
+              </tbody>
+            ))}
+          </table>
+        </Grid>
       );
     }
   };
@@ -570,11 +540,8 @@ function Customers() {
         email_id: createCoupon.email_id,
         cup_business_uid: createCoupon.cup_business_uid,
       })
-      .catch((error) => {
-        console.log(error.message);
-      })
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
       });
   }
   function handle(e) {
