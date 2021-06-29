@@ -16,6 +16,7 @@ import AdminItems from './AdminItems';
 import Customers from './Customers/Customers';
 import OrderSummary from './OrderSummary';
 import AdminMenu from './AdminMenu';
+import Notifications from '../Farm/Notifications';
 //within this admin page, we need ability to display any farmer page
 //the option to select which farm to view is in AdminNavBar
 //get selected farm from AdmiNavBar and use it in Farmer
@@ -222,6 +223,9 @@ function Admin(authLevel, isAuth) {
               </Route>
               <Route exact path="/admin/customers">
                 <Customers custID={custID} />
+              </Route>
+              <Route exact path="/admin/messages">
+                <Notifications farmID={farmID} farmName={farmName} />
               </Route>
             </Switch>
           </div>

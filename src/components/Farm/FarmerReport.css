@@ -1,24 +1,66 @@
-.btn-group button {
-
-    border: 1px solid green; /* Green border */
-
-    padding: 10px 24px; /* Some padding */
-    cursor: pointer; /* Pointer/hand icon */
-    float: left; /* Float the buttons side by side */
+body {
+    background-color: lightblue;
 }
 
-.btn-group button:not(:last-child) {
-    border-right: none; /* Prevent double borders */
+.round-box1{
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    padding: 20px;
+    margin: 20px 20px;
+    background-color: white;
 }
 
-/* Clear floats (clearfix hack) */
-.btn-group:after {
-    content: "";
-    clear: both;
-    display: table;
+.testUL ul{
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 }
 
-/* Add a background color on hover */
-.btn-group button:hover {
-    background-color: #3e8e41;
+.testUL li{
+    margin: auto;}
+
+.AllOrdersButtons{
+    background-color: #136D74;
+    color: white;
+    margin-left: 10px;
 }
+
+.ReportButtons{
+    background-color: #136D74;
+    color: white;
+    margin-left: 10px;
+    float: right;
+}
+
+.allorders{
+    color: orange;
+    text-align: left;
+    margin-left: 30px;
+}
+
+.allordersButton{
+    text-decoration: none;
+
+    float: left;
+}
+
+.driverRouter{
+    text-decoration: none;
+
+    margin-left: 20px;
+    float: left;
+
+}
+
+.DeliveryDates ul{
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.DeliveryDates li{
+    margin: auto;}

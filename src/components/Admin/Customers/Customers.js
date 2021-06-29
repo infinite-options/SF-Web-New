@@ -5,6 +5,7 @@ import moment from 'moment';
 import { AuthContext } from '../../../auth/AuthContext';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
+
 import {
   Grid,
   Typography,
@@ -15,38 +16,13 @@ import {
 } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import {
-  ThemeProvider,
-  createMuiTheme,
-  withStyles,
-  makeStyles,
-} from '@material-ui/core/styles';
+import { fade } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import CustomerSrc from '../../../sf-svg-icons/Polygon1.svg';
 import { AdminFarmContext } from '../AdminFarmContext';
 import appColors from '../../../styles/AppColors';
 import Delivered from '../../../sf-svg-icons/delivered.svg';
 import couponUnavaliable from '../../../images/couponUnavaliable.svg';
-const theme = createMuiTheme({
-  overrides: {
-    MuiCssBaseline: {
-      '@global': {
-        '*::-webkit-scrollbar': {
-          width: '10px',
-        },
-        '*::-webkit-scrollbar-thumb ': {
-          background: ' #1C6D74',
-        },
-        '*::-webkit-scrollbar-track': {
-          background: '#BCCDCE',
-        },
-        '*::-webkit-scrollbar-thumb:hover': {
-          background: '#1C6D74',
-        },
-      },
-    },
-  },
-});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,13 +32,29 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#BCCDCE',
     padding: '2rem',
   },
+  search: {
+    position: 'relative',
+    width: '100%',
+  },
+  inputRoot: {
+    color: '#1C6D74',
+  },
+  inputInput: {
+    background: '#FFFFFF 0% 0% no-repeat padding-box',
+    border: '1px solid #1C6D74',
+    borderRadius: ' 8px',
+    opacity: 1,
+    width: '189px',
+    height: '25px',
+    padding: '5px',
+  },
   usrInfo: {
     display: 'flex',
     backgroundClip: 'context-box',
     backgroundColor: '#E8D1BD',
     borderRadius: '20px',
     width: 'auto',
-    height: '345px',
+    height: '500px',
     overflowY: 'auto',
     boxShadow:
       ' -30px 20px 70px -30px rgba(51, 51, 51, 0.7), 0 50px 100px 0 rgba(51, 51, 51, 0.2)',
@@ -81,12 +73,12 @@ const useStyles = makeStyles((theme) => ({
     opacity: 1,
     justifyContent: 'start',
     padding: '10px',
+    borderBottom: '1px solid #747474',
   },
   usrDesc: {
     textAlign: 'center',
     fontSize: '0.9rem',
     letterSpacing: '-0.48px',
-
     opacity: 1,
     alignItems: 'center',
     padding: '10px',
@@ -98,7 +90,6 @@ const useStyles = makeStyles((theme) => ({
   },
   infoRow: {
     color: '#1C6D74',
-    borderBottom: '1px solid #747474',
     '&:active': {
       boxShadow: 'none',
       backgroundColor: '#1C6D74',
@@ -396,9 +387,9 @@ function fetchProduce(setProduceOrdered, id) {
       console.error(error);
     });
 }
-function fetchCoupons(setCoupons, id) {
+function fetchCoupons(setCoupons, custEmail) {
   fetch(
-    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/all_coupons`,
+    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/available_Coupons/${custEmail}`,
     {
       method: 'GET',
     }
@@ -421,38 +412,108 @@ function fetchCoupons(setCoupons, id) {
 
 function Customers() {
   const classes = useStyles();
+
   const Auth = useContext(AuthContext);
   const { custList } = useContext(AdminFarmContext);
+  const [searchName, setSearchName] = useState('');
+  const [searchAddress, setSearchAddress] = useState('');
+  const [searchID, setSearchID] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState([]);
   const [payments, setPayments] = useState([]);
   const [history, setHistory] = useState([]);
   const [farms, setFarms] = useState([]);
   const [purchaseID, setPurchaseID] = useState([]);
+  const [email, setEmail] = useState('');
   const [rightTabChosen, setRightTabChosen] = useState(0);
   const [produceOrdered, setProduceOrdered] = useState([]);
   const [coupons, setCoupons] = useState([]);
-  //console.log('Selected Customer: ', selectedCustomer[0].customer_email);
+  console.log('Selected Customer: ', email);
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
       return (
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Grid lg={12} className={classes.usrInfo}>
-            <table className={classes.infoTable}>
-              <thead>
-                <tr className={classes.infoRow}>
-                  <td className={classes.usrTitle}>Customer Name</td>
-                  <td className={classes.usrTitle}>Email ID</td>
-                  <td className={classes.usrTitle}>Purchase ID</td>
-                  <td className={classes.usrTitle}>Last Order(date) </td>
-                  <td className={classes.usrTitle}>Customer Since</td>
-                  <td className={classes.usrTitle}>Address</td>
-                  <td className={classes.usrTitle}>Delivery Zone</td>
-                  <td className={classes.usrTitle}>Zip Code</td>
-                  <td className={classes.usrTitle}>Phone</td>
-                </tr>
-              </thead>
-              {custList.map((profile) => (
+        <Grid lg={12} className={classes.usrInfo}>
+          <table className={classes.infoTable}>
+            <thead>
+              <tr>
+                <td className={classes.infoRow}> Search by</td>
+                <td>
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    className={classes.inputInput}
+                    onChange={(event) => {
+                      setSearchName(event.target.value);
+                    }}
+                  />
+                </td>
+                <td></td>
+                <td>
+                  <input
+                    type="text"
+                    placeholder="Address"
+                    className={classes.inputInput}
+                    onChange={(event) => {
+                      setSearchAddress(event.target.value);
+                    }}
+                  />
+                </td>
+                <td></td>
+                <td>
+                  <input
+                    type="text"
+                    placeholder="Purchase ID"
+                    className={classes.inputInput}
+                    onChange={(event) => {
+                      setSearchID(event.target.value);
+                    }}
+                  />
+                </td>
+              </tr>
+              <tr className={classes.infoRow}>
+                <td className={classes.usrTitle}>Customer Name</td>
+                <td className={classes.usrTitle}>Email ID</td>
+                <td className={classes.usrTitle}>Purchase ID</td>
+                <td className={classes.usrTitle}>Last Order(date) </td>
+                <td className={classes.usrTitle}>Customer Since</td>
+                <td className={classes.usrTitle}>Address</td>
+                <td className={classes.usrTitle}>Delivery Zone</td>
+                <td className={classes.usrTitle}>Zip Code</td>
+                <td className={classes.usrTitle}>Phone</td>
+              </tr>
+            </thead>
+            {custList
+              .filter((val) => {
+                if (searchName === '') {
+                  return val;
+                } else if (
+                  val.customer_first_name
+                    .toLowerCase()
+                    .includes(searchName.toLowerCase())
+                ) {
+                  return val;
+                }
+              })
+              .filter((val) => {
+                if (searchAddress === '') {
+                  return val;
+                } else if (
+                  val.customer_address
+                    .toLowerCase()
+                    .includes(searchAddress.toLowerCase())
+                ) {
+                  return val;
+                }
+              })
+              .filter((val) => {
+                if (searchID === '') {
+                  return val;
+                } else if (
+                  val.purchase_id.toLowerCase().includes(searchID.toLowerCase())
+                ) {
+                  return val;
+                }
+              })
+              .map((profile) => (
                 <tbody>
                   <tr
                     key={profile.customer_uid}
@@ -467,7 +528,12 @@ function Customers() {
                       );
                       fetchFarm(setFarms, profile.customer_uid);
                       fetchProduce(setProduceOrdered, profile.customer_uid);
-                      fetchCoupons(setCoupons, profile.customer_uid);
+                      fetchCoupons(setCoupons, profile.customer_email);
+                      setEmail(profile.customer_email);
+                      handleClose();
+                      setSearchName('');
+                      setSearchAddress('');
+                      setSearchID('');
                     }}
                   >
                     <td className={classes.usrDesc}>
@@ -477,7 +543,9 @@ function Customers() {
                     <td className={classes.usrDesc}>
                       {profile.customer_email}
                     </td>
-                    <td className={classes.usrDesc}>{profile.purchase_id}</td>
+                    <td className={classes.usrDesc}>
+                      #{profile.purchase_id.substring(4)}
+                    </td>
                     <td className={classes.usrDesc}>
                       {moment(profile.last_order_date).format('LL')}
                     </td>
@@ -497,9 +565,8 @@ function Customers() {
                   </tr>
                 </tbody>
               ))}
-            </table>
-          </Grid>
-        </ThemeProvider>
+          </table>
+        </Grid>
       );
     }
   };
@@ -570,11 +637,8 @@ function Customers() {
         email_id: createCoupon.email_id,
         cup_business_uid: createCoupon.cup_business_uid,
       })
-      .catch((error) => {
-        console.log(error.message);
-      })
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
       });
   }
   function handle(e) {
@@ -641,7 +705,7 @@ function Customers() {
                     anchorEl={anchorEl}
                     onClose={handleClose}
                     anchorReference="anchorPosition"
-                    anchorPosition={{ top: 600, left: 1000 }}
+                    anchorPosition={{ top: 700, left: 1000 }}
                     anchorOrigin={{
                       vertical: 'center',
                       horizontal: 'right',
