@@ -1,28 +1,11 @@
-import Modal from 'react-bootstrap/Modal';
 // import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import classes from './Ambasadormodal.module.css';
-import { Button } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
-import Signup from '../SignUp/Signup';
-import { Paper } from '@material-ui/core';
-import AdminLogin from '../LogIn/AdminLogin';
 import Draggable from 'react-draggable';
 
 const LoginAmbasador = (props) => {
-  let [modalSignup, modalSignupMessage] = useState('');
-  let [modalLogin, modalLoginMessage] = useState('');
-  const modalSign = () => {
-    modalSignupMessage('true');
-    console.log(modalSignupMessage, modalSignup);
-    // props.modalClear();
-  };
-  const modalLgn = () => {
-    modalLoginMessage('true');
-    console.log(modalSignupMessage, modalSignup);
-    // props.modalClear();
-  };
 
   return (
     <>
@@ -31,6 +14,7 @@ const LoginAmbasador = (props) => {
         <div>
           <img
             src={cross}
+            alt = {''}
             onClick={props.close}
             style={{
               float: 'right',

@@ -42,7 +42,7 @@ function SocialLogin(props) {
     else if (urlParams.has('media')) {
       console.log(urlParams.get('media'));
     }
-  }, []);
+  }, [Auth, props]);
 
   const responseGoogle = (response) => {
     console.log(response);
@@ -181,6 +181,7 @@ function SocialLogin(props) {
               src={Fb_Login}
               onClick={renderProps.onClick}
               disabled={renderProps.disabled}
+              alt = {''}
             ></img>
           )}
         />
@@ -200,6 +201,7 @@ function SocialLogin(props) {
                 src={Google}
                 onClick={renderProps.onClick}
                 disabled={renderProps.disabled}
+                alt = {''}
               ></img>
             )}
           />
@@ -210,6 +212,7 @@ function SocialLogin(props) {
         <img
           src={Apple_Login}
           variant="contained"
+          alt = {''}
           onClick={() => {
             window.AppleID.auth.signIn();
           }}

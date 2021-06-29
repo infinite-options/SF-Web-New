@@ -9,9 +9,7 @@ import SocialLogin from '../LogIn/SocialLogin';
 import CssTextField from '../../utils/CssTextField';
 import AuthUtils from '../../utils/AuthUtils';
 import { useConfirmation } from '../../services/ConfirmationService';
-import checkoutContext from '../CheckoutPage/CheckoutContext';
 import { AuthContext } from '../../auth/AuthContext';
-import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   labelRoot: {
@@ -22,9 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 const OrderConfirmation = (props) => {
   const store = useContext(storeContext);
-  const checkout = useContext(checkoutContext);
   const auth = useContext(AuthContext);
-  const history = useHistory();
   const confirm = useConfirmation();
   const classes = useStyles();
   const AuthMethods = new AuthUtils();
@@ -36,23 +32,16 @@ const OrderConfirmation = (props) => {
   const [isAddressConfirmed, setIsAddressConfirmed] = useState(true);
 
   const [signUpErrorMessage, setSignUpErrorMessage] = useState('');
-  const [locError, setLocError] = useState('');
-  const [locErrorMessage, setLocErrorMessage] = useState('');
+  // const [locError, setLocError] = useState('');
+  // const [locErrorMessage, setLocErrorMessage] = useState('');
   const [emailError, setEmailError] = useState('');
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
-
-  function createLocError(message) {
-    setLocError('Invalid Input');
-    setLocErrorMessage(message);
-  }
+  // const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
 
   function resetErrors() {
     setSignUpErrorMessage('');
-    setLocError('');
-    setLocErrorMessage('');
     setEmailError('');
     setEmailErrorMessage('');
   }
@@ -103,7 +92,7 @@ const OrderConfirmation = (props) => {
       ) {
         setPasswordError('not matching');
         setConfirmPasswordError('not matching');
-        setPasswordErrorMessage('Your passwords do not match');
+        // setPasswordErrorMessage('Your passwords do not match');
         isPasswordError = true;
       }
       var count = 0;
@@ -115,7 +104,7 @@ const OrderConfirmation = (props) => {
       count += /\d/.test(password) ? 1 : 0;
       if (count < 4) {
         setPasswordError('stronger');
-        setPasswordErrorMessage('Your password does not pass the criteria');
+        // setPasswordErrorMessage('Your password does not pass the criteria');
         isPasswordError = true;
       }
       if (isEmailError || isEmptyError || isPasswordError) {
@@ -127,10 +116,6 @@ const OrderConfirmation = (props) => {
           console.log('(res.code === 200): ', res);
           if (res.code === 200) {
             setProfile({ ...userInfo });
-          } else {
-            setLocErrorMessage(
-              'There was an issue updating your profile, please try again later'
-            );
           }
         });
       } else {
@@ -145,17 +130,9 @@ const OrderConfirmation = (props) => {
               title: 'Profile Successfully Created',
               description: 'Thank you for signing up. You are now signed in.',
             }).then(() => {});
-          } else {
-            setLocErrorMessage(
-              'There was an issue creating your Account, please try again later'
-            );
           }
         });
       }
-    } else {
-      createLocError(
-        'Your address Had not been validated, please validate before saving changes.'
-      );
     }
   };
   const checkExistingEmail = async () => {
@@ -187,7 +164,7 @@ const OrderConfirmation = (props) => {
     const { name, value } = event.target;
     setPasswordError('');
     setConfirmPasswordError('');
-    setPasswordErrorMessage('');
+    // setPasswordErrorMessage('');
     if (name === 'confirm') {
       setConfirmPassword(value);
     } else {
@@ -202,7 +179,13 @@ const OrderConfirmation = (props) => {
         userInfo.zip === store.profile.zip &&
         userInfo.state === store.profile.state
     );
-  }, [userInfo]);
+  }, [
+    userInfo,
+    store.profile.address,
+    store.profile.city,
+    store.profile.state,
+    store.profile.zip,
+  ]);
 
   const PlainTextField = (props) => {
     return (

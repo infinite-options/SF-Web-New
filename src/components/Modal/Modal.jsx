@@ -1,8 +1,6 @@
-import Modal from 'react-bootstrap/Modal';
 // import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import classes from './ErrorModal.module.css';
-import { Button } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
 import Draggable from 'react-draggable';
@@ -23,6 +21,7 @@ const Mymodal = (props) => {
           <img
             src={cross}
             onClick={props.onConfirm}
+            alt = {''}
             style={{
               float: 'right',
               height: '25px',

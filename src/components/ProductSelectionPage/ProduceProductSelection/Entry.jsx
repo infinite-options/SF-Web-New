@@ -11,10 +11,6 @@ import {
   SvgIcon,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import InfoIcon from '@material-ui/icons/Info';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import axios from 'axios';
 import appColors from '../../../styles/AppColors';
 import ProduceSelectContext from '../ProdSelectContext';
 
@@ -111,7 +107,7 @@ const useStyles = makeStyles((theme) => ({
     height: '78px',
     display: 'flex',
     flexDirection: 'column',
-    background: (props) => (props.id != 0 ? '#F4860933' : 'white'),
+    background: (props) => (props.id !== 0 ? '#F4860933' : 'white'),
   },
 
   itemInfo: {
@@ -153,7 +149,7 @@ function Entry(props) {
 
     const isFavoritedAndInFavorites =
       productSelect.categoriesClicked.has('favorite') &&
-      props.favorite == 'TRUE';
+      props.favorite === 'TRUE';
 
     if (props.favorite === 'TRUE') {
       setHearted(true);
@@ -168,7 +164,7 @@ function Entry(props) {
     if (productSelect.categoriesClicked.has(props.type)) isInCategory = true;
 
     setIsShown(
-      productSelect.categoriesClicked.size == 0 ||
+      productSelect.categoriesClicked.size === 0 ||
         isInCategory ||
         isFavoritedAndInFavorites
     );
@@ -177,6 +173,10 @@ function Entry(props) {
     store.dayClicked,
     productSelect.farmsClicked,
     productSelect.categoriesClicked,
+    props.business_uids,
+    props.favorite,
+    props.type,
+    store.farmDaytimeDict,
   //  store.cartItems,
   //  store.products
 
@@ -186,7 +186,7 @@ function Entry(props) {
     if (props.id in store.cartItems) {
       const itemCount = store.cartItems[props.id]['count'];
       if (itemCount > 0) {
-        if (itemCount == 1) {
+        if (itemCount === 1) {
           let clone = Object.assign({}, store.cartItems);
           delete clone[props.id];
           store.setCartItems(clone);
@@ -222,9 +222,9 @@ function Entry(props) {
 
   const toggleHearted = () => {
     for (let i = 0; i < store.products.length; i++) {
-      if (store.products[i].item_uid == props.id) {
+      if (store.products[i].item_uid === props.id) {
         store.products[i].favorite =
-          props.favorite == 'FALSE' ? 'TRUE' : 'FALSE';
+          props.favorite === 'FALSE' ? 'TRUE' : 'FALSE';
       }
     }
     setHearted(!hearted);
@@ -265,7 +265,7 @@ function Entry(props) {
                 onClick={toggleHearted}
                 disabled={!isInDay}
               >
-                <img src={hearted ? FavoriteSrc : FavoriteBorderedSrc} />
+                <img src={hearted ? FavoriteSrc : FavoriteBorderedSrc} alt = {''} />
               </Button>
             </Box>
 
@@ -280,7 +280,7 @@ function Entry(props) {
                 onClick={flipped}
                 disabled={!isInDay}
               >
-                <img src={InfoSrc} />
+                <img src={InfoSrc} alt = {''} />
               </Button>
             </Box>
           </Box>
@@ -304,7 +304,7 @@ function Entry(props) {
               }}
             >
               <Button onClick={toggleHearted} disabled={!isInDay}>
-                <img src={hearted ? FavoriteSrc : FavoriteBorderedSrc} />
+                <img src={hearted ? FavoriteSrc : FavoriteBorderedSrc} alt = {''} />
               </Button>
             </Box>
             <Box
@@ -318,7 +318,7 @@ function Entry(props) {
                 onClick={notFlipped}
                 disabled={!isInDay}
               >
-                <img src={InfoSrc} />
+                <img src={InfoSrc} alt = {''} />
               </Button>
             </Box>
           </Box>

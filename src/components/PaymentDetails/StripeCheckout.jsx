@@ -51,11 +51,8 @@ const StripeCheckout = (props) => {
   const [processing, setProcessing] = useState(false);
   const {
     profile,
-    setProfile,
     cartItems,
-    setCartItems,
     startDeliveryDate,
-    setCartTotal,
   } = useContext(storeContext);
 
   const { paymentDetails, setPaymentProcessing, chosenCoupon } =
@@ -192,7 +189,7 @@ const StripeCheckout = (props) => {
       };
 
       console.log('purchase_Data_SF data', data);
-      let res = axios
+      axios
         .post(
           process.env.REACT_APP_SERVER_BASE_URI + 'purchase_Data_SF',
           data,

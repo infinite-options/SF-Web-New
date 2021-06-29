@@ -5,18 +5,13 @@ import storeContext from '../../Store/storeContext';
 import {
   Box,
   Button,
-  ButtonBase,
-  Grid,
   Paper,
   Typography,
 } from '@material-ui/core';
 import appColors from '../../../styles/AppColors';
-import { set } from 'js-cookie';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
-import ItemCategory from '../../FilterProductSelection/ItemCategory';
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
-import GridList from '@material-ui/core/GridList';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; 
+import { Carousel } from 'react-responsive-carousel';
 
 const theme2 = createMuiTheme({
   breakpoints: {
@@ -49,65 +44,6 @@ const theme2 = createMuiTheme({
 
 console.log('Theme2 = ', theme2.breakpoints);
 
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     display: 'flex',
-//     flexWrap: 'wrap',
-//     justifyContent: 'space-around',
-//     overflow: 'hidden',
-//     backgroundColor: theme.palette.background.paper,
-//   },
-//   gridList: {
-//     flexWrap: 'nowrap',
-//     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-//     transform: 'translateZ(0)',
-//   },
-//   title: {
-//     color: theme.palette.primary.light,
-//   },
-//   titleBar: {
-//     background:
-//       'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-//   },
-// }));
-
-var responsive = {
-  superLargeDesktop: {
-    // the naming can be any, depends on you.
-    breakpoint: { max: 40, min: 3000 },
-    items: 5,
-  },
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 5,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 7,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-  },
-};
-
-// const responsive = {
-//   desktop: {
-//     breakpoint: { max: 3000, min: 1024 },
-//     items: 3,
-
-//   },
-//   tablet: {
-//     breakpoint: { max: 1024, min: 464 },
-//     items: 2,
-
-//   },
-//   mobile: {
-//     breakpoint: { max: 464, min: 0 },
-//     items: 1,
-//   }
-// };
-
 const useStyles = makeStyles((theme) => ({
   itemDisplayContainer: {
     backgroundColor: '#F1F4F4',
@@ -125,7 +61,17 @@ const useStyles = makeStyles((theme) => ({
 
   imageItem: {
     borderRadius: 10,
-    marginLeft: '6rem',
+    paddingLeft: '6rem',
+  },
+
+  foodCatDisplayType: {
+    color: '#ff8500',
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: appColors.componentBg,
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
 
   entryContainer: {
@@ -205,9 +151,11 @@ function DisplayProduct() {
   const productSelect = useContext(ProdSelectContext);
   const store = useContext(storeContext);
 
-  const [FruitDisplayType, setFruitDisplayType] = useState(true);
-  const [OtherDisplayType, setOtherDisplayType] = useState(true);
-  const [VegetableDisplayType, setVegetableDisplayType] = useState(true);
+  const [FruitDisplayType, setFruitDisplayType] = useState(false);
+  const [OtherDisplayType, setOtherDisplayType] = useState(false);
+  const [VegetableDisplayType, setVegetableDisplayType] = useState(false);
+  const [GiftCardDisplayType, setGiftCardDisplayType] = useState(false);
+
 
   const [windowHeight, setWindowHeight] = React.useState(window.innerHeight);
 
@@ -248,81 +196,127 @@ function DisplayProduct() {
     store.products,
     store.productsLoading,
     store.cartTotal,
+    store.expectedDelivery,
   ]);
 
   function handleClickOther() {
     setOtherDisplayType(!OtherDisplayType);
   }
 
+  function handleClickGiftCard() {
+    setGiftCardDisplayType(!GiftCardDisplayType);
+  }
+
   function handleClickFruit() {
     setFruitDisplayType(!FruitDisplayType);
   }
 
-  function handleClickVegetable() {
-    setVegetableDisplayType(!VegetableDisplayType);
+  function handleClickDisplayType(category) {
+    switch(category) {
+      case 'Vegetables':
+        setVegetableDisplayType(!VegetableDisplayType);
+        break;
+      case 'Fruits':
+        setFruitDisplayType(!FruitDisplayType);
+        break;
+      case 'Gift Cards':
+        setGiftCardDisplayType(!GiftCardDisplayType);
+        break;
+      case 'Others':
+        setOtherDisplayType(!OtherDisplayType);
+    }
   }
+
+  const foodTypeArr = [
+    {
+      name: 'Vegetables',
+      displayType: VegetableDisplayType,
+      products: store.productsVegetable,
+    },
+    {
+      name: 'Fruits',
+      displayType: FruitDisplayType,
+      products: store.productsFruit,
+    },
+    {
+      name: 'Gift Cards',
+      displayType: GiftCardDisplayType,
+      products: store.productsGiftCard,
+    },
+    {
+      name: 'Others',
+      displayType: OtherDisplayType,
+      products: store.productsDessert,
+    },
+  ];
 
   if (!store.productsLoading && !productSelect.itemError) {
     return (
       <>
-        <Box marginLeft="1rem" marginRight="0.2rem">
+        {foodTypeArr.map(ft =>
+        <Box marginLeft="1rem" marginRight="0.2rem" display = 'flex' flexDirection = 'column'>
           <Box fontSize={22} color={appColors.paragraphText}>
             {displayMessage}
           </Box>
-
-          {/* <Box style={{ backgroundColor: appColors.componentBg }}>
-            <p> Grid Test </p>
-          </Box> */}
 
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h1
               style={{
                 textDecoration: 'underline',
                 color: appColors.secondary,
-                paddingLeft: '2rem',
-                paddingRight: '2rem',
               }}
             >
-              Vegetables
+              {ft.name}
             </h1>
-            <div style={{ display: 'flex' }}>
-              {/* <Button
-                varient="text"
-                style={{ color: '#ff8500' }}
-                onClick={handleClickVegetable}
+
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <Typography
+                className = {classes.foodCatDisplayType}
+                onClick={() => handleClickDisplayType(ft.name)}
               >
-                See all Vegetables
-              </Button> */}
-              {/* <Box
+                {`See all ${ft.name}`}
+              </Typography>
+              <Box
                 style={{
                   width: '1rem',
                   height: '1rem',
                   marginTop: '2rem',
                   backgroundSize: '1rem',
-                  backgroundImage: VegetableDisplayType
+                  backgroundImage: ft.displayType
                     ? `url(${'./store_img/seeAllUp.png'})`
                     : `url(${'./store_img/seeAllDown.png'})`,
                 }}
-              ></Box> */}
+              ></Box>
             </div>
           </div>
-          {/* <Box hidden={VegetableDisplayType}>
+
+          <Box
+            // width={window.innerWidth < 1200 ? window.innerWidth : window.innerWidth - 500}
+            hidden={ft.displayType}
+          >
             <Carousel
-              // itemClass={classes.imageItem}
-              // centerMode={true}
-              responsive={responsive}
+               itemClass={classes.imageItem}
+               showArrows={true}
+               autoPlay={true}
+               interval ={2000}
+               showIndicators={false}
+               centerMode={true}
+               swipeable={false}
+               infiniteLoop={true}
+               centerSlidePercentage={
+                 window.innerWidth < 1200 ?
+                 window.innerWidth < 600 ? 100 : 40 : 30
+              }
+              showThumbs={false}
             >
-              {store.productsVegetable.map(createProduct2)}
-            </Carousel>
-          </Box> */}
+              {ft.products.map(createProduct2)}
+            </Carousel> 
+          </Box>
+          
           <Box
             className="responsive-display-produce"
-            // width="100%"
-            hidden={!FruitDisplayType}
+            hidden={!ft.displayType}
             height={windowHeight - 165}
-            // ml={2}
-            // p={3}
-            // pb={5}
             mb={2}
             style={{
               backgroundColor: appColors.componentBg,
@@ -341,240 +335,17 @@ function DisplayProduct() {
                 overflow: 'auto',
               }}
             >
-              <Box width="97%" justifyContent="center">
+              <Box justifyContent="center">
                 <Box
                   className={classes.entryContainer}
-                  // spacing={5}
-                  // spacing={2}
                 >
-                  {store.productsVegetable.map(createProduct2)}
+                  {ft.products.map(createProduct2)}
                 </Box>
               </Box>
             </Paper>
           </Box>
-        </Box>
-
-        <Box style={{ backgroundColor: appColors.componentBg }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h1
-              style={{
-                textDecoration: 'underline',
-                color: appColors.secondary,
-                paddingLeft: '2rem',
-                paddingRight: '2rem',
-              }}
-            >
-              {' '}
-              Fruits{' '}
-            </h1>
-            <div style={{ display: 'flex' }}>
-              {/* <Button style={{color:"#ff8500"}}  onClick = {handleClickFruit}> See all Fruits </Button>
- <Box  style={{
-            width: '1rem',
-            height: '1rem',
-            marginTop:'2rem',
-            backgroundSize:'1rem',
-            backgroundImage: FruitDisplayType? `url(${
-              './store_img/seeAllUp.png' })` : `url(${
-                './store_img/seeAllDown.png'
-            })`,}}>
-
-</Box> */}
-            </div>
-          </div>
-          {/* <Box hidden={ FruitDisplayType  }>
-
-<Carousel
-    itemClass={classes.imageItem}
-    centerMode={true} 
-    responsive={responsive}>
-  
-  {store.productsFruit.map(createProduct2)}
-    
-  </Carousel> 
-  </Box>  */}
-          <Box
-            className="responsive-display-produce"
-            // width="100%"
-            hidden={!FruitDisplayType}
-            height={windowHeight - 165}
-            // ml={2}
-            // p={3}
-            // pb={5}
-            mb={2}
-            style={{
-              backgroundColor: appColors.componentBg,
-              borderRadius: 10,
-              paddingBottom: '95px',
-            }}
-          >
-            <Box mt={2} />
-
-            <Paper
-              elevation={0}
-              style={{
-                backgroundColor: appColors.componentBg,
-                maxHeight: '100%',
-                width: '100%',
-                overflow: 'auto',
-              }}
-            >
-              <Box width="97%" justifyContent="center">
-                <Box className={classes.entryContainer}>
-                  {store.productsFruit.map(createProduct2)}
-                </Box>
-              </Box>
-            </Paper>
-          </Box>
-        </Box>
-
-        <Box style={{ backgroundColor: appColors.componentBg }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h1
-              style={{
-                textDecoration: 'underline',
-                color: appColors.secondary,
-                paddingLeft: '2rem',
-                paddingRight: '2rem',
-              }}
-            >
-              {' '}
-              Others{' '}
-            </h1>
-            <div style={{ display: 'flex' }}>
-              {/* <Button style={{color:"#ff8500"}}  onClick = {handleClickOther}> See all Others </Button>
- <Box  style={{
-            width: '1rem',
-            height: '1rem',
-            marginTop:'2rem',
-            backgroundSize:'1rem',
-            backgroundImage: OtherDisplayType? `url(${
-              './store_img/seeAllUp.png' })` : `url(${
-                './store_img/seeAllDown.png'
-            })`,}}>
-
-</Box> */}
-            </div>
-          </div>
-          {/* <Box hidden={ OtherDisplayType  }>
-
-<Carousel
-    itemClass={classes.imageItem}
-    centerMode={true} 
-    responsive={responsive}>
-  
-  {store.products.map(createProduct2)}
-    
-  </Carousel> 
-  </Box>  */}
-          <Box
-            className="responsive-display-produce"
-            // width="100%"
-            hidden={!OtherDisplayType}
-            height={windowHeight - 165}
-            // ml={2}
-            // p={3}
-            // pb={5}
-            mb={2}
-            style={{
-              backgroundColor: appColors.componentBg,
-              borderRadius: 10,
-              paddingBottom: '95px',
-            }}
-          >
-            <Box mt={2} />
-
-            <Paper
-              elevation={0}
-              style={{
-                backgroundColor: appColors.componentBg,
-                maxHeight: '100%',
-                width: '100%',
-                overflow: 'auto',
-              }}
-            >
-              <Box width="97%" justifyContent="center">
-                <Box className={classes.entryContainer}>
-                  {store.productsDessert.map(createProduct2)}
-                </Box>
-              </Box>
-            </Paper>
-          </Box>
-        </Box>
+        </Box>)}
       </>
-      //       <Box
-      //         className = {classes.itemDisplayContainer}
-      //       >
-
-      // <Simple/>
-      //         {/* <Paper
-      //           elevation={0}
-      //           className = {classes.productsPaperContainer}
-      //         >
-      //           <Box justifyContent="center">
-      //             <Grid container direction="row" justify="flex-start"
-      //               // spacing={5}
-      //             >
-      //               {store.productsFruit.map(createProduct2)}
-      //             </Grid>
-      //           </Box>
-      //         </Paper> */}
-      // <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Vegetables </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //     <Carousel
-      //             itemClass={classes.imageItem}
-      //             centerMode={true}
-      //             responsive={responsive}>
-
-      //            {store.productsVegetable.map(createProduct2)}
-
-      //           </Carousel>
-
-      //           <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Fruits </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //          <Carousel
-      //         itemClass={classes.imageItem}
-      //         centerMode={true}
-      //         responsive={responsive}>
-
-      //         {store.productsFruit.map(createProduct2)}
-      //         </Carousel>
-
-      //           <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Desserts </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //            <Carousel
-      //             itemClass={classes.imageItem}
-      //             centerMode={true}
-      //             responsive={responsive}>
-
-      //            {store.productsDessert.map(createProduct2)}
-
-      //           </Carousel>
-
-      //           <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Other </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //            <Carousel
-      //             itemClass={classes.imageItem}
-      //             centerMode={true}
-      //             responsive={responsive}>
-
-      //             {store.products.map(createProduct2)}
-
-      //           </Carousel>
-
-      //       </Box>
     );
   } else {
     return (

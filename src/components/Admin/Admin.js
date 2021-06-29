@@ -74,7 +74,7 @@ function Admin(authLevel, isAuth) {
   useEffect(() => {
     if (Auth.authLevel >= 2) {
       axios
-        .get(process.env.REACT_APP_SERVER_BASE_URI + 'adminCustomerInfo')
+        .get(process.env.REACT_APP_SERVER_BASE_URI + 'adminCustomerInfo/all')
         .then((res) => {
           setCustList(
             res.data.result.sort(function (a, b) {

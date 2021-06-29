@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, {  useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { AuthContext } from 'auth/AuthContext';
@@ -23,6 +23,11 @@ import Background from '../../icon/Rectangle.svg';
 import AdminLogin from '../LogIn/AdminLogin';
 import Signup from '../SignUp/Signup';
 import Footer from '../Footer/Footer';
+
+import {
+  geocodeByAddress,
+  getLatLng,
+} from 'react-places-autocomplete';
 
 import Cookies from 'js-cookie';
 
@@ -105,7 +110,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     width: '75%',
     height: '50px',
-    color: 'primary',
     background: '#e88330',
     color: 'white',
     borderRadius: '10px',
@@ -145,10 +149,6 @@ function ProfileInfo() {
   const [newPassword, setNewPassword] = React.useState('');
   const [confirmedPassword, setConfirmedPassword] = React.useState('');
 
-  console.log('newPassword = ', newPassword);
-  console.log('confirmPass = ', confirmedPassword);
-  console.log('profile = ', profile);
-
   const loginTypeMapping = {
     NULL: (
       <Box>
@@ -162,17 +162,17 @@ function ProfileInfo() {
     ),
     GOOGLE: (
       <Box className={classes.socialSigninWrapper}>
-        <img height="60px" src={GoogleSignin} />
+        <img height="60px" src={GoogleSignin} alt = {''} />
       </Box>
     ),
     FACEBOOK: (
       <Box className={classes.socialSigninWrapper}>
-        <img height="60px" src={FacebookSignin} />
+        <img height="60px" src={FacebookSignin} alt = {''} />
       </Box>
     ),
     APPLE: (
       <Box className={classes.socialSigninWrapper}>
-        <img height="60px" src={AppleSignin} />
+        <img height="60px" src={AppleSignin} alt = {''} />
       </Box>
     ),
   };
@@ -238,7 +238,7 @@ function ProfileInfo() {
       };
       setProfile(updatedProfile);
     }
-  }, []);
+  }, [Auth.isAuth, history, setProfile]);
 
   const handleClickLogOut = () => {
     localStorage.removeItem('currentStorePage');
@@ -252,17 +252,23 @@ function ProfileInfo() {
     history.push('/');
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     const AuthMethods = new AuthUtils();
 
-    if (newPassword != '' && newPassword == confirmedPassword) {
+    const addy = `${profile.address}, ${profile.city}, ${profile.state}, ${profile.zip}`;
+    const res = await geocodeByAddress(addy);
+    const coords = await getLatLng(res[0]);
+
+    const newProfile = {...profile, latitude: coords.lat.toString(), longitude: coords.lng.toString()};
+
+    if (newPassword !== '' && newPassword === confirmedPassword) {
       const cred = {
         customer_email: profile.email,
         password: newPassword,
       };
 
       Promise.all([
-        AuthMethods.updateProfile(profile),
+        AuthMethods.updateProfile(newProfile),
         AuthMethods.updatePassword(cred),
       ])
         .then((authRes) => {
@@ -276,7 +282,7 @@ function ProfileInfo() {
       console.log('here');
     } else {
       console.log('else');
-      AuthMethods.updateProfile(profile)
+      AuthMethods.updateProfile(newProfile)
         .then((authRes) => {
           console.warn('authRes = ', authRes);
           window.location.reload();
@@ -287,7 +293,7 @@ function ProfileInfo() {
     }
   };
 
-  console.log('Auth = ', Auth);
+  console.log('Shackles = ', profile);
 
   return (
     <Box className={classes.profileInfoContainer}>
@@ -332,20 +338,20 @@ function ProfileInfo() {
           <TextField
             className={classes.profileEditField}
             variant="outlined"
-            label={profile.firstName == '' ? 'John' : profile.firstName}
+            label={profile.firstName === '' ? 'John' : profile.firstName}
             disabled
           />
           <TextField
             className={classes.profileEditField}
             variant="outlined"
-            label={profile.lastName == '' ? 'Doe' : profile.lastName}
+            label={profile.lastName === '' ? 'Doe' : profile.lastName}
             disabled
           />
           <TextField
             className={classes.profileEditField}
             variant="outlined"
             placeholder={
-              profile.phoneNum == '' ? '123-456-7891' : profile.phoneNum
+              profile.phoneNum === '' ? '123-456-7891' : profile.phoneNum
             }
             onChange={(event) =>
               setProfile({ ...profile, phoneNum: event.target.value })
@@ -354,13 +360,13 @@ function ProfileInfo() {
           <TextField
             className={classes.profileEditField}
             variant="outlined"
-            label={profile.email == '' ? 'johndoe@example.com' : profile.email}
+            label={profile.email === '' ? 'johndoe@example.com' : profile.email}
             disabled
           />
 
           {Auth.isAuth ? loginTypeMapping[profile.socialMedia] : ''}
 
-          <Box hidden={profile.socialMedia != 'NULL' || !resetPasswordClicked}>
+          <Box hidden={profile.socialMedia !== 'NULL' || !resetPasswordClicked}>
             <TextField
               className={classes.profileEditField}
               variant="outlined"
@@ -382,7 +388,7 @@ function ProfileInfo() {
             className={classes.profileEditField}
             variant="outlined"
             placeholder={
-              profile.address == '' ? 'Street Address' : profile.address
+              profile.address === '' ? 'Street Address' : profile.address
             }
             onChange={(event) =>
               setProfile({ ...profile, address: event.target.value })
@@ -391,7 +397,7 @@ function ProfileInfo() {
           <TextField
             className={classes.profileEditField}
             variant="outlined"
-            placeholder={profile.unit == '' ? 'Appt number' : profile.unit}
+            placeholder={profile.unit === '' ? 'Apt number' : profile.unit}
             onChange={(event) =>
               setProfile({ ...profile, unit: event.target.value })
             }
@@ -401,7 +407,7 @@ function ProfileInfo() {
             <TextField
               className={classes.profileEditField}
               variant="outlined"
-              placeholder={profile.city == '' ? 'City' : profile.city}
+              placeholder={profile.city === '' ? 'City' : profile.city}
               style={{ marginRight: '30px' }}
               onChange={(event) =>
                 setProfile({ ...profile, city: event.target.value })
@@ -410,7 +416,7 @@ function ProfileInfo() {
             <TextField
               className={classes.profileEditField}
               variant="outlined"
-              placeholder={profile.state == '' ? 'State' : profile.state}
+              placeholder={profile.state === '' ? 'State' : profile.state}
               style={{ marginRight: '30px' }}
               onChange={(event) =>
                 setProfile({ ...profile, state: event.target.value })
@@ -419,7 +425,7 @@ function ProfileInfo() {
             <TextField
               className={classes.profileEditField}
               variant="outlined"
-              placeholder={profile.zip == '' ? 'Zip Code' : profile.zip}
+              placeholder={profile.zip === '' ? 'Zip Code' : profile.zip}
               onChange={(event) =>
                 setProfile({ ...profile, zip: event.target.value })
               }

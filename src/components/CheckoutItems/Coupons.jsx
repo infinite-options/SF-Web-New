@@ -7,6 +7,7 @@ import { AuthContext } from '../../auth/AuthContext';
 import storeContext from '../Store/storeContext';
 import checkoutContext from '../CheckoutPage/CheckoutContext';
 import { makeStyles } from '@material-ui/core/styles';
+import useWindowsDimensions from '../WindowDimensions/WindowDimensions';
 
 // const responsive = {
 //   desktop: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Coupons(props) {
   const classes = useStyles();
-
+  const currDims = useWindowsDimensions();
   const store = useContext(storeContext);
   const auth = useContext(AuthContext);
   const checkout = useContext(checkoutContext);
@@ -246,8 +247,8 @@ export default function Coupons(props) {
         <Box
           onClick={onCouponClick}
           style={{
-            width: '212px',
-            height: '115px',
+            width: '14rem',
+            height: '8rem',
             backgroundImage: `url(${
               './coupon_img/' + coupProps.status + '.png'
             })`,
@@ -264,10 +265,14 @@ export default function Coupons(props) {
             justifyContent="center"
             marginLeft="2rem"
           >
-            <Box fontSize="16px" pr={1} fontWeight="bold" marginTop="1rem">
+            <Box fontSize="16px" pr={1} fontWeight="bold" marginTop="0.5rem" textAlign='left'>
               {coupProps.title}
             </Box>
-            <Box fontSize="12px" fontWeight="bold">
+            <Box
+              textAlign='left'
+              fontSize="12px"
+              fontWeight="bold"
+            >
               {coupProps.notes}
             </Box>
             <Box
@@ -386,6 +391,8 @@ export default function Coupons(props) {
     return arr; // for testing
   }
 
+  console.log('currDims.width = ', currDims.width);
+
   return (
     // if the Carousel view is acting up in localhost, replace this componant with: <></>, save the file,
     // then undo to original, and save again and it should work as expected
@@ -407,13 +414,14 @@ export default function Coupons(props) {
             centerMode={true}
             swipeable={true}
             centerSlidePercentage={
-              window.innerWidth < 1200
-                ? window.innerWidth < 500
-                  ? 100
-                  : 30
-                : 60
+              // window.innerWidth > 1800 ? 10 : window.innerWidth > 1500 ? 30 : 50
+              currDims.width > 2000 ? 50 :
+              currDims.width > 1850 ? 55 :
+              currDims.width > 1550 ? 60 :
+              currDims.width > 1400 ? 70 : 75
             }
             width="100%"
+            showThumbs={false}
           >
             {avaiCouponData.concat(unavaiCouponData).map(CreateCouponCard)}
           </Carousel>
