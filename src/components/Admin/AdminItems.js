@@ -7,13 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import Button from "@material-ui/core/Button";
-import DayPickerInput from 'react-day-picker/DayPickerInput';
-import 'react-day-picker/lib/style.css';
-import moment from 'moment';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import axios from 'axios';
-import TextField from '@material-ui/core/TextField';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -119,11 +113,9 @@ const useStyles = makeStyles((theme) => ({
   
 }));
 
-function OrderSummary() {
+function AdminItems() {
   const classes = useStyles();
-  const [orders, setOrders] = useState([]);
   const [open, setOpen] = useState(false);
-  const [farm, setFarm] = useState();
   const [allProduce, setAllProduce] = useState([]);
   const [produceDict, setProduceDict] = useState({});
 
@@ -133,7 +125,6 @@ function OrderSummary() {
       
   }, []);
 
-  
   const fetchProduceInfo = () => {
     axios
       .get('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/admin_items')
@@ -141,13 +132,13 @@ function OrderSummary() {
         setAllProduce(res.data.result)
         const temp_dict = {}
         res.data.result.map((item) => (
-            temp_dict[item.item_uid] = String(item.farms[0][2])+","+String(item.farms[0][3])
+            temp_dict[item.item_uid] = item
           )
               
         )
 
       setProduceDict(temp_dict)
-      console.log("dict is ",temp_dict)
+      //console.log("dict is ",temp_dict)
         
       })
       .catch((err) => {
@@ -158,16 +149,58 @@ function OrderSummary() {
       });
   };
  
-  const handleFarmChange = (e) => {
-    
-    let prodUID = e.target.value.split(",")[0]
-    let prodPriceStatus = e.target.value.split(",")[1]+","+e.target.value.split(",")[2]
-    setProduceDict(prevState => ({
-      ...prevState,
-      [prodUID]: prodPriceStatus
-  }))
+  const handleProduceChange = (e) => {
+    //console.log(e.target.name)
+    if (e.target.type === 'file'){
+      let uid = e.target.id.split(",")[1];
+      const formData = new FormData();
+      formData.append("item_photo", e.target.files[0]); 
+      formData.append("uid",uid); 
+      //console.log(e.target,"call endpoint")
+      axios
+      .post(
+        'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/upload_image_admin',
+        formData
+      )
+      .then((response) => {
+        //console.log(response.data)
+        let val = response.data
+        let tempDict = produceDict[uid]
+        tempDict["item_photo"] = val
+        setProduceDict(prevState => ({...prevState, [uid]: tempDict }))
+      })
+      .catch((er) => {
+        console.log(er);
+      });
+    } 
+    else{
+        let uid = e.target.id
+        let val = e.target.value
+        let propty = e.target.name
+        let tempDict = produceDict[uid]
+        tempDict[propty] = val
+        setProduceDict(prevState => ({...prevState, [uid]: tempDict }))
+    }
+    //console.log("after update",produceDict)
+  };
+
+  const handleSave = (e) => {
+      let action = e.target.id.split(",")[1]==='save'?'update':'delete'
+      let uid = e.target.id.split(",")[0];
+      axios
+      .post(
+        'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_item_admin/'+action,
+        produceDict[uid]
+      )
+      .then((response) => {
+        setOpen(true)
+      })
+      .catch((er) => {
+        console.log(er);
+      });
     
   };
+
   
   
   return (
@@ -210,7 +243,6 @@ function OrderSummary() {
                     <tr className={classes.tr} style={{border:'0px'}}>
                       <td className={classes.usrTitle}>Name</td>
                       <td className={classes.usrTitle}>Photo</td>
-                      {/* <td className={classes.usrTitle}>Info</td> */}
                       <td className={classes.usrTitle}>Type</td>
                       <td className={classes.usrTitle}>Description</td>
                       <td className={classes.usrTitle}>Unit </td>
@@ -220,8 +252,6 @@ function OrderSummary() {
                       <td className={classes.usrTitle}>Display</td>
                       <td className={classes.usrTitle}>Suppliers</td>
                       <td className={classes.usrTitle}>Primary Farm</td>
-                      <td className={classes.usrTitle}>Farm Price</td>
-                      <td className={classes.usrTitle}>Status</td>
                       <td className={classes.usrTitle}>Actions</td>
                     </tr>
 
@@ -229,44 +259,66 @@ function OrderSummary() {
         
                       <tr className={classes.tr}>
                         
-                        <td><input type="text" id="fname" name="fname" style={{width:"80%"}} value={produceVal.item_name}/></td>
+                        <td><input type="text" id={produceVal.item_uid} name="item_name" style={{width:"80%"}} defaultValue={produceVal.item_name} onChange={handleProduceChange}/></td>
                         <td className={classes.usrDesc}>
+                          <div style={{display:"flex"}}>
                             <img src={produceVal.item_photo} 
-                                 alt="" height="50" width="50">
-                           </img>
+                                 alt="produce" height="50" width="50" style={{border:"1px solid #E8E8E8",borderRadius:"5px"}}>
+                            </img>
+                            <label htmlFor={'upload-button'+','+produceVal.item_uid}>
+                                <img src='/editIcon.png' 
+                                alt="edit" height="15" width="15"  style={{ marginLeft:"3px",marginTop:"20px" }}/>
+                            </label>
+                            <input
+                              type="file"
+                              id={'upload-button'+','+produceVal.item_uid}
+                              style={{ display: "none" }}
+                              onChange={handleProduceChange}
+                            />
+                          </div>
                         </td>
-                        {/* <td><input type="text" id="fname" name="fname"  value={produceVal.item_info}/></td> */}
-                        <td><input type="text" id="fname" name="fname" style={{width:"80%"}} defaultValue={produceVal.item_type} /></td>
-                        <td><input type="text" id="fname" name="fname" style={{width:"50%"}} defaultValue={produceVal.item_desc}/></td>
-                        <td><input type="text" id="fname" name="fname" style={{width:"50%"}} defaultValue={produceVal.item_unit}/></td>
-                        <td><input type="text" id="fname" name="fname" style={{width:"40%"}} defaultValue={"$"+String(produceVal.item_price)}/></td>
-                        <td><input type="text" id="fname" name="fname" style={{width:"50%"}} defaultValue={produceVal.item_sizes}/></td>
-                        <td><input type="text" id="fname" name="fname" style={{width:"50%"}} defaultValue={produceVal.taxable}/></td>
-                        <td><input type="text" id="fname" name="fname" style={{width:"40%"}} defaultValue={produceVal.item_display}/></td>
-                        <td className={classes.usrDesc}>{produceVal.farms.length}</td>
+                        <td><input type="text" id={produceVal.item_uid} name="item_type" style={{width:"70%"}} defaultValue={produceVal.item_type} onChange={handleProduceChange}/></td>
+                        <td><input type="text" id={produceVal.item_uid} name="item_desc" style={{width:"50%"}} defaultValue={produceVal.item_desc} onChange={handleProduceChange}/></td>
+                        <td><input type="text" id={produceVal.item_uid} name="item_unit" style={{width:"50%"}} defaultValue={produceVal.item_unit} onChange={handleProduceChange}/></td>
+                        <td>$<input type="text" id={produceVal.item_uid} name="item_price" style={{width:"35%"}} defaultValue={produceVal.item_price} onChange={handleProduceChange}/></td>
+                        <td><input type="text" id={produceVal.item_uid} name="item_sizes" style={{width:"40%"}} defaultValue={produceVal.item_sizes} onChange={handleProduceChange}/></td>
+                        <td><input type="text" id={produceVal.item_uid} name="taxable" style={{width:"42%"}} defaultValue={produceVal.taxable} onChange={handleProduceChange}/></td>
+                        <td><input type="text" id={produceVal.item_uid} name="item_display" style={{width:"42%"}} defaultValue={produceVal.item_display} onChange={handleProduceChange}/></td>
+                        <td className={classes.usrDesc} >{produceVal.farms.length}</td>
                         
                         <td className={classes.usrDesc}>
 
-                          <select style={{border:'0px',textAlign:'center',width:"auto"}} 
-                                  onChange={handleFarmChange}
-                                  >
+                          <select style={{border:'0px',textAlign:'center',width:"auto"}}>
                             {produceVal.farms.map((item,index) => (
-                                    
-                                      <option 
-                                      // selected = {item===produceVal.business_name?"selected":""}
-                                      // className={item===produceVal.business_name? classes.original:classes.replacement} 
+                                    <option 
+                                      className={index===0? classes.original:classes.replacement} 
                                                 key={index} 
                                                 value={produceVal.item_uid+","+item[2]+","+String(item[3])}
                                                 >
-                                        {item[item.length-1]}
+                                        {item[item.length-1]+", "+item[item.length-2]+", "+item[item.length-3]}
                                     </option>
                                           
                             ))}
                           </select>
                         </td>
-                        <td><input type="text" id="fname" name="fname" style={{width:"40%"}} defaultValue={produceDict[produceVal.item_uid]?"$"+produceDict[produceVal.item_uid].split(",")[0]:""}/></td>
-                        <td><input type="text" id="fname" name="fname" style={{width:"50%"}} defaultValue={produceDict[produceVal.item_uid]?produceDict[produceVal.item_uid].split(",")[1]:""}/></td>
-                
+                              <td>< img
+                                    width="20"
+                                    height="20"
+                                    src='/saveButton.png'
+                                    alt="save"
+                                    onClick={handleSave}
+                                    style={{ marginRight:"10px" }}
+                                    id={String(produceVal.item_uid)+","+"save"}
+                                  />
+                                  < img
+                                    width="20"
+                                    height="20"
+                                    src='/deleteButton.png'
+                                    alt="delete"
+                                    onClick={handleSave}
+                                    id={String(produceVal.item_uid)+","+"delete"}
+                                  />
+                              </td>
                         
                       </tr>
                       ))}
@@ -278,6 +330,26 @@ function OrderSummary() {
             </Grid>
           
           </Grid>
+
+          <div>
+            <Dialog open={open} onClose={()=>setOpen(false)}>
+              <DialogTitle>{"Successful!!"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Produce has been updated
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button 
+                onClick={()=>setOpen(false)}
+                        
+                        color="primary" autoFocus>
+                  Okay
+                </Button>
+                
+              </DialogActions>
+            </Dialog>
+          </div>
           
             </div> 
        
@@ -285,4 +357,4 @@ function OrderSummary() {
     }
   
 
-export default OrderSummary;
+export default AdminItems;

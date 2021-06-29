@@ -182,7 +182,7 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
               <img
                 width="50"
                 height="50"
-                src="./logos/sf logo_without text.png"
+                src="/logos/sf logo_without text.png"
                 alt="logo"
                 onClick={handleLogoClick}
                 style={{ cursor: 'pointer' }}
