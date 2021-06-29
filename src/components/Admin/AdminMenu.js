@@ -119,6 +119,12 @@ const AdminMenu = ({ props }) => {
           state: { storePage: 0 },
         });
         break;
+      case 'Messages':
+        history.push({
+          pathname: '/admin/messages',
+          state: { storePage: 0 },
+        });
+        break;
       default:
         break;
     }
@@ -281,6 +287,27 @@ const AdminMenu = ({ props }) => {
                   }}
                 >
                   Customers
+                </div>
+              </div>
+            </ListItem>
+            <ListItem
+              className={
+                active === 'Messages'
+                  ? `${classes.activeitem}`
+                  : `${classes.menuitem}`
+              }
+              onClick={(e) => {
+                handleMenuItem(e, 'Messages');
+              }}
+            >
+              <div style={{ display: 'flex' }}>
+                <div
+                  style={{
+                    marginLeft: '1rem',
+                    fontSize: '18px',
+                  }}
+                >
+                  Messages
                 </div>
               </div>
             </ListItem>
