@@ -11,20 +11,23 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Input from "@material-ui/core/Input";
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import EmailModal from './emailModal';
+import PassModal from './passwordModal';
 
 const API_URL = process.env.REACT_APP_SERVER_BASE_URI + '';
 
 // TODO: if farmer default to home page
-function AdminLogin(props) {
+function AdminLogin({...props}) {
   const [emailValue, setEmail] = useState('');
   const [passwordValue, setPassword] = useState('');
   const [errorValue, setError] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [emailError, setemailError] = useState();
   const [passVisible, setPassvisble] = React.useState({
     password: "",
     showPassword: false,
   });
-
+  const [passModal,setpassModal]=useState();
   const Auth = useContext(AuthContext);
 
 
@@ -34,6 +37,22 @@ function AdminLogin(props) {
     setPassvisble({...passVisible,showPassword:!passVisible.showPassword});
   };
 
+
+
+  const onReset= async value=>{
+    axios .post (API_URL+"set_temp_password",{"email":emailValue})
+    .then((response)=>
+    {let res=response
+    if(res.data.message==="A temporary password has been sent"){
+      console.log(res);
+      setpassModal(true);
+    }
+    else if(res.data.code===280) {
+      console.log(res)
+      alert("No account found with that email.")
+    }
+    
+  })}
   useEffect(() => {
     if (
       process.env.REACT_APP_APPLE_CLIENT_ID &&
@@ -222,11 +241,18 @@ function AdminLogin(props) {
                           props.history.push('/admin');
                           break;
                       }
-                    } else if (res.data.code === 406 || res.data.code === 404) {
+                    } else if (res.data.code === 404) {
                       console.log('Invalid credentials');
                       setError('credential');
                       setErrorMessage('Invalid credentials');
-                    } else if (res.data.code === 401) {
+                      setemailError(true);
+                    } else if(res.data.code === 406 ){
+                      console.log('Wrong Password');
+                      setError('Password');
+                      setErrorMessage('Invalid Password');
+                      
+                    }
+                    else if (res.data.code === 401) {
                       console.log('Need to log in by social media');
                       setError('social');
                       setErrorMessage(res.data.message);
@@ -295,6 +321,7 @@ function AdminLogin(props) {
                   console.log('Invalid credentials');
                   setError('credential');
                   setErrorMessage('Invalid credentials');
+                  setemailError(true);
                 } else {
                   console.log('Unknown login error');
                   setError('unknown');
@@ -322,6 +349,7 @@ function AdminLogin(props) {
           console.log('Invalid credentials');
           setError('credential');
           setErrorMessage('Invalid credentials');
+          setemailError(true);
         } else {
           console.log('Unknown log in error');
           setError('Log in failed, try again');
@@ -456,10 +484,13 @@ function AdminLogin(props) {
               {/* <Box mb={2}>
               <Box>or</Box>
             </Box> */}
+            <p style={{color:appColors.secondary,fontWeight:'bold'}} onClick={onReset}>Reset Password</p>
             </Grid>
           </form>
         </Grid>
       </Paper>
+      {emailError && <EmailModal clear={setemailError} setIsSignUpShown={props.setIsSignUpShown} setIsLoginShown={props.setIsLoginShown}/>}
+    {passModal && <PassModal clear={setpassModal}></PassModal>}
     </div>
   );
 }

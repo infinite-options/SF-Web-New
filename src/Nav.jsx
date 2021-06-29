@@ -22,6 +22,7 @@ import AdminDashboard from './components/Admin/AdminDashboard';
 function Nav(authLevel, isAuth) {
   return (
     <Switch>
+      {/* {isAuth ?   <Route exact path="/store" component={Store} />:<Route exact path="/" component={Landing} />} */}
       <Route exact path="/" component={Landing} />
       <Route exact path="/signup" component={Signup} />
       <Route exact path="/socialsignup" component={SocialSignUp} />
