@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#E8D1BD',
     borderRadius: '20px',
     width: 'auto',
-    height: '345px',
+    height: '500px',
     overflowY: 'auto',
     boxShadow:
       ' -30px 20px 70px -30px rgba(51, 51, 51, 0.7), 0 50px 100px 0 rgba(51, 51, 51, 0.2)',
@@ -73,7 +73,6 @@ const useStyles = makeStyles((theme) => ({
     opacity: 1,
     justifyContent: 'start',
     padding: '10px',
-
     borderBottom: '1px solid #747474',
   },
   usrDesc: {
@@ -388,9 +387,9 @@ function fetchProduce(setProduceOrdered, id) {
       console.error(error);
     });
 }
-function fetchCoupons(setCoupons, id) {
+function fetchCoupons(setCoupons, custEmail) {
   fetch(
-    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/all_coupons`,
+    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/available_Coupons/${custEmail}`,
     {
       method: 'GET',
     }
@@ -447,6 +446,7 @@ function Customers() {
                     }}
                   />
                 </td>
+                <td></td>
                 <td>
                   <input
                     type="text"
@@ -457,6 +457,7 @@ function Customers() {
                     }}
                   />
                 </td>
+                <td></td>
                 <td>
                   <input
                     type="text"
@@ -527,7 +528,7 @@ function Customers() {
                       );
                       fetchFarm(setFarms, profile.customer_uid);
                       fetchProduce(setProduceOrdered, profile.customer_uid);
-                      fetchCoupons(setCoupons, profile.customer_uid);
+                      fetchCoupons(setCoupons, profile.customer_email);
                       setEmail(profile.customer_email);
                       handleClose();
                       setSearchName('');
@@ -704,7 +705,7 @@ function Customers() {
                     anchorEl={anchorEl}
                     onClose={handleClose}
                     anchorReference="anchorPosition"
-                    anchorPosition={{ top: 600, left: 1000 }}
+                    anchorPosition={{ top: 700, left: 1000 }}
                     anchorOrigin={{
                       vertical: 'center',
                       horizontal: 'right',
