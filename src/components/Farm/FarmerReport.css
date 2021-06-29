@@ -1,66 +1,60 @@
-body {
-    background-color: lightblue;
+.round-box1 {
+  border-radius: 25px;
+  padding: 20px;
+  margin: 20px 20px;
+  background-color: white;
 }
 
-.round-box1{
-    border-radius: 25px;
-    border: 2px solid #73AD21;
-    padding: 20px;
-    margin: 20px 20px;
-    background-color: white;
+.testUL ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.testUL ul{
-    list-style: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+.testUL li {
+  margin: auto;
 }
 
-.testUL li{
-    margin: auto;}
-
-.AllOrdersButtons{
-    background-color: #136D74;
-    color: white;
-    margin-left: 10px;
+.AllOrdersButtons {
+  background-color: #136d74;
+  color: white;
+  margin-left: 10px;
 }
 
-.ReportButtons{
-    background-color: #136D74;
-    color: white;
-    margin-left: 10px;
-    float: right;
+.ReportButtons {
+  background-color: #136d74;
+  color: white;
+  margin-left: 10px;
+  float: right;
 }
 
-.allorders{
-    color: orange;
-    text-align: left;
-    margin-left: 30px;
+.allorders {
+  color: orange;
+  text-align: left;
+  margin-left: 30px;
 }
 
-.allordersButton{
-    text-decoration: none;
+.allordersButton {
+  text-decoration: none;
 
-    float: left;
+  float: left;
 }
 
-.driverRouter{
-    text-decoration: none;
+.driverRouter {
+  text-decoration: none;
 
-    margin-left: 20px;
-    float: left;
-
+  margin-left: 20px;
+  float: left;
 }
 
-.DeliveryDates ul{
-    list-style: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+.DeliveryDates ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.DeliveryDates li{
-    margin: auto;}
+.DeliveryDates li {
+  margin: auto;
+}

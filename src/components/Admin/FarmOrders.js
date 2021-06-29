@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 // import { Grid, Typography } from '@material-ui/core';
 import moment from 'moment';
@@ -162,8 +162,8 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '10px',
     paddingBottom: '10px',
   },
-  tableRow:{
-    borderBottom:'1px solid black'
+  tableRow: {
+    borderBottom: '1px solid black',
   },
   buttonRight: {
     textAlign: 'left',
@@ -175,9 +175,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function fetchBusinessInfo(setselectedBusiness, id,setProfit1) {
+function fetchBusinessInfo(setselectedBusiness, id, setProfit1) {
   fetch(
-    `http://127.0.0.1:4000/api/v2/farmer_order_summary_page/2021-06-20,`+id,
+    `http://127.0.0.1:4000/api/v2/farmer_order_summary_page/2021-06-20,` + id,
     {
       method: 'GET',
     }
@@ -193,29 +193,28 @@ function fetchBusinessInfo(setselectedBusiness, id,setProfit1) {
       const selectedB = json.result;
       setselectedBusiness(selectedB);
       console.log(selectedB);
-      
-      let p=0;
-      let q=0;
-      let numItems=selectedB.length;
-    for(let i=0;i<selectedB.length;i++){
-      p=p+selectedB[i]['total_revenue']
-      q=q+selectedB[i]['quantity']
-    }
-    console.log(p);
-    console.log(q);
-  
-    setProfit1({
-      profit:p,
-      num:numItems,
-      quantity:q
-    })
-      
+
+      let p = 0;
+      let q = 0;
+      let numItems = selectedB.length;
+      for (let i = 0; i < selectedB.length; i++) {
+        p = p + selectedB[i]['total_revenue'];
+        q = q + selectedB[i]['quantity'];
+      }
+      console.log(p);
+      console.log(q);
+
+      setProfit1({
+        profit: p,
+        num: numItems,
+        quantity: q,
+      });
     })
     .catch((error) => {
       console.error(error);
-    })
-  };
-  
+    });
+}
+
 function FarmOrders() {
   const classes = useStyles();
   const Auth = useContext(AuthContext);
@@ -237,9 +236,9 @@ function FarmOrders() {
         setfarmerInfo(response.data.result.result);
       });
   };
-  
-  console.log(profit1)
-  console.log(farmerInfo)
+
+  console.log(profit1);
+  console.log(farmerInfo);
   const farm = () => {
     if (Auth.authLevel >= 2) {
       return (
@@ -247,7 +246,6 @@ function FarmOrders() {
           <table className={classes.table}>
             <thead>
               <tr className={classes.tr}>
-              
                 <td className={classes.usrTitle}>Business Name</td>
                 <td className={classes.usrTitle}>City</td>
                 <td className={classes.usrTitle}>Business Id</td>
@@ -262,28 +260,33 @@ function FarmOrders() {
                   key={profile.business_uid}
                   className={classes.tr}
                   style={{ cursor: 'pointer' }}
-                  onClick={()=>{
+                  onClick={() => {
                     setBusiSelect(profile);
-                    fetchBusinessInfo(setselectedBusiness,profile.business_uid,setProfit1);
-                    
+                    fetchBusinessInfo(
+                      setselectedBusiness,
+                      profile.business_uid,
+                      setProfit1
+                    );
                   }}
-                  
-                 
                 >
                   <td className={classes.usrDesc}>
                     {profile.business_name}&nbsp;
-                    
                   </td>
                   <td className={classes.usrDesc}>{profile.business_city}</td>
                   <td className={classes.usrDesc}>{profile.business_uid}</td>
-                  
+
                   <td className={classes.usrDesc}>
                     {profile.business_zip},&nbsp;
-                    
                   </td>
-                  <td className={classes.usrDesc}>{profile.business_phone_num}</td>
-                  <td><img style={{height:'40px'}}src={profile.business_image}></img></td>
-
+                  <td className={classes.usrDesc}>
+                    {profile.business_phone_num}
+                  </td>
+                  <td>
+                    <img
+                      style={{ height: '40px' }}
+                      src={profile.business_image}
+                    ></img>
+                  </td>
                 </tr>
               </tbody>
             ))}
@@ -293,72 +296,108 @@ function FarmOrders() {
     }
   };
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-const handleClick = (event) => {
-  setAnchorEl(event.currentTarget);
-};
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
-const handleClose = () => {
-  setAnchorEl(null);
-};
+  return (
+    <div className={classes.root}>
+      <Grid container>
+        <Grid
+          lg={12}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            marginBottom: '1rem',
+            background: '#FFFFFF 0% 0% no-repeat padding-box',
+            borderRadius: '20px',
+            opacity: 1,
+          }}
+        >
+          <div>
+            <Box style={{ float: 'left' }}>
+              <img
+                style={{ height: '125px', float: 'left', margin: '20px' }}
+                src={busiSelect.business_image}
+              ></img>
+              <div style={{ float: 'left' }}>
+                <h2 style={{ marginTop: '50px', color: '#1C6D74' }}>
+                  {busiSelect.business_name}
+                </h2>
+                <h5
+                  style={{
+                    marginTop: '5px',
+                    color: '#1C6D74',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  Send message
+                </h5>
+              </div>
+            </Box>
+            <Box
+              style={{ float: 'left', marginLeft: '20px', marginTop: '30px' }}
+            >
+              <IconButton
+                aria-describedby={id}
+                variant="contained"
+                color="primary"
+                onClick={handleClick}
+                style={{ margin: '15%' }}
+              >
+                <img src={CustomerSrc} alt="user pic" style={{}} />
+              </IconButton>
+            </Box>
+            <Box>
+              <div style={{ float: 'right', margin: '20px', color: '#1C6D74' }}>
+                <h5>Revenue from farm</h5>
+                <p
+                  style={{
+                    color: 'black',
+                    fontWeight: 'bolder',
+                    fontSize: '25px',
+                  }}
+                >
+                  $ {profit1.profit}
+                </p>
+              </div>
+              <div style={{ float: 'right', margin: '20px', color: '#1C6D74' }}>
+                <h5>Total no. Orders</h5>
+                <p
+                  style={{
+                    color: 'black',
+                    fontWeight: 'bolder',
+                    fontSize: '25px',
+                  }}
+                >
+                  {profit1.num}
+                </p>
+              </div>
 
-const open = Boolean(anchorEl);
-const id = open ? 'simple-popover' : undefined;
-
-return (
-  <div className={classes.root}>
-    <Grid container>
-      <Grid
-        lg={12}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          marginBottom: '1rem',
-          background: '#FFFFFF 0% 0% no-repeat padding-box',
-          borderRadius: '20px',
-          opacity: 1,
-        }}
-      >
-        <div >
-        <Box style={{float:'left'}}>
-         <img style={{height:'125px',float:'left',margin:'20px'}}src={busiSelect.business_image}></img>
-         <div style={{float:'left'}}>
-         <h2 style={{marginTop:'50px',color:'#1C6D74'}}>{busiSelect.business_name}</h2>
-         <h5 style={{marginTop:'5px',color:'#1C6D74',textDecoration:'underline'}}>Send message</h5>
-         </div>
-         </Box>
-          <Box  style={{float:'left',marginLeft:'20px',marginTop:'30px'}}>
-          <IconButton
-            aria-describedby={id}
-            variant="contained"
-            color="primary"
-            onClick={handleClick}
-           style={{margin:'15%',}}
-          >
-            <img src={CustomerSrc} alt="user pic" style={{}} />
-          </IconButton>
-          </Box>
-          <Box>
-          <div style={{float:'right',margin:'20px',color:'#1C6D74'}}>
-            <h5>Revenue from farm</h5>
-            <p style={{color:'black',fontWeight:'bolder',fontSize:'25px'}}>$ {profit1.profit}</p>
-            </div>
-            <div style={{float:'right',margin:'20px',color:'#1C6D74'}}>
-              <h5>Total no. Orders</h5>
-            <p style={{color:'black',fontWeight:'bolder',fontSize:'25px'}}>{profit1.num}</p>
-            </div>
-            
-            <div style={{float:'right',margin:'20px',color:'#1C6D74'}}>
-            <h5>Number of items</h5>
-            <p style={{color:'black',fontWeight:'bolder',fontSize:'25px'}}>{profit1.quantity}</p>
-            </div>
-          </Box>
-          
-        </div>
-        <Popover
+              <div style={{ float: 'right', margin: '20px', color: '#1C6D74' }}>
+                <h5>Number of items</h5>
+                <p
+                  style={{
+                    color: 'black',
+                    fontWeight: 'bolder',
+                    fontSize: '25px',
+                  }}
+                >
+                  {profit1.quantity}
+                </p>
+              </div>
+            </Box>
+          </div>
+          <Popover
             id={id}
             open={open}
             anchorEl={anchorEl}
@@ -377,73 +416,76 @@ return (
           >
             {farm()}
           </Popover>
-        
-      </Grid>
-      <Box
-                style={{
-                  width:'48%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  marginLeft: '1rem',
-                  display: 'flex',
-          flexDirection: 'column',
-          marginBottom: '1rem',
-          background: '#FFFFFF 0% 0% no-repeat padding-box',
-          borderRadius: '20px',
-          opacity: 1,
-                }}
-              >
-                <div style={{marginLeft:'3rem',textAlign:'left',color:'#F5841F'}}><h2 >Upcoming Revenue</h2></div>
-                <table className={classes.infoTable}>
-                  <thead>
-                    <tr className={classes.infoRow}>
-                      <td className={classes.infoTitle}>Name</td>
-                      <td className={classes.infoTitle}>Picture </td>
-                      <td className={classes.infoTitle}>Unit</td>
-                      <td className={classes.infoTitle}>Cost Price</td>
-                      <td className={classes.infoTitle}>Quantity</td>
-                      <td className={classes.infoTitle}>Farm Revenue</td>
-                    </tr>
-                  </thead>
-                  {SelectedBusiness.map((info) => (
-                    <tbody>
-                      <tr className={classes.infoRow}>
-                        <td className={classes.desc}>
-                          {info.name}
-                        </td>
-                        <td className={classes.desc}>
-                         <img style={{height:'50px'}}src= {info.img}></img>
-                        </td>
-                        <td className={classes.desc}>{info.unit}</td>
-                        <td className={classes.desc}>
-                          $ {info.price}
-                        </td>
-                        <td className={classes.desc}>{info.quantity} </td>
-                        <td className={classes.desc}>$ {info.total_revenue}</td>
-                      </tr>
-                    </tbody>
-                  ))}
-                </table>
-              </Box>
-      
-              <Box
-                style={{
-                  width:'48%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  marginLeft: '1rem',
-                  display: 'flex',
-          flexDirection: 'column',
-          marginBottom: '1rem',
-          background: '#FFFFFF 0% 0% no-repeat padding-box',
-          borderRadius: '20px',
-          opacity: 1,
-                }}
-              >
-                <div style={{marginLeft:'3rem',textAlign:'left',color:'#F5841F'}}><h2 >Upcoming Order</h2></div>
-                {/* <table>
+        </Grid>
+        <Box
+          style={{
+            width: '48%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            marginLeft: '1rem',
+            display: 'flex',
+            flexDirection: 'column',
+            marginBottom: '1rem',
+            background: '#FFFFFF 0% 0% no-repeat padding-box',
+            borderRadius: '20px',
+            opacity: 1,
+          }}
+        >
+          <div
+            style={{ marginLeft: '3rem', textAlign: 'left', color: '#F5841F' }}
+          >
+            <h2>Upcoming Revenue</h2>
+          </div>
+          <table className={classes.infoTable}>
+            <thead>
+              <tr className={classes.infoRow}>
+                <td className={classes.infoTitle}>Name</td>
+                <td className={classes.infoTitle}>Picture </td>
+                <td className={classes.infoTitle}>Unit</td>
+                <td className={classes.infoTitle}>Cost Price</td>
+                <td className={classes.infoTitle}>Quantity</td>
+                <td className={classes.infoTitle}>Farm Revenue</td>
+              </tr>
+            </thead>
+            {SelectedBusiness.map((info) => (
+              <tbody>
+                <tr className={classes.infoRow}>
+                  <td className={classes.desc}>{info.name}</td>
+                  <td className={classes.desc}>
+                    <img style={{ height: '50px' }} src={info.img}></img>
+                  </td>
+                  <td className={classes.desc}>{info.unit}</td>
+                  <td className={classes.desc}>$ {info.price}</td>
+                  <td className={classes.desc}>{info.quantity} </td>
+                  <td className={classes.desc}>$ {info.total_revenue}</td>
+                </tr>
+              </tbody>
+            ))}
+          </table>
+        </Box>
+
+        <Box
+          style={{
+            width: '48%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            marginLeft: '1rem',
+            display: 'flex',
+            flexDirection: 'column',
+            marginBottom: '1rem',
+            background: '#FFFFFF 0% 0% no-repeat padding-box',
+            borderRadius: '20px',
+            opacity: 1,
+          }}
+        >
+          <div
+            style={{ marginLeft: '3rem', textAlign: 'left', color: '#F5841F' }}
+          >
+            <h2>Upcoming Order</h2>
+          </div>
+          {/* <table>
                   <thead>
                     <tr>
                       <td className={classes.infoTitle}>Name</td>
@@ -471,12 +513,10 @@ return (
                     </tbody>
                   ))}
                 </table> */}
-              </Box>
-        
-      
-    </Grid>
-  </div>
-);
+        </Box>
+      </Grid>
+    </div>
+  );
 }
 
 export default FarmOrders;
