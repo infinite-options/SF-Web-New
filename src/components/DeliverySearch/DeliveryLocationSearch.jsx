@@ -14,7 +14,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import appColors from '../../styles/AppColors';
 import CssTextField from '../../utils/CssTextField';
 // import FindLongLatWithAddr from '../utils/FindLongLatWithAddr';
-import { AuthContext } from '../../auth/AuthContext';
+
 // import { TrendingUpRounded } from '@material-ui/icons';
 import PlacesAutocomplete, {
   geocodeByAddress,
@@ -22,7 +22,7 @@ import PlacesAutocomplete, {
   getLatLng,
 } from 'react-places-autocomplete';
 import BusiApiReqs from '../../utils/BusiApiReqs';
-
+import { AuthContext } from '../../auth/AuthContext';
 import Mymodal from '../Modal/Modal';
 import SuccessModal from '../Modal/SuccessModal';
 // import TextField from '@material-ui/core/TextField';
@@ -236,12 +236,21 @@ const DeliveryLocationSearch = ({...props}) => {
     //        };
     // localStorage.setItem('guestProfile', JSON.stringify(guestProfile));
     // auth.setIsGuest(true);
+    if(auth.isAuth){
     history.push('/store');
+    }
+    else{
+      alert("Please type in your address");
+    }
     //  localStorage.setItem('guestProfile', JSON.stringify(guestProfile));
     //   auth.setIsGuest(true);
     //   history.push('/store');
     console.log(guestProfile);
   };
+  const modalLogin = async () => {
+    history.push('/store');
+  }
+
   const google = window.google;
   const searchOptions = {
     location: new google.maps.LatLng(37.2366, -121.887),
@@ -292,7 +301,7 @@ const DeliveryLocationSearch = ({...props}) => {
         <SuccessModal
           title={modalSuccess.title}
           body={modalSuccess.body}
-          onConfirm={login}
+          onConfirm={modalLogin}
           onSign={signUpClicked}
           modalClear={errorHandleModal}
         ></SuccessModal>
@@ -386,7 +395,7 @@ const DeliveryLocationSearch = ({...props}) => {
           size="large"
           variant="contained"
           color="secondary"
-          onClick={handleSelect}
+          onClick={login}
           style={{
             width: '300px',
             textTransform: 'none',

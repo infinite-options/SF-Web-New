@@ -19,6 +19,7 @@ import Order from '../Order/Order';
 import Footer from '../Footer/Footer';
 import { LeftEmptyCell } from '@material-ui/data-grid';
 import bg from '../../icon/bg.svg';
+import ConfirmatioModal from 'components/SignUp/ConfirmationModal';
 
 const useStyles = makeStyles((theme) => ({
   authModal: {
@@ -138,6 +139,7 @@ const Landing = ({ ...props }) => {
   // Toggles for the login and signup box to be passed in as props to the Landing Nav Bar
   const [isLoginShown, setIsLoginShown] = useState(false); // checks if user is logged in
   const [isSignUpShown, setIsSignUpShown] = useState(false);
+  const [confirmEmailstate,setConfirmEmail]=useState(false);
 
   const loginWrapperRef = useRef(null);
   useOutsideAlerter(loginWrapperRef, setIsLoginShown);
@@ -182,7 +184,12 @@ const Landing = ({ ...props }) => {
             className={classes.authModal}
             hidden={!isLoginShown}
           >
-            <AdminLogin />
+            <AdminLogin 
+            isLoginShown={isLoginShown}
+            setIsLoginShown={setIsLoginShown}
+            isSignUpShown={isSignUpShown}
+            setIsSignUpShown={setIsSignUpShown}
+            />
           </Box>
         </Box>
 
@@ -205,10 +212,22 @@ const Landing = ({ ...props }) => {
               setIsLoginShown={setIsLoginShown}
               isSignUpShown={isSignUpShown}
               setIsSignUpShown={setIsSignUpShown}
+              isconfirmEmailstate={confirmEmailstate}
+              setConfirmEmail={setConfirmEmail}
               />
+             
             </Box>
+            
           </Box>
         </Box>
+        {confirmEmailstate && <ConfirmatioModal 
+        isLoginShown={isLoginShown}
+        setIsLoginShown={setIsLoginShown}
+        isSignUpShown={isSignUpShown}
+        setIsSignUpShown={setIsSignUpShown}
+        isconfirmEmailstate={confirmEmailstate}
+        setConfirmEmail={setConfirmEmail}
+              />}
       </Box>
       {/* END: Login/SignUp Modal */}
       {/* START: landing Logo and Guest Login */}
