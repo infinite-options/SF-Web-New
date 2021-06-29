@@ -5,6 +5,7 @@ import moment from 'moment';
 import { AuthContext } from '../../../auth/AuthContext';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
+
 import {
   Grid,
   Typography,
@@ -15,6 +16,7 @@ import {
 } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { fade } from '@material-ui/core/styles';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import CustomerSrc from '../../../sf-svg-icons/Polygon1.svg';
 import { AdminFarmContext } from '../AdminFarmContext';
@@ -29,6 +31,22 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     backgroundColor: '#BCCDCE',
     padding: '2rem',
+  },
+  search: {
+    position: 'relative',
+    width: '100%',
+  },
+  inputRoot: {
+    color: '#1C6D74',
+  },
+  inputInput: {
+    background: '#FFFFFF 0% 0% no-repeat padding-box',
+    border: '1px solid #1C6D74',
+    borderRadius: ' 8px',
+    opacity: 1,
+    width: '189px',
+    height: '25px',
+    padding: '5px',
   },
   usrInfo: {
     display: 'flex',
@@ -55,12 +73,13 @@ const useStyles = makeStyles((theme) => ({
     opacity: 1,
     justifyContent: 'start',
     padding: '10px',
+
+    borderBottom: '1px solid #747474',
   },
   usrDesc: {
     textAlign: 'center',
     fontSize: '0.9rem',
     letterSpacing: '-0.48px',
-
     opacity: 1,
     alignItems: 'center',
     padding: '10px',
@@ -72,7 +91,6 @@ const useStyles = makeStyles((theme) => ({
   },
   infoRow: {
     color: '#1C6D74',
-    borderBottom: '1px solid #747474',
     '&:active': {
       boxShadow: 'none',
       backgroundColor: '#1C6D74',
@@ -395,23 +413,61 @@ function fetchCoupons(setCoupons, id) {
 
 function Customers() {
   const classes = useStyles();
+
   const Auth = useContext(AuthContext);
   const { custList } = useContext(AdminFarmContext);
+  const [searchName, setSearchName] = useState('');
+  const [searchAddress, setSearchAddress] = useState('');
+  const [searchID, setSearchID] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState([]);
   const [payments, setPayments] = useState([]);
   const [history, setHistory] = useState([]);
   const [farms, setFarms] = useState([]);
   const [purchaseID, setPurchaseID] = useState([]);
+  const [email, setEmail] = useState('');
   const [rightTabChosen, setRightTabChosen] = useState(0);
   const [produceOrdered, setProduceOrdered] = useState([]);
   const [coupons, setCoupons] = useState([]);
-  //console.log('Selected Customer: ', selectedCustomer[0].customer_email);
+  console.log('Selected Customer: ', email);
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
       return (
         <Grid lg={12} className={classes.usrInfo}>
           <table className={classes.infoTable}>
             <thead>
+              <tr>
+                <td className={classes.infoRow}> Search by</td>
+                <td>
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    className={classes.inputInput}
+                    onChange={(event) => {
+                      setSearchName(event.target.value);
+                    }}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    placeholder="Address"
+                    className={classes.inputInput}
+                    onChange={(event) => {
+                      setSearchAddress(event.target.value);
+                    }}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    placeholder="Purchase ID"
+                    className={classes.inputInput}
+                    onChange={(event) => {
+                      setSearchID(event.target.value);
+                    }}
+                  />
+                </td>
+              </tr>
               <tr className={classes.infoRow}>
                 <td className={classes.usrTitle}>Customer Name</td>
                 <td className={classes.usrTitle}>Email ID</td>
@@ -424,50 +480,90 @@ function Customers() {
                 <td className={classes.usrTitle}>Phone</td>
               </tr>
             </thead>
-            {custList.map((profile) => (
-              <tbody>
-                <tr
-                  key={profile.customer_uid}
-                  className={classes.infoRow}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    fetchCustomers(setPayments, profile.customer_uid);
-                    fetchHistory(setHistory, profile.customer_uid);
-                    fetchCustomerInfo(
-                      setSelectedCustomer,
-                      profile.customer_uid
-                    );
-                    fetchFarm(setFarms, profile.customer_uid);
-                    fetchProduce(setProduceOrdered, profile.customer_uid);
-                    fetchCoupons(setCoupons, profile.customer_uid);
-                    handleClose();
-                  }}
-                >
-                  <td className={classes.usrDesc}>
-                    {profile.customer_first_name}&nbsp;
-                    {profile.customer_last_name}
-                  </td>
-                  <td className={classes.usrDesc}>{profile.customer_email}</td>
-                  <td className={classes.usrDesc}>{profile.purchase_id}</td>
-                  <td className={classes.usrDesc}>
-                    {moment(profile.last_order_date).format('LL')}
-                  </td>
-                  <td className={classes.usrDesc}>
-                    {moment(profile.customer_created_at).format('LL')}
-                  </td>
-                  <td className={classes.usrDesc}>
-                    {profile.customer_address},&nbsp;
-                    <br /> {profile.customer_city},&nbsp;{' '}
-                    {profile.customer_state}
-                  </td>
-                  <td className={classes.usrDesc}>{profile.zone}</td>
-                  <td className={classes.usrDesc}>{profile.customer_zip}</td>
-                  <td className={classes.usrDesc}>
-                    {profile.customer_phone_num}
-                  </td>
-                </tr>
-              </tbody>
-            ))}
+            {custList
+              .filter((val) => {
+                if (searchName === '') {
+                  return val;
+                } else if (
+                  val.customer_first_name
+                    .toLowerCase()
+                    .includes(searchName.toLowerCase())
+                ) {
+                  return val;
+                }
+              })
+              .filter((val) => {
+                if (searchAddress === '') {
+                  return val;
+                } else if (
+                  val.customer_address
+                    .toLowerCase()
+                    .includes(searchAddress.toLowerCase())
+                ) {
+                  return val;
+                }
+              })
+              .filter((val) => {
+                if (searchID === '') {
+                  return val;
+                } else if (
+                  val.purchase_id.toLowerCase().includes(searchID.toLowerCase())
+                ) {
+                  return val;
+                }
+              })
+              .map((profile) => (
+                <tbody>
+                  <tr
+                    key={profile.customer_uid}
+                    className={classes.infoRow}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      fetchCustomers(setPayments, profile.customer_uid);
+                      fetchHistory(setHistory, profile.customer_uid);
+                      fetchCustomerInfo(
+                        setSelectedCustomer,
+                        profile.customer_uid
+                      );
+                      fetchFarm(setFarms, profile.customer_uid);
+                      fetchProduce(setProduceOrdered, profile.customer_uid);
+                      fetchCoupons(setCoupons, profile.customer_uid);
+                      setEmail(profile.customer_email);
+                      handleClose();
+                      setSearchName('');
+                      setSearchAddress('');
+                      setSearchID('');
+                    }}
+                  >
+                    <td className={classes.usrDesc}>
+                      {profile.customer_first_name}&nbsp;
+                      {profile.customer_last_name}
+                    </td>
+                    <td className={classes.usrDesc}>
+                      {profile.customer_email}
+                    </td>
+                    <td className={classes.usrDesc}>
+                      #{profile.purchase_id.substring(4)}
+                    </td>
+                    <td className={classes.usrDesc}>
+                      {moment(profile.last_order_date).format('LL')}
+                    </td>
+                    <td className={classes.usrDesc}>
+                      {moment(profile.customer_created_at).format('LL')}
+                    </td>
+                    <td className={classes.usrDesc}>
+                      {profile.customer_address},&nbsp;
+                      <br /> {profile.customer_city},&nbsp;{' '}
+                      {profile.customer_state}
+                    </td>
+                    <td className={classes.usrDesc}>{profile.zone}</td>
+                    <td className={classes.usrDesc}>{profile.customer_zip}</td>
+                    <td className={classes.usrDesc}>
+                      {profile.customer_phone_num}
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
           </table>
         </Grid>
       );
