@@ -244,8 +244,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '8px',
     opacity: 1,
     color: 'white',
+    border: '1px solid #FF8500',
     marginBottom: '20px',
     width: '157px',
+    height: '33px',
+    fontSize: '16px',
   },
 }));
 
@@ -614,7 +617,7 @@ function Customers() {
     notes: '',
     num_used: '0',
     recurring: 'T',
-    email_id: 'xyz@gmail.com',
+    email_id: email,
     cup_business_uid: '200-000002',
   });
 
@@ -638,6 +641,7 @@ function Customers() {
         cup_business_uid: createCoupon.cup_business_uid,
       })
       .then((response) => {
+        alert('Coupon created');
         console.log(response.data);
       });
   }
@@ -1101,6 +1105,7 @@ function Customers() {
                         <input
                           className={classes.couponInput}
                           type="text"
+                          placeholder="Coupon Title"
                           id="coupon_title"
                           onChange={(e) => handle(e)}
                           value={createCoupon.coupon_title}
@@ -1113,6 +1118,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
+                          placeholder="Order Subtotal "
                           type="text"
                           id="threshold"
                           onChange={(e) => handle(e)}
@@ -1129,6 +1135,7 @@ function Customers() {
                         <input
                           className={classes.couponInput}
                           type="text"
+                          placeholder="CouponID"
                           id="coupon_id"
                           onChange={(e) => handle(e)}
                           value={createCoupon.coupon_id}
@@ -1142,6 +1149,7 @@ function Customers() {
                         <input
                           className={classes.couponInput}
                           type="text"
+                          placeholder="% discount"
                           id="discount_percent"
                           onChange={(e) => handle(e)}
                           value={createCoupon.discount_percent}
@@ -1158,6 +1166,7 @@ function Customers() {
                           className={classes.couponInput}
                           type="text"
                           id="valid"
+                          placeholder="TRUE/FALSE"
                           onChange={(e) => handle(e)}
                           value={createCoupon.valid}
                           style={{ margin: 6 }}
@@ -1171,6 +1180,7 @@ function Customers() {
                           className={classes.couponInput}
                           type="text"
                           id="discount_amount"
+                          placeholder="$ discount"
                           onChange={(e) => handle(e)}
                           value={createCoupon.discount_amount}
                           style={{ margin: 6 }}
@@ -1184,7 +1194,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
-                          type="date"
+                          type="datetime-local"
                           id="expire_date"
                           onChange={(e) => handle(e)}
                           value={createCoupon.expire_date}
@@ -1199,6 +1209,7 @@ function Customers() {
                           className={classes.couponInput}
                           type="text"
                           id="discount_shipping"
+                          placeholder="$ shipping"
                           onChange={(e) => handle(e)}
                           value={createCoupon.discount_shipping}
                           style={{ margin: 6 }}
@@ -1214,6 +1225,7 @@ function Customers() {
                           className={classes.couponInput}
                           type="text"
                           id="limits"
+                          placeholder="No. of coupons"
                           onChange={(e) => handle(e)}
                           value={createCoupon.limits}
                           style={{ margin: 6 }}
@@ -1227,6 +1239,7 @@ function Customers() {
                           className={classes.couponInput}
                           type="text"
                           id="notes"
+                          placeholder="Description"
                           onChange={(e) => handle(e)}
                           value={createCoupon.notes}
                           rows={4}
@@ -1234,7 +1247,7 @@ function Customers() {
                         />
                       </Box>
                     </Box>
-                    <Button className={classes.btn}>Submit</Button>
+                    <button className={classes.btn}>Submit</button>
                   </form>
                 </Box>
 
