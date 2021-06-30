@@ -621,8 +621,9 @@ function Customers() {
     cup_business_uid: '200-000002',
   });
 
-  function submit(e) {
+  function submit(e, email) {
     e.preventDefault();
+    console.log(email);
     axios
       .post(url, {
         coupon_id: createCoupon.coupon_id,
@@ -637,7 +638,7 @@ function Customers() {
         notes: createCoupon.notes,
         num_used: createCoupon.num_used,
         recurring: createCoupon.recurring,
-        email_id: createCoupon.email_id,
+        email_id: email,
         cup_business_uid: createCoupon.cup_business_uid,
       })
       .then((response) => {
@@ -1096,7 +1097,7 @@ function Customers() {
                     marginBottom: '20px',
                   }}
                 >
-                  <form onSubmit={(e) => submit(e)}>
+                  <form onSubmit={(e) => submit(e, email)}>
                     <Box display="flex" mb={1}>
                       <Box width="50%">
                         <Typography className={classes.paymentHeader}>
@@ -1194,7 +1195,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
-                          type="datetime-local"
+                          type="date"
                           id="expire_date"
                           onChange={(e) => handle(e)}
                           value={createCoupon.expire_date}
