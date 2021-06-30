@@ -34,6 +34,7 @@ const ADMIN_ORDER_URL = BASE_URL + 'admin_report_groupby/';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    flexDirection: 'column',
     flexGrow: 1,
     backgroundColor: '#BCCDCE',
   },

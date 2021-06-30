@@ -614,7 +614,7 @@ function Customers() {
     notes: '',
     num_used: '0',
     recurring: 'T',
-    email_id: '',
+    email_id: 'xyz@gmail.com',
     cup_business_uid: '200-000002',
   });
 
