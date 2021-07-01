@@ -32,10 +32,12 @@ const INSERT_ORDER_URL = BASE_URL + 'purchase_Data_SF';
 const ADMIN_ORDER_URL = BASE_URL + 'admin_report_groupby/';
 
 const useStyles = makeStyles((theme) => ({
-  // root: {
-  //   flexGrow: 1,
-  //   backgroundColor: 'white',
-  // },
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    backgroundColor: '#BCCDCE',
+  },
   reportLink: {
     textDecoration: 'none',
   },
@@ -500,20 +502,18 @@ export default function FarmerReport({
   };
 
   return (
-    <div hidden={props.hidden}>
-
-
-      <Box >
-        {/* Will Hide buttons */}
-        <div className="round-box1">
-          <div style={labelStyle}>
-            <h2 className="allorders">All Orders</h2>
-
-          </div>
-          <Box hidden={auth.authLevel !== 2}>
-            {/* Will Show buttons */}
-            {/* <Box> */}
-            <a
+    <div className={classes.root}>
+      <div hidden={props.hidden}>
+        <Box>
+          {/* Will Hide buttons */}
+          <div className="round-box1">
+            <div style={labelStyle}>
+              <h2 className="allorders">All Orders</h2>
+            </div>
+            <Box hidden={auth.authLevel !== 2}>
+              {/* Will Show buttons */}
+              {/* <Box> */}
+              <a
                 href={
                   BASE_URL +
                   'report_order_customer_pivot_detail/order' +
@@ -526,16 +526,16 @@ export default function FarmerReport({
                 target="_blank"
                 rel="noreferrer"
                 className="allordersButton"
-            >
-              <Button
+              >
+                <Button
                   size="small"
                   variant="contained"
                   className="AllOrdersButtons"
-              >
-                Order Details
-              </Button>
-            </a>
-            <a
+                >
+                  Order Details
+                </Button>
+              </a>
+              <a
                 href={
                   BASE_URL +
                   'report_order_customer_pivot_detail/customer' +
@@ -548,16 +548,16 @@ export default function FarmerReport({
                 target="_blank"
                 rel="noreferrer"
                 className="allordersButton"
-            >
-              <Button
+              >
+                <Button
                   size="small"
                   variant="contained"
                   className={classes.reportButtons}
-              >
-                Customer Details
-              </Button>
-            </a>
-            <a
+                >
+                  Customer Details
+                </Button>
+              </a>
+              <a
                 href={
                   BASE_URL +
                   'report_order_customer_pivot_detail/pivot' +
@@ -570,16 +570,16 @@ export default function FarmerReport({
                 target="_blank"
                 rel="noreferrer"
                 className="allordersButton"
-            >
-              <Button
+              >
+                <Button
                   size="small"
                   variant="contained"
                   className={classes.reportButtons}
-              >
-                Pivot Table
-              </Button>
-            </a>
-            <a
+                >
+                  Pivot Table
+                </Button>
+              </a>
+              <a
                 href={
                   BASE_URL +
                   'drivers_report_check_sort/' +
@@ -589,17 +589,17 @@ export default function FarmerReport({
                 target="_blank"
                 rel="noreferrer"
                 className="allordersButton"
-            >
-              <Button
+              >
+                <Button
                   size="small"
                   variant="contained"
                   className={classes.reportButtons}
-              >
-                Driver Check
-              </Button>
-            </a>
+                >
+                  Driver Check
+                </Button>
+              </a>
 
-            <a
+              <a
                 href={
                   BASE_URL +
                   'drivers_report_check_sort/' +
@@ -609,97 +609,96 @@ export default function FarmerReport({
                 target="_blank"
                 rel="noreferrer"
                 className="allordersButton"
-            >
-              <Button
+              >
+                <Button
                   size="small"
                   variant="contained"
                   className={classes.reportButtons}
-              >
-                Driver Sort
-              </Button>
-            </a>
-            <a className="allordersButton">
-              <Button
+                >
+                  Driver Sort
+                </Button>
+              </a>
+              <a className="allordersButton">
+                <Button
                   size="small"
                   variant="contained"
                   className={classes.reportButtons}
                   onClick={handleDriverRoute}
-              >
-                Driver Route
-              </Button>
-            </a>
+                >
+                  Driver Route
+                </Button>
+              </a>
 
-            <Box flexGrow={1} />
-            <Box display="flex" justifyContent="flex-end">
-              {deliveryDays.length > 0 && (
+              <Box flexGrow={1} />
+              <Box display="flex" justifyContent="flex-end">
+                {deliveryDays.length > 0 && (
                   <Box mt={-2}>
                     <FormHelperText>Delivery Day:</FormHelperText>
                     <Select
-                        labelId="demo-controlled-open-select-label"
-                        id="demo-controlled-open-select"
-                        name="business"
-                        value={selectedDay}
-                        onChange={handleDaySelect}
-
+                      labelId="demo-controlled-open-select-label"
+                      id="demo-controlled-open-select"
+                      name="business"
+                      value={selectedDay}
+                      onChange={handleDaySelect}
                     >
                       {deliveryDays.map((day) => {
                         return (
-                            <MenuItem key={day} value={day}>
-                              {day + ' ' + weekdayDatesDict[day]}
-                            </MenuItem>
+                          <MenuItem key={day} value={day}>
+                            {day + ' ' + weekdayDatesDict[day]}
+                          </MenuItem>
                         );
                       })}
                     </Select>
                   </Box>
-              )}
-              <div className={classes.reportButtonsRightSection}>
-                <Button
+                )}
+                <div className={classes.reportButtonsRightSection}>
+                  <Button
                     variant="contained"
                     size="small"
                     name="summary"
                     className={classes.reportButtons}
                     onClick={handleSendReport}
-                >
-                  Send Summary Report
-                </Button>
-                <Button
+                  >
+                    Send Summary Report
+                  </Button>
+                  <Button
                     variant="contained"
                     size="small"
                     name="packing"
                     className={classes.reportButtons}
                     onClick={handleSendReport}
-                >
-                  Send Packing Report
-                </Button>
-              </div>
+                  >
+                    Send Packing Report
+                  </Button>
+                </div>
+              </Box>
             </Box>
-          </Box>
-        </div>
-
-
-        <div className="round-box1">
-          <div style={labelStyle}>
-            <h2 className="allorders">Open Orders</h2>
           </div>
-          <OrdersTable
+
+          <div className="round-box1">
+            <div style={labelStyle}>
+              <h2 className="allorders">Open Orders</h2>
+            </div>
+            <OrdersTable
               orders={orders}
               farmID={farmID}
               type="FALSE"
               functions={buttonFunctions}
-          />
-        </div>
-        <div className="round-box1">
-          <div style={labelStyle}>
-            <h2 className="allorders">Delivered Orders</h2>
+            />
           </div>
-          <OrdersTable
+          <div className="round-box1">
+            <div style={labelStyle}>
+              <h2 className="allorders">Delivered Orders</h2>
+            </div>
+            <OrdersTable
               orders={orders}
               farmID={farmID}
               type="TRUE"
               functions={buttonFunctions}
-          />
-        </div>
-      </Box>
+            />
+          </div>
+        </Box>
+      </div>
     </div>
   );
 }
@@ -847,48 +846,53 @@ function OrderRow({ order, type, farmID, ...props }) {
             <ul>
               <li>
                 <Button
-                    size="small"
-                    variant="contained" // value="orders"
-                    style={{ ...tinyButtonStyle, backgroundColor: '#007bff', display: "inline-block"}}
-                    onClick={(e) =>
-                        props.functions.handleShowOrders(e, order, setHidden)
-                    }
+                  size="small"
+                  variant="contained" // value="orders"
+                  style={{
+                    ...tinyButtonStyle,
+                    backgroundColor: '#007bff',
+                    display: 'inline-block',
+                  }}
+                  onClick={(e) =>
+                    props.functions.handleShowOrders(e, order, setHidden)
+                  }
                 >
                   orders
                 </Button>
               </li>
 
-
               <li>
                 <Button
-                    size="small"
-                    variant="contained" // value="copy"
-                    style={{ ...tinyButtonStyle, backgroundColor: '#6c757d' }}
-                    onClick={(e) =>
-                        props.functions.handleCopy(e, order, props.index)
-                    }
+                  size="small"
+                  variant="contained" // value="copy"
+                  style={{ ...tinyButtonStyle, backgroundColor: '#6c757d' }}
+                  onClick={(e) =>
+                    props.functions.handleCopy(e, order, props.index)
+                  }
                 >
                   copy
                 </Button>
-
               </li>
             </ul>
           </div>
-
 
           {farmID === 'all' && (
             <div className="testUL">
               <ul>
                 <li>
                   <Button
-                      size="small"
-                      variant="contained" // value="cancel"
-                      style={{ ...tinyButtonStyle, backgroundColor: 'orange', display: "inline-block" }}
-                      onClick={(e) =>
-                          props.functions[
-                              type === 'FALSE' ? 'handleDeliver' : 'handleCancel'
-                              ](e, order, props.index)
-                      }
+                    size="small"
+                    variant="contained" // value="cancel"
+                    style={{
+                      ...tinyButtonStyle,
+                      backgroundColor: 'orange',
+                      display: 'inline-block',
+                    }}
+                    onClick={(e) =>
+                      props.functions[
+                        type === 'FALSE' ? 'handleDeliver' : 'handleCancel'
+                      ](e, order, props.index)
+                    }
                   >
                     {type === 'FALSE' ? 'deliver' : 'cancel'}
                   </Button>
@@ -896,12 +900,12 @@ function OrderRow({ order, type, farmID, ...props }) {
 
                 <li>
                   <Button
-                      size="small"
-                      variant="contained" // value="delete"
-                      style={{ ...tinyButtonStyle, backgroundColor: '#dc3545' }}
-                      onClick={(e) =>
-                          props.functions.handleDelete(e, order, props.index)
-                      }
+                    size="small"
+                    variant="contained" // value="delete"
+                    style={{ ...tinyButtonStyle, backgroundColor: '#dc3545' }}
+                    onClick={(e) =>
+                      props.functions.handleDelete(e, order, props.index)
+                    }
                   >
                     delete
                   </Button>

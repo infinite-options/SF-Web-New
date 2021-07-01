@@ -5,18 +5,17 @@ import moment from 'moment';
 import { AuthContext } from '../../../auth/AuthContext';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
-
-import {
-  Grid,
-  Typography,
-  Box,
-  Avatar,
-  Paper,
-  Button,
-} from '@material-ui/core';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+import { Grid, Typography, Box, Avatar, Paper } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { fade } from '@material-ui/core/styles';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import CustomerSrc from '../../../sf-svg-icons/Polygon1.svg';
 import { AdminFarmContext } from '../AdminFarmContext';
@@ -166,8 +165,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '20px',
     marginBottom: '20px',
     paddingBottom: '20px',
-    paddingLeft: '10px',
-    paddingRight: '10px',
+    fontSize: '10px',
   },
   title: {
     textAlign: 'left',
@@ -244,8 +242,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '8px',
     opacity: 1,
     color: 'white',
+    border: '1px solid #FF8500',
     marginBottom: '20px',
     width: '157px',
+    height: '33px',
+    fontSize: '16px',
   },
 }));
 
@@ -335,8 +336,6 @@ function fetchHistory(setHistory, id) {
     .then((json) => {
       const history = json.result;
       setHistory(history);
-
-      console.log('History', history);
     })
     .catch((error) => {
       console.error(error);
@@ -412,7 +411,6 @@ function fetchCoupons(setCoupons, custEmail) {
 
 function Customers() {
   const classes = useStyles();
-
   const Auth = useContext(AuthContext);
   const { custList } = useContext(AdminFarmContext);
   const [searchName, setSearchName] = useState('');
@@ -427,7 +425,10 @@ function Customers() {
   const [rightTabChosen, setRightTabChosen] = useState(0);
   const [produceOrdered, setProduceOrdered] = useState([]);
   const [coupons, setCoupons] = useState([]);
-  console.log('Selected Customer: ', email);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [order, setOrder] = useState();
+  const [orderBy, setOrderBy] = useState();
+
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
       return (
@@ -570,9 +571,7 @@ function Customers() {
       );
     }
   };
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
+  //popover open and close
   const handleClick = (setPurchaseID, event) => {
     const purchaseID = [];
     setPurchaseID(purchaseID);
@@ -586,9 +585,11 @@ function Customers() {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
+  //right tabs
   const handleChange = (event, newValue) => {
     setRightTabChosen(newValue);
   };
+  //linking orders and produce with purcaseID
   const filterOnClick = (setPurchaseID, pid) => {
     const purchaseID = pid;
     setPurchaseID(purchaseID);
@@ -599,6 +600,47 @@ function Customers() {
       ? history
       : history.filter((hist) => hist.purchase_id == purchaseID);
 
+  //sorting stats
+  const handleSortRequest = (cellId) => {
+    const isAsc = orderBy === cellId && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(cellId);
+  };
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  function getComparator(order, orderBy) {
+    return order === 'desc'
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  const farmsSort = () => {
+    return stableSort(farms, getComparator(order, orderBy));
+  };
+  const produceSort = () => {
+    return stableSort(produceOrdered, getComparator(order, orderBy));
+  };
+
+  //posting to update_Coupons/crate
   const url =
     'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_Coupons/create';
   const [createCoupon, setCreateCoupon] = useState({
@@ -614,11 +656,11 @@ function Customers() {
     notes: '',
     num_used: '0',
     recurring: 'T',
-    email_id: '',
+    email_id: email,
     cup_business_uid: '200-000002',
   });
 
-  function submit(e) {
+  function submit(e, email) {
     e.preventDefault();
     axios
       .post(url, {
@@ -634,10 +676,11 @@ function Customers() {
         notes: createCoupon.notes,
         num_used: createCoupon.num_used,
         recurring: createCoupon.recurring,
-        email_id: createCoupon.email_id,
+        email_id: email,
         cup_business_uid: createCoupon.cup_business_uid,
       })
       .then((response) => {
+        alert('Coupon created');
         console.log(response.data);
       });
   }
@@ -645,9 +688,22 @@ function Customers() {
     const newCoupon = { ...createCoupon };
     newCoupon[e.target.id] = e.target.value;
     setCreateCoupon(newCoupon);
-
-    console.log(newCoupon);
   }
+  //farm stats table head
+  const farmHead = [
+    { id: 'business_image', label: '' },
+    { id: 'business_name', label: 'Farm Name' },
+    { id: 'total_orders', label: 'Total orders' },
+    { id: 'Revenue', label: 'Revenue' },
+  ];
+
+  //produce stats table head
+  const produceHead = [
+    { id: 'img', label: '' },
+    { id: 'name', label: 'Produce Name' },
+    { id: 'quantity', label: 'Qty' },
+    { id: 'revenue', label: 'Revenue' },
+  ];
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -982,6 +1038,7 @@ function Customers() {
             borderRadius: '20px',
             opacity: 1,
             overflow: 'hidden',
+            padding: '0',
           }}
         >
           <Paper elevation={0}>
@@ -1014,13 +1071,13 @@ function Customers() {
               style={{
                 marginTop: 10,
                 minHeight: '80vh',
-                maxHeight: '92%',
-                overflow: 'hidden',
+                maxHeight: '100%',
+                overflowY: 'auto',
               }}
             >
               <Box hidden={rightTabChosen !== 0}>
                 {historyView.map((history) => (
-                  <Box className={classes.card}>
+                  <Box className={classes.card} style={{ padding: '10px' }}>
                     <Box className={classes.delivered}>
                       <img src={Delivered} alt="user pic" />
                       &nbsp; Order Delivered
@@ -1076,7 +1133,7 @@ function Customers() {
                               textAlign="right"
                               paddingTop="10px"
                             >
-                              {item['price']}
+                              ${item['price'].toFixed(2)}
                             </Box>
                           </Box>
                         );
@@ -1092,7 +1149,7 @@ function Customers() {
                     marginBottom: '20px',
                   }}
                 >
-                  <form onSubmit={(e) => submit(e)}>
+                  <form onSubmit={(e) => submit(e, email)}>
                     <Box display="flex" mb={1}>
                       <Box width="50%">
                         <Typography className={classes.paymentHeader}>
@@ -1101,6 +1158,7 @@ function Customers() {
                         <input
                           className={classes.couponInput}
                           type="text"
+                          placeholder="Coupon Title"
                           id="coupon_title"
                           onChange={(e) => handle(e)}
                           value={createCoupon.coupon_title}
@@ -1113,6 +1171,7 @@ function Customers() {
                         </Typography>
                         <input
                           className={classes.couponInput}
+                          placeholder="Order Subtotal "
                           type="text"
                           id="threshold"
                           onChange={(e) => handle(e)}
@@ -1129,6 +1188,7 @@ function Customers() {
                         <input
                           className={classes.couponInput}
                           type="text"
+                          placeholder="CouponID"
                           id="coupon_id"
                           onChange={(e) => handle(e)}
                           value={createCoupon.coupon_id}
@@ -1142,6 +1202,7 @@ function Customers() {
                         <input
                           className={classes.couponInput}
                           type="text"
+                          placeholder="% discount"
                           id="discount_percent"
                           onChange={(e) => handle(e)}
                           value={createCoupon.discount_percent}
@@ -1158,6 +1219,7 @@ function Customers() {
                           className={classes.couponInput}
                           type="text"
                           id="valid"
+                          placeholder="TRUE/FALSE"
                           onChange={(e) => handle(e)}
                           value={createCoupon.valid}
                           style={{ margin: 6 }}
@@ -1171,6 +1233,7 @@ function Customers() {
                           className={classes.couponInput}
                           type="text"
                           id="discount_amount"
+                          placeholder="$ discount"
                           onChange={(e) => handle(e)}
                           value={createCoupon.discount_amount}
                           style={{ margin: 6 }}
@@ -1199,6 +1262,7 @@ function Customers() {
                           className={classes.couponInput}
                           type="text"
                           id="discount_shipping"
+                          placeholder="$ shipping"
                           onChange={(e) => handle(e)}
                           value={createCoupon.discount_shipping}
                           style={{ margin: 6 }}
@@ -1214,6 +1278,7 @@ function Customers() {
                           className={classes.couponInput}
                           type="text"
                           id="limits"
+                          placeholder="No. of coupons"
                           onChange={(e) => handle(e)}
                           value={createCoupon.limits}
                           style={{ margin: 6 }}
@@ -1227,6 +1292,7 @@ function Customers() {
                           className={classes.couponInput}
                           type="text"
                           id="notes"
+                          placeholder="Description"
                           onChange={(e) => handle(e)}
                           value={createCoupon.notes}
                           rows={4}
@@ -1234,173 +1300,273 @@ function Customers() {
                         />
                       </Box>
                     </Box>
-                    <Button className={classes.btn}>Submit</Button>
+                    <button className={classes.btn}>Submit</button>
                   </form>
                 </Box>
 
-                <Box
-                  className={classes.card}
-                  component="div"
-                  overflow="scroll"
-                  height="600px"
-                >
-                  <Box display="flex" justifyContent="space-between">
-                    <Box width="60%" className={classes.header}>
+                <Box className={classes.card} component="div">
+                  <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="center"
+                    style={{ padding: '10px' }}
+                  >
+                    <Grid item xs={12} sm container className={classes.header}>
                       Current Coupons
-                    </Box>
-                    <Box width="10%">%</Box>
-                    <Box width="10%">$</Box>
-                    <Box width="20%">Shipping</Box>
-                  </Box>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sm
+                      container
+                      direction="row"
+                      justify="space-between"
+                      alignItems="center"
+                      style={{ fontSize: '14px', fontWeight: 'bold' }}
+                    >
+                      <Grid item style={{ paddingLeft: '20px' }}>
+                        %
+                      </Grid>
+                      <Grid item>$</Grid>
+                      <Grid item>Shipping</Grid>
+                    </Grid>
+                  </Grid>
 
                   {coupons.map((coupon) => (
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      padding="10px 0px"
-                      borderBottom="0.5px solid #747474"
+                    <Grid
+                      container
+                      direction="row"
+                      justify="space-between"
+                      alignItems="center"
+                      style={{ padding: '15px 0px' }}
                     >
-                      <Box
-                        style={{
-                          width: '212px',
-                          height: '115px',
-                          backgroundImage: `url(${couponUnavaliable})`,
-                          backgroundSize: '100% 100%',
-                          backgroundPosition: 'center center',
-                          backgroundRepeat: 'no-repeat',
-                        }}
-                      >
+                      <Grid item>
                         <Box
-                          display="flex"
-                          flexDirection="column"
-                          alignItems="flex-start"
-                          justifyContent="center"
-                          marginLeft="1rem"
+                          style={{
+                            width: '170px',
+                            height: '73px',
+                            backgroundImage: `url(${couponUnavaliable})`,
+                            backgroundSize: '100% 100%',
+                            backgroundPosition: 'center center',
+                            backgroundRepeat: 'no-repeat',
+                          }}
                         >
                           <Box
-                            fontSize="14px"
-                            pr={1}
-                            fontWeight="bold"
-                            marginTop="1.5rem"
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="flex-start"
+                            justifyContent="center"
+                            marginLeft="1.5rem"
                           >
-                            {coupon.coupon_title}
-                          </Box>
-                          <Box fontSize="10px">{coupon.notes}</Box>
-                          <Box fontSize="10px">
-                            Spend $ {coupon.threshold} more to use
-                          </Box>
-                          <Box fontSize="10px">
-                            Expires: {moment(coupon.expire_date).format('LL')}
-                          </Box>
-
-                          <Box fontSize="10px" fontWeight="bold">
-                            Non Eligible
+                            <Box
+                              fontSize="12px"
+                              pr={1}
+                              fontWeight="bold"
+                              marginTop="0.5rem"
+                            >
+                              {coupon.coupon_title}
+                            </Box>
+                            <Box fontSize="10px">{coupon.notes}</Box>
+                            <Box fontSize="10px">
+                              Spend $ {coupon.threshold} more to use
+                            </Box>
+                            <Box fontSize="10px">
+                              Expires: {moment(coupon.expire_date).format('LL')}
+                            </Box>
                           </Box>
                         </Box>
-                      </Box>
-
-                      <Box width="10%" display="flex" marginLeft="30px">
-                        {coupon.discount_percent}
-                      </Box>
-                      <Box width="10%">{coupon.discount_amount}</Box>
-                      <Box width="20%">{coupon.discount_shipping}</Box>
-                    </Box>
+                      </Grid>
+                      <Grid item style={{ padding: '10px' }}>
+                        <Grid
+                          item
+                          xs={12}
+                          sm
+                          container
+                          direction="row"
+                          justify="space-between"
+                          alignItems="center"
+                          style={{ fontSize: '14px', paddingRight: '10px' }}
+                        >
+                          <Grid item>
+                            <Typography>{coupon.discount_percent}% </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography>${coupon.discount_amount}</Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography>${coupon.discount_shipping}</Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          {' '}
+                          <Typography>No. of uses:{coupon.num_used}</Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
                   ))}
                 </Box>
               </Box>
               <Box hidden={rightTabChosen !== 2}>
-                <Box className={classes.card}>
-                  <Typography className={classes.header}>
+                <Box
+                  className={classes.card}
+                  style={{
+                    padding: '0',
+                    margin: '0',
+                  }}
+                >
+                  <Typography
+                    className={classes.header}
+                    style={{ padding: '10px' }}
+                  >
                     Farms Supported
                   </Typography>
-                  <Box className={classes.sectionHeader} display="flex">
-                    <Box width="60%" textAlign="left">
-                      Farm Name
-                    </Box>
-                    <Box width="20%" textAlign="center">
-                      No. of Orders
-                    </Box>
-                    <Box width="20%" textAlign="right">
-                      Revenue
-                    </Box>
-                  </Box>
-                  <Box className={classes.items}>
-                    {farms.map((farm) => (
-                      <Box display="flex" justifyContent="start">
-                        <Box
-                          width="60%"
-                          textAlign="left"
-                          display="flex"
-                          paddingTop="10px"
-                        >
-                          <img
-                            src={farm.business_image}
-                            alt=""
-                            height="50"
-                            width="50"
+                  <TableContainer>
+                    <TableHead>
+                      <TableRow>
+                        {farmHead.map((headCell) => (
+                          <TableCell
                             style={{
-                              borderRadius: '10px',
-                              marginRight: '5px',
+                              fontWeight: 'bold',
                             }}
-                          />
-                          <Typography>{farm.business_name}</Typography>
-                        </Box>
-                        <Box width="20%" paddingTop="10px">
-                          {farm.total_orders}
-                        </Box>
-                        <Box width="20%" paddingTop="10px">
-                          {farm.Revenue}
-                        </Box>
-                      </Box>
-                    ))}
-                  </Box>
+                            padding="none"
+                            key={headCell.id}
+                            sortDirection={
+                              orderBy === headCell.id ? order : false
+                            }
+                          >
+                            {headCell.disableSorting ? (
+                              headCell.label
+                            ) : (
+                              <TableSortLabel
+                                active={orderBy === headCell.id}
+                                direction={
+                                  orderBy === headCell.id ? order : 'asc'
+                                }
+                                onClick={() => {
+                                  handleSortRequest(headCell.id);
+                                }}
+                              >
+                                {headCell.label}
+                              </TableSortLabel>
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {farmsSort().map((farm) => (
+                        <TableRow>
+                          <TableCell padding="none">
+                            <img
+                              src={farm.business_image}
+                              alt=""
+                              height="50"
+                              width="50"
+                              style={{
+                                borderRadius: '10px',
+                                marginRight: '5px',
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell
+                            padding="none"
+                            align="left"
+                            style={{ paddingRight: '20px' }}
+                          >
+                            {farm.business_name}
+                          </TableCell>
+                          <TableCell padding="none">
+                            {farm.total_orders}
+                          </TableCell>
+                          <TableCell padding="none">
+                            ${farm.Revenue.toFixed(2)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </TableContainer>
                 </Box>
-                <Box className={classes.card}>
-                  <Typography className={classes.header}>
+                <Box
+                  className={classes.card}
+                  style={{
+                    padding: '0',
+                    margin: '0',
+                  }}
+                >
+                  <Typography
+                    className={classes.header}
+                    style={{ padding: '10px' }}
+                  >
                     Produce Ordered
                   </Typography>
-                  <Box className={classes.sectionHeader} display="flex">
-                    <Box width="60%" textAlign="left">
-                      Produce Name
-                    </Box>
-                    <Box width="20%" textAlign="center">
-                      Quantity
-                    </Box>
-                    <Box width="22%" textAlign="right">
-                      Revenue
-                    </Box>
-                  </Box>
-                  <Box className={classes.items}>
-                    {produceOrdered.map((produce) => (
-                      <Box display="flex" justifyContent="start">
-                        <Box
-                          width="60%"
-                          display="inline-block"
-                          textAlign="left"
-                        >
-                          <img
-                            src={produce.img}
-                            alt=""
-                            height="50"
-                            width="50"
+                  <TableContainer>
+                    <TableHead>
+                      <TableRow>
+                        {produceHead.map((headCell) => (
+                          <TableCell
                             style={{
-                              borderRadius: '10px',
-                              marginRight: '5px',
-                              verticalAlign: 'middle',
+                              fontWeight: 'bold',
                             }}
-                          />
+                            key={headCell.id}
+                            padding="none"
+                            sortDirection={
+                              orderBy === headCell.id ? order : false
+                            }
+                          >
+                            {headCell.disableSorting ? (
+                              headCell.label
+                            ) : (
+                              <TableSortLabel
+                                active={orderBy === headCell.id}
+                                direction={
+                                  orderBy === headCell.id ? order : 'asc'
+                                }
+                                onClick={() => {
+                                  handleSortRequest(headCell.id);
+                                }}
+                              >
+                                {headCell.label}
+                              </TableSortLabel>
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
 
-                          {produce.name}
-                        </Box>
-                        <Box width="20%" textAlign="center" paddingTop="10px">
-                          {produce.quantity}
-                        </Box>
-                        <Box width="20%" textAlign="right" paddingTop="10px">
-                          {produce.revenue}
-                        </Box>
-                      </Box>
-                    ))}
-                  </Box>
+                    <TableBody>
+                      {produceSort().map((produce) => (
+                        <TableRow>
+                          <TableCell padding="none">
+                            <img
+                              src={produce.img}
+                              alt=""
+                              height="50"
+                              width="50"
+                              style={{
+                                borderRadius: '10px',
+                                marginRight: '5px',
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell
+                            padding="none"
+                            align="left"
+                            style={{ paddingRight: '20px' }}
+                          >
+                            {produce.name}
+                          </TableCell>
+
+                          <TableCell padding="none">
+                            {produce.quantity}
+                          </TableCell>
+                          <TableCell padding="none">
+                            ${produce.revenue.toFixed(2)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </TableContainer>
                 </Box>
               </Box>
             </Paper>

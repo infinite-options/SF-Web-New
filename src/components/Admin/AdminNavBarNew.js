@@ -230,7 +230,7 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
                   <Button
                     size={'small'}
                     className={classes.button}
-                    onClick={() => history.push('/admin/farmerhome')}
+                    onClick={() => history.push('/admin/adminitems')}
                     //onClick={() => setTab(0)}
                   >
                     Items
