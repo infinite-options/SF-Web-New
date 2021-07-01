@@ -1,13 +1,13 @@
 import React, {useState,useEffect } from 'react';
-import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from "@material-ui/core/Dialog";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import Button from "@material-ui/core/Button";
 import axios from 'axios';
+import AdminItemAddModel from './AdminItemAddModel';
+import { Grid, Button, Modal } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -118,6 +118,7 @@ function AdminItems() {
   const [open, setOpen] = useState(false);
   const [allProduce, setAllProduce] = useState([]);
   const [produceDict, setProduceDict] = useState({});
+  const [openModel, setOpenModel] = useState(false);
 
 
   useEffect(() => {
@@ -201,6 +202,14 @@ function AdminItems() {
     
   };
 
+  const closeModel = () => {setOpenModel(false)}
+
+  const modelBody = (
+    <div>
+      <AdminItemAddModel farmID={"200-000002"} handleClose={closeModel} />
+    </div>
+  );
+
   
   
   return (
@@ -230,8 +239,9 @@ function AdminItems() {
                 margin: '1rem',
               }}> 
                 Produce Offered
-                  
-                  
+                
+                <img src='/add.png' height="20" width="20" style={{ marginLeft:"10px",cursor:"pointer"}} onClick={()=>setOpenModel(true)} />
+
               </div>
               <div
               style={{
@@ -350,8 +360,12 @@ function AdminItems() {
               </DialogActions>
             </Dialog>
           </div>
-          
-            </div> 
+              <Modal open={openModel} onClose={()=>setOpenModel(false)}>
+                  {modelBody}
+              </Modal>
+        </div> 
+
+      
        
       );
     }

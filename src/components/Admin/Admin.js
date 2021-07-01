@@ -12,7 +12,7 @@ import FarmerReport from '../Farm/FarmerReport';
 import FarmerSettings from '../Farm/FarmerSettings';
 import FarmProfiles from './FarmProfiles';
 import FarmOrders from './FarmOrders';
-import AdminItems from './AdminItems';
+import AdminItems from './Produce/AdminItems';
 import Customers from './Customers/Customers';
 import OrderSummary from './OrderSummary';
 import AdminMenu from './AdminMenu';
