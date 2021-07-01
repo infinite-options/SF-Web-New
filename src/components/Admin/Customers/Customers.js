@@ -5,7 +5,14 @@ import moment from 'moment';
 import { AuthContext } from '../../../auth/AuthContext';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
-
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { Grid, Typography, Box, Avatar, Paper } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -158,6 +165,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '20px',
     marginBottom: '20px',
     paddingBottom: '20px',
+    fontSize: '10px',
   },
   title: {
     textAlign: 'left',
@@ -418,6 +426,8 @@ function Customers() {
   const [produceOrdered, setProduceOrdered] = useState([]);
   const [coupons, setCoupons] = useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [order, setOrder] = useState();
+  const [orderBy, setOrderBy] = useState();
 
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
@@ -561,7 +571,7 @@ function Customers() {
       );
     }
   };
-
+  //popover open and close
   const handleClick = (setPurchaseID, event) => {
     const purchaseID = [];
     setPurchaseID(purchaseID);
@@ -575,44 +585,62 @@ function Customers() {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
+  //right tabs
   const handleChange = (event, newValue) => {
     setRightTabChosen(newValue);
   };
+  //linking orders and produce with purcaseID
   const filterOnClick = (setPurchaseID, pid) => {
     const purchaseID = pid;
     setPurchaseID(purchaseID);
   };
-  const sortFarmName = () => {
-    let sortedData = farms.sort(function (a, b) {
-      var textA = a.business_name.toUpperCase();
-      var textB = b.business_name.toUpperCase();
-      return textA < textB ? -1 : textA > textB ? 1 : 0;
-    });
-    setFarms(sortedData);
-  };
 
-  const sortFarmOrders = () => {
-    let sortedData = farms.sort(function (a, b) {
-      var textA = a.total_orders;
-      var textB = b.total_orders;
-      return textA < textB ? -1 : textA > textB ? 1 : 0;
-    });
-    setFarms(sortedData);
-  };
-
-  const sortRevenue = () => {
-    let sortedData = farms.sort(function (a, b) {
-      var textA = a.Revenue;
-      var textB = b.Revenue;
-      return textA < textB ? -1 : textA > textB ? 1 : 0;
-    });
-    setFarms(sortedData);
-  };
   const historyView =
     purchaseID.length === 0
       ? history
       : history.filter((hist) => hist.purchase_id == purchaseID);
 
+  //sorting stats
+  const handleSortRequest = (cellId) => {
+    const isAsc = orderBy === cellId && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(cellId);
+  };
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  function getComparator(order, orderBy) {
+    return order === 'desc'
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  const farmsSort = () => {
+    return stableSort(farms, getComparator(order, orderBy));
+  };
+  const produceSort = () => {
+    return stableSort(produceOrdered, getComparator(order, orderBy));
+  };
+
+  //posting to update_Coupons/crate
   const url =
     'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_Coupons/create';
   const [createCoupon, setCreateCoupon] = useState({
@@ -661,7 +689,21 @@ function Customers() {
     newCoupon[e.target.id] = e.target.value;
     setCreateCoupon(newCoupon);
   }
+  //farm stats table head
+  const farmHead = [
+    { id: 'business_image', label: '' },
+    { id: 'business_name', label: 'Farm Name' },
+    { id: 'total_orders', label: 'Total orders' },
+    { id: 'Revenue', label: 'Revenue' },
+  ];
 
+  //produce stats table head
+  const produceHead = [
+    { id: 'img', label: '' },
+    { id: 'name', label: 'Produce Name' },
+    { id: 'quantity', label: 'Qty' },
+    { id: 'revenue', label: 'Revenue' },
+  ];
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -996,6 +1038,7 @@ function Customers() {
             borderRadius: '20px',
             opacity: 1,
             overflow: 'hidden',
+            padding: '0',
           }}
         >
           <Paper elevation={0}>
@@ -1028,13 +1071,13 @@ function Customers() {
               style={{
                 marginTop: 10,
                 minHeight: '80vh',
-                maxHeight: '92%',
-                overflow: 'hidden',
+                maxHeight: '100%',
+                overflowY: 'auto',
               }}
             >
               <Box hidden={rightTabChosen !== 0}>
                 {historyView.map((history) => (
-                  <Box className={classes.card}>
+                  <Box className={classes.card} style={{ padding: '10px' }}>
                     <Box className={classes.delivered}>
                       <img src={Delivered} alt="user pic" />
                       &nbsp; Order Delivered
@@ -1090,7 +1133,7 @@ function Customers() {
                               textAlign="right"
                               paddingTop="10px"
                             >
-                              {item['price']}
+                              ${item['price'].toFixed(2)}
                             </Box>
                           </Box>
                         );
@@ -1267,6 +1310,7 @@ function Customers() {
                     direction="row"
                     justify="space-between"
                     alignItems="center"
+                    style={{ padding: '10px' }}
                   >
                     <Grid item xs={12} sm container className={classes.header}>
                       Current Coupons
@@ -1279,8 +1323,9 @@ function Customers() {
                       direction="row"
                       justify="space-between"
                       alignItems="center"
+                      style={{ fontSize: '14px', fontWeight: 'bold' }}
                     >
-                      <Grid item style={{ paddingLeft: '40px' }}>
+                      <Grid item style={{ paddingLeft: '20px' }}>
                         %
                       </Grid>
                       <Grid item>$</Grid>
@@ -1332,7 +1377,7 @@ function Customers() {
                           </Box>
                         </Box>
                       </Grid>
-                      <Grid item xs={12} sm container>
+                      <Grid item style={{ padding: '10px' }}>
                         <Grid
                           item
                           xs={12}
@@ -1341,6 +1386,7 @@ function Customers() {
                           direction="row"
                           justify="space-between"
                           alignItems="center"
+                          style={{ fontSize: '14px', paddingRight: '10px' }}
                         >
                           <Grid item>
                             <Typography>{coupon.discount_percent}% </Typography>
@@ -1352,114 +1398,175 @@ function Customers() {
                             <Typography>${coupon.discount_shipping}</Typography>
                           </Grid>
                         </Grid>
-                        <Grid item>No. of uses:{coupon.num_used}</Grid>
+                        <Grid item>
+                          {' '}
+                          <Typography>No. of uses:{coupon.num_used}</Typography>
+                        </Grid>
                       </Grid>
                     </Grid>
                   ))}
                 </Box>
               </Box>
               <Box hidden={rightTabChosen !== 2}>
-                <Box className={classes.card}>
-                  <Typography className={classes.header}>
+                <Box
+                  className={classes.card}
+                  style={{
+                    padding: '0',
+                    margin: '0',
+                  }}
+                >
+                  <Typography
+                    className={classes.header}
+                    style={{ padding: '10px' }}
+                  >
                     Farms Supported
                   </Typography>
-                  <Box className={classes.sectionHeader} display="flex">
-                    <Box
-                      width="60%"
-                      textAlign="left"
-                      onClick={sortFarmName}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Typography>Farm Name</Typography>
-                    </Box>
-                    <Box
-                      width="20%"
-                      textAlign="center"
-                      onClick={sortFarmOrders}
-                    >
-                      No. of Orders
-                    </Box>
-                    <Box width="20%" textAlign="right" onClick={sortRevenue}>
-                      Revenue
-                    </Box>
-                  </Box>
-                  <Box className={classes.items}>
-                    {farms.map((farm) => (
-                      <Box display="flex" justifyContent="start">
-                        <Box
-                          width="60%"
-                          textAlign="left"
-                          display="flex"
-                          paddingTop="10px"
-                        >
-                          <img
-                            src={farm.business_image}
-                            alt=""
-                            height="50"
-                            width="50"
+                  <TableContainer>
+                    <TableHead>
+                      <TableRow>
+                        {farmHead.map((headCell) => (
+                          <TableCell
                             style={{
-                              borderRadius: '10px',
-                              marginRight: '5px',
+                              fontWeight: 'bold',
                             }}
-                          />
-                          <Typography>{farm.business_name}</Typography>
-                        </Box>
-                        <Box width="20%" paddingTop="10px">
-                          {farm.total_orders}
-                        </Box>
-                        <Box width="20%" paddingTop="10px">
-                          {farm.Revenue}
-                        </Box>
-                      </Box>
-                    ))}
-                  </Box>
+                            padding="none"
+                            key={headCell.id}
+                            sortDirection={
+                              orderBy === headCell.id ? order : false
+                            }
+                          >
+                            {headCell.disableSorting ? (
+                              headCell.label
+                            ) : (
+                              <TableSortLabel
+                                active={orderBy === headCell.id}
+                                direction={
+                                  orderBy === headCell.id ? order : 'asc'
+                                }
+                                onClick={() => {
+                                  handleSortRequest(headCell.id);
+                                }}
+                              >
+                                {headCell.label}
+                              </TableSortLabel>
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {farmsSort().map((farm) => (
+                        <TableRow>
+                          <TableCell padding="none">
+                            <img
+                              src={farm.business_image}
+                              alt=""
+                              height="50"
+                              width="50"
+                              style={{
+                                borderRadius: '10px',
+                                marginRight: '5px',
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell
+                            padding="none"
+                            align="left"
+                            style={{ paddingRight: '20px' }}
+                          >
+                            {farm.business_name}
+                          </TableCell>
+                          <TableCell padding="none">
+                            {farm.total_orders}
+                          </TableCell>
+                          <TableCell padding="none">
+                            ${farm.Revenue.toFixed(2)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </TableContainer>
                 </Box>
-                <Box className={classes.card}>
-                  <Typography className={classes.header}>
+                <Box
+                  className={classes.card}
+                  style={{
+                    padding: '0',
+                    margin: '0',
+                  }}
+                >
+                  <Typography
+                    className={classes.header}
+                    style={{ padding: '10px' }}
+                  >
                     Produce Ordered
                   </Typography>
-                  <Box className={classes.sectionHeader} display="flex">
-                    <Box width="60%" textAlign="left">
-                      Produce Name
-                    </Box>
-                    <Box width="20%" textAlign="center">
-                      Quantity
-                    </Box>
-                    <Box width="22%" textAlign="right">
-                      Revenue
-                    </Box>
-                  </Box>
-                  <Box className={classes.items}>
-                    {produceOrdered.map((produce) => (
-                      <Box display="flex" justifyContent="start">
-                        <Box
-                          width="60%"
-                          display="inline-block"
-                          textAlign="left"
-                        >
-                          <img
-                            src={produce.img}
-                            alt=""
-                            height="50"
-                            width="50"
+                  <TableContainer>
+                    <TableHead>
+                      <TableRow>
+                        {produceHead.map((headCell) => (
+                          <TableCell
                             style={{
-                              borderRadius: '10px',
-                              marginRight: '5px',
-                              verticalAlign: 'middle',
+                              fontWeight: 'bold',
                             }}
-                          />
+                            key={headCell.id}
+                            padding="none"
+                            sortDirection={
+                              orderBy === headCell.id ? order : false
+                            }
+                          >
+                            {headCell.disableSorting ? (
+                              headCell.label
+                            ) : (
+                              <TableSortLabel
+                                active={orderBy === headCell.id}
+                                direction={
+                                  orderBy === headCell.id ? order : 'asc'
+                                }
+                                onClick={() => {
+                                  handleSortRequest(headCell.id);
+                                }}
+                              >
+                                {headCell.label}
+                              </TableSortLabel>
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
 
-                          {produce.name}
-                        </Box>
-                        <Box width="20%" textAlign="center" paddingTop="10px">
-                          {produce.quantity}
-                        </Box>
-                        <Box width="20%" textAlign="right" paddingTop="10px">
-                          {produce.revenue}
-                        </Box>
-                      </Box>
-                    ))}
-                  </Box>
+                    <TableBody>
+                      {produceSort().map((produce) => (
+                        <TableRow>
+                          <TableCell padding="none">
+                            <img
+                              src={produce.img}
+                              alt=""
+                              height="50"
+                              width="50"
+                              style={{
+                                borderRadius: '10px',
+                                marginRight: '5px',
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell
+                            padding="none"
+                            align="left"
+                            style={{ paddingRight: '20px' }}
+                          >
+                            {produce.name}
+                          </TableCell>
+
+                          <TableCell padding="none">
+                            {produce.quantity}
+                          </TableCell>
+                          <TableCell padding="none">
+                            ${produce.revenue.toFixed(2)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </TableContainer>
                 </Box>
               </Box>
             </Paper>
