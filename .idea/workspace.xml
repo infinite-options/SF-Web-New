@@ -20,12 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c55e7531-7ba9-4fd4-83fe-ea55fbc88158" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/Farm/Notifications/Main.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Farm/Notifications/OptionBar.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Farm/Notifications/Main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Farm/Notifications/Main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Farm/Notifications/OptionBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Farm/Notifications/OptionBar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Farm/Notifications/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Farm/Notifications/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +71,8 @@
       <workItem from="1624994067448" duration="1517000" />
       <workItem from="1625040150065" duration="6841000" />
       <workItem from="1625077863859" duration="2482000" />
-      <workItem from="1625122415130" duration="1204000" />
+      <workItem from="1625122415130" duration="2096000" />
+      <workItem from="1625164501693" duration="619000" />
     </task>
     <servers />
   </component>
