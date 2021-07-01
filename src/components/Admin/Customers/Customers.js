@@ -6,17 +6,9 @@ import { AuthContext } from '../../../auth/AuthContext';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
 
-import {
-  Grid,
-  Typography,
-  Box,
-  Avatar,
-  Paper,
-  Button,
-} from '@material-ui/core';
+import { Grid, Typography, Box, Avatar, Paper } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { fade } from '@material-ui/core/styles';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import CustomerSrc from '../../../sf-svg-icons/Polygon1.svg';
 import { AdminFarmContext } from '../AdminFarmContext';
@@ -166,8 +158,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '20px',
     marginBottom: '20px',
     paddingBottom: '20px',
-    paddingLeft: '10px',
-    paddingRight: '10px',
   },
   title: {
     textAlign: 'left',
@@ -338,8 +328,6 @@ function fetchHistory(setHistory, id) {
     .then((json) => {
       const history = json.result;
       setHistory(history);
-
-      console.log('History', history);
     })
     .catch((error) => {
       console.error(error);
@@ -415,7 +403,6 @@ function fetchCoupons(setCoupons, custEmail) {
 
 function Customers() {
   const classes = useStyles();
-
   const Auth = useContext(AuthContext);
   const { custList } = useContext(AdminFarmContext);
   const [searchName, setSearchName] = useState('');
@@ -430,7 +417,8 @@ function Customers() {
   const [rightTabChosen, setRightTabChosen] = useState(0);
   const [produceOrdered, setProduceOrdered] = useState([]);
   const [coupons, setCoupons] = useState([]);
-  console.log('Selected Customer: ', email);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
       return (
@@ -574,8 +562,6 @@ function Customers() {
     }
   };
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
   const handleClick = (setPurchaseID, event) => {
     const purchaseID = [];
     setPurchaseID(purchaseID);
@@ -596,7 +582,32 @@ function Customers() {
     const purchaseID = pid;
     setPurchaseID(purchaseID);
   };
+  const sortFarmName = () => {
+    let sortedData = farms.sort(function (a, b) {
+      var textA = a.business_name.toUpperCase();
+      var textB = b.business_name.toUpperCase();
+      return textA < textB ? -1 : textA > textB ? 1 : 0;
+    });
+    setFarms(sortedData);
+  };
 
+  const sortFarmOrders = () => {
+    let sortedData = farms.sort(function (a, b) {
+      var textA = a.total_orders;
+      var textB = b.total_orders;
+      return textA < textB ? -1 : textA > textB ? 1 : 0;
+    });
+    setFarms(sortedData);
+  };
+
+  const sortRevenue = () => {
+    let sortedData = farms.sort(function (a, b) {
+      var textA = a.Revenue;
+      var textB = b.Revenue;
+      return textA < textB ? -1 : textA > textB ? 1 : 0;
+    });
+    setFarms(sortedData);
+  };
   const historyView =
     purchaseID.length === 0
       ? history
@@ -623,7 +634,6 @@ function Customers() {
 
   function submit(e, email) {
     e.preventDefault();
-    console.log(email);
     axios
       .post(url, {
         coupon_id: createCoupon.coupon_id,
@@ -650,9 +660,8 @@ function Customers() {
     const newCoupon = { ...createCoupon };
     newCoupon[e.target.id] = e.target.value;
     setCreateCoupon(newCoupon);
-
-    console.log(newCoupon);
   }
+
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -1252,73 +1261,100 @@ function Customers() {
                   </form>
                 </Box>
 
-                <Box
-                  className={classes.card}
-                  component="div"
-                  overflow="scroll"
-                  height="600px"
-                >
-                  <Box display="flex" justifyContent="space-between">
-                    <Box width="60%" className={classes.header}>
+                <Box className={classes.card} component="div">
+                  <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="center"
+                  >
+                    <Grid item xs={12} sm container className={classes.header}>
                       Current Coupons
-                    </Box>
-                    <Box width="10%">%</Box>
-                    <Box width="10%">$</Box>
-                    <Box width="20%">Shipping</Box>
-                  </Box>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sm
+                      container
+                      direction="row"
+                      justify="space-between"
+                      alignItems="center"
+                    >
+                      <Grid item style={{ paddingLeft: '40px' }}>
+                        %
+                      </Grid>
+                      <Grid item>$</Grid>
+                      <Grid item>Shipping</Grid>
+                    </Grid>
+                  </Grid>
 
                   {coupons.map((coupon) => (
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      padding="10px 0px"
-                      borderBottom="0.5px solid #747474"
+                    <Grid
+                      container
+                      direction="row"
+                      justify="space-between"
+                      alignItems="center"
+                      style={{ padding: '15px 0px' }}
                     >
-                      <Box
-                        style={{
-                          width: '212px',
-                          height: '115px',
-                          backgroundImage: `url(${couponUnavaliable})`,
-                          backgroundSize: '100% 100%',
-                          backgroundPosition: 'center center',
-                          backgroundRepeat: 'no-repeat',
-                        }}
-                      >
+                      <Grid item>
                         <Box
-                          display="flex"
-                          flexDirection="column"
-                          alignItems="flex-start"
-                          justifyContent="center"
-                          marginLeft="1rem"
+                          style={{
+                            width: '170px',
+                            height: '73px',
+                            backgroundImage: `url(${couponUnavaliable})`,
+                            backgroundSize: '100% 100%',
+                            backgroundPosition: 'center center',
+                            backgroundRepeat: 'no-repeat',
+                          }}
                         >
                           <Box
-                            fontSize="14px"
-                            pr={1}
-                            fontWeight="bold"
-                            marginTop="1.5rem"
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="flex-start"
+                            justifyContent="center"
+                            marginLeft="1.5rem"
                           >
-                            {coupon.coupon_title}
-                          </Box>
-                          <Box fontSize="10px">{coupon.notes}</Box>
-                          <Box fontSize="10px">
-                            Spend $ {coupon.threshold} more to use
-                          </Box>
-                          <Box fontSize="10px">
-                            Expires: {moment(coupon.expire_date).format('LL')}
-                          </Box>
-
-                          <Box fontSize="10px" fontWeight="bold">
-                            Non Eligible
+                            <Box
+                              fontSize="12px"
+                              pr={1}
+                              fontWeight="bold"
+                              marginTop="0.5rem"
+                            >
+                              {coupon.coupon_title}
+                            </Box>
+                            <Box fontSize="10px">{coupon.notes}</Box>
+                            <Box fontSize="10px">
+                              Spend $ {coupon.threshold} more to use
+                            </Box>
+                            <Box fontSize="10px">
+                              Expires: {moment(coupon.expire_date).format('LL')}
+                            </Box>
                           </Box>
                         </Box>
-                      </Box>
-
-                      <Box width="10%" display="flex" marginLeft="30px">
-                        {coupon.discount_percent}
-                      </Box>
-                      <Box width="10%">{coupon.discount_amount}</Box>
-                      <Box width="20%">{coupon.discount_shipping}</Box>
-                    </Box>
+                      </Grid>
+                      <Grid item xs={12} sm container>
+                        <Grid
+                          item
+                          xs={12}
+                          sm
+                          container
+                          direction="row"
+                          justify="space-between"
+                          alignItems="center"
+                        >
+                          <Grid item>
+                            <Typography>{coupon.discount_percent}% </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography>${coupon.discount_amount}</Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography>${coupon.discount_shipping}</Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>No. of uses:{coupon.num_used}</Grid>
+                      </Grid>
+                    </Grid>
                   ))}
                 </Box>
               </Box>
@@ -1328,13 +1364,22 @@ function Customers() {
                     Farms Supported
                   </Typography>
                   <Box className={classes.sectionHeader} display="flex">
-                    <Box width="60%" textAlign="left">
-                      Farm Name
+                    <Box
+                      width="60%"
+                      textAlign="left"
+                      onClick={sortFarmName}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <Typography>Farm Name</Typography>
                     </Box>
-                    <Box width="20%" textAlign="center">
+                    <Box
+                      width="20%"
+                      textAlign="center"
+                      onClick={sortFarmOrders}
+                    >
                       No. of Orders
                     </Box>
-                    <Box width="20%" textAlign="right">
+                    <Box width="20%" textAlign="right" onClick={sortRevenue}>
                       Revenue
                     </Box>
                   </Box>
