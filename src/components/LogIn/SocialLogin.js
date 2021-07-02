@@ -181,7 +181,7 @@ function SocialLogin(props) {
               src={Fb_Login}
               onClick={renderProps.onClick}
               disabled={renderProps.disabled}
-              alt = {''}
+              alt={''}
             ></img>
           )}
         />
@@ -201,7 +201,7 @@ function SocialLogin(props) {
                 src={Google}
                 onClick={renderProps.onClick}
                 disabled={renderProps.disabled}
-                alt = {''}
+                alt={''}
               ></img>
             )}
           />
@@ -212,7 +212,7 @@ function SocialLogin(props) {
         <img
           src={Apple_Login}
           variant="contained"
-          alt = {''}
+          alt={''}
           onClick={() => {
             window.AppleID.auth.signIn();
           }}

@@ -1,20 +1,13 @@
-import Modal from 'react-bootstrap/Modal';
 import React, { useState, useContext } from 'react';
-
 import { withRouter } from 'react-router';
 import classes from './modal.module.css';
 import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
-import AuthUtils from '../../utils/AuthUtils';
-import { AuthContext } from '../../auth/AuthContext';
 import appColors from '../../styles/AppColors';
-
 import PassModal from './passwordModal';
 
 const IncorrectPasswordModal = ({ ...props }) => {
-  const AuthMethods = new AuthUtils();
-  const auth = useContext(AuthContext);
   const [passModal, setpassModal] = useState();
 
   const API_URL = process.env.REACT_APP_SERVER_BASE_URI + '';

@@ -34,9 +34,8 @@ const ConfirmatioModal = (props) => {
           height: 'auto',
           width: '400px',
           position: 'absolute',
-          top: '100px',
-          right: '350px',
-          zIndex: 10040,
+          top: '125px',
+          left: '570px',
           border: 'none',
         }}
       >
