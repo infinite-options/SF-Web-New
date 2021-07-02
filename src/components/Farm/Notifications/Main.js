@@ -21,6 +21,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import './Main.css'
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -115,171 +116,211 @@ function NotificationMain({
   };
 
   return (
-    <div>
-      <Grid container>
-        <Grid item xs={12} lg={8}>
-          <MaterialTable
-            icons={tableIcons}
-            title={notification + ' customers'}
-            columns={[
-              {
-                title: (
-                  <Checkbox
-                    indeterminate={
-                      numCustomersSelected > 0 &&
-                      numCustomersSelected < numCustomers
-                    }
-                    checked={
-                      numCustomers > 0 && numCustomersSelected === numCustomers
-                    }
-                    onChange={handleSelectAllCustomersClick}
-                    inputProps={{ 'aria-label': 'Select all customers' }}
-                  />
-                ),
-                field: 'customer_uid',
-                render: (rowData) => {
-                  return (
-                    <Checkbox
-                      checked={customerIsSelected(rowData.customer_uid)}
-                      onChange={(event) =>
-                        handleChangeSelection(event, rowData.customer_uid)
-                      }
-                      inputProps={{
-                        'aria-label':
-                          'Select customer id ' + rowData.customer_uid,
-                      }}
+
+
+        <div >
+            <div className="tableBox1 box1">
+
+
+
+                <MaterialTable
+
+                    icons={tableIcons}
+                    title={notification + ' customers'}
+                    columns={[
+                        {
+                            title: (
+                                <Checkbox
+                                    indeterminate={
+                                        numCustomersSelected > 0 &&
+                                        numCustomersSelected < numCustomers
+                                    }
+                                    checked={
+                                        numCustomers > 0 && numCustomersSelected === numCustomers
+                                    }
+                                    onChange={handleSelectAllCustomersClick}
+                                    inputProps={{ 'aria-label': 'Select all customers' }}
+                                />
+                            ),
+                            field: 'customer_uid',
+                            render: (rowData) => {
+                                return (
+                                    <Checkbox
+                                        checked={customerIsSelected(rowData.customer_uid)}
+                                        onChange={(event) =>
+                                            handleChangeSelection(event, rowData.customer_uid)
+                                        }
+                                        inputProps={{
+                                            'aria-label':
+                                                'Select customer id ' + rowData.customer_uid,
+                                        }}
+                                    />
+                                );
+                            },
+                        },
+                        {
+                            title: 'Name',
+                            field: 'customer_first_name',
+                            render: (rowData) => {
+                                return (
+                                    rowData.customer_first_name +
+                                    ' ' +
+                                    rowData.customer_last_name
+                                );
+                            },
+                        },
+                        { title: 'Email', field: 'customer_email' },
+                        { title: 'Phone', field: 'customer_phone_num' },
+                        { title: 'Address', field: 'address' },
+                        { title: 'City', field: 'customer_city' },
+                        { title: 'Zip', field: 'customer_zip' },
+                        { title: 'Business', field: 'business_name' },
+                        { title: '# Orders', field: 'number_of_orders' },
+                        { title: 'Last Order', field: 'latest_order_date' },
+                    ]}
+                    data={customerList}
+                    options={{
+                        // selection: true,
+                        pageSize: 10,
+                        pageSizeOptions: [10],
+                        rowStyle: { height: 10 },
+                        search: true,
+                    }}
+                >
+                </MaterialTable>
+
+
+
+            </div>
+
+            <br/>
+            <div className="tableBox2 ">
+
+                <div className="form-group">
+                    <TextField
+                        multiline
+                        rows={25}
+                        value={message}
+
+                        InputProps={{
+                            style:{
+                                width: 310,
+                                height: 500
+                        }
+                        }}
+                        variant="outlined"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        onChange={(event) => {
+                            setMessage(event.target.value);
+                        }}
+                        style={{
+                            padding: '0 23px',
+                        }}
                     />
-                  );
-                },
-              },
-              {
-                title: 'Name',
-                field: 'customer_first_name',
-                render: (rowData) => {
-                  return (
-                    rowData.customer_first_name +
-                    ' ' +
-                    rowData.customer_last_name
-                  );
-                },
-              },
-              { title: 'Email', field: 'customer_email' },
-              { title: 'Phone', field: 'customer_phone_num' },
-              { title: 'Address', field: 'address' },
-              { title: 'City', field: 'customer_city' },
-              { title: 'Zip', field: 'customer_zip' },
-              { title: 'Business', field: 'business_name' },
-              { title: '# Orders', field: 'number_of_orders' },
-              { title: 'Last Order', field: 'latest_order_date' },
-            ]}
-            data={customerList}
-            options={{
-              // selection: true,
-              pageSize: 10,
-              pageSizeOptions: [10],
-              rowStyle: { height: 10 },
-              search: true,
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} lg={4}>
-          <TextField
-            multiline
-            rows={30}
-            value={message}
-            fullWidth
-            variant="outlined"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onChange={(event) => {
-              setMessage(event.target.value);
-            }}
-            style={{
-              padding: '0 20px',
-            }}
-          />
-          <Grid container className={classes.buttonGroup}>
-            <Grid item xs={6}>
-              <Button
-                disabled={message === '' || selectedCustomers.length === 0}
-                variant="contained"
-                onClick={() => {
-                  console.log(notification);
-                  // console.log(selectedCustomers)
-                  console.log(message);
-                  // Get remaining customer info of selected customers
-                  let selectedCustomerInfo = customerList.filter(
-                    (customerInfo) =>
-                      selectedCustomers.indexOf(customerInfo.customer_uid) !==
-                      -1
-                  );
-                  console.log(selectedCustomerInfo);
-                  // Sending SMS
-                  if (notification === 'SMS') {
-                    // Get comma separated list of phone numbers of customers
-                    let selectedPhoneNumbers = selectedCustomerInfo
-                      .map((customerInfo) => customerInfo.customer_phone_num)
-                      .toString();
-                    console.log(selectedPhoneNumbers);
-                    axios
-                      .post(API_URL + 'Send_Twilio_SMS', {
-                        message: message,
-                        numbers: selectedPhoneNumbers,
-                      })
-                      .then((res) => {
-                        console.log(res);
-                      })
-                      .catch((err) => {
-                        if (err.response) {
-                          console.log(err.response);
-                        }
-                        console.log(err);
-                      });
-                  } else if (notification === 'Notifications') {
-                    // Get comma separated list of emails of customers
-                    let selectedUids = selectedCustomerInfo
-                      .map((customerInfo) => customerInfo.customer_uid)
-                      .toString();
-                    console.log(selectedUids);
-                    let formData = new FormData();
-                    formData.append('uids', selectedUids);
-                    formData.append('message', message);
-                    axios
-                      .post(API_URL + 'Send_Notification/customer', formData)
-                      .then((res) => {
-                        console.log(res);
-                      })
-                      .catch((err) => {
-                        if (err.response) {
-                          console.log(err.response);
-                        }
-                        console.log(err);
-                      });
-                  } else {
-                    console.log('Invalid notification type');
-                  }
-                }}
-              >
-                Send Notifications
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button
-                variant="contained"
-                disabled={message === ''}
-                onClick={() => {
-                  console.log(notification);
-                  console.log(message);
-                }}
-              >
-                Send to All
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </div>
+                </div>
+                {/*<Grid container className={classes.buttonGroup}>
+                    <Grid item xs={6}>*/}
+                        <div className="form-group">
+                            <Button
+                                disabled={message === '' || selectedCustomers.length === 0}
+                                variant="contained"
+                                onClick={() => {
+                                    console.log(notification);
+                                    // console.log(selectedCustomers)
+                                    console.log(message);
+                                    // Get remaining customer info of selected customers
+                                    let selectedCustomerInfo = customerList.filter(
+                                        (customerInfo) =>
+                                            selectedCustomers.indexOf(customerInfo.customer_uid) !==
+                                            -1
+                                    );
+                                    console.log(selectedCustomerInfo);
+                                    // Sending SMS
+                                    if (notification === 'SMS') {
+                                        // Get comma separated list of phone numbers of customers
+                                        let selectedPhoneNumbers = selectedCustomerInfo
+                                            .map((customerInfo) => customerInfo.customer_phone_num)
+                                            .toString();
+                                        console.log(selectedPhoneNumbers);
+                                        axios
+                                            .post(API_URL + 'Send_Twilio_SMS', {
+                                                message: message,
+                                                numbers: selectedPhoneNumbers,
+                                            })
+                                            .then((res) => {
+                                                console.log(res);
+                                            })
+                                            .catch((err) => {
+                                                if (err.response) {
+                                                    console.log(err.response);
+                                                }
+                                                console.log(err);
+                                            });
+                                    } else if (notification === 'Notifications') {
+                                        // Get comma separated list of emails of customers
+                                        let selectedUids = selectedCustomerInfo
+                                            .map((customerInfo) => customerInfo.customer_uid)
+                                            .toString();
+                                        console.log(selectedUids);
+                                        let formData = new FormData();
+                                        formData.append('uids', selectedUids);
+                                        formData.append('message', message);
+                                        axios
+                                            .post(API_URL + 'Send_Notification/customer', formData)
+                                            .then((res) => {
+                                                console.log(res);
+                                            })
+                                            .catch((err) => {
+                                                if (err.response) {
+                                                    console.log(err.response);
+                                                }
+                                                console.log(err);
+                                            });
+                                    } else {
+                                        console.log('Invalid notification type');
+                                    }
+                                }}
+                                style={{
+                                    backgroundColor: 'orange',
+                                    color: 'white',
+                                    marginTop: '20px',
+                                    marginRight: '20px'
+                                }}
+
+                            >
+                                Send Notifications
+                            </Button>
+                            {/*</Grid>
+                    <Grid item xs={6}>*/}
+                            <Button
+
+                                variant="contained"
+                                disabled={message === ''}
+                                onClick={() => {
+                                    console.log(notification);
+                                    console.log(message);
+                                }}
+                                style={{
+                                    backgroundColor: 'orange',
+                                    color: 'white',
+                                    marginLeft: '10px',
+                                    marginTop: '20px',
+                                }}
+
+
+                            >
+                                Send to All
+                            </Button>
+                        </div>
+                    {/*</Grid>
+                </Grid>*/}
+
+            </div>
+        </div>
+
+
   );
 }
 
