@@ -1,33 +1,43 @@
 import Modal from 'react-bootstrap/Modal';
 import React, { useState, useContext } from 'react';
+
+import { withRouter } from 'react-router';
 import classes from './modal.module.css';
+import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
 import AuthUtils from '../../utils/AuthUtils';
 import { AuthContext } from '../../auth/AuthContext';
+import appColors from '../../styles/AppColors';
 
-const EmailModal = (props) => {
+import PassModal from './passwordModal';
+
+const IncorrectPasswordModal = ({ ...props }) => {
   const AuthMethods = new AuthUtils();
   const auth = useContext(AuthContext);
+  const [passModal, setpassModal] = useState();
+
+  const API_URL = process.env.REACT_APP_SERVER_BASE_URI + '';
   let [modalSignup, modalSignupMessage] = useState('');
 
   const onClear = () => {
     props.clear(false);
   };
-
-  const onsignUp = () => {
-    modalSignupMessage('true');
-    console.log(modalSignupMessage, modalSignup);
-    props.clear(false);
-    props.setIsSignUpShown(true);
-    props.setIsLoginShown(false);
-    // props.clear(false);
-    // props.signClear(false);
-    // props.loginShow(true);
-    // props.modalClear();
-    // props.setIsLoginShown(true);
-    // props.setConfirmEmail(false)
+  const onReset = async (value) => {
+    axios
+      .post(API_URL + 'set_temp_password', { email: props.emailValue })
+      .then((response) => {
+        let res = response;
+        if (res.data.message === 'A temporary password has been sent') {
+          console.log(res);
+          setpassModal(true);
+        } else if (res.data.code === 280) {
+          console.log(res);
+          alert('No account found with that email.');
+        }
+      });
   };
+  console.log('Email:', props.emailValue);
   const onLogin = () => {
     modalSignupMessage('true');
     console.log(modalSignupMessage, modalSignup);
@@ -41,7 +51,6 @@ const EmailModal = (props) => {
     // props.setIsLoginShown(true);
     // props.setConfirmEmail(false)
   };
-  console.log(props.code);
 
   return (
     <>
@@ -82,7 +91,7 @@ const EmailModal = (props) => {
               color: 'black',
             }}
           >
-            Account Not Found
+            Incorrect Password{' '}
           </h2>
           <h2
             style={{
@@ -93,8 +102,9 @@ const EmailModal = (props) => {
               color: 'black',
             }}
           >
-            Sorry, we don’t recognize this <br />
-            email or username.
+            Seems like an incorrect password <br /> was entered for the
+            associated
+            <br /> email with this account.
           </h2>
           <button
             onClick={onLogin}
@@ -111,39 +121,23 @@ const EmailModal = (props) => {
               fontWeight: 'bold',
             }}
           >
-            Try again with different username
+            Try again with a correct password
           </button>
           <p
             style={{
-              float: 'left',
-              marginLeft: '65px',
-              fontSize: '14px',
+              color: appColors.secondary,
               fontWeight: 'bold',
+              cursor: 'pointer',
             }}
+            onClick={onReset}
           >
-            Dont have an account?
+            Forgot Password?
           </p>
-          <button
-            onClick={onsignUp}
-            style={{
-              width: '350px',
-              marginBottom: '20px',
-              height: '50px',
-              borderRadius: '8px',
-              backgroundColor: 'rgb(239,139,52)',
-              border: ' 2px solid rgb(239,139,52)',
-              color: 'rgb(255,255,255)',
-              fontSize: '18px',
-              fontWeight: 'bold',
-            }}
-          >
-            Sign Up
-          </button>
-          <p></p>
+          {passModal && <PassModal clear={setpassModal}></PassModal>}
         </div>
       </Card>
     </>
   );
 };
 
-export default EmailModal;
+export default withRouter(IncorrectPasswordModal);

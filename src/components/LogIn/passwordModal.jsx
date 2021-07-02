@@ -15,15 +15,12 @@ const PassModal = (props) => {
   const AuthMethods = new AuthUtils();
   const auth = useContext(AuthContext);
   let [modalSignup, modalSignupMessage] = useState('');
-  
-const onClear=()=>{
+
+  const onClear = () => {
     props.clear(false);
-}
+  };
 
-
-
- 
-  console.log((props.code));
+  console.log(props.code);
 
   return (
     <>
@@ -32,8 +29,11 @@ const onClear=()=>{
         style={{
           borderRadius: '10px',
           marginBottom: '20px',
-          height: '520px',
-          width: '480px',
+          height: 'auto',
+          width: '400px',
+          border: 'none',
+          top: '125px',
+          left: '570px',
         }}
       >
         <div>
@@ -47,18 +47,18 @@ const onClear=()=>{
               color: 'black',
               marginTop: '3px',
               marginRight: '3px',
+              cursor: 'pointer',
             }}
           ></img>
         </div>
         <div>
-        <h2
+          <h2
             style={{
               fontWeight: 'bold',
-              fontSize: '35px',
-              marginBottom: '80px',
-              marginTop: '50px',
-              color:'black',
-              
+              fontSize: '25px',
+              marginBottom: '25px',
+              marginTop: '25px',
+              color: 'black',
             }}
           >
             Temporary password sent
@@ -69,41 +69,33 @@ const onClear=()=>{
               fontSize: '23px',
               marginBottom: '50px',
               marginTop: '30px',
-              color:'black'
+              color: 'black',
             }}
           >
-            We have sent you an email with a<br/> temporary password. Please<br/> follow the instructions in the email<br/> to create a new password.
+            We have sent you an email with a<br /> temporary password. Please
+            <br /> follow the instructions in the email
+            <br /> to create a new password.
           </h2>
           <button
-          
             onClick={onClear}
             style={{
-                width: '350px',
-                marginTop:'30px',
-                marginBottom: '20px',
-                height: '60px',
-                borderRadius: '15px',
-                backgroundColor: 'rgb(239,139,52)',
-                border: ' 2px solid rgb(239,139,52)',
-                color: 'rgb(255,255,255)',
-                fontSize: '20px',
-                fontWeight:'bold'
-              
+              width: '350px',
+              marginTop: '25px',
+              marginBottom: '20px',
+              height: '50px',
+              borderRadius: '8px',
+              backgroundColor: 'rgb(239,139,52)',
+              border: ' 2px solid rgb(239,139,52)',
+              color: 'rgb(255,255,255)',
+              fontSize: '18px',
+              fontWeight: 'bold',
             }}
           >
             Okay
-            </button>
-           
-            <p></p>
-        </div>
-        
-        
-        
-          
-         
-        
+          </button>
 
-        
+          <p></p>
+        </div>
       </Card>
     </>
   );

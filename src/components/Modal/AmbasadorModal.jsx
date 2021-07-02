@@ -58,6 +58,7 @@ const AmbasadorModal = (props) => {
               color: 'black',
               marginTop: '10px',
               marginRight: '10px',
+              cursor: 'pointer',
             }}
           ></img>
         </div>

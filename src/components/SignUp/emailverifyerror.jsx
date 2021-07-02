@@ -17,7 +17,7 @@ const Emailverify = (props) => {
   const history = useHistory();
   let [modalSignup, modalSignupMessage] = useState('');
   const modalClick = () => {
-    props.clear(false)
+    props.clear(false);
   };
   return (
     <>
@@ -26,8 +26,13 @@ const Emailverify = (props) => {
         style={{
           borderRadius: '10px',
           marginBottom: '20px',
-          height: '480px',
-          width: '450px',
+          height: 'auto',
+          width: '400px',
+          position: 'absolute',
+          top: '100px',
+          right: '350px',
+          zIndex: 10040,
+          border: 'none',
         }}
       >
         <div>
@@ -41,6 +46,7 @@ const Emailverify = (props) => {
               color: '#136D74',
               marginTop: '3px',
               marginRight: '3px',
+              cursor: 'pointer',
             }}
           ></img>
         </div>
@@ -48,10 +54,10 @@ const Emailverify = (props) => {
           <h2
             style={{
               fontWeight: 'bold',
-              fontSize: '40px',
-              marginBottom: '50px',
-              marginTop: '80px',
-              color: 'black'
+              fontSize: '30px',
+              marginBottom: '25px',
+              marginTop: '25px',
+              color: 'black',
             }}
           >
             Hmm..
@@ -62,38 +68,32 @@ const Emailverify = (props) => {
             width: '300px',
             marginLeft: 'auto',
             marginRight: 'auto',
-            fontSize: '20px',
-            marginBottom: '50px',
-            fontWeight:'bold',
-            color: 'black'
+            fontSize: '18px',
+            marginBottom: '25px',
+            fontWeight: 'bold',
+            color: 'black',
           }}
         >
-          We tried sending you an email and it didn’t go through. Please check your email address in the Sign Up section.
+          We tried sending you an email and it didn’t go through. Please check
+          your email address in the Sign Up section.
         </div>
-        
-        
-          <button
-          
-            onClick={modalClick}
-            style={{
-              width: '350px',
-              marginBottom: '20px',
-              height: '60px',
-              borderRadius: '15px',
-              backgroundColor: 'rgb(239,139,52)',
-              border: ' 2px solid rgb(239,139,52)',
-              color: 'rgb(255,255,255)',
-              fontSize: '20px',
-              fontWeight:'bold'
-                
-              }}
-          >
-            Okay
-          </button>
-         
-        
 
-        
+        <button
+          onClick={modalClick}
+          style={{
+            width: '350px',
+            marginBottom: '20px',
+            height: '50px',
+            borderRadius: '8px',
+            backgroundColor: 'rgb(239,139,52)',
+            border: ' 2px solid rgb(239,139,52)',
+            color: 'rgb(255,255,255)',
+            fontSize: '18px',
+            fontWeight: 'bold',
+          }}
+        >
+          Okay
+        </button>
       </Card>
     </>
   );

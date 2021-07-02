@@ -1,32 +1,56 @@
 import Modal from 'react-bootstrap/Modal';
-// import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useContext } from 'react';
+
+import { withRouter } from 'react-router';
 import classes from './modal.module.css';
-import { Button } from 'react-bootstrap';
+import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
-import Signup from '../SignUp/Signup';
-import { Paper } from '@material-ui/core';
 import AuthUtils from '../../utils/AuthUtils';
 import { AuthContext } from '../../auth/AuthContext';
 import appColors from '../../styles/AppColors';
+import SocialLogin from './SocialLogin';
+import PassModal from './passwordModal';
 
-const AlertModal = (props) => {
+const SocialLoginError = ({ ...props }) => {
   const AuthMethods = new AuthUtils();
   const auth = useContext(AuthContext);
+  const [passModal, setpassModal] = useState();
+
+  const API_URL = process.env.REACT_APP_SERVER_BASE_URI + '';
   let [modalSignup, modalSignupMessage] = useState('');
 
-  const modalClick = () => {
+  const onClear = () => {
+    props.clear(false);
+  };
+  const onReset = async (value) => {
+    axios
+      .post(API_URL + 'set_temp_password', { email: props.emailValue })
+      .then((response) => {
+        let res = response;
+        if (res.data.message === 'A temporary password has been sent') {
+          console.log(res);
+          setpassModal(true);
+        } else if (res.data.code === 280) {
+          console.log(res);
+          alert('No account found with that email.');
+        }
+      });
+  };
+  console.log('Email:', props.emailValue);
+  const onLogin = () => {
     modalSignupMessage('true');
     console.log(modalSignupMessage, modalSignup);
     props.clear(false);
-    props.signClear(false);
-    props.loginShow(true);
+    props.setIsLoginShown(true);
+    props.setIsSignUpShown(false);
+    // props.clear(false);
+    // props.signClear(false);
+    // props.loginShow(true);
     // props.modalClear();
     // props.setIsLoginShown(true);
     // props.setConfirmEmail(false)
   };
-  console.log(props.code);
 
   return (
     <>
@@ -35,18 +59,16 @@ const AlertModal = (props) => {
         style={{
           borderRadius: '10px',
           marginBottom: '20px',
-          height: '450px',
-          width: '480px',
-          position: 'absolute',
-          top: '100px',
-          right: '350px',
-          zIndex: 10040,
+          height: 'auto',
+          width: '400px',
+          overflow: 'hidden',
+          border: 'none',
         }}
       >
         <div>
           <img
             src={cross}
-            onClick={modalClick}
+            onClick={onClear}
             style={{
               float: 'right',
               height: '25px',
@@ -68,7 +90,7 @@ const AlertModal = (props) => {
               color: 'black',
             }}
           >
-            {props.title}
+            Social Sign Up Exists
           </h2>
           <h2
             style={{
@@ -79,28 +101,18 @@ const AlertModal = (props) => {
               color: 'black',
             }}
           >
-            {props.subject}
+            We have found this account with
+            <br /> a different social login. Please
+            <br /> click below to continue.
           </h2>
-          <button
-            onClick={modalClick}
-            style={{
-              width: '350px',
-              marginBottom: '20px',
-              height: '60px',
-              borderRadius: '15px',
-              backgroundColor: 'rgb(239,139,52)',
-              border: ' 2px solid rgb(239,139,52)',
-              color: 'rgb(255,255,255)',
-              fontSize: '20px',
-              fontWeight: 'bold',
-            }}
-          >
-            Log In
-          </button>
+
+          {props.socialMedia === 'Google' && (
+            <SocialLogin socialMedia={props.socialMedia} />
+          )}
         </div>
       </Card>
     </>
   );
 };
 
-export default AlertModal;
+export default withRouter(SocialLoginError);
