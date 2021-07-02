@@ -134,15 +134,15 @@ function AdminItems() {
 
     const [farms, setFarms] = useState([]);
     const farmHead = [
-      { id: 'Name', label: 'Name' },
-      { id: 'Photo', label: 'Photo' },
-      { id: 'Type', label: 'type' },
-      { id: 'Description', label: 'Description' },
-      { id: 'Unit', label: 'Unit' },
-      { id: 'Item Price', label: 'Item Price' },
-      { id: 'Size', label: 'Size' },
-      { id: 'Taxable', label: 'Taxable' },
-      { id: 'Display', label: 'Display' },
+      { id: 'item_name', label: 'Name' },
+      { id: 'item_photo', label: 'Photo' },
+      { id: 'item_type', label: 'Type' },
+      { id: 'item_desc', label: 'Description' },
+      { id: 'item_unit', label: 'Unit' },
+      { id: 'item_price', label: 'Item Price' },
+      { id: 'item_sizes', label: 'Size' },
+      { id: 'taxable', label: 'Taxable' },
+      { id: 'item_display', label: 'Display' },
       { id: 'Suppliers', label: 'Suppliers' },
       { id: 'Primary Farm', label: 'Primary Farm' },
     ];
@@ -186,6 +186,7 @@ function AdminItems() {
     }
   
     const farmsSort = () => {
+      console.log(order, orderBy)
       return stableSort(allProduce, getComparator(order, orderBy));
     };
   
@@ -270,7 +271,7 @@ function AdminItems() {
       
     };
     
-    const handleEdit = () => {
+    const handleEdit = (e) => {
         console.log("in handle edit", selectedUID)
         if (selectedUID === 'newProduce'){
           setOpenModel(true)
@@ -423,7 +424,7 @@ function AdminItems() {
                     </TableHead>
                     <TableBody>
                       {farmsSort().map((produceVal) => (
-                        <TableRow>
+                        <TableRow style={{ cursor: 'pointer' }} onClick={()=>{setSelectedUID(produceVal.item_uid);handleEdit();}}>
                           <TableCell
                             padding="none"
                             align="left"
@@ -460,7 +461,7 @@ function AdminItems() {
                             {produceVal.item_price}
                           </TableCell>
                           <TableCell padding="none">
-                            {produceVal.item_size}
+                            {produceVal.item_sizes}
                           </TableCell>
                           <TableCell padding="none">
                             {produceVal.taxable}
@@ -468,11 +469,21 @@ function AdminItems() {
                           <TableCell padding="none">
                             {produceVal.item_display}
                           </TableCell>
-                          <TableCell padding="none">
+                          <TableCell padding="none" >
                             {produceVal.farms.length}
                           </TableCell>
-                          <TableCell padding="none">
-                            {produceVal.item_display}
+                          <TableCell padding="none" onClick={e => e.stopPropagation()}>
+                            <select style={{border:'0px',textAlign:'center',width:"auto"}}>
+                                  {produceVal.farms.map((item,index) => (
+                                          <option 
+                                          className={index===0? classes.original:classes.replacement} 
+                                                      key={index} 
+                                                      value={produceVal.item_uid+","+item[2]+","+String(item[3])}
+                                                      >
+                                              {item[item.length-1]+", "+item[item.length-2]+", "+item[item.length-3]}
+                                          </option>
+                                    ))}
+                              </select>
                           </TableCell>
                         </TableRow>
                       ))}
