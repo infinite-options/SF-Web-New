@@ -30,6 +30,7 @@ const AlertModal = (props) => {
 
   return (
     <>
+      <div id="overlay"></div>
       <Card
         className={classes.modalSuccess}
         style={{

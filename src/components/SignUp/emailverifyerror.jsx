@@ -21,6 +21,7 @@ const Emailverify = (props) => {
   };
   return (
     <>
+      <div id="overlay"></div>
       <Card
         className={classes.modalConfirmation}
         style={{

@@ -26,6 +26,7 @@ const ConfirmatioModal = (props) => {
   };
   return (
     <>
+      <div id="overlay"></div>
       <Card
         className={classes.modalConfirmation}
         style={{

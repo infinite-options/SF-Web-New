@@ -47,6 +47,7 @@ const IncorrectPasswordModal = ({ ...props }) => {
 
   return (
     <>
+      <div id="overlay"></div>
       <Card
         className={classes.modalSuccess}
         style={{
