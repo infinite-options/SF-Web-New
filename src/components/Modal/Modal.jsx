@@ -21,7 +21,7 @@ const Mymodal = (props) => {
           <img
             src={cross}
             onClick={props.onConfirm}
-            alt = {''}
+            alt={''}
             style={{
               float: 'right',
               height: '25px',
@@ -29,6 +29,7 @@ const Mymodal = (props) => {
               color: 'black',
               marginTop: '3px',
               marginRight: '3px',
+              cursor: 'pointer',
             }}
           ></img>
         </div>

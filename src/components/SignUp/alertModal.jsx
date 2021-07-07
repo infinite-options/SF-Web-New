@@ -15,7 +15,7 @@ const AlertModal = (props) => {
   const AuthMethods = new AuthUtils();
   const auth = useContext(AuthContext);
   let [modalSignup, modalSignupMessage] = useState('');
-  
+
   const modalClick = () => {
     modalSignupMessage('true');
     console.log(modalSignupMessage, modalSignup);
@@ -26,10 +26,11 @@ const AlertModal = (props) => {
     // props.setIsLoginShown(true);
     // props.setConfirmEmail(false)
   };
-  console.log((props.code));
+  console.log(props.code);
 
   return (
     <>
+      <div id="overlay"></div>
       <Card
         className={classes.modalSuccess}
         style={{
@@ -37,6 +38,10 @@ const AlertModal = (props) => {
           marginBottom: '20px',
           height: '450px',
           width: '480px',
+          position: 'absolute',
+          top: '100px',
+          right: '350px',
+          zIndex: 10040,
         }}
       >
         <div>
@@ -50,18 +55,18 @@ const AlertModal = (props) => {
               color: 'black',
               marginTop: '3px',
               marginRight: '3px',
+              cursor: 'pointer',
             }}
           ></img>
         </div>
         <div>
-        
           <h2
             style={{
               fontWeight: 'bold',
               fontSize: '35px',
               marginBottom: '80px',
               marginTop: '50px',
-              color:'black',
+              color: 'black',
             }}
           >
             {props.title}
@@ -72,13 +77,12 @@ const AlertModal = (props) => {
               fontSize: '25px',
               marginBottom: '50px',
               marginTop: '30px',
-              color:'black'
+              color: 'black',
             }}
           >
             {props.subject}
           </h2>
           <button
-          
             onClick={modalClick}
             style={{
               width: '350px',
@@ -89,21 +93,12 @@ const AlertModal = (props) => {
               border: ' 2px solid rgb(239,139,52)',
               color: 'rgb(255,255,255)',
               fontSize: '20px',
-              fontWeight:'bold'
-              
+              fontWeight: 'bold',
             }}
           >
             Log In
-            </button>
+          </button>
         </div>
-        
-        
-        
-          
-         
-        
-
-        
       </Card>
     </>
   );

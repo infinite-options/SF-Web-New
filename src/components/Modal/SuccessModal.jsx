@@ -22,7 +22,7 @@ const SuccessModal = (props) => {
           <img
             src={cross}
             onClick={props.modalClear}
-            alt = {''}
+            alt={''}
             style={{
               float: 'right',
               height: '25px',
@@ -30,6 +30,7 @@ const SuccessModal = (props) => {
               color: 'black',
               marginTop: '3px',
               marginRight: '3px',
+              cursor: 'pointer',
             }}
           ></img>
         </div>
@@ -77,7 +78,6 @@ const SuccessModal = (props) => {
         </div>
         <div hidden={auth.isAuth}>
           <button
-          
             onClick={props.onSign}
             style={{
               width: '300px',
@@ -111,8 +111,6 @@ const SuccessModal = (props) => {
           </button>
           </div> */}
         </div>
-
-        
       </Card>
     </>
   );

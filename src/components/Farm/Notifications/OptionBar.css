@@ -1,0 +1,24 @@
+.round-box1 {
+    background-color: white;
+    height: 50px;
+    position: relative;
+    border: 3px solid green;
+}
+
+.hButton{
+    margin-right: 30px;
+}
+
+.vertical-center {
+    margin-left: 250px;
+    position: absolute;
+    top: 50%;
+
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+}
+
+body {
+    background-color: #0e918c;
+}

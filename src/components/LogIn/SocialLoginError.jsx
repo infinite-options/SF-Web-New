@@ -1,18 +1,27 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import Cookies from 'js-cookie';
-import axios from 'axios';
 import { Grid, Button } from '@material-ui/core';
-import { AuthContext } from '../../auth/AuthContext';
 import { withRouter } from 'react-router';
+import classes from './modal.module.css';
+import axios from 'axios';
+import Card from 'react-bootstrap/Card';
+import cross from '../../icon/cross.svg';
 import Google from '../../icon/Google/Glogin.png';
 import Fb_Login from '../../icon/Facebook/Flogin.png';
 import Apple_Login from '../../icon/Apple/Alogin.png';
+import { AuthContext } from '../../auth/AuthContext';
 
-function SocialLogin(props) {
+const SocialLoginError = ({ ...props }) => {
   const Auth = useContext(AuthContext);
+  const [passModal, setpassModal] = useState();
 
+  const API_URL = process.env.REACT_APP_SERVER_BASE_URI + '';
+
+  const onClear = () => {
+    props.clear(false);
+  };
   useEffect(() => {
     if (
       process.env.REACT_APP_APPLE_CLIENT_ID &&
@@ -163,63 +172,126 @@ function SocialLogin(props) {
         console.log(err);
       });
   };
-
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
-        <FacebookLogin
-          appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-          autoLoad={false}
-          fields="name,email,picture"
-          onClick="return false"
-          callback={responseFacebook}
-          size="small"
-          // icon={<SiFacebook/>}
-          textButton="Continue with Facebook"
-          render={(renderProps) => (
-            <img
-              src={Fb_Login}
-              onClick={renderProps.onClick}
-              disabled={renderProps.disabled}
-              alt={''}
-            ></img>
-          )}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Button style={{}}>
-          <GoogleLogin
-            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-            onSuccess={responseGoogle}
-            onFailure={responseGoogle}
-            isSignedIn={false}
-            buttonText="Continue with Google"
-            disable={false}
-            cookiePolicy={'single_host_origin'}
-            render={(renderProps) => (
-              <img
-                src={Google}
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
-                alt={''}
-              ></img>
-            )}
-          />
-        </Button>
-      </Grid>
+    <>
+      <div id="overlay"></div>
+      <Card
+        className={classes.modalSuccess}
+        style={{
+          borderRadius: '10px',
+          marginBottom: '20px',
+          height: 'auto',
+          width: '400px',
+          overflow: 'hidden',
+          border: 'none',
+          top: '125px',
+          left: '570px',
+        }}
+      >
+        <div>
+          <img
+            src={cross}
+            onClick={onClear}
+            style={{
+              float: 'right',
+              height: '25px',
+              width: '25px',
+              color: 'black',
+              marginTop: '3px',
+              marginRight: '3px',
+              cursor: 'pointer',
+            }}
+          ></img>
+        </div>
+        <div>
+          <h2
+            style={{
+              fontWeight: 'bold',
+              fontSize: '35px',
+              marginBottom: '80px',
+              marginTop: '50px',
+              color: 'black',
+            }}
+          >
+            Social Sign Up Exists
+          </h2>
+          <h2
+            style={{
+              fontWeight: 'bold',
+              fontSize: '25px',
+              marginBottom: '50px',
+              marginTop: '30px',
+              color: 'black',
+            }}
+          >
+            We have found this account with
+            <br /> a different social login. Please
+            <br /> click below to continue.
+          </h2>
+          <Grid container spacing={1} style={{ paddingBottom: '20px' }}>
+            <Grid item xs={12}>
+              {props.socialMedia === 'Facebook' && (
+                <FacebookLogin
+                  appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+                  autoLoad={false}
+                  fields="name,email,picture"
+                  onClick="return false"
+                  callback={responseFacebook}
+                  size="small"
+                  // icon={<SiFacebook/>}
+                  textButton="Continue with Facebook"
+                  render={(renderProps) => (
+                    <img
+                      src={Fb_Login}
+                      onClick={renderProps.onClick}
+                      disabled={renderProps.disabled}
+                      alt={''}
+                    ></img>
+                  )}
+                />
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              {props.socialMedia === 'Google' && (
+                <Button style={{}}>
+                  <GoogleLogin
+                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                    onSuccess={responseGoogle}
+                    onFailure={responseGoogle}
+                    isSignedIn={false}
+                    buttonText="Continue with Google"
+                    disable={false}
+                    cookiePolicy={'single_host_origin'}
+                    render={(renderProps) => (
+                      <img
+                        src={Google}
+                        onClick={renderProps.onClick}
+                        disabled={renderProps.disabled}
+                        alt={''}
+                      ></img>
+                    )}
+                  />
+                </Button>
+              )}
+            </Grid>
 
-      <Grid item xs={12}>
-        <img
-          src={Apple_Login}
-          variant="contained"
-          alt={''}
-          onClick={() => {
-            window.AppleID.auth.signIn();
-          }}
-        ></img>
-      </Grid>
-    </Grid>
+            <Grid item xs={12}>
+              {props.socialMedia === 'Apple' && (
+                <img
+                  src={Apple_Login}
+                  variant="contained"
+                  alt={''}
+                  onClick={() => {
+                    window.AppleID.auth.signIn();
+                  }}
+                ></img>
+              )}
+            </Grid>
+          </Grid>
+        </div>
+      </Card>
+    </>
   );
-}
+};
 
-export default withRouter(SocialLogin);
+export default withRouter(SocialLoginError);

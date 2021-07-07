@@ -25,8 +25,8 @@ const useStyles = makeStyles((theme) => ({
   authModal: {
     position: 'absolute',
     width: '500px',
-    zIndex:'20000',
-    height:'auto'
+    zIndex: '10040',
+    height: 'auto',
   },
   infoSection: {
     width: '33.33%',
@@ -139,7 +139,7 @@ const Landing = ({ ...props }) => {
   // Toggles for the login and signup box to be passed in as props to the Landing Nav Bar
   const [isLoginShown, setIsLoginShown] = useState(false); // checks if user is logged in
   const [isSignUpShown, setIsSignUpShown] = useState(false);
-  const [confirmEmailstate,setConfirmEmail]=useState(false);
+  const [confirmEmailstate, setConfirmEmail] = useState(false);
 
   const loginWrapperRef = useRef(null);
   useOutsideAlerter(loginWrapperRef, setIsLoginShown);
@@ -170,6 +170,7 @@ const Landing = ({ ...props }) => {
         setIsSignUpShown={setIsSignUpShown}
       />
       {/* START: Login/SignUp Modal */}
+
       <Box display="flex" justifyContent="flex-end">
         {/* Login Modal */}
         <Box
@@ -184,11 +185,11 @@ const Landing = ({ ...props }) => {
             className={classes.authModal}
             hidden={!isLoginShown}
           >
-            <AdminLogin 
-            isLoginShown={isLoginShown}
-            setIsLoginShown={setIsLoginShown}
-            isSignUpShown={isSignUpShown}
-            setIsSignUpShown={setIsSignUpShown}
+            <AdminLogin
+              isLoginShown={isLoginShown}
+              setIsLoginShown={setIsLoginShown}
+              isSignUpShown={isSignUpShown}
+              setIsSignUpShown={setIsSignUpShown}
             />
           </Box>
         </Box>
@@ -207,27 +208,27 @@ const Landing = ({ ...props }) => {
               className={classes.authModal}
               hidden={!isSignUpShown}
             >
-              <Signup 
-              isLoginShown={isLoginShown}
-              setIsLoginShown={setIsLoginShown}
-              isSignUpShown={isSignUpShown}
-              setIsSignUpShown={setIsSignUpShown}
-              isconfirmEmailstate={confirmEmailstate}
-              setConfirmEmail={setConfirmEmail}
+              <Signup
+                isLoginShown={isLoginShown}
+                setIsLoginShown={setIsLoginShown}
+                isSignUpShown={isSignUpShown}
+                setIsSignUpShown={setIsSignUpShown}
+                isconfirmEmailstate={confirmEmailstate}
+                setConfirmEmail={setConfirmEmail}
               />
-             
             </Box>
-            
           </Box>
         </Box>
-        {confirmEmailstate && <ConfirmatioModal 
-        isLoginShown={isLoginShown}
-        setIsLoginShown={setIsLoginShown}
-        isSignUpShown={isSignUpShown}
-        setIsSignUpShown={setIsSignUpShown}
-        isconfirmEmailstate={confirmEmailstate}
-        setConfirmEmail={setConfirmEmail}
-              />}
+        {confirmEmailstate && (
+          <ConfirmatioModal
+            isLoginShown={isLoginShown}
+            setIsLoginShown={setIsLoginShown}
+            isSignUpShown={isSignUpShown}
+            setIsSignUpShown={setIsSignUpShown}
+            isconfirmEmailstate={confirmEmailstate}
+            setConfirmEmail={setConfirmEmail}
+          />
+        )}
       </Box>
       {/* END: Login/SignUp Modal */}
       {/* START: landing Logo and Guest Login */}
@@ -495,12 +496,11 @@ const Landing = ({ ...props }) => {
         >
           Local produce delivered to your doorstep
         </p>
-        <DeliveryLocationSearch 
-        isLoginShown={isLoginShown}
-        setIsLoginShown={setIsLoginShown}
-        isSignUpShown={isSignUpShown}
-        setIsSignUpShown={setIsSignUpShown}
-        
+        <DeliveryLocationSearch
+          isLoginShown={isLoginShown}
+          setIsLoginShown={setIsLoginShown}
+          isSignUpShown={isSignUpShown}
+          setIsSignUpShown={setIsSignUpShown}
         />
       </Box>
 
@@ -753,20 +753,19 @@ const Landing = ({ ...props }) => {
         </Box>
         <Box style={{ marginBottom: '20px' }}>
           <Order
-          isLoginShown={isLoginShown}
-          setIsLoginShown={setIsLoginShown}
-          isSignUpShown={isSignUpShown}
-          setIsSignUpShown={setIsSignUpShown}
-          
+            isLoginShown={isLoginShown}
+            setIsLoginShown={setIsLoginShown}
+            isSignUpShown={isSignUpShown}
+            setIsSignUpShown={setIsSignUpShown}
           />
         </Box>
 
         <Box style={{ backgroundColor: 'rgb(251,132,0)' }}>
-        <Footer 
-          isLoginShown={isLoginShown}
-          setIsLoginShown={setIsLoginShown}
-          isSignUpShown={isSignUpShown}
-          setIsSignUpShown={setIsSignUpShown}
+          <Footer
+            isLoginShown={isLoginShown}
+            setIsLoginShown={setIsLoginShown}
+            isSignUpShown={isSignUpShown}
+            setIsSignUpShown={setIsSignUpShown}
           />
         </Box>
       </div>

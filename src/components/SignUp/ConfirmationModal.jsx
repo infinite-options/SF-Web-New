@@ -21,18 +21,23 @@ const ConfirmatioModal = (props) => {
     console.log(modalSignupMessage, modalSignup);
     // props.modalClear();
     props.setIsLoginShown(true);
-    props.setConfirmEmail(false)
+    props.setConfirmEmail(false);
     // history.push('/store')
   };
   return (
     <>
+      <div id="overlay"></div>
       <Card
         className={classes.modalConfirmation}
         style={{
           borderRadius: '10px',
           marginBottom: '20px',
-          height: '500px',
-          width: '525px',
+          height: 'auto',
+          width: '400px',
+          position: 'absolute',
+          top: '125px',
+          left: '570px',
+          border: 'none',
         }}
       >
         <div>
@@ -46,6 +51,7 @@ const ConfirmatioModal = (props) => {
               color: '#136D74',
               marginTop: '3px',
               marginRight: '3px',
+              cursor: 'pointer',
             }}
           ></img>
         </div>
@@ -53,13 +59,14 @@ const ConfirmatioModal = (props) => {
           <h2
             style={{
               fontWeight: 'bold',
-              fontSize: '40px',
-              marginBottom: '50px',
-              marginTop: '80px',
-              color: 'black'
+              fontSize: '30px',
+              marginBottom: '25px',
+              marginTop: '25px',
+              color: 'black',
             }}
           >
-            Congratulations! <br/>Please verify Email
+            Congratulations! <br />
+            Please verify Email
           </h2>
         </div>
         <div
@@ -67,39 +74,35 @@ const ConfirmatioModal = (props) => {
             width: '300px',
             marginLeft: 'auto',
             marginRight: 'auto',
-            fontSize: '20px',
-            marginBottom: '50px',
-            fontWeight:'bold',
-            color: 'black'
+            fontSize: '18px',
+            marginBottom: '25px',
+            fontWeight: 'bold',
+            color: 'black',
           }}
         >
-          You’ve successfully sign up for <br/>Serving Fresh!<br/><br/> We’ve sent you an email.
-           Please verify your account by clicking on the link in that email.
+          You’ve successfully sign up for <br />
+          Serving Fresh!
+          <br />
+          <br /> We’ve sent you an email. Please verify your account by clicking
+          on the link in that email.
         </div>
-        
-        
-          <button
-          
-            onClick={modalClick}
-            style={{
-              width: '350px',
-              marginBottom: '20px',
-              height: '60px',
-              borderRadius: '15px',
-              backgroundColor: 'rgb(239,139,52)',
-              border: ' 2px solid rgb(239,139,52)',
-              color: 'rgb(255,255,255)',
-              fontSize: '20px',
-              fontWeight:'bold'
-                
-              }}
-          >
-            Okay
-          </button>
-         
-        
 
-        
+        <button
+          onClick={modalClick}
+          style={{
+            width: '350px',
+            marginBottom: '20px',
+            height: '50px',
+            borderRadius: '8px',
+            backgroundColor: 'rgb(239,139,52)',
+            border: ' 2px solid rgb(239,139,52)',
+            color: 'rgb(255,255,255)',
+            fontSize: '18px',
+            fontWeight: 'bold',
+          }}
+        >
+          Okay
+        </button>
       </Card>
     </>
   );

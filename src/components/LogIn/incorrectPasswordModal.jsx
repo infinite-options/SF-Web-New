@@ -1,26 +1,49 @@
-import Modal from 'react-bootstrap/Modal';
-// import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useContext } from 'react';
+import { withRouter } from 'react-router';
 import classes from './modal.module.css';
-import { Button } from 'react-bootstrap';
+import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
-import Signup from '../SignUp/Signup';
-import { Paper } from '@material-ui/core';
-import AuthUtils from '../../utils/AuthUtils';
-import { AuthContext } from '../../auth/AuthContext';
 import appColors from '../../styles/AppColors';
+import PassModal from './passwordModal';
 
-const PassModal = (props) => {
-  const AuthMethods = new AuthUtils();
-  const auth = useContext(AuthContext);
+const IncorrectPasswordModal = ({ ...props }) => {
+  const [passModal, setpassModal] = useState();
+
+  const API_URL = process.env.REACT_APP_SERVER_BASE_URI + '';
   let [modalSignup, modalSignupMessage] = useState('');
 
   const onClear = () => {
     props.clear(false);
   };
-
-  console.log(props.code);
+  const onReset = async (value) => {
+    axios
+      .post(API_URL + 'set_temp_password', { email: props.emailValue })
+      .then((response) => {
+        let res = response;
+        if (res.data.message === 'A temporary password has been sent') {
+          console.log(res);
+          setpassModal(true);
+        } else if (res.data.code === 280) {
+          console.log(res);
+          alert('No account found with that email.');
+        }
+      });
+  };
+  console.log('Email:', props.emailValue);
+  const onLogin = () => {
+    modalSignupMessage('true');
+    console.log(modalSignupMessage, modalSignup);
+    props.clear(false);
+    props.setIsLoginShown(true);
+    props.setIsSignUpShown(false);
+    // props.clear(false);
+    // props.signClear(false);
+    // props.loginShow(true);
+    // props.modalClear();
+    // props.setIsLoginShown(true);
+    // props.setConfirmEmail(false)
+  };
 
   return (
     <>
@@ -32,9 +55,9 @@ const PassModal = (props) => {
           marginBottom: '20px',
           height: 'auto',
           width: '400px',
-          border: 'none',
           top: '125px',
           left: '570px',
+          border: 'none',
         }}
       >
         <div>
@@ -62,23 +85,23 @@ const PassModal = (props) => {
               color: 'black',
             }}
           >
-            Temporary password sent
+            Incorrect Password{' '}
           </h2>
           <h2
             style={{
               fontWeight: 'bold',
-              fontSize: '23px',
-              marginBottom: '50px',
-              marginTop: '30px',
+              fontSize: '18px',
+              marginBottom: '25px',
+              marginTop: '25px',
               color: 'black',
             }}
           >
-            We have sent you an email with a<br /> temporary password. Please
-            <br /> follow the instructions in the email
-            <br /> to create a new password.
+            Seems like an incorrect password <br /> was entered for the
+            associated
+            <br /> email with this account.
           </h2>
           <button
-            onClick={onClear}
+            onClick={onLogin}
             style={{
               width: '350px',
               marginTop: '25px',
@@ -92,14 +115,23 @@ const PassModal = (props) => {
               fontWeight: 'bold',
             }}
           >
-            Okay
+            Try again with a correct password
           </button>
-
-          <p></p>
+          <p
+            style={{
+              color: appColors.secondary,
+              fontWeight: 'bold',
+              cursor: 'pointer',
+            }}
+            onClick={onReset}
+          >
+            Forgot Password?
+          </p>
+          {passModal && <PassModal clear={setpassModal}></PassModal>}
         </div>
       </Card>
     </>
   );
 };
 
-export default PassModal;
+export default withRouter(IncorrectPasswordModal);

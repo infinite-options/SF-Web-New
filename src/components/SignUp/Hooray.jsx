@@ -1,25 +1,19 @@
-import Modal from 'react-bootstrap/Modal';
-// import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useContext } from 'react';
 import classes from './modal.module.css';
-import { Button } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
-import Signup from '../SignUp/Signup';
-import { Paper } from '@material-ui/core';
 import AuthUtils from '../../utils/AuthUtils';
 import { AuthContext } from '../../auth/AuthContext';
-import appColors from '../../styles/AppColors';
 
 const Hooray = (props) => {
   const AuthMethods = new AuthUtils();
   const auth = useContext(AuthContext);
   let [modalSignup, modalSignupMessage] = useState('');
-  
+
   const modalClick = () => {
     // modalSignupMessage('true');
     // console.log(modalSignupMessage, modalSignup);
-    
+
     props.clear(false);
     props.signClear(false);
     // props.modalClear();
@@ -27,24 +21,27 @@ const Hooray = (props) => {
     // props.setConfirmEmail(false)
   };
 
-  console.log((props.code));
+  console.log(props.code);
 
   return (
     <>
+      <div id="overlay"></div>
       <Card
         className={classes.modalSuccess}
         style={{
           borderRadius: '10px',
           marginBottom: '20px',
-          height: '601px',
+          height: 'auto',
           width: '400px',
+          top: '100px',
+          border: 'none',
         }}
       >
         <div>
           <img
             src={cross}
             onClick={modalClick}
-            alt = {''}
+            alt={''}
             style={{
               float: 'right',
               height: '25px',
@@ -52,6 +49,7 @@ const Hooray = (props) => {
               color: 'black',
               marginTop: '3px',
               marginRight: '3px',
+              cursor: 'pointer',
             }}
           ></img>
         </div>
@@ -61,9 +59,9 @@ const Hooray = (props) => {
               fontWeight: 'bold',
               marginRight: 'auto',
               marginLeft: 'auto',
-              marginBottom: '75px',
+              marginBottom: '25px',
               marginTop: '100px',
-              fontSize: '40px',
+              fontSize: '30px',
             }}
           >
             Still Growing ...
@@ -74,9 +72,9 @@ const Hooray = (props) => {
             width: '300px',
             marginRight: 'auto',
             marginLeft: 'auto',
-            marginBottom: '50px',
-            fontSize: '20px',
-            fontWeight:'bold'
+            marginBottom: '25px',
+            fontSize: '18px',
+            fontWeight: 'bold',
           }}
         >
           Sorry, it looks like we don’t deliver to your neighborhood yet. Enter
@@ -88,10 +86,11 @@ const Hooray = (props) => {
             placeholder="Enter your email"
             style={{
               width: '300px',
-              height: '50px',
-              marginBottom: '50px',
+              height: '20px',
+              marginBottom: '25px',
               marginTop: '20px',
-              borderRadius: '15px',
+              borderRadius: '8px',
+              padding: '10px',
               border: '1px solid #E1E7E7',
             }}
           ></input>
@@ -101,13 +100,13 @@ const Hooray = (props) => {
             onClick={modalClick}
             style={{
               width: '300px',
-              //   marginBottom: '20px',
-              height: '60px',
-              borderRadius: '15px',
+              height: '50px',
+              marginBottom: '25px',
+              borderRadius: '8px',
               backgroundColor: '#FF8500',
               color: 'white',
               border: ' 1px solid #E1E7E7',
-              fontSize: '25px',
+              fontSize: '18px',
             }}
           >
             Submit

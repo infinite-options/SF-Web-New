@@ -7,52 +7,50 @@ import { AuthContext } from '../../auth/AuthContext';
 import CssTextField from '../../utils/CssTextField';
 import appColors from '../../styles/AppColors';
 import SocialLogin from './SocialLogin';
-import InputAdornment from "@material-ui/core/InputAdornment";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Input from "@material-ui/core/Input";
+import InputAdornment from '@material-ui/core/InputAdornment';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import EmailModal from './emailModal';
 import PassModal from './passwordModal';
-
+import IncorrectPasswordModal from './incorrectPasswordModal';
+import SocialLoginErrorModal from './SocialLoginError';
 const API_URL = process.env.REACT_APP_SERVER_BASE_URI + '';
 
 // TODO: if farmer default to home page
-function AdminLogin({...props}) {
+function AdminLogin({ ...props }) {
   const [emailValue, setEmail] = useState('');
+  const [socialMedia, setSocialMedia] = useState('');
   const [passwordValue, setPassword] = useState('');
   const [errorValue, setError] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [emailError, setemailError] = useState();
+  const [passwordError, setpasswordError] = useState();
+  const [socialError, setsocialError] = useState();
   const [passVisible, setPassvisble] = React.useState({
-    password: "",
+    password: '',
     showPassword: false,
   });
-  const [passModal,setpassModal]=useState();
+  const [passModal, setpassModal] = useState();
   const Auth = useContext(AuthContext);
 
-
-
-
   const handleClickShowPassword = () => {
-    setPassvisble({...passVisible,showPassword:!passVisible.showPassword});
+    setPassvisble({ ...passVisible, showPassword: !passVisible.showPassword });
   };
 
-
-
-  const onReset= async value=>{
-    axios .post (API_URL+"set_temp_password",{"email":emailValue})
-    .then((response)=>
-    {let res=response
-    if(res.data.message==="A temporary password has been sent"){
-      console.log(res);
-      setpassModal(true);
-    }
-    else if(res.data.code===280) {
-      console.log(res)
-      alert("No account found with that email.")
-    }
-    
-  })}
+  const onReset = async (value) => {
+    axios
+      .post(API_URL + 'set_temp_password', { email: emailValue })
+      .then((response) => {
+        let res = response;
+        if (res.data.message === 'A temporary password has been sent') {
+          console.log(res);
+          setpassModal(true);
+        } else if (res.data.code === 280) {
+          console.log(res);
+          alert('No account found with that email.');
+        }
+      });
+  };
   useEffect(() => {
     if (
       process.env.REACT_APP_APPLE_CLIENT_ID &&
@@ -246,13 +244,12 @@ function AdminLogin({...props}) {
                       setError('credential');
                       setErrorMessage('Invalid credentials');
                       setemailError(true);
-                    } else if(res.data.code === 406 ){
+                    } else if (res.data.code === 406) {
                       console.log('Wrong Password');
                       setError('Password');
                       setErrorMessage('Invalid Password');
-                      
-                    }
-                    else if (res.data.code === 401) {
+                      setpasswordError(true);
+                    } else if (res.data.code === 401) {
                       console.log('Need to log in by social media');
                       setError('social');
                       setErrorMessage(res.data.message);
@@ -343,6 +340,8 @@ function AdminLogin({...props}) {
           let socialMediaUsedFormat =
             socialMediaUsed.charAt(0) + socialMediaUsed.slice(1).toLowerCase();
           let newErrorMessage = 'Use ' + socialMediaUsedFormat + ' to login';
+          setSocialMedia(socialMediaUsedFormat);
+          setsocialError(true);
           setErrorMessage(newErrorMessage);
         } else if (res.data.code === 404) {
           // No information, probably because invalid email
@@ -363,7 +362,7 @@ function AdminLogin({...props}) {
         console.log(err);
       });
   };
-
+  console.log('Social Media', socialMedia);
   const showError = () => {
     if (errorValue === '') {
       return null;
@@ -372,7 +371,13 @@ function AdminLogin({...props}) {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        position: 'absolute',
+        right: '350px',
+        zIndex: 10040,
+      }}
+    >
       <Paper style={paperStyle}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
@@ -432,24 +437,26 @@ function AdminLogin({...props}) {
                 error={errorValue}
                 id="outlined-password-input"
                 label="Password"
-                type={passVisible.showPassword?"password":"text"}
+                type={passVisible.showPassword ? 'password' : 'text'}
                 variant="outlined"
                 size="small"
                 value={passwordValue}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      {passVisible.showPassword ? <VisibilityIcon 
-                       onClick={handleClickShowPassword}
-                       style={{ color: 'rgb(74,124,133)' }}
-                       aria-hidden="false"
-                       /> : 
-                       <VisibilityOff onClick={handleClickShowPassword}
-                       style={{ color: 'rgb(74,124,133)' }}
-                       aria-hidden="false"
-                       ></VisibilityOff>
-                      
-                  }
+                      {passVisible.showPassword ? (
+                        <VisibilityIcon
+                          onClick={handleClickShowPassword}
+                          style={{ color: 'rgb(74,124,133)' }}
+                          aria-hidden="false"
+                        />
+                      ) : (
+                        <VisibilityOff
+                          onClick={handleClickShowPassword}
+                          style={{ color: 'rgb(74,124,133)' }}
+                          aria-hidden="false"
+                        ></VisibilityOff>
+                      )}
                     </InputAdornment>
                   ),
                 }}
@@ -481,16 +488,44 @@ function AdminLogin({...props}) {
               </Box>
             </Grid>
             <Grid item xs={12}>
-              {/* <Box mb={2}>
-              <Box>or</Box>
-            </Box> */}
-            <p style={{color:appColors.secondary,fontWeight:'bold'}} onClick={onReset}>Reset Password</p>
+              <p
+                style={{
+                  color: appColors.secondary,
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                }}
+                onClick={onReset}
+              >
+                Reset Password
+              </p>
             </Grid>
           </form>
         </Grid>
       </Paper>
-      {emailError && <EmailModal clear={setemailError} setIsSignUpShown={props.setIsSignUpShown} setIsLoginShown={props.setIsLoginShown}/>}
-    {passModal && <PassModal clear={setpassModal}></PassModal>}
+      {emailError && (
+        <EmailModal
+          clear={setemailError}
+          setIsSignUpShown={props.setIsSignUpShown}
+          setIsLoginShown={props.setIsLoginShown}
+        />
+      )}
+      {passModal && <PassModal clear={setpassModal}></PassModal>}
+      {passwordError && (
+        <IncorrectPasswordModal
+          emailValue={emailValue}
+          clear={setpasswordError}
+          setIsSignUpShown={props.setIsSignUpShown}
+          setIsLoginShown={props.setIsLoginShown}
+        />
+      )}
+      {socialError && (
+        <SocialLoginErrorModal
+          socialMedia={socialMedia}
+          clear={setsocialError}
+          setIsSignUpShown={props.setIsSignUpShown}
+          setIsLoginShown={props.setIsLoginShown}
+        />
+      )}
     </div>
   );
 }
