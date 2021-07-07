@@ -373,6 +373,7 @@ function Entry(props) {
               props.unit === 'each' ? '(' + props.unit + ')' : '/ ' + props.unit
             }`}
           </Typography>
+         
         </Box>
       </Card>
     </Grid>
