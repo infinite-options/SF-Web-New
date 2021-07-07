@@ -6,20 +6,14 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
-import moment from 'moment';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import AdminItemAddModel from './AdminItemAddModel';
 import axios from 'axios';
 
-import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
@@ -131,8 +125,9 @@ function AdminItems() {
     const [produceDict, setProduceDict] = useState({});
     const [openModel, setOpenModel] = useState(false);
     const [selectedUID, setSelectedUID] = useState()
+    const [farmData, setFarmData] = useState([])
 
-    const [farms, setFarms] = useState([]);
+    
     const farmHead = [
       { id: 'item_name', label: 'Name' },
       { id: 'item_photo', label: 'Photo' },
@@ -150,6 +145,30 @@ function AdminItems() {
     const [orderBy, setOrderBy] = useState();
     const [order, setOrder] = useState();
 
+
+    const farmFetch = () => {
+      // console.log("in farmfetch")
+      
+  
+      axios
+          .get('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/all_businesses')
+          .then((res) => {
+            
+            var tempArr = []
+            res.data.result.map((item) => (
+                tempArr.push([item.business_uid,item.business_name])
+              )
+            )
+          setFarmData(tempArr)
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.log(err.response);
+            }
+            console.log(err);
+          });
+    };
+
     const handleSortRequest = (cellId) => {
       const isAsc = orderBy === cellId && order === 'asc';
       setOrder(isAsc ? 'desc' : 'asc');
@@ -160,12 +179,12 @@ function AdminItems() {
       const stabilizedThis = array.map((el, index) => [el, index]);
       
       stabilizedThis.sort((a, b) => {
-        console.log("stabilizer",a,b);
+        // console.log("stabilizer",a,b);
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
         return a[1] - b[1];
       });
-      console.log("final stab",stabilizedThis)
+      // console.log("final stab",stabilizedThis)
       return stabilizedThis.map((el) => el[0]);
     }
   
@@ -186,14 +205,19 @@ function AdminItems() {
     }
   
     const farmsSort = () => {
-      console.log(order, orderBy)
+      // console.log(order, orderBy)
       return stableSort(allProduce, getComparator(order, orderBy));
     };
   
     useEffect(() => {
         fetchProduceInfo();
-        
+        farmFetch();
     }, []);
+
+    useEffect(() => {
+      fetchProduceInfo();
+      
+  }, [openModel]);
   
     const fetchProduceInfo = () => {
       axios
@@ -219,74 +243,18 @@ function AdminItems() {
         });
     };
    
-    const handleProduceChange = (e) => {
-      //console.log(e.target.name)
-      if (e.target.type === 'file'){
-        let uid = e.target.id.split(",")[1];
-        const formData = new FormData();
-        formData.append("item_photo", e.target.files[0]); 
-        formData.append("uid",uid); 
-        //console.log(e.target,"call endpoint")
-        axios
-        .post(
-          'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/upload_image_admin',
-          formData
-        )
-        .then((response) => {
-          //console.log(response.data)
-          let val = response.data
-          let tempDict = produceDict[uid]
-          tempDict["item_photo"] = val
-          setProduceDict(prevState => ({...prevState, [uid]: tempDict }))
-        })
-        .catch((er) => {
-          console.log(er);
-        });
-      } 
-      else{
-          let uid = e.target.id
-          let val = e.target.value
-          let propty = e.target.name
-          let tempDict = produceDict[uid]
-          tempDict[propty] = val
-          setProduceDict(prevState => ({...prevState, [uid]: tempDict }))
-      }
-      //console.log("after update",produceDict)
-    };
-  
-    const handleSave = (e) => {
-        let action = e.target.id.split(",")[1]==='save'?'update':'delete'
-        let uid = e.target.id.split(",")[0];
-        axios
-        .post(
-          'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_item_admin/'+action,
-          produceDict[uid]
-        )
-        .then((response) => {
-          setOpen(true)
-        })
-        .catch((er) => {
-          console.log(er);
-        });
-      
-    };
-    
     const handleEdit = (e) => {
-        console.log("in handle edit", selectedUID)
-        if (selectedUID === 'newProduce'){
-          setOpenModel(true)
-        }
-        else{
-          setOpenModel(true)
-        }
+        console.log("in handle edit of admin items", selectedUID)
+        setOpenModel(true)
         
     };
 
-    const closeModel = () => {setOpenModel(false);}
+    const closeModel = () => {setOpenModel(false); 
+                                setOpen(true)}
   
     const modelBody = (
       <div>
-        <AdminItemAddModel produceDict={selectedUID==='newProduce'?selectedUID:produceDict[selectedUID]} handleClose={closeModel} />
+        <AdminItemAddModel produceDict={selectedUID==='newProduce'?selectedUID:produceDict[selectedUID]} handleClose={closeModel} farmData={farmData}/>
       </div>
     );
   
@@ -322,71 +290,7 @@ function AdminItems() {
                                                                                                                                     handleEdit()}} />
 
               </div>
-              {/* 
-              <div
-              style={{
-                marginTop: '1rem',
-              }}> 
-              <table className={classes.table}>
-                
-              <tbody>
-                    
-                    <tr className={classes.tr} style={{border:'0px'}}>
-                      <td className={classes.usrTitle}>Name</td>
-                      <td className={classes.usrTitle}>Photo</td>
-                      <td className={classes.usrTitle}>Type</td>
-                      <td className={classes.usrTitle}>Description</td>
-                      <td className={classes.usrTitle}>Unit </td>
-                      <td className={classes.usrTitle}>Item Price</td>
-                      <td className={classes.usrTitle}>Size</td>
-                      <td className={classes.usrTitle}>Taxable</td>
-                      <td className={classes.usrTitle}>Display</td>
-                      <td className={classes.usrTitle}>Suppliers</td>
-                      <td className={classes.usrTitle}>Primary Farm</td>
-                      
-                    </tr>
-                  
-                { allProduce.map((produceVal) => (
-        
-                    <tr className={classes.tr} style={{ cursor: 'pointer' }} onClick={()=>{setSelectedUID(produceVal.item_uid);handleEdit();}}>
-                        <td className={classes.usrDesc}>{produceVal.item_name}</td>
-                        <td className={classes.usrDesc}>
-                          <img src={produceVal.item_photo} 
-                                alt="" height="50" width="50">
-                          </img>
-                        </td>
-                        <td className={classes.usrDesc}>{produceVal.item_type}</td>
-                        <td className={classes.usrDesc}>{produceVal.item_desc}</td>
-                        <td className={classes.usrDesc}>{produceVal.item_unit}</td>
-                        <td className={classes.usrDesc}>{produceVal.item_price}</td>
-                        <td className={classes.usrDesc}>{produceVal.item_sizes}</td>
-                        <td className={classes.usrDesc}>{produceVal.taxable}</td>
-                        <td className={classes.usrDesc}>{produceVal.item_display}</td>
-                        <td className={classes.usrDesc} >{produceVal.farms.length}</td>
-                        <td className={classes.usrDesc}>
-                            <select style={{border:'0px',textAlign:'center',width:"auto"}}>
-                                {produceVal.farms.map((item,index) => (
-                                        <option 
-                                        className={index===0? classes.original:classes.replacement} 
-                                                    key={index} 
-                                                    value={produceVal.item_uid+","+item[2]+","+String(item[3])}
-                                                    >
-                                            {item[item.length-1]+", "+item[item.length-2]+", "+item[item.length-3]}
-                                        </option>
-                                  ))}
-                            </select>
-                        </td>
-                        
-                    </tr>
-                ))}
-                        
-                        
-              </tbody>
-              </table>
               
-              </div> 
-              */}
-
               <div>
 
               <TableContainer>

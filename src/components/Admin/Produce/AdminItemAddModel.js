@@ -1,18 +1,11 @@
-import React, { useContext, useState, forwardRef } from 'react';
+import React, { useContext, useState, forwardRef, useEffect } from 'react';
 import NumberFormat from 'react-number-format';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Box from '@material-ui/core/Box';
-import Checkbox from '@material-ui/core/Checkbox';
-import appColors from '../../../styles/AppColors';
 import { AuthContext } from '../../../auth/AuthContext';
 import axios from 'axios';
 import { Grid, Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-const booleanVals = new Set(['taxable', 'favorite']);
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -95,119 +88,124 @@ const useStyles = makeStyles((theme) => ({
   
 }));
 
-const AdminItemAddModel = forwardRef(({ produceDict, ...props }) => {
-  console.log('props in add item modal', props);
-  const auth = useContext(AuthContext);
-  const farmID = "200-000002"
-  const [file, setFile] = useState({ obj: undefined, url: '' }); // NOTE: url key is probably useless
-  const classes = useStyles();
-  const [itemProps, setItemProps] = useState({
-    new_item: 'TRUE',
-    bus_uid: farmID,
-    item_info: '',
-    item_name: '',
-    item_status: 'Active',
-    item_type: '',
-    item_desc: '',
-    item_unit: '',
-    item_price: '',
-    bus_price: '',
-    item_sizes: '',
-    favorite: 'FALSE',
-    taxable: 'FALSE',
-    item_photo: { obj: undefined, url: '' },
-    exp_date: '',
-  });
-
+function AdminItemAddModel (props){
   
-
-
-
+  const auth = useContext(AuthContext);
+  const classes = useStyles();
+  const [inProduceDict, setInProduceDict] = useState(props.produceDict != 'newProduce'?
+                                                      {
+                                                        "item_uid":props.produceDict["item_uid"],
+                                                        "item_name":props.produceDict["item_name"],
+                                                        "item_photo":props.produceDict["item_photo"],
+                                                        "item_type":props.produceDict["item_type"],
+                                                        "item_desc":props.produceDict["item_desc"],
+                                                        "item_unit":props.produceDict["item_unit"],
+                                                        "item_price":props.produceDict["item_price"],
+                                                        "item_sizes":props.produceDict["item_sizes"],
+                                                        "taxable":props.produceDict["taxable"],
+                                                        "item_display":props.produceDict["item_display"],
+                                                        "farms":props.produceDict["farms"]
+                                                      }:
+                                                      {
+                                                        "item_uid":'',
+                                                        "item_name":'',
+                                                        "item_photo":'',
+                                                        "item_type":'',
+                                                        "item_desc":'',
+                                                        "item_unit":'',
+                                                        "item_price":'',
+                                                        "item_sizes":'',
+                                                        "taxable":'',
+                                                        "item_display":'',
+                                                        "farms":[],
+                                                        "business_price":'',
+                                                        "business_uid":'200-000002',
+                                                        "item_status":''
+                                                      }
+                                                    )
   const handleChange = (event) => {
-    const { name, value, checked } = event.target;
-
-    let newValue = value;
-    if (booleanVals.has(name)) newValue = checked ? 'TRUE' : 'FALSE';
-    if (name === 'item_status') newValue = checked ? 'Active' : 'Past';
-    console.log('setEditData(props.data): ', name, newValue);
-    setItemProps({ ...itemProps, [name]: newValue });
+    const { id, value} = event.target;
+    setInProduceDict(prevState => ({...prevState, [id]: value }))
+    
   };
 
-  const onFileChange = (event) => {
-    setFile({
-      obj: event.target.files[0],
-      url: URL.createObjectURL(event.target.files[0]),
+  const handleFarmSelection = (event) => {
+    event.persist();
+    
+    if(event.target!='null'){
+      // console.log( event.target.value,event.target)
+      setInProduceDict(prevState => ({...prevState, ['business_uid']: event.target.value }))
+      
+    }
+    // console.log(inProduceDict)
+  };
+
+  const handleSave = () => {
+    if(props.produceDict==='newProduce'){
+      
+      let formData = new FormData();
+      Object.entries(inProduceDict).forEach((entry) => {
+        formData.append(entry[0], entry[1]);
+      
     });
-    console.log(event.target.files[0].name);
+    formData.append('new_item','TRUE')
+    
+      axios
+      .post(
+        'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/addItems_Prime/Insert',
+        formData // itemInfo
+      )
+      .then((response) => {
+        console.log(response);
+
+      })
+      .catch((er) => {
+        console.log(er);
+      });
+  
+    }
+    else{
+    axios
+    .post(
+      'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_item_admin/update',
+      inProduceDict
+    )
+    .then((response) => {
+      console.log("produce saved")
+     
+      
+    })
+    .catch((er) => {
+      console.log(er);
+    });}
+    props.handleClose()
+  
+};
+
+  const onFileChange = (e) => {
+    const formData = new FormData();
+        formData.append("item_photo", e.target.files[0]); 
+        formData.append("uid",inProduceDict['item_uid']); 
+        
+        axios
+        .post(
+          'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/upload_image_admin',
+          formData
+        )
+        .then((response) => {
+          //console.log(response.data)
+          let val = response.data
+          setInProduceDict(prevState => ({...prevState, ['item_photo']: val }))
+        })
+        .catch((er) => {
+          console.log(er);
+        });
   };
 
   const insertAPI =
     process.env.REACT_APP_SERVER_BASE_URI + 'addItems_Prime/Insert';
 
-  // NOTE: Which item inputs are optional/required?
-
-  //post new item to endpoint
-  const addItem = () => {
-    const itemInfo = {
-      new_item: 'TRUE',
-      item_info: itemProps.item_name,
-      bus_uid: farmID,
-      item_name: itemProps.item_name,
-      item_status: itemProps.item_status,
-      item_type: itemProps.item_type,
-      item_desc: itemProps.item_desc,
-      item_unit: itemProps.item_unit,
-      item_price: parseFloat(itemProps.item_price).toFixed(2),
-      bus_price: parseFloat(
-        auth.authLevel == 2 ? itemProps.business_price : itemProps.item_price
-      ).toFixed(2),
-      item_sizes: itemProps.item_sizes,
-      favorite: itemProps.favorite,
-      taxable: itemProps.taxable,
-      item_photo: file.obj,
-      exp_date: itemProps.exp_date,
-      // image_category: "item_images", // NOTE: temporary
-    };
-    let formData = new FormData();
-    Object.entries(itemInfo).forEach((entry) => {
-      formData.append(entry[0], entry[1]);
-    });
-
-    // console.log(itemInfo);
-    axios
-      .post(
-        insertAPI,
-        formData // itemInfo
-      )
-      .then((response) => {
-        // console.log(response);
-
-        // appending new item to the business's items list
-        // NOTE: currently getting info by searching through sql string response
-        const sqlString = response.data.sql;
-        itemInfo.item_uid = sqlString.substring(
-          sqlString.indexOf("item_uid = '") + 12,
-          sqlString.indexOf("item_uid = '") + 22
-        );
-        itemInfo.created_at = sqlString.substring(
-          sqlString.indexOf("created_at = '") + 14,
-          sqlString.indexOf("created_at = '") + 24
-        );
-        itemInfo.item_photo = sqlString.substring(
-          sqlString.indexOf("item_photo = '") + 14,
-          sqlString.indexOf("item_photo = '") + 78
-        );
-        itemInfo.item_price = parseFloat(itemInfo.item_price);
-        itemInfo.business_price = parseFloat(itemInfo.business_price);
-
-        //props.setData((prevData) => [...prevData, itemInfo]);
-
-        props.handleClose();
-      })
-      .catch((er) => {
-        console.log(er);
-      });
-  };
+  
 
   return (
           <div id="addItm" style={{bottom:"0", position:"absolute", marginLeft:"15%", width:"auto", marginBottom:"1rem"}}>
@@ -220,16 +218,112 @@ const AdminItemAddModel = forwardRef(({ produceDict, ...props }) => {
             background: '#FFFFFF 0% 0% no-repeat padding-box',
             borderRadius: '20px',
             opacity: 1,
-            marginLeft:"5%"
+            // marginLeft:"5%"
           }}
         >
-          
+      
        <div id="inBox"
               style={{
                 marginTop: '1rem',
               }}> 
               <table className={classes.table}>
-              { produceDict === 'newProduce'?console.log("in new produce"):
+                {/* {console.log("hello there",inProduceDict,props.produceDict)} */}
+                {/* {farmFetch()} */}
+              { props.produceDict === 'newProduce' || inProduceDict['item_uid'] === '' ?
+              
+              <tbody>
+                    
+                    <tr className={classes.tr} style={{border:'0px'}}>
+                      <td className={classes.usrTitle}>Name</td>
+                      <td className={classes.usrTitle}>Photo</td>
+                      <td className={classes.usrTitle}>Type</td>
+                      <td className={classes.usrTitle}>Description</td>
+                      <td className={classes.usrTitle}>Unit </td>
+                      <td className={classes.usrTitle}>Item Price</td>
+                      <td className={classes.usrTitle}>Size</td>
+                      <td className={classes.usrTitle}>Taxable</td>
+                      <td className={classes.usrTitle}>Display</td>
+                      <td className={classes.usrTitle}>Business Price</td>
+                      <td className={classes.usrTitle}>Primary Farm</td>
+                      <td className={classes.usrTitle}>Item Status</td>
+                      
+                    </tr>
+                    
+                    <tr className={classes.tr}>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_name" onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <div>
+                            <img 
+                                  src={inProduceDict['item_photo']===""?'/fruits-and-vegetables.png':inProduceDict['item_photo']}
+                                  alt="" height="50" width="50">
+                            </img>
+                            <label htmlFor="upload-button">
+                            <img src='/editIcon.png' alt="dummy" width="15" height="15" />
+                            </label>
+                            <input
+                                type="file"
+                                id="upload-button"
+                                style={{ display: "none" }}
+                                onChange={onFileChange}
+                              />
+                          </div>
+                        </td> 
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_type"  onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_desc"  onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_unit"  onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_price"  onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_sizes"  onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="taxable"  onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_display"  onChange={handleChange}/> 
+                        </td>
+                        
+                        <td className={classes.usrDesc}>
+                          <TextField id="business_price"  onChange={handleChange}/> 
+                        </td>
+                        
+                        <td className={classes.usrDesc}>
+                            <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                            onChange={handleFarmSelection}>
+                              
+                                {props.farmData.map((item,index) => (
+                                        <option 
+                                         selected={index===0 || item[0]===inProduceDict['business_uid'] ? "selected":"nothing"} 
+                                                    key={item[0]} 
+                                                    value={item[0]}
+                                                    
+                                                    >
+                                            {item[1]}
+                                        </option>
+                                  ))}
+                            </select>
+                        </td>
+
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_status"  onChange={handleChange}/> 
+                        </td>
+                        
+                         
+                    </tr>
+                    
+              </tbody>
+            
+              :
+              
               <tbody>
                     
                     <tr className={classes.tr} style={{border:'0px'}}>
@@ -246,31 +340,57 @@ const AdminItemAddModel = forwardRef(({ produceDict, ...props }) => {
                       <td className={classes.usrTitle}>Primary Farm</td>
                       
                     </tr>
-                  
-                
-        
                     <tr className={classes.tr}>
-                        <td className={classes.usrDesc}>{produceDict['item_name']}</td>
                         <td className={classes.usrDesc}>
-                          <img src={produceDict['item_photo']}
-                                alt="" height="50" width="50">
-                          </img>
+                          <TextField id="item_name" value={inProduceDict['item_name']} onChange={handleChange}/> 
                         </td>
-                        <td className={classes.usrDesc}>{produceDict['item_type']}</td>
-                        <td className={classes.usrDesc}>{produceDict['item_desc']}</td>
-                        <td className={classes.usrDesc}>{produceDict['item_unit']}</td>
-                        <td className={classes.usrDesc}>{produceDict['item_price']}</td>
-                        <td className={classes.usrDesc}>{produceDict['item_sizes']}</td>
-                        <td className={classes.usrDesc}>{produceDict['taxable']}</td>
-                        <td className={classes.usrDesc}>{produceDict['item_display']}</td>
-                        <td className={classes.usrDesc} >{produceDict['farms'].length}</td>
+                        <td className={classes.usrDesc}>
+                          <div>
+                            <img src={inProduceDict['item_photo']}
+                                  alt="" height="50" width="50">
+                            </img>
+                            <label htmlFor="upload-button">
+                            <img src='/editIcon.png' alt="dummy" width="15" height="15" />
+                            </label>
+                            <input
+                                type="file"
+                                id="upload-button"
+                                style={{ display: "none" }}
+                                onChange={onFileChange}
+                              />
+                          </div>
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_type" value={inProduceDict['item_type']} onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_desc" value={inProduceDict['item_desc']} onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_unit" value={inProduceDict['item_unit']} onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_price" value={inProduceDict['item_price']} onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_sizes" value={inProduceDict['item_sizes']} onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="taxable" value={inProduceDict['taxable']} onChange={handleChange}/> 
+                        </td>
+                        <td className={classes.usrDesc}>
+                          <TextField id="item_display" value={inProduceDict['item_display']} onChange={handleChange}/> 
+                        </td>
+                        
+                        <td className={classes.usrDesc} >{inProduceDict['farms'].length}</td>
+                        
                         <td className={classes.usrDesc}>
                             <select style={{border:'0px',textAlign:'center',width:"auto"}}>
-                                {produceDict['farms'].map((item,index) => (
+                                {inProduceDict['farms'].map((item,index) => (
                                         <option 
                                         className={index===0? classes.original:classes.replacement} 
                                                     key={index} 
-                                                    //value={produceDict[item_uid+","+item[2]+","+String(item[3])}
+                                                    //value={inProduceDict[item_uid+","+item[2]+","+String(item[3])}
                                                     >
                                             {item[item.length-1]+", "+item[item.length-2]+", "+item[item.length-3]}
                                         </option>
@@ -282,6 +402,7 @@ const AdminItemAddModel = forwardRef(({ produceDict, ...props }) => {
                     </tr>
                     
               </tbody>
+              
               }
               </table>
               <div >
@@ -290,19 +411,22 @@ const AdminItemAddModel = forwardRef(({ produceDict, ...props }) => {
                   height="40px"
                   src='/saveButtonText.png'
                   alt="save"
-                  //onClick={handleEdit}
+                  onClick={handleSave}
                   
                   style={{ marginLeft:"auto",marginRight:"auto",display:"block", marginBottom:"15px",  cursor: 'pointer'  }}
-                  id={produceDict['item_uid']}
+                  
                   />
               </div>
         </div>
 
+
         </Grid>
+
+        
         </div>
             
   );
-});
+};
 
 //styling
 
