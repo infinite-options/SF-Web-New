@@ -248,7 +248,7 @@ function FarmProfiles() {
   const fetchProducts= async (id)=>{
     setProducts([])
     await axios.get(
-      'http://127.0.0.1:4000/api/v2/admin_farmer_items/'+id
+      'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/admin_farmer_items/'+id
     ).then(response => {
       console.log(response.data.result.result);
       setProducts(response.data.result.result);
