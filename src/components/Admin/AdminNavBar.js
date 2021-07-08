@@ -10,7 +10,8 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
 import { AdminFarmContext } from './AdminFarmContext';
 import appColors from 'styles/AppColors';
-
+import { AuthContext } from '../../auth/AuthContext';
+import Button from '@material-ui/core/Button';
 const theme = createMuiTheme({
   palette: {
     primary: {

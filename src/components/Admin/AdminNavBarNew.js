@@ -256,6 +256,30 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
             )}
             <div className={classes.rightButtons}>
               <Button
+                size={'small'}
+                className={classes.button}
+                //onClick={() => setTab(8)}
+                onClick={() => history.push('/admin/pricecompare')}
+              >
+                Price Compare
+              </Button>
+              <Button
+                size={'small'}
+                className={classes.button}
+                onClick={() => history.push('/admin/analytics')}
+                //onClick={() => setTab(3)}
+              >
+                Analytics
+              </Button>
+              <Button
+                size={'small'}
+                className={classes.button}
+                onClick={() => history.push('/admin/revenue')}
+                //onClick={() => setTab(4)}
+              >
+                Revenue
+              </Button>
+              <Button
                 variant="contained"
                 size="small"
                 style={{

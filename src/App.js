@@ -8,13 +8,15 @@ import Nav from './Nav';
 import { AdminFarmContext } from './components/Admin/AdminFarmContext';
 import { ConfirmationServiceProvider } from './services/ConfirmationService';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
-
+import ReactGA from 'react-ga';
 import { AuthContext } from './auth/AuthContext';
 import axios from 'axios';
 import appColors from './styles/AppColors';
 
 const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
+const GA_TRCKING_CODE = process.env.REACT_APP_GA_TRACKING_CODE;
 
+ReactGA.initialize(GA_TRCKING_CODE);
 const cookies = new Cookies();
 
 //this function calculate the number of items in the cart and set it to global hook context
@@ -149,15 +151,16 @@ function App() {
       isMounted = false;
     };
   }, [isAuth]);
-
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, []);
   return (
     <Router>
-
       <ThemeProvider theme={theme}>
         <div className="App">
           <MessengerCustomerChat
-              pageId="123466412386867"
-              appId="257223515515874"
+            pageId="123466412386867"
+            appId="257223515515874"
           />
           <ConfirmationServiceProvider>
             <AuthContext.Provider
