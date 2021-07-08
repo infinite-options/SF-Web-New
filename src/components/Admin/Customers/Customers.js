@@ -5,12 +5,10 @@ import moment from 'moment';
 import { AuthContext } from '../../../auth/AuthContext';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
-import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { Grid, Typography, Box, Avatar, Paper } from '@material-ui/core';
@@ -788,8 +786,28 @@ function Customers() {
                     opacity: 1,
                   }}
                 >
-                  <a>Send Message</a>&nbsp;
-                  <a>Issue Coupon</a>
+                  <a
+                    href="/admin/messages"
+                    style={{
+                      textTransform: 'none',
+                      textDecorationColor: 'none',
+                      color: ' #1C6D74',
+                    }}
+                  >
+                    Send Message
+                  </a>
+                  &nbsp;
+                  <a
+                    onClick={() => {
+                      setRightTabChosen(1);
+                    }}
+                    style={{
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Issue Coupon
+                  </a>
                 </Typography>
               </Box>
               <Box

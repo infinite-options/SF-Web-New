@@ -280,6 +280,14 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
                 Revenue
               </Button>
               <Button
+                size={'small'}
+                className={classes.button}
+                onClick={() => history.push('/admin/zones')}
+                //onClick={() => setTab(4)}
+              >
+                Zones
+              </Button>
+              <Button
                 variant="contained"
                 size="small"
                 style={{

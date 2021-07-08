@@ -231,7 +231,9 @@ function Admin(authLevel, isAuth) {
               <Route exact path="/admin/pricecompare">
                 <PriceCompare />
               </Route>
-
+              <Route exact path="/admin/zones">
+                <Zones />
+              </Route>
               <Route exact path="/admin/farmprofiles">
                 <FarmProfiles />
               </Route>
