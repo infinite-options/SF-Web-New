@@ -17,6 +17,11 @@ import Customers from './Customers/Customers';
 import OrderSummary from './OrderSummary';
 import AdminMenu from './AdminMenu';
 import Notifications from '../Farm/Notifications';
+import Analytics from './Analytics';
+import RevenueHighchart from './HighchartTemplate';
+import ReactGA from 'react-ga';
+import Zones from './Zones';
+import PriceCompare from './Price_Compare/PriceCompare';
 //within this admin page, we need ability to display any farmer page
 //the option to select which farm to view is in AdminNavBar
 //get selected farm from AdmiNavBar and use it in Farmer
@@ -24,6 +29,11 @@ import Notifications from '../Farm/Notifications';
 
 //TODO: order purchase amounts by business total, Item total, amount paid
 //TODO: Add date to delivery day
+
+const GA_TRCKING_CODE = process.env.REACT_APP_GA_TRACKING_CODE;
+
+ReactGA.initialize(GA_TRCKING_CODE);
+
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
@@ -60,6 +70,9 @@ function Admin(authLevel, isAuth) {
         return null;
     }
   })();
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, []);
   useEffect(() => {
     if (custID !== '') localStorage.setItem('custID', custID);
   }, [custID]);
@@ -208,6 +221,18 @@ function Admin(authLevel, isAuth) {
               </Route>
               <Route exact path="/admin/farmersettings">
                 <FarmerSettings farmID={farmID} farmName={farmName} />
+              </Route>
+              <Route exact path="/admin/analytics">
+                <Analytics farmID={farmID} farmName={farmName} />
+              </Route>
+              <Route exact path="/admin/revenue">
+                <RevenueHighchart farmID={farmID} farmName={farmName} />
+              </Route>
+              <Route exact path="/admin/pricecompare">
+                <PriceCompare />
+              </Route>
+              <Route exact path="/admin/zones">
+                <Zones />
               </Route>
               <Route exact path="/admin/farmprofiles">
                 <FarmProfiles />
