@@ -680,6 +680,16 @@ function Customers() {
       .then((response) => {
         alert('Coupon created');
         console.log(response.data);
+        createCoupon.coupon_id = '';
+        createCoupon.valid = '';
+        createCoupon.threshold = '';
+        createCoupon.discount_percent = '';
+        createCoupon.discount_amount = '';
+        createCoupon.discount_shipping = '';
+        createCoupon.expire_date = '';
+        createCoupon.limits = '';
+        createCoupon.coupon_title = '';
+        createCoupon.notes = '';
       });
   }
   function handle(e) {
