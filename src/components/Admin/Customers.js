@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import clsx from 'clsx';
 import moment from 'moment';
-import { AuthContext } from '../../../auth/AuthContext';
+import { AuthContext } from '../../auth/AuthContext';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
 import TableBody from '@material-ui/core/TableBody';
@@ -15,11 +15,11 @@ import { Grid, Typography, Box, Avatar, Paper } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import CustomerSrc from '../../../sf-svg-icons/Polygon1.svg';
-import { AdminFarmContext } from '../AdminFarmContext';
-import appColors from '../../../styles/AppColors';
-import Delivered from '../../../sf-svg-icons/delivered.svg';
-import couponUnavaliable from '../../../images/couponUnavaliable.svg';
+import CustomerSrc from '../../sf-svg-icons/Polygon1.svg';
+import { AdminFarmContext } from './AdminFarmContext';
+import appColors from '../../styles/AppColors';
+import Delivered from '../../sf-svg-icons/delivered.svg';
+import couponUnavaliable from '../../images/couponUnavaliable.svg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
