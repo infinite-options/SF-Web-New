@@ -103,7 +103,7 @@ function reducer(state, action) {
 function Zones ({history,...props}) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // Check for log in
+  // Check for log in work on login with sf style admin auth
   useEffect(() => {
     if (
       document.cookie
@@ -132,6 +132,7 @@ function Zones ({history,...props}) {
         }
         // eslint-disable-next-line no-console
         console.log(err);
+        dispatch({ type: 'MOUNT' });
       });
 
     } else {
@@ -354,50 +355,132 @@ function Zones ({history,...props}) {
 
   const createCheckboxBusinesses = () => {
     let items = []
+    console.log(state.editedZone.z_businesses)
+    state.selectedBusinesses = JSON.parse(state.editedZone.z_businesses)
+    //state.editedZone.z_businesses = JSON.parse(state.editedZone.z_businesses)
+    console.log(state.selectedBusinesses)
     for (let i = 0; i < state.businesses.length; i++) {
       if (i == state.businesses.length - 1){
-        items.push(
-          <>
-            <input 
-              type="checkbox" 
-              id={i} 
-              name={i} 
-              value={state.businesses[i].business_uid}
-              style = {{marginRight: "5px"}}
-              onClick={() => {
-                if (state.selectedBusinesses.indexOf(state.businesses[i].business_uid) == -1) {
-                  state.selectedBusinesses.push(state.businesses[i].business_uid)
-                } else {
-                  state.selectedBusinesses.splice(state.selectedBusinesses.indexOf(state.businesses[i].business_uid), 1)
-                }
-                console.log(state.selectedBusinesses)
-              }}
-            ></input>
-            <label for={i}>{state.businesses[i].business_name + ", " + state.businesses[i].business_uid}</label><br></br>
-          </>
-        )
+        if (state.selectedBusinesses.indexOf(state.businesses[i].business_uid) == -1) {
+          items.push(
+            <>
+              <input 
+                type="checkbox" 
+                id={i} 
+                name={i} 
+                value={state.businesses[i].business_uid}
+                style = {{marginRight: "5px"}}
+                onClick={() => {
+                  if (state.selectedBusinesses.indexOf(state.businesses[i].business_uid) == -1) {
+                    state.selectedBusinesses.push(state.businesses[i].business_uid)
+                    //state.editedZone.z_businesses.push(state.businesses[i].business_uid)
+                  } else {
+                    state.selectedBusinesses.splice(state.selectedBusinesses.indexOf(state.businesses[i].business_uid), 1)
+                    //state.editedZone.z_businesses.splice(state.selectedBusinesses.indexOf(state.businesses[i].business_uid), 1)
+                  }
+                  console.log(state.selectedBusinesses)
+                }}
+              ></input>
+              <label for={i}>{state.businesses[i].business_name + ", " + state.businesses[i].business_uid}</label><br></br>
+            </>
+          )
+        } else {
+          items.push(
+            <>
+              <input 
+                type="checkbox" 
+                id={i} 
+                name={i} 
+                value={state.businesses[i].business_uid}
+                style = {{marginRight: "5px"}}
+                onClick={() => {
+                  if (state.selectedBusinesses.indexOf(state.businesses[i].business_uid) == -1) {
+                    state.selectedBusinesses.push(state.businesses[i].business_uid)
+                    //state.editedZone.z_businesses.push(state.businesses[i].business_uid)
+                  } else {
+                    state.selectedBusinesses.splice(state.selectedBusinesses.indexOf(state.businesses[i].business_uid), 1)
+                    //state.editedZone.z_businesses.splice(state.selectedBusinesses.indexOf(state.businesses[i].business_uid), 1)
+                  }
+                  console.log(state.selectedBusinesses)
+                }}
+                defaultChecked="true"
+              ></input>
+              <label for={i}>{state.businesses[i].business_name + ", " + state.businesses[i].business_uid}</label><br></br>
+            </>
+          )
+        }
       } else {
-        items.push(
-          <>
-            <input 
-              type="checkbox" 
-              id={i} 
-              name={i} 
-              value={state.businesses[i].business_uid}
-              style = {{marginRight: "5px"}}
-              onClick={() => {
-                if (state.selectedBusinesses.indexOf(state.businesses[i].business_uid) == -1) {
-                  state.selectedBusinesses.push(state.businesses[i].business_uid)
-                } else {
-                  state.selectedBusinesses.splice(state.selectedBusinesses.indexOf(state.businesses[i].business_uid), 1)
-                }
-                console.log(state.selectedBusinesses)
-              }}
-            ></input>
-            <label for={i}>{state.businesses[i].business_name + ", " + state.businesses[i].business_uid}</label><br></br>
-            <div style={{height: "1px", width: "100%", backgroundColor: "#F8BB17", marginBottom: "5px"}}></div>
-          </>
-        )
+        if (state.selectedBusinesses.indexOf(state.businesses[i].business_uid) == -1) {
+          items.push(
+            <>
+              <input 
+                type="checkbox" 
+                id={i} 
+                name={i} 
+                value={state.businesses[i].business_uid}
+                style = {{marginRight: "5px"}}
+                onClick={() => {
+                  if (state.selectedBusinesses.indexOf(state.businesses[i].business_uid) == -1) {
+                    state.selectedBusinesses.push(state.businesses[i].business_uid)
+                    //state.editedZone.z_businesses.push(state.businesses[i].business_uid)
+                  } else {
+                    state.selectedBusinesses.splice(state.selectedBusinesses.indexOf(state.businesses[i].business_uid), 1)
+                    //state.editedZone.z_businesses.splice(state.selectedBusinesses.indexOf(state.businesses[i].business_uid), 1)
+                  }
+                  console.log(state.selectedBusinesses)
+                }}
+              ></input>
+              <label for={i}>{state.businesses[i].business_name + ", " + state.businesses[i].business_uid}</label><br></br>
+              <div style={{height: "1px", width: "100%", backgroundColor: "#BCCDCE", marginBottom: "5px"}}></div>
+            </>
+          )
+        } else {
+          items.push(
+            <>
+              <input 
+                type="checkbox" 
+                id={i} 
+                name={i} 
+                value={state.businesses[i].business_uid}
+                style = {{marginRight: "5px"}}
+                onClick={() => {
+                  if (state.selectedBusinesses.indexOf(state.businesses[i].business_uid) == -1) {
+                    state.selectedBusinesses.push(state.businesses[i].business_uid)
+                    //state.editedZone.z_businesses.push(state.businesses[i].business_uid)
+                  } else {
+                    state.selectedBusinesses.splice(state.selectedBusinesses.indexOf(state.businesses[i].business_uid), 1)
+                    //state.editedZone.z_businesses.splice(state.selectedBusinesses.indexOf(state.businesses[i].business_uid), 1)
+                  }
+                  console.log(state.selectedBusinesses)
+                }}
+                defaultChecked="true"
+              ></input>
+              <label for={i}>{state.businesses[i].business_name + ", " + state.businesses[i].business_uid}</label><br></br>
+              <div style={{height: "1px", width: "100%", backgroundColor: "#BCCDCE", marginBottom: "5px"}}></div>
+            </>
+          )
+        }
+        // items.push(
+        //   <>
+        //     <input 
+        //       type="checkbox" 
+        //       id={i} 
+        //       name={i} 
+        //       value={state.businesses[i].business_uid}
+        //       style = {{marginRight: "5px"}}
+        //       onClick={() => {
+        //         if (state.selectedBusinesses.indexOf(state.businesses[i].business_uid) == -1) {
+        //           state.selectedBusinesses.push(state.businesses[i].business_uid)
+        //         } else {
+        //           state.selectedBusinesses.splice(state.selectedBusinesses.indexOf(state.businesses[i].business_uid), 1)
+        //         }
+        //         console.log(state.selectedBusinesses)
+        //       }}
+        //     ></input>
+        //     <label for={i}>{state.businesses[i].business_name + ", " + state.businesses[i].business_uid}</label><br></br>
+        //     <div style={{height: "1px", width: "100%", backgroundColor: "#F8BB17", marginBottom: "5px"}}></div>
+        //   </>
+        // )
       }
     }
     return items
@@ -432,8 +515,8 @@ function Zones ({history,...props}) {
             justifySelf: "center",
             alignSelf: "center",
             display: "block",
-            border: "#ff6505 solid",
-            backgroundColor: "#FEF7E0",
+            border: "#1C6D74 solid",
+            backgroundColor: "white",
             // height: "900px",
             width: "20%",
             zIndex:"102",
@@ -445,12 +528,13 @@ function Zones ({history,...props}) {
               <div style={{width: "100%", textAlign: "center"}}>
                 <Button
                   style={{
-                    backgroundColor: "#F26522",
+                    backgroundColor: "#1C6D74",
                     marginBottom: "15px",
                     marginTop: "15px",
                     borderRadius: "15px",
                     width: "50%",
-                    fontSize: "18px",  
+                    fontSize: "18px",
+                    color: "white"  
                   }}
                   onClick={() => {
                     let temp = ''
@@ -466,7 +550,7 @@ function Zones ({history,...props}) {
                       alert('Please select at least one business before saving')
                     } else {
                       editZone('z_business_uid', temp);
-                      editZone('z_businesses', state.selectedBusinesses);
+                      editZone('z_businesses', JSON.stringify(state.selectedBusinesses));
                       console.log(state.selectedBusinesses)
                       state.selectedBusinesses = []
                       dispatch({ type: 'TOGGLE_SELECT_BUSINESS', payload: false });
@@ -536,7 +620,7 @@ function Zones ({history,...props}) {
   }
 
   return (
-    <div style={{backgroundColor: '#F26522', height: "1000px"}}>
+    <div style={{backgroundColor: '#BCCDCE', height: "1000px"}}>
       {getAllBusinesses()}
 
       {selectBusinessModal()}
@@ -547,7 +631,7 @@ function Zones ({history,...props}) {
         <div style = {{width: "50%", height: "100%", float: "left", fontWeight: 'bold', paddingTop: "45px", paddingLeft: "27px", }}>
           Zones
         </div>
-        <div style = {{width: "15%", height: "100%", float: "left", fontWeight: 'bold', color: "#F26522", textAlign: "center", marginTop: "15px",}}>
+        <div style = {{width: "15%", height: "100%", float: "left", fontWeight: 'bold', color: "#1C6D74", textAlign: "center", marginTop: "15px",}}>
           Total no. of Zones
           <div style = {{color: "black", fontSize: "30px"}}>
             {state.zones.length}
@@ -570,12 +654,12 @@ function Zones ({history,...props}) {
         // }}
       > 
         <div style={{width: "100%"}}>
-          <div style={{width: "50%", float: "left"}}>
+          <div style={{width: "49%", float: "left"}}>
             <div className = {styles.googleMap} id="map">
             </div>
             {initMap()}
           </div>
-          <div style={{width: "50%", float: "left"}}>
+          <div style={{width: "49%", float: "left"}}>
 
             {/* NEW CODE */}
 
@@ -593,14 +677,15 @@ function Zones ({history,...props}) {
                 editNameSplit('colorValue','');
                 // toggleEditZone(state.zones[e.target.value])
                 console.log(state.zones[e.target.value])
+                // console.log(state.editedZone.z_businesses)
                 // splitZoneName()
               }}
             >
               {createDropdownZones()}
             </select>
             {splitZoneName()}
-            <div style={{width: "98%", margin: "1%", float: "left"}}>
-              <div style={{color: "#F26522"}}>Zone Name:</div>
+            {/* <div style={{width: "98%", margin: "1%", float: "left"}}>
+              <div style={{color: "#1C6D74"}}>Zone Name:</div>
               <Form.Control
                 value={state.editedZone.zone_name}
                 onChange={
@@ -609,11 +694,31 @@ function Zones ({history,...props}) {
                   }
                 }
             />
+            </div> */}
+
+            <div>
+
             </div>
             
-            <div style={{width: "48%", margin: "1%", float: "left"}}>
-              <div style={{color: "#F26522"}}>Zone Name:</div>
+            <div style={{width: "31%", margin: "1%", float: "left"}}>
+              <div style={{color: "#1C6D74"}}>Zone Name:</div>
               <Form.Control
+              style = {{
+                maxWidth: '100%',
+                borderStyle: "solid",
+                borderWidth: "1px",
+                borderColor: "#CED4DA",
+                borderRadius: ".25rem",
+                // padding: ".375rem .75rem",
+                color: "#495057",
+                height: "calc(1.5em + .75rem + 2px)",
+                lineHeight: "1.5",
+                fontSize: "1rem",
+                fontWeight: "400",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: "nowrap"
+              }}
                 value={state.nameSplit.nameValue}
                 onChange={
                   (event) => {
@@ -625,9 +730,25 @@ function Zones ({history,...props}) {
             />
             </div>
 
-            <div style={{width: "48%", margin: "1%", float: "left"}}>
-              <div style={{color: "#F26522"}}>Zone Color:</div>
+            <div style={{width: "31%", margin: "1%", float: "left"}}>
+              <div style={{color: "#1C6D74"}}>Zone Color:</div>
               <Form.Control
+              style = {{
+                maxWidth: '100%',
+                borderStyle: "solid",
+                borderWidth: "1px",
+                borderColor: "#CED4DA",
+                borderRadius: ".25rem",
+                // padding: ".375rem .75rem",
+                color: "#495057",
+                height: "calc(1.5em + .75rem + 2px)",
+                lineHeight: "1.5",
+                fontSize: "1rem",
+                fontWeight: "400",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: "nowrap"
+              }}
                 value={state.nameSplit.colorValue}
                 onChange={
                   (event) => {
@@ -637,16 +758,27 @@ function Zones ({history,...props}) {
                   }
                 }
             />
-            
-            
             </div>
 
-            <div className={styles.spacer}></div>
-
-            <div style={{width: "98%", margin: "1%", float: "left"}}>
-              <div style={{width: "25%", float: "left"}}>
-                  <div style={{color: "#F26522"}}>Zone UID:</div>
+            <div style={{width: "31%", margin: "1%", float: "left"}}>
+                  <div style={{color: "#1C6D74"}}>Zone UID:</div>
                   <Form.Control
+                    style = {{
+                      maxWidth: '100%',
+                      borderStyle: "solid",
+                      borderWidth: "1px",
+                      borderColor: "#CED4DA",
+                      borderRadius: ".25rem",
+                      // padding: ".375rem .75rem",
+                      color: "#495057",
+                      height: "calc(1.5em + .75rem + 2px)",
+                      lineHeight: "1.5",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap"
+                    }}
                     value={state.editedZone.zone_uid}
                     onChange={
                       (event) => {
@@ -655,8 +787,39 @@ function Zones ({history,...props}) {
                     }
                   />
                 </div>
+
+            <div className={styles.spacer}></div>
+
+            <div style={{width: "98%", margin: "1%", float: "left"}}>
+              {/* <div style={{width: "25%", float: "left"}}>
+                  <div style={{color: "#1C6D74"}}>Zone UID:</div>
+                  <Form.Control
+                    style = {{
+                      width: "80%",
+                      borderStyle: "solid",
+                      borderWidth: "1px",
+                      borderColor: "#CED4DA",
+                      borderRadius: ".25rem",
+                      padding: ".375rem .75rem",
+                      color: "#495057",
+                      height: "calc(1.5em + .75rem + 2px)",
+                      lineHeight: "1.5",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap"
+                    }}
+                    value={state.editedZone.zone_uid}
+                    onChange={
+                      (event) => {
+                        editZone('zone_uid',event.target.value);
+                      }
+                    }
+                  />
+                </div> */}
               <div style={{width: "25%", float: "left"}}>
-                <div style={{color: "#F26522"}}>Business UID:</div>
+                <div style={{color: "#1C6D74"}}>Business UID:</div>
                 {/* <select
                   className={styles.dropdown}
                   style={{width: "100%", float: "left"}}
@@ -671,11 +834,13 @@ function Zones ({history,...props}) {
                 </select> */}
                 <div 
                   style = {{
+                    maxWidth: '98%',
+                    margin: "1%",
                     borderStyle: "solid",
                     borderWidth: "1px",
                     borderColor: "#CED4DA",
                     borderRadius: ".25rem",
-                    padding: ".375rem .75rem",
+                    // padding: ".375rem .75rem",
                     color: "#495057",
                     height: "calc(1.5em + .75rem + 2px)",
                     lineHeight: "1.5",
@@ -689,24 +854,17 @@ function Zones ({history,...props}) {
                   dispatch({ type: 'TOGGLE_SELECT_BUSINESS', payload: true });
                   console.log(state.toggleSelectBusiness)
                 }}>{
-                  // convertUIDToNames(state.editedZone.z_business_uid)
-                  state.editedZone.z_business_uid
+                  convertUIDToNames(state.editedZone.z_business_uid)
+                  // state.editedZone.z_business_uid
                 }</div>
               </div>
               <div style={{width: "25%", float: "left"}}>
-                <div style={{color: "#F26522"}}>Delivery Day</div>
-                {/* <Form.Control
-                  value={state.editedZone.z_delivery_day}
-                  onChange={
-                    (event) => {
-                      editZone('z_delivery_day',event.target.value);
-                    }
-                  }
-                /> */}
+                <div style={{color: "#1C6D74"}}>Delivery Day</div>
                 <select
                   className={styles.dropdown}
                   style={{
-                    width: "100%", 
+                    maxWidth: '98%',
+                    margin: "1%",
                     float: "left",
                     borderStyle: "solid",
                     borderWidth: "1px",
@@ -729,18 +887,75 @@ function Zones ({history,...props}) {
                     }
                   }
                 >
-                  <option value="Sunday">Sunday</option>
-                  <option value="Monday">Monday</option>
-                  <option value="Tuesday">Tuesday</option>
-                  <option value="Wednesday">Wednesday</option>
-                  <option value="Thursday">Thursday</option>
-                  <option value="Friday">Friday</option>
-                  <option value="Saturday">Saturday</option>
+                  <option value="SUNDAY">Sunday</option>
+                  <option value="MONDAY">Monday</option>
+                  <option value="TUESDAY">Tuesday</option>
+                  <option value="WEDNESDAY">Wednesday</option>
+                  <option value="THURSDAY">Thursday</option>
+                  <option value="FRIDAY">Friday</option>
+                  <option value="SATURDAY">Saturday</option>
                 </select>
               </div>
+
               <div style={{width: "25%", float: "left"}}>
-                <div style={{color: "#F26522"}}>Delivery Time</div>
+                <div style={{color: "#1C6D74"}}>Accepting Day</div>
+                <select
+                  className={styles.dropdown}
+                  style={{
+                    maxWidth: '98%',
+                    margin: "1%",
+                    float: "left",
+                    borderStyle: "solid",
+                    borderWidth: "1px",
+                    borderColor: "#CED4DA",
+                    borderRadius: ".25rem",
+                    padding: ".375rem .75rem",
+                    color: "#495057",
+                    height: "calc(1.5em + .75rem + 2px)",
+                    lineHeight: "1.5",
+                    fontSize: "1rem",
+                    fontWeight: "400",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap"
+                  }}
+                  value={state.editedZone.z_accepting_day}
+                  onChange={
+                    (event) => {
+                      editZone('z_accepting_day',event.target.value);
+                    }
+                  }
+                >
+                  <option value="SUNDAY">Sunday</option>
+                  <option value="MONDAY">Monday</option>
+                  <option value="TUESDAY">Tuesday</option>
+                  <option value="WEDNESDAY">Wednesday</option>
+                  <option value="THURSDAY">Thursday</option>
+                  <option value="FRIDAY">Friday</option>
+                  <option value="SATURDAY">Saturday</option>
+                </select>
+              </div>
+
+              <div style={{width: "25%", float: "left"}}>
+                <div style={{color: "#1C6D74"}}>Delivery Time</div>
                 <Form.Control
+                  style = {{
+                    maxWidth: '98%',
+                    margin: "1%",
+                    borderStyle: "solid",
+                    borderWidth: "1px",
+                    borderColor: "#CED4DA",
+                    borderRadius: ".25rem",
+                    // padding: ".375rem .75rem",
+                    color: "#495057",
+                    height: "calc(1.5em + .75rem + 2px)",
+                    lineHeight: "1.5",
+                    fontSize: "1rem",
+                    fontWeight: "400",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap"
+                  }}
                   value={state.editedZone.z_delivery_time}
                   onChange={
                     (event) => {
@@ -754,8 +969,25 @@ function Zones ({history,...props}) {
               <div className={styles.spacerSmall}></div>
 
               <div style={{width: "25%", float: "left"}}>
-                <div style={{color: "#F26522"}}>Accepting Time</div>
+                <div style={{color: "#1C6D74"}}>Accepting Time</div>
                 <Form.Control
+                  style = {{
+                    width: '95%',
+                    margin: "1%",
+                    borderStyle: "solid",
+                    borderWidth: "1px",
+                    borderColor: "#CED4DA",
+                    borderRadius: ".25rem",
+                    // padding: ".375rem .75rem",
+                    color: "#495057",
+                    height: "calc(1.5em + .75rem + 2px)",
+                    lineHeight: "1.5",
+                    fontSize: "1rem",
+                    fontWeight: "400",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap"
+                  }}
                   value={state.editedZone.z_accepting_time}
                   onChange={
                     (event) => {
@@ -765,8 +997,25 @@ function Zones ({history,...props}) {
                 />
               </div>
               <div style={{width: "25%", float: "left"}}>
-                <div style={{color: "#F26522"}}>Delivery Fee</div>
+                <div style={{color: "#1C6D74"}}>Delivery Fee</div>
                 <Form.Control
+                  style = {{
+                    width: '95%',
+                    margin: "1%",
+                    borderStyle: "solid",
+                    borderWidth: "1px",
+                    borderColor: "#CED4DA",
+                    borderRadius: ".25rem",
+                    // padding: ".375rem .75rem",
+                    color: "#495057",
+                    height: "calc(1.5em + .75rem + 2px)",
+                    lineHeight: "1.5",
+                    fontSize: "1rem",
+                    fontWeight: "400",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap"
+                  }}
                   value={state.editedZone.delivery_fee}
                   onChange={
                     (event) => {
@@ -776,8 +1025,25 @@ function Zones ({history,...props}) {
                 />
               </div>
               <div style={{width: "25%", float: "left"}}>
-                <div style={{color: "#F26522"}}>Service Fee</div>
+                <div style={{color: "#1C6D74"}}>Service Fee</div>
                 <Form.Control
+                  style = {{
+                    width: '95%',
+                    margin: "1%",
+                    borderStyle: "solid",
+                    borderWidth: "1px",
+                    borderColor: "#CED4DA",
+                    borderRadius: ".25rem",
+                    // padding: ".375rem .75rem",
+                    color: "#495057",
+                    height: "calc(1.5em + .75rem + 2px)",
+                    lineHeight: "1.5",
+                    fontSize: "1rem",
+                    fontWeight: "400",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap"
+                  }}
                   value={state.editedZone.service_fee}
                   onChange={
                     (event) => {
@@ -787,8 +1053,25 @@ function Zones ({history,...props}) {
                 />
               </div>
               <div style={{width: "25%", float: "left"}}>
-                <div style={{color: "#F26522"}}>Tax Rate</div>
+                <div style={{color: "#1C6D74"}}>Tax Rate</div>
                 <Form.Control
+                  style = {{
+                    width: '95%',
+                    margin: "1%",
+                    borderStyle: "solid",
+                    borderWidth: "1px",
+                    borderColor: "#CED4DA",
+                    borderRadius: ".25rem",
+                    // padding: ".375rem .75rem",
+                    color: "#495057",
+                    height: "calc(1.5em + .75rem + 2px)",
+                    lineHeight: "1.5",
+                    fontSize: "1rem",
+                    fontWeight: "400",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap"
+                  }}
                   value={state.editedZone.tax_rate}
                   onChange={
                     (event) => {
@@ -802,7 +1085,7 @@ function Zones ({history,...props}) {
             <div className={styles.spacer}></div>
 
             <div style={{width: "98%", margin: "1%", float: "left"}}>
-              <div style={{color: "#F26522"}}>Define Zone Points:</div>
+              <div style={{color: "#1C6D74"}}>Define Zone Points:</div>
               <div className={styles.spacerSmall}></div>
               <div style={{width: "100%", float: "left"}}>
                 <div style={{width: "50%", float: "left"}}>
@@ -811,7 +1094,24 @@ function Zones ({history,...props}) {
                   <div style={{width: "50%", float: "left"}}>Latitude (Y)</div>
                   <div style={{width: "50%", float: "left"}}>Longitude (X)</div>
                   <Form.Control
-                    style={{width: "50%", float: "left"}}
+                    style = {{
+                      width: '45%',
+                      margin: "1%",
+                      borderStyle: "solid",
+                      borderWidth: "1px",
+                      borderColor: "#CED4DA",
+                      borderRadius: ".25rem",
+                      // padding: ".375rem .75rem",
+                      color: "#495057",
+                      height: "calc(1.5em + .75rem + 2px)",
+                      lineHeight: "1.5",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap"
+                    }}
+                    
                     value={state.editedZone.LT_lat}
                     onChange={
                       (event) => {
@@ -819,8 +1119,26 @@ function Zones ({history,...props}) {
                       }
                     }
                   />
+
+                  
                   <Form.Control
-                    style={{width: "50%", float: "left"}}
+                    style = {{
+                      width: '45%',
+                      margin: "1%",
+                      borderStyle: "solid",
+                      borderWidth: "1px",
+                      borderColor: "#CED4DA",
+                      borderRadius: ".25rem",
+                      // padding: ".375rem .75rem",
+                      color: "#495057",
+                      height: "calc(1.5em + .75rem + 2px)",
+                      lineHeight: "1.5",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap"
+                    }}
                     value={state.editedZone.LT_long}
                     onChange={
                       (event) => {
@@ -835,7 +1153,23 @@ function Zones ({history,...props}) {
                   <div style={{width: "50%", float: "left"}}>Latitude (Y)</div>
                   <div style={{width: "50%", float: "left"}}>Longitude (X)</div>
                   <Form.Control
-                    style={{width: "50%", float: "left"}}
+                    style = {{
+                      width: '45%',
+                      margin: "1%",
+                      borderStyle: "solid",
+                      borderWidth: "1px",
+                      borderColor: "#CED4DA",
+                      borderRadius: ".25rem",
+                      // padding: ".375rem .75rem",
+                      color: "#495057",
+                      height: "calc(1.5em + .75rem + 2px)",
+                      lineHeight: "1.5",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap"
+                    }}
                     value={state.editedZone.RT_lat}
                     onChange={
                       (event) => {
@@ -843,8 +1177,26 @@ function Zones ({history,...props}) {
                       }
                     }
                   />
+                  
+                  
                   <Form.Control
-                    style={{width: "50%", float: "left"}}
+                    style = {{
+                      width: '45%',
+                      margin: "1%",
+                      borderStyle: "solid",
+                      borderWidth: "1px",
+                      borderColor: "#CED4DA",
+                      borderRadius: ".25rem",
+                      // padding: ".375rem .75rem",
+                      color: "#495057",
+                      height: "calc(1.5em + .75rem + 2px)",
+                      lineHeight: "1.5",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap"
+                    }}
                     value={state.editedZone.RT_long}
                     onChange={
                       (event) => {
@@ -860,7 +1212,23 @@ function Zones ({history,...props}) {
                   <div style={{width: "50%", float: "left"}}>Latitude (Y)</div>
                   <div style={{width: "50%", float: "left"}}>Longitude (X)</div>
                   <Form.Control
-                    style={{width: "50%", float: "left"}}
+                    style = {{
+                      width: '45%',
+                      margin: "1%",
+                      borderStyle: "solid",
+                      borderWidth: "1px",
+                      borderColor: "#CED4DA",
+                      borderRadius: ".25rem",
+                      // padding: ".375rem .75rem",
+                      color: "#495057",
+                      height: "calc(1.5em + .75rem + 2px)",
+                      lineHeight: "1.5",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap"
+                    }}
                     value={state.editedZone.LB_lat}
                     onChange={
                       (event) => {
@@ -869,7 +1237,23 @@ function Zones ({history,...props}) {
                     }
                   />
                   <Form.Control
-                    style={{width: "50%", float: "left"}}
+                    style = {{
+                      width: '45%',
+                      margin: "1%",
+                      borderStyle: "solid",
+                      borderWidth: "1px",
+                      borderColor: "#CED4DA",
+                      borderRadius: ".25rem",
+                      // padding: ".375rem .75rem",
+                      color: "#495057",
+                      height: "calc(1.5em + .75rem + 2px)",
+                      lineHeight: "1.5",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap"
+                    }}
                     value={state.editedZone.LB_long}
                     onChange={
                       (event) => {
@@ -884,7 +1268,23 @@ function Zones ({history,...props}) {
                   <div style={{width: "50%", float: "left"}}>Latitude (Y)</div>
                   <div style={{width: "50%", float: "left"}}>Longitude (X)</div>
                   <Form.Control
-                    style={{width: "50%", float: "left"}}
+                    style = {{
+                      width: '45%',
+                      margin: "1%",
+                      borderStyle: "solid",
+                      borderWidth: "1px",
+                      borderColor: "#CED4DA",
+                      borderRadius: ".25rem",
+                      // padding: ".375rem .75rem",
+                      color: "#495057",
+                      height: "calc(1.5em + .75rem + 2px)",
+                      lineHeight: "1.5",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap"
+                    }}
                     value={state.editedZone.RB_lat}
                     onChange={
                       (event) => {
@@ -893,7 +1293,23 @@ function Zones ({history,...props}) {
                     }
                   />
                   <Form.Control
-                    style={{width: "50%", float: "left"}}
+                    style = {{
+                      width: '45%',
+                      margin: "1%",
+                      borderStyle: "solid",
+                      borderWidth: "1px",
+                      borderColor: "#CED4DA",
+                      borderRadius: ".25rem",
+                      // padding: ".375rem .75rem",
+                      color: "#495057",
+                      height: "calc(1.5em + .75rem + 2px)",
+                      lineHeight: "1.5",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap"
+                    }}
                     value={state.editedZone.RB_long}
                     onChange={
                       (event) => {
@@ -911,7 +1327,7 @@ function Zones ({history,...props}) {
 
             <div style={{textAlign: "center"}}>
               <Button
-                style={{backgroundColor: "#F26522", borderRadius: "15px"}}
+                style={{backgroundColor: "#1C6D74", borderRadius: "15px", color: "white"}}
                 variant="secondary"
                 onClick={() => {
                   saveZone()
@@ -920,7 +1336,7 @@ function Zones ({history,...props}) {
                 Save Zone
               </Button>
               {/* <Button
-                style={{backgroundColor: "#F26522", borderRadius: "15px"}}
+                style={{backgroundColor: "#1C6D74", borderRadius: "15px"}}
                 variant="secondary"
                 onClick={() => stitchZoneName()}
               >
