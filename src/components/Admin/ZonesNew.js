@@ -621,7 +621,7 @@ function Zones ({history,...props}) {
   }
 
   return (
-    <div style={{backgroundColor: '#BCCDCE', height: "1000px"}}>
+    <div style={{backgroundColor: '#BCCDCE', height: "1000px", paddingTop: "30px"}}>
       {getAllBusinesses()}
 
       {selectBusinessModal()}
@@ -629,7 +629,7 @@ function Zones ({history,...props}) {
       {/* <AdminNavBar currentPage={'edit-meal'}/> */}
 
       <div className={styles.containerCustomer}>
-        <div style = {{width: "50%", height: "100%", float: "left", fontWeight: 'bold', paddingTop: "45px", paddingLeft: "27px", }}>
+        <div style = {{width: "65%", height: "100%", float: "left", fontWeight: 'bold', paddingTop: "45px", paddingLeft: "27px", textAlign: "left"}}>
           Zones
         </div>
         <div style = {{width: "15%", height: "100%", float: "left", fontWeight: 'bold', color: "#1C6D74", textAlign: "center", marginTop: "15px",}}>
