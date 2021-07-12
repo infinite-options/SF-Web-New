@@ -502,7 +502,7 @@ function Zones ({history,...props}) {
         <div style={{
           height: "100%",
           width: "100%",
-          zIndex: "101",
+          zIndex: "99999",
           left: "0",
           top: "0",
           overflow: "auto",
@@ -520,7 +520,8 @@ function Zones ({history,...props}) {
             // height: "900px",
             width: "20%",
             zIndex:"102",
-            borderRadius: "20px"
+            borderRadius: "20px",
+            marginTop: "100px"
           }}>
             <div style = {{width: "96%", margin: "2%"}}>
               <div style={{fontWeight: "bold", marginBottom: "15px"}}>Assign businesses to this zone:</div>
