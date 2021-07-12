@@ -445,31 +445,34 @@ function RevenueHighchart() {
             <MenuItem value={'business'}>Business</MenuItem>
           </Select>
         </FormControl>
-      </Box>
-      <Box justify-content="center">
-        <FormControl className={classes.formControl}>
-          <FormHelperText>Month</FormHelperText>
-          <Select
-            labelId="demo-controlled-open-select-label"
-            id="demo-controlled-open-select"
-            name="month"
-            value={selectedMonth}
-            onChange={handleChange}
-          >
-            {months.map((month) => {
-              return (
-                <MenuItem key={month} value={month}>
-                  {month}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+        <Box display="flex" marginLeft="100px" justify-content="center">
+          <FormControl className={classes.formControl}>
+            <FormHelperText>Month</FormHelperText>
+            <Select
+              labelId="demo-controlled-open-select-label"
+              id="demo-controlled-open-select"
+              name="month"
+              value={selectedMonth}
+              onChange={handleChange}
+            >
+              {months.map((month) => {
+                return (
+                  <MenuItem key={month} value={month}>
+                    {month}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
 
-        <a href={reportLink} style={{ textDecoration: 'none' }}>
-          <button style={{ marginTop: '25px' }}>Generate Revenue Report</button>
-        </a>
+          <a href={reportLink} style={{ textDecoration: 'none' }}>
+            <button style={{ marginTop: '25px' }}>
+              Generate Revenue Report
+            </button>
+          </a>
+        </Box>
       </Box>
+
       <HighchartsReact highcharts={Highcharts} options={options} />
     </>
   );

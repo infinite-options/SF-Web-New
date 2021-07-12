@@ -170,7 +170,7 @@ function DateAnalytics() {
           const barData = {
             type: 'column',
             name: barsType === fields.business ? farmDict[barValue] : barValue,
-            showInLegend: false,
+            showInLegend: true,
             data: [...nullData],
             tooltip: {
               pointFormat:

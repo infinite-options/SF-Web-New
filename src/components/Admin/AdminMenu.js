@@ -166,6 +166,30 @@ const AdminMenu = ({ props }) => {
             </ListItem>
             <ListItem
               className={
+                active === 'Google Analytics'
+                  ? `${classes.activeitem}`
+                  : `${classes.menuitem}`
+              }
+              onClick={() =>
+                window.open(
+                  'https://analytics.google.com/analytics/web/#/realtime/rt-overview/a181862263w278248782p246348361/',
+                  '_blank'
+                )
+              }
+            >
+              <div style={{ display: 'flex' }}>
+                <div
+                  style={{
+                    marginLeft: '1rem',
+                    fontSize: '18px',
+                  }}
+                >
+                  Google Analytics
+                </div>
+              </div>
+            </ListItem>
+            <ListItem
+              className={
                 active === 'Farm Profiles'
                   ? `${classes.activeitem}`
                   : `${classes.menuitem}`

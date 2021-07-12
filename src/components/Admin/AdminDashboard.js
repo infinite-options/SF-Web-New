@@ -24,6 +24,15 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     borderRadius: '20px',
     width: '260px',
+    minWidth: '260px',
+  },
+  chart: {
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    borderRadius: '20px',
+    width: '800px',
+    margin: '1rem',
   },
   header: {
     textAlign: 'center',
@@ -31,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     letterSpacing: '0.25px',
     color: '#1C6D74',
     opacity: 1,
-    padding: '1rem',
+    padding: '0.5rem',
   },
   upcoming: {
     display: 'flex',
@@ -202,19 +211,23 @@ function AdminDashboard() {
           </Grid>
         </Grid>
         <Typography className={classes.header}>Revenue($ vs time)</Typography>
-        <Grid container spacing={3}>
-          <Grid item>
-            <Paper className={classes.paper}>
+        <Grid container>
+          <Grid item xs={12}>
+            <Paper className={classes.chart}>
               <CustomerRevenue />
             </Paper>
           </Grid>
-          <Grid item>
-            <Paper className={classes.paper}>
+        </Grid>
+        <Grid container>
+          <Grid item xs={12}>
+            <Paper className={classes.chart}>
               <BusinessRevenue />
             </Paper>
           </Grid>
-          <Grid item>
-            <Paper className={classes.paper}>
+        </Grid>
+        <Grid container>
+          <Grid item xs={12}>
+            <Paper className={classes.chart}>
               <ItemRevenue />
             </Paper>
           </Grid>
@@ -222,19 +235,23 @@ function AdminDashboard() {
         <Typography className={classes.header}>
           Analytics(# or $ by customer)
         </Typography>
-        <Grid container spacing={3}>
-          <Grid item>
-            <Paper className={classes.paper}>
+        <Grid container>
+          <Grid item xs={12}>
+            <Paper className={classes.chart}>
               <ItemAnalytics />
             </Paper>
           </Grid>
-          <Grid item>
-            <Paper className={classes.paper}>
+        </Grid>
+        <Grid container>
+          <Grid item xs={12}>
+            <Paper className={classes.chart}>
               <BusinessAnalytics />
             </Paper>
           </Grid>
-          <Grid item>
-            <Paper className={classes.paper}>
+        </Grid>
+        <Grid container>
+          <Grid item xs={12}>
+            <Paper className={classes.chart}>
               <DateAnalytics />
             </Paper>
           </Grid>
