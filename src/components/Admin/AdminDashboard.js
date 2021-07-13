@@ -72,7 +72,8 @@ function AdminDashboard() {
   const [upcomingOrders, setUpcomingOrders] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
-
+  const [newCustomers, setNewCustomers] = useState(0);
+  const [newOrders, setNewOrders] = useState([]);
   useEffect(() => {
     axios
       .get(
@@ -95,6 +96,35 @@ function AdminDashboard() {
         setTotalQuantity(Number(temp_qty));
         setTotalRevenue(Number(temp_rev).toFixed(2));
         setUpcomingOrders(
+          res.data.result.sort(function (a, b) {
+            var textA = a.delivery_first_name.toUpperCase();
+            var textB = b.delivery_first_name.toUpperCase();
+            return textA < textB ? -1 : textA > textB ? 1 : 0;
+          })
+        );
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response);
+        }
+        console.log(err);
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get(
+        'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/new_customer_info'
+      )
+      .then((res) => {
+        let temp_qty = 0;
+
+        console.log(res.data.result);
+        for (const vals of res.data.result) {
+          temp_qty = temp_qty + 1;
+        }
+        console.log('New Customers', temp_qty);
+        setNewCustomers(Number(temp_qty));
+        setNewOrders(
           res.data.result.sort(function (a, b) {
             var textA = a.delivery_first_name.toUpperCase();
             var textB = b.delivery_first_name.toUpperCase();
@@ -185,7 +215,7 @@ function AdminDashboard() {
                 First time customers
               </Typography>
               <Typography className={classes.subheader}>
-                #{totalQuantity}
+                #{newCustomers}
               </Typography>
             </Paper>
           </Grid>
