@@ -45,6 +45,7 @@ const initialState = {
     RT_lat:'',
     RB_long:'',
     RB_lat:'',
+    status:""
   },
   nameSplit: {
     colorValue: '',
@@ -190,6 +191,11 @@ function Zones ({history,...props}) {
 
   const toggleEditZone = (initialZone) => {
     dispatch({ type: 'TOGGLE_EDIT_ZONE', payload: initialZone});
+    // if (state.editedZone.status == "ACTIVE") {
+    //   state.switch_image = switchOn
+    // } else {
+    //   state.switch_image = switchOff
+    // }
   }
 
   const editZone = (property, value) => {
@@ -274,7 +280,7 @@ function Zones ({history,...props}) {
 
       let tempLat = (parseFloat(state.editedZone.LB_lat) + parseFloat(state.editedZone.LT_lat) + parseFloat(state.editedZone.RB_lat) + parseFloat(state.editedZone.RT_lat))/4
       let tempLong = (parseFloat(state.editedZone.LB_long) + parseFloat(state.editedZone.LT_long) + parseFloat(state.editedZone.RB_long) + parseFloat(state.editedZone.RT_long))/4
-      let tempZoom = 13
+      let tempZoom = 12
 
       if (isNaN(tempLat) || isNaN(tempLong)) {
         tempLat = 37.2872
@@ -527,10 +533,10 @@ function Zones ({history,...props}) {
             border: "#1C6D74 solid",
             backgroundColor: "white",
             // height: "900px",
-            width: "20%",
+            width: "30%",
             zIndex:"102",
             borderRadius: "20px",
-            marginTop: "100px"
+            // marginTop: "100px"
           }}>
             <div style = {{width: "96%", margin: "2%"}}>
               <div style={{fontWeight: "bold", marginBottom: "15px"}}>Assign businesses to this zone:</div>
@@ -660,6 +666,14 @@ function Zones ({history,...props}) {
     }
   }
 
+  const setSwitchImage = () => {
+    if (state.editedZone.status == "ACTIVE") {
+      state.switch_image = switchOn
+    } else {
+      state.switch_image = switchOff
+    }
+  }
+
   return (
     <div style={{backgroundColor: '#BCCDCE', height: "1000px", paddingTop: "30px"}}>
       {getAllBusinesses()}
@@ -721,20 +735,28 @@ function Zones ({history,...props}) {
                   console.log(state.zones[e.target.value])
                   // console.log(state.editedZone.z_businesses)
                   // splitZoneName()
+                  
                 }}
               >
                 {createDropdownZones()}
               </select>
+
+              {setSwitchImage()}
+
               <div style={{width: "10%", display: "inline-block", color: "#1C6D74"}}
               >Active:</div>
               <div style={{width: "10%", display: "inline-block"}}
                 onClick={() => {
                   dispatch({ type: 'TOGGLE_ACTIVE', payload: !state.active_zone})
                   console.log(state.active_zone)
-                  if (state.active_zone == true) {
+                  if (state.editedZone.status == "INACTIVE") {
                     state.switch_image = switchOn
+                    state.editedZone.status = "ACTIVE"
+                    console.log(state.editedZone)
                   } else {
                     state.switch_image = switchOff
+                    state.editedZone.status = "INACTIVE"
+                    console.log(state.editedZone)
                   }
                 }}>
                 <img src={state.switch_image}></img>
