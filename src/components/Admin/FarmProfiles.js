@@ -10,7 +10,9 @@ import {
   Avatar,
   Button,
   Paper,
+  TextField
 } from '@material-ui/core';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { AuthContext } from '../../auth/AuthContext';
 import IconButton from '@material-ui/core/IconButton';
 import CustomerSrc from '../../sf-svg-icons/Polygon1.svg';
@@ -243,6 +245,7 @@ function FarmProfiles() {
   let [products, setProducts] = useState([]);
   let [selectedProduct, setSelectedProduct] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [produceDict, setProduceDict] = useState({})
 
 
   const fetchProducts= async (id)=>{
@@ -250,49 +253,47 @@ function FarmProfiles() {
     await axios.get(
       'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/admin_farmer_items/'+id
     ).then(response => {
-      console.log(response.data.result.result);
+      // console.log(response.data.result.result);
       setProducts(response.data.result.result);
       // setbusinessProfile(response.data.result[0]);
       // console.log(businessProfile);
-
+      // console.log(products)
+      const temp_dict = {}
+      response.data.result.result.map((item) => (
+              temp_dict[item.item_uid] = item
+            )
+                
+          )
+  
+        setProduceDict(temp_dict)
+      // console.log("dict is",produceDict)
     })
   }
 
 
-  const handleNameChange=(e)=>{
-    setSelectedProduct({
-      ...selectedProduct,
-      item_name:e.target.value
-    });
-    console.log(selectedProduct);
-  }
-  const handlePriceChange=(e)=>{
-    setSelectedProduct({
-      ...selectedProduct,
-      item_price:e.target.value
-    });
-    console.log(selectedProduct);
-  }
-  const handleStatusChange=(e)=>{
-    setSelectedProduct({
-      ...selectedProduct,
-      item_status:e.target.value
-    });
-    console.log(selectedProduct);
-  }
-  const handleDescChange=(e)=>{
-    setSelectedProduct({
-      ...selectedProduct,
-      item_desc:e.target.value
-    });
-    console.log(selectedProduct);
+
+  
+  const handleProductChange=(e)=>{
+    let val = e.target.value
+    let id = e.target.id
+    let idx = e.target.name
+    // console.log(e.target,idx)
+    let tmpDic = products
+    tmpDic[idx][id] = val
+    setProducts(tmpDic)
+
+    setSelectedProduct(prevState => ({...prevState, [id]: val}));
+    // setProducts(preState => ({}))
+    // console.log(selectedProduct);
   }
   
-  const handleSave=async (id,action )=>{
-    console.log(id,action);
-    console.log(selectedProduct); 
-    await axios.post('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_item_admin/'+action,selectedProduct)
+  
+  const handleSave=(id,action)=>{
+    // console.log(id,action,products[id]);
+    
+    axios.post('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_farmer_item_admin/'+action,products[parseInt(id)])
     .then((response) => {
+      
       setDialogOpen(true)
     })
     .catch((er) => {
@@ -503,35 +504,33 @@ return (
                     <thead>
                       <td className={classes.desc}>Name</td>
                       <td className={classes.desc}>Picture</td>
-                      <td className={classes.desc}>Units</td>
-                      <td className={classes.desc}>Cost Price</td>
-                      <td className={classes.desc}>Item Description</td>
+                      <td className={classes.desc}>Unit</td>
+                      <td className={classes.desc}>Business Price</td>
                       <td className={classes.desc}>Status</td>
-                      <td className={classes.desc}></td>
+                      <td className={classes.desc}>Action</td>
                     </thead>
-                    {products.map((info) => (
+                    {products.map((info,index) => (
                     <tbody key={info.business_uid} >
                       <tr className={classes.infoRow} onClick={()=>setSelectedProduct(info)}>
                         <td className={classes.desc}>
-                         <input id='name' type="text" defaultValue={info.item_name} style={{width:'100px'}} onChange={handleNameChange}/> 
+                        {info.item_name} 
                         </td>
                         <td className={classes.desc}>
                          <img style={{height:'50px'}}src= {info.item_photo}></img>
                         </td>
                         <td className={classes.desc}>
-                         <p style={{height:'50px'}} > {info.item_unit}</p>
+                         {info.item_unit}
                         </td>
                         <td className={classes.desc}>
-                          <input id="price" type="text" defaultValue={info.item_price} style={{width:'30px'}} onChange={handlePriceChange}/></td>
-                        <td className={classes.desc}>
-                           <input type="text" defaultValue={info.item_desc} style={{width:'70px'}} onChange={handleDescChange}/>
+                        <TextField id="business_price"  name = {index} value={info['business_price']} InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}
+                                                style={{width:'50px',textAlign: 'center'}} onChange={handleProductChange}/>
                         </td>
                         <td className={classes.desc}>
-                           <input id="status" type="text" defaultValue={info.item_status} style={{width:'50px'}} onChange={handleStatusChange}/>
+                          <TextField id="item_status" name = {index} value={info['item_status']} style={{width:'60px'}} onChange={handleProductChange}/>
                         </td>
                         <td className={classes.desc}>
-                        <img style={{width:'18px', marginRight:'5px'}} src={save} onClick={()=>handleSave(info.item_uid,"update")} id="update"></img>
-                           <img style={{width:'15px'}} src={del} onClick={()=>handleSave(info.item_uid,"delete")} id="delete"></img>
+                        <img style={{width:'18px', marginRight:'5px'}} src={save} onClick={()=>handleSave(index,"update")} id="update"></img>
+                           <img style={{width:'15px'}} src={del} onClick={()=>handleSave(index,"delete")} id="delete"></img>
                         </td>
                         {/* <td className={classes.desc}>{info.quantity} </td>
                         <td className={classes.desc}>$ {info.total_revenue}</td> */}
