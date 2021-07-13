@@ -9,6 +9,8 @@ import {
 import {withRouter} from "react-router";
 // import AdminNavBar from '../AdminNavBar';
 import styles from "./zones.module.css";
+import switchOn from "./static/Switch Light.svg";
+import switchOff from "./static/Switch - Off.svg";
 
 const API_URL = process.env.REACT_APP_SERVER_BASE_URI;
 const google = window.google;
@@ -50,7 +52,9 @@ const initialState = {
   },
   businesses: [],
   toggleSelectBusiness: false,
-  selectedBusinesses: []
+  selectedBusinesses: [],
+  zone_active: false,
+  switch_image: switchOn
 };
 
 function reducer(state, action) {
@@ -95,6 +99,11 @@ function reducer(state, action) {
         ...state,
         nameSplit: action.payload,
       }
+      case 'TOGGLE_ACTIVE':
+        return {
+          ...state,
+          active_zone: action.payload,
+        }
     default:
       return state;
   }
@@ -620,6 +629,37 @@ function Zones ({history,...props}) {
     
   }
 
+  const activeSwitch = () => {
+    
+    if (state.zone_active == true) {
+      return (
+        <div style={{width: "100%", display: "inline-block"}}
+        // onClick={() => {
+        //   dispatch({ type: 'TOGGLE_ACTIVE', payload: false})
+        //   console.log(state.zone_active)
+        // }}
+        >
+          <img src={switchOn}
+            
+          ></img>
+        </div>
+      )
+    } else {
+      return (
+        <div style={{width: "100%", display: "inline-block"}}
+        // onClick={() => {
+        //   dispatch({ type: 'TOGGLE_ACTIVE', payload: true})
+        //   console.log(state.zone_active)
+        // }}
+        >
+          <img src={switchOff}
+            
+          ></img>
+        </div>
+      )
+    }
+  }
+
   return (
     <div style={{backgroundColor: '#BCCDCE', height: "1000px", paddingTop: "30px"}}>
       {getAllBusinesses()}
@@ -664,26 +704,45 @@ function Zones ({history,...props}) {
 
             {/* NEW CODE */}
 
-            <select
-              style={{width: "98%", margin: "1%", float: "left"}}
-              className={styles.dropdown}
-              onChange={e => {
-                if( e.target.value != -1) {
-                  toggleEditZone(state.zones[e.target.value])
+            <div style={{width: "98%", margin: "1%", height: "20px"}}>
+              <select
+                style={{width: "70%", float: "left"}}
+                className={styles.dropdown}
+                onChange={e => {
+                  if( e.target.value != -1) {
+                    toggleEditZone(state.zones[e.target.value])
+                    console.log(state.zones[e.target.value])
+                  } else {
+                    toggleEditZone(initialState.editedZone)
+                  }
+                  editNameSplit('nameValue','');
+                  editNameSplit('colorValue','');
+                  // toggleEditZone(state.zones[e.target.value])
                   console.log(state.zones[e.target.value])
-                } else {
-                  toggleEditZone(initialState.editedZone)
-                }
-                editNameSplit('nameValue','');
-                editNameSplit('colorValue','');
-                // toggleEditZone(state.zones[e.target.value])
-                console.log(state.zones[e.target.value])
-                // console.log(state.editedZone.z_businesses)
-                // splitZoneName()
-              }}
-            >
-              {createDropdownZones()}
-            </select>
+                  // console.log(state.editedZone.z_businesses)
+                  // splitZoneName()
+                }}
+              >
+                {createDropdownZones()}
+              </select>
+              <div style={{width: "10%", display: "inline-block", color: "#1C6D74"}}
+              >Active:</div>
+              <div style={{width: "10%", display: "inline-block"}}
+                onClick={() => {
+                  dispatch({ type: 'TOGGLE_ACTIVE', payload: !state.active_zone})
+                  console.log(state.active_zone)
+                  if (state.active_zone == true) {
+                    state.switch_image = switchOn
+                  } else {
+                    state.switch_image = switchOff
+                  }
+                }}>
+                <img src={state.switch_image}></img>
+              </div>
+              
+            </div>
+
+           
             {splitZoneName()}
             {/* <div style={{width: "98%", margin: "1%", float: "left"}}>
               <div style={{color: "#1C6D74"}}>Zone Name:</div>
