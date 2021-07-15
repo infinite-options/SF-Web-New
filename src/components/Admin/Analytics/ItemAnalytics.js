@@ -8,7 +8,7 @@ import Box from '@material-ui/core/Box';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { AdminFarmContext } from './AdminFarmContext';
+import { AdminFarmContext } from '../AdminFarmContext';
 
 require('highcharts/modules/exporting')(Highcharts);
 require('highcharts/modules/export-data')(Highcharts);
@@ -35,7 +35,7 @@ const fields = {
 
 // TODO: add dropdown for farms / all and date range / all
 // TODO: Add Date Bar Category
-function Analytics() {
+function ItemAnalytics() {
   const classes = useStyles();
   const { farmList, farmDict } = useContext(AdminFarmContext);
 
@@ -108,7 +108,7 @@ function Analytics() {
       let custName = (
         purchase.delivery_first_name +
         ' ' +
-        purchase.delivery_last_name
+        purchase.delivery_last_name.substring(0, 1)
       ).trim();
       if (custName in custDict) {
         custAmnArr[custAmnDict[custName]].amount +=
@@ -199,9 +199,9 @@ function Analytics() {
   }
 
   const options = {
-    chart: { height: '900px' },
+    chart: { height: '400px' },
     title: {
-      text: 'Customer Analytics',
+      text: 'Customer Analytics (Item)',
       align: 'left',
     },
     exporting: {
@@ -237,7 +237,7 @@ function Analytics() {
       {
         min: 0,
         title: {
-          text: barsType + ' purchase amount',
+          text: 'Item purchase amount',
           style: {
             color: '#f56a79',
           },
@@ -361,20 +361,7 @@ function Analytics() {
             })}
           </Select>
         </FormControl>
-        <FormControl className={classes.formControl}>
-          <FormHelperText>Graph Type</FormHelperText>
-          <Select
-            labelId="demo-controlled-open-select-label"
-            id="demo-controlled-open-select"
-            name="type"
-            value={barsType}
-            onChange={handleChange}
-          >
-            <MenuItem value={fields.item}>Item</MenuItem>
-            <MenuItem value={fields.business}>Business</MenuItem>
-            <MenuItem value={fields.date}>Date</MenuItem>
-          </Select>
-        </FormControl>
+
         <FormControl className={classes.formControl}>
           <FormHelperText>Price Type</FormHelperText>
           <Select
@@ -395,4 +382,4 @@ function Analytics() {
   );
 }
 
-export default Analytics;
+export default ItemAnalytics;
