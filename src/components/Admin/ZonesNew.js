@@ -45,7 +45,7 @@ const initialState = {
     RT_lat:'',
     RB_long:'',
     RB_lat:'',
-    status:""
+    zone_status:"INACTIVE"
   },
   nameSplit: {
     colorValue: '',
@@ -191,11 +191,6 @@ function Zones ({history,...props}) {
 
   const toggleEditZone = (initialZone) => {
     dispatch({ type: 'TOGGLE_EDIT_ZONE', payload: initialZone});
-    // if (state.editedZone.status == "ACTIVE") {
-    //   state.switch_image = switchOn
-    // } else {
-    //   state.switch_image = switchOff
-    // }
   }
 
   const editZone = (property, value) => {
@@ -215,9 +210,36 @@ function Zones ({history,...props}) {
   }
 
   const saveZone = () => {
-    if(state.editedZone.zone_uid === '') {
+    let myObj = {
+      zone_uid: state.editedZone.zone_uid,
+      z_business_uid: state.editedZone.z_business_uid,
+      area: state.editedZone.area,
+      zone: state.editedZone.zone,
+      zone_name: state.editedZone.zone_name,
+      z_businesses: state.editedZone.z_businesses,
+      z_delivery_day: state.editedZone.z_delivery_day,
+      z_delivery_time: state.editedZone.z_delivery_time,
+      z_accepting_day: state.editedZone.z_accepting_day,
+      z_accepting_time: state.editedZone.z_accepting_time,
+      service_fee: state.editedZone.service_fee,
+      delivery_fee: state.editedZone.delivery_fee,
+      tax_rate: state.editedZone.tax_rate,
+      LB_long: state.editedZone.LB_long,
+      LB_lat: state.editedZone.LB_lat,
+      LT_long: state.editedZone.LT_long,
+      LT_lat: state.editedZone.LT_lat,
+      RT_long: state.editedZone.RT_long,
+      RT_lat: state.editedZone.RT_lat,
+      RB_long: state.editedZone.RB_long,
+      RB_lat: state.editedZone.RB_lat,
+      status: state.editedZone.zone_status
+    }
+
+    console.log(myObj)
+
+    if(myObj.zone_uid === '') {
       const newZone = {
-        ...state.editedZone,
+        ...myObj,
         z_business_uid: '200-000001', 
         z_businesses: [],
       }
@@ -239,7 +261,7 @@ function Zones ({history,...props}) {
     } else {
       // Edit current zone
       axios
-        .post(`${API_URL}update_zones/update`,state.editedZone)
+        .post(`${API_URL}update_zones/update`,myObj)
         .then((response) => {
           const zoneIndex = state.zones.findIndex((zone) => zone.zone_uid === state.editedZone.zone_uid);
           const newZones = [...state.zones];
@@ -667,7 +689,7 @@ function Zones ({history,...props}) {
   }
 
   const setSwitchImage = () => {
-    if (state.editedZone.status == "ACTIVE") {
+    if (state.editedZone.zone_status == "ACTIVE") {
       state.switch_image = switchOn
     } else {
       state.switch_image = switchOff
@@ -725,6 +747,7 @@ function Zones ({history,...props}) {
                 onChange={e => {
                   if( e.target.value != -1) {
                     toggleEditZone(state.zones[e.target.value])
+                    //editZone('status', state.editedZone.zone_status)
                     console.log(state.zones[e.target.value])
                   } else {
                     toggleEditZone(initialState.editedZone)
@@ -749,13 +772,13 @@ function Zones ({history,...props}) {
                 onClick={() => {
                   dispatch({ type: 'TOGGLE_ACTIVE', payload: !state.active_zone})
                   console.log(state.active_zone)
-                  if (state.editedZone.status == "INACTIVE") {
+                  if (state.editedZone.zone_status == "INACTIVE") {
                     state.switch_image = switchOn
-                    state.editedZone.status = "ACTIVE"
+                    state.editedZone.zone_status = "ACTIVE"
                     console.log(state.editedZone)
                   } else {
                     state.switch_image = switchOff
-                    state.editedZone.status = "INACTIVE"
+                    state.editedZone.zone_status = "INACTIVE"
                     console.log(state.editedZone)
                   }
                 }}>
