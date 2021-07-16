@@ -3,12 +3,12 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import axios from 'axios';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import Box from '@material-ui/core/Box';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
-import { AdminFarmContext } from './AdminFarmContext';
+import { AdminFarmContext } from '../AdminFarmContext';
 
 require('highcharts/modules/exporting')(Highcharts);
 require('highcharts/modules/export-data')(Highcharts);
@@ -27,15 +27,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const fields = {
-  business: 'deconstruct.itm_business_uid',
-  item: 'deconstruct.name',
-  date: 'purchase_date',
-};
-
 // TODO: add dropdown for farms / all and date range / all
-// TODO: Add Date Bar Category
-function Analytics() {
+function RevenueHighchart() {
   const classes = useStyles();
   const { farmList, farmDict } = useContext(AdminFarmContext);
 
@@ -48,22 +41,66 @@ function Analytics() {
   const [listOfDates, setDates] = useState([]);
   const [listOfBuyers, setListOfBuyers] = useState([]);
   const [listOfNumCateg, setListOfNumCateg] = useState([]);
+  const [listOfCumuRevenue, setCumuRevenue] = useState([]);
+  const [listOfDailyRevenue, setDailyRevenue] = useState([]);
 
   const [businessID, setBusinessId] = useState('all');
   const [purchasesRes, setPurchasesRes] = useState([]);
 
-  // deconstruct.name is the item name
-  const [barsType, setBarType] = useState(fields.item);
+  const [barsType, setBarType] = useState('deconstruct.itm_business_uid');
   const [priceType, setPriceType] = useState('item');
+
+  const [months] = useState([
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]);
+  const [datemonths] = useState({
+    Jan: '2021-01-01,2021-01-31',
+    Feb: '2021-02-01,2021-02-28',
+    Mar: '2021-03-01,2021-03-31',
+    Apr: '2021-04-01,2021-04-30',
+    May: '2021-05-01,2021-05-31',
+    Jun: '2021-06-01,2021-06-30',
+    Jul: '2021-07-01,2021-07-31',
+    Aug: '2021-08-01,2021-08-31',
+    Sep: '2021-09-01,2021-09-30',
+    Oct: '2021-10-01,2021-10-31',
+    Nov: '2021-11-01,2021-11-30',
+    Dec: '2021-12-01,2021-12-31',
+  });
+  const [selectedMonth, setSelectedMonth] = useState('Jan');
+  const [reportLink, setReportLink] = useState(
+    ' https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farmer_revenue_inventory_report_all_month/summary,' +
+      datemonths['Jan']
+  );
 
   const handleChange = (event) => {
     const { value, name } = event.target;
     if (name === 'type') setBarType(value);
     else if (name === 'business') setBusinessId(value);
     else if (name === 'price') setPriceType(value);
+    else if (name === 'month') {
+      setSelectedMonth(value);
+      setReportLink(
+        ' https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farmer_revenue_inventory_report_all_month/summary,' +
+          datemonths[value]
+      );
+    }
+  };
+  const onReportClick = () => {
+    return <a href={reportLink} target="_blank" rel="noreferrer"></a>;
   };
 
-  // TODO: Configure number of purchases field
   // TODO: First need to get all the dates that has customer activities, sort them
   // TODO: Get code from Allan
   // DONE: 1. Add business
@@ -71,10 +108,6 @@ function Analytics() {
   // DONE: 3. Add businesses pull down
   // TODO: 4. Add numbers to top
   // TODO: 5. Add Date ranges
-  // const newCustomers = [3, 1, 1, 0, 5, 3];
-  // const returnCustomers = [2, 3, 4, 1, 3, 1];
-  // const cumulativeProfit = [10, 29, 54, 57, 99, 115];
-  // const dailyRevenue = [10, 19, 25, 3, 42, 16];
 
   useEffect(() => {
     axios
@@ -89,88 +122,71 @@ function Analytics() {
   }, [businessID]);
 
   useEffect(() => {
+    let isMounted = true; // note this flag denote mount status
     if (purchasesRes.length > 0 || businessID !== 'all')
-      loadSeriesData(purchasesRes);
+      loadSeriesData(purchasesRes, isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [farmDict, barsType, priceType, purchasesRes]);
 
-  function loadSeriesData(res) {
+  function loadSeriesData(res, isMounted) {
     let theData = res;
     setChartData(theData);
     console.log(theData);
 
     //todo: get list of dates
-    let custAmnDict = {};
-    let custDict = {};
-    let cIdx = 0;
-    let custAmnArr = [];
-    let custArr = [];
-    theData.map((purchase) => {
-      let custName = (
-        purchase.delivery_first_name +
-        ' ' +
-        purchase.delivery_last_name
-      ).trim();
-      if (custName in custDict) {
-        custAmnArr[custAmnDict[custName]].amount +=
-          purchase[priceType + '_amount'];
-      } else {
-        custAmnArr.push({
-          name: custName,
-          amount: purchase[priceType + '_amount'],
-        });
-        custDict[custName] = [];
-        custAmnDict[custName] = cIdx;
-        cIdx += 1;
+    let dayDict = {};
+    let dayArr = [];
+    theData.map((days) => {
+      let tempDays = days.purchase_date.substring(0, 10);
+      if (!(tempDays in dayDict)) {
+        dayArr.push(tempDays);
+        dayDict[tempDays] = [];
       }
-      custDict[custName].push(purchase);
+      dayDict[tempDays].push(days);
     });
-    custAmnArr.sort(function (a, b) {
-      a = a.amount;
-      b = b.amount;
+    dayArr.sort(function (a, b) {
+      a = a.split('-').join('');
+      b = b.split('-').join('');
       return a > b ? 1 : a < b ? -1 : 0;
       // return a.localeCompare(b);         // <-- alternative
     });
+    console.log(dayArr); //!comment out
+    setDates(dayArr);
 
-    custArr = custAmnArr.map((customer) => {
-      return customer.name;
-    });
-    setDates(custArr);
-
-    //TODO: after getting all the dates, we get the buyer next
+    //Todo: atfter getting all the dates, we get the buyer next
     //todo (returner or new customers)
     let barDict = {};
-    let purchases = [];
-    let purchaseIdSet = new Set();
-    cIdx = 0;
-    const numPurchases = new Array(custArr.length).fill(0);
-    const nullData = new Array(custArr.length).fill(0);
+    let customers = [];
+    let cIdx = 0;
+    const nullData = new Array(dayArr.length).fill(null);
+    let dailyIncome = new Array(dayArr.length).fill(0);
+    let revenue = new Array(dayArr.length).fill(0);
+    let uniqueBarSets = new Array(dayArr.length).fill(new Set());
     let total = 0;
 
-    for (const custIdx in custArr) {
+    for (const dayIdx in dayArr) {
       let dailyProfit = 0;
-      for (const purchase of custDict[custArr[custIdx]]) {
-        var barValue = purchase[barsType];
+      for (const purchase of dayDict[dayArr[dayIdx]]) {
+        const barValue =
+          barsType === 'customer'
+            ? purchase.delivery_first_name + ' ' + purchase.delivery_last_name
+            : purchase[barsType];
 
-        if (barsType === fields.date) {
-          barValue = barValue.substring(0, 7);
-        }
         const amountSpent =
           Math.round(purchase[priceType + '_amount'] * 100) / 100;
 
         if (barValue in barDict) {
-          purchases[barDict[barValue]].data[custIdx] += amountSpent;
-          purchases[barDict[barValue]].data[custIdx] =
-            Math.round(purchases[barDict[barValue]].data[custIdx] * 100) / 100;
-          if (!purchaseIdSet.has(purchase.purchase_uid)) {
-            numPurchases[custIdx] += 1;
-            purchaseIdSet.add(purchase.purchase_uid);
-          }
+          customers[barDict[barValue]].data[dayIdx] += amountSpent;
+          customers[barDict[barValue]].data[dayIdx] =
+            Math.round(customers[barDict[barValue]].data[dayIdx] * 100) / 100;
         } else {
           barDict[barValue] = cIdx;
-          const barData = {
+          const customerData = {
             type: 'column',
-            name: barsType === fields.business ? farmDict[barValue] : barValue,
-            showInLegend: barsType === fields.item ? false : true,
+            name: barValue,
+            showInLegend: false,
             data: [...nullData],
             tooltip: {
               pointFormat:
@@ -178,30 +194,41 @@ function Analytics() {
             },
             yAxis: 0,
           };
-          barData.data[custIdx] = amountSpent;
-          purchases.push(barData);
+          customerData.data[dayIdx] = amountSpent;
+          customers.push(customerData);
           cIdx += 1;
-          if (!purchaseIdSet.has(purchase.purchase_uid)) {
-            numPurchases[custIdx] += 1;
-            purchaseIdSet.add(purchase.purchase_uid);
-          }
         }
         dailyProfit += amountSpent;
         dailyProfit = Math.round(dailyProfit * 100) / 100;
+        if (uniqueBarSets[dayIdx].size == 0) uniqueBarSets[dayIdx] = new Set();
+        uniqueBarSets[dayIdx].add(barValue);
       }
+
+      total += dailyProfit;
+      total = Math.round(total * 100) / 100;
+      dailyIncome[dayIdx] = dailyProfit;
+      revenue[dayIdx] = total;
     }
 
-    setListOfBuyers(purchases);
-    setListOfNumCateg(numPurchases);
+    const uniqueBarVals = uniqueBarSets.map((set) => {
+      return set.size;
+    });
+
+    if (isMounted) {
+      setListOfNumCateg(uniqueBarVals);
+      setListOfBuyers(customers);
+      setCumuRevenue(revenue);
+      setDailyRevenue(dailyIncome);
+    }
     // console.log("buyerContainer ", buyerContainer);
     // console.log("retuners ", oldCustomer);
     // console.log("NewBuyer ", newCustomer);
   }
 
   const options = {
-    chart: { height: '900px' },
+    chart: { height: '400px' },
     title: {
-      text: 'Customer Analytics',
+      text: 'Revenue Analysis (Business)',
       align: 'left',
     },
     exporting: {
@@ -224,7 +251,7 @@ function Analytics() {
     xAxis: [
       {
         title: {
-          text: 'Customer',
+          text: 'Date',
           style: {
             color: 'gray',
           },
@@ -237,7 +264,7 @@ function Analytics() {
       {
         min: 0,
         title: {
-          text: barsType + ' purchase amount',
+          text: 'Business purchase amount',
           style: {
             color: '#f56a79',
           },
@@ -247,7 +274,27 @@ function Analytics() {
       {
         min: 0,
         title: {
-          text: 'Number of purchases',
+          text: 'Daily Revenue ($)',
+          style: {
+            color: '#f08a5d',
+          },
+        },
+        opposite: true,
+      },
+      {
+        min: 0,
+        title: {
+          text: 'Cumulative Revenue ($)',
+          style: {
+            color: '#32e0c4',
+          },
+        },
+        opposite: true,
+      },
+      {
+        min: 0,
+        title: {
+          text: 'Number of Businesses',
           style: {
             color: '#000',
           },
@@ -255,8 +302,7 @@ function Analytics() {
         stackLabels: {
           enabled: true,
           style: {
-            fontWeight: 'bold',
-            color: 'black',
+            color: '#000',
           },
         },
         opposite: true,
@@ -266,11 +312,11 @@ function Analytics() {
     //     shared: true
     // },
     legend: {
-      layout: 'horizontal',
+      layout: 'vertical',
       align: 'left',
       x: 80,
       verticalAlign: 'top',
-      y: 10,
+      y: 55,
       floating: true,
       backgroundColor:
         Highcharts.defaultOptions.legend.backgroundColor || // theme
@@ -287,14 +333,32 @@ function Analytics() {
     series: [
       ...listOfBuyers,
       {
+        type: 'spline',
+        name: 'Cumulative Revenue',
+        showInLegend: false,
+        data: listOfCumuRevenue,
+        tooltip: {
+          pointFormat: '{series.name}: <b>{point.y}</b><br/>',
+        },
+        yAxis: 2,
+      },
+      {
+        type: 'spline',
+        name: 'Daily Revenue',
+        showInLegend: false,
+        data: listOfDailyRevenue,
+
+        yAxis: 1,
+      },
+      {
         type: 'scatter',
-        name: 'Number of purchases',
+        name: 'Number of Businesses',
         showInLegend: false,
         data: listOfNumCateg,
         tooltip: {
           pointFormat: '{series.name}: <b>{point.y}</b><br/>',
         },
-        yAxis: 1,
+        yAxis: 3,
       },
     ],
     responsive: {
@@ -339,6 +403,11 @@ function Analytics() {
     },
   };
 
+  const onChange =
+    (title) =>
+    (...args) =>
+      console.log(title, args);
+
   return (
     <>
       <Box display="flex" justifyContent="center">
@@ -361,20 +430,7 @@ function Analytics() {
             })}
           </Select>
         </FormControl>
-        <FormControl className={classes.formControl}>
-          <FormHelperText>Graph Type</FormHelperText>
-          <Select
-            labelId="demo-controlled-open-select-label"
-            id="demo-controlled-open-select"
-            name="type"
-            value={barsType}
-            onChange={handleChange}
-          >
-            <MenuItem value={fields.item}>Item</MenuItem>
-            <MenuItem value={fields.business}>Business</MenuItem>
-            <MenuItem value={fields.date}>Date</MenuItem>
-          </Select>
-        </FormControl>
+
         <FormControl className={classes.formControl}>
           <FormHelperText>Price Type</FormHelperText>
           <Select
@@ -389,10 +445,37 @@ function Analytics() {
             <MenuItem value={'business'}>Business</MenuItem>
           </Select>
         </FormControl>
+        <Box display="flex" marginLeft="100px" justify-content="center">
+          <FormControl className={classes.formControl}>
+            <FormHelperText>Month</FormHelperText>
+            <Select
+              labelId="demo-controlled-open-select-label"
+              id="demo-controlled-open-select"
+              name="month"
+              value={selectedMonth}
+              onChange={handleChange}
+            >
+              {months.map((month) => {
+                return (
+                  <MenuItem key={month} value={month}>
+                    {month}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+
+          <a href={reportLink} style={{ textDecoration: 'none' }}>
+            <button style={{ marginTop: '25px' }}>
+              Generate Revenue Report
+            </button>
+          </a>
+        </Box>
       </Box>
+
       <HighchartsReact highcharts={Highcharts} options={options} />
     </>
   );
 }
 
-export default Analytics;
+export default RevenueHighchart;

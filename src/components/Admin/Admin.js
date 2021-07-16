@@ -13,14 +13,14 @@ import FarmerSettings from '../Farm/FarmerSettings';
 import FarmProfiles from './FarmProfiles';
 import FarmOrders from './FarmOrders';
 import AdminItems from './Produce/AdminItems';
-import Customers from './Customers/Customers';
+import Customers from './Customers';
 import OrderSummary from './OrderSummary';
 import AdminMenu from './AdminMenu';
 import Notifications from '../Farm/Notifications';
 import Analytics from './Analytics';
 import RevenueHighchart from './HighchartTemplate';
 import ReactGA from 'react-ga';
-import Zones from './Zones';
+import Zones from './ZonesNew';
 import PriceCompare from './Price_Compare/PriceCompare';
 //within this admin page, we need ability to display any farmer page
 //the option to select which farm to view is in AdminNavBar
