@@ -350,12 +350,12 @@ function OrderSummary() {
                       <td className={classes.usrTitle}></td>
                       <td className={classes.usrTitle}></td>
                       <td className={classes.usrTitle}></td>
-                      <td className={classes.usrTitle}></td>
-                      <td className={classes.usrTitle}></td>
-                      <td className={classes.usrTitle}></td>
-                      <td className={classes.usrTitle}></td>
-                      <td className={classes.usrTitle}></td>
                       <td className={classes.usrTitle}>#{totalQuantity}</td>
+                      <td className={classes.usrTitle}></td>
+                      <td className={classes.usrTitle}></td>
+                      <td className={classes.usrTitle}></td>
+                      <td className={classes.usrTitle}></td>
+                      <td className={classes.usrTitle}></td>
                       <td className={classes.usrTitle}>${totalRevenue}</td>
                       <td className={classes.usrTitle}>${totalProfit}</td>
                     </tr>
@@ -364,12 +364,12 @@ function OrderSummary() {
                       <td className={classes.usrTitle}>Name</td>
                       <td className={classes.usrTitle}>Picture</td>
                       <td className={classes.usrTitle}>Unit</td>
+                      <td className={classes.usrTitle}>Quantity</td>
                       <td className={classes.usrTitle}>Farm Name </td>
                       <td className={classes.usrTitle}>Suppliers</td>
                       <td className={classes.usrTitle}>Cost Price</td>
                       <td className={classes.usrTitle}>Sales Price</td>
                       <td className={classes.usrTitle}>Profit</td>
-                      <td className={classes.usrTitle}>Quantity</td>
                       <td className={classes.usrTitle}>Total Revenue</td>
                       <td className={classes.usrTitle}>Total Profit</td>
                     </tr>
@@ -383,6 +383,7 @@ function OrderSummary() {
                           </img>
                         </td>
                         <td className={classes.usrDesc}>{orderVal.unit}</td>
+                        <td className={classes.usrDesc}>{Number(orderVal.quantity).toFixed(2)}</td>
                         <td className={classes.usrDesc}>
 
                           <select style={{border:'0px',textAlign:'center',width:"auto"}} onChange={handleChangeFarm}>
@@ -432,7 +433,6 @@ function OrderSummary() {
                         <td className={classes.usrDesc}>${Number(orderVal.business_price).toFixed(2)}</td>
                         <td className={classes.usrDesc}>${Number(orderVal.price).toFixed(2)}</td>
                         <td className = {Number(orderVal.profit)>=0? classes.posProfit:classes.negProfit} >{Number(orderVal.profit)>=0?"":"-"}${Number(orderVal.profit).toFixed(2)}</td>
-                        <td className={classes.usrDesc}>{Number(orderVal.quantity).toFixed(2)}</td>
                         <td className={classes.usrDesc}>${Number(orderVal.total_revenue).toFixed(2)}</td>
                         <td className={classes.usrDesc}>${Number(orderVal.total_profit).toFixed(2)}</td>
                       </tr>
