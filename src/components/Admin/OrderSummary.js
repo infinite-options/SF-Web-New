@@ -10,8 +10,7 @@ import Button from "@material-ui/core/Button";
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import moment from 'moment';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -119,7 +118,20 @@ function OrderSummary() {
   const [open, setOpen] = useState(false);
   const [farm, setFarm] = useState();
   const [produce, setProduce] = useState();
-  const [deliveryDate, setDeliveryDate] = useState(() => { return (moment().clone().add(1, 'weeks').startOf('week').format('YYYY-MM-DD')) })
+  
+  const [deliveryDate, setDeliveryDate] = useState(() => { 
+    let currDate = moment().format('YYYY-MM-DD')
+    let wedDate = moment().isoWeekday(3).format('YYYY-MM-DD')
+    let sunDate = moment().clone().add(1, 'weeks').startOf('week').format('YYYY-MM-DD')
+    let resDate = ''
+    if (currDate > wedDate){
+      resDate = sunDate
+    }  
+    else{
+      resDate = wedDate
+    }
+    return (resDate) 
+  })
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalProfit, setTotalProfit] = useState(0);
