@@ -189,7 +189,7 @@ function AdminDashboard() {
                       <Box>
                         <Box alignItems="center" justifyContent="center">
                           <Typography className={classes.upcoming}>
-                            {info.delivery_first_name}
+                            {info.delivery_first_name}&nbsp;
                             {info.delivery_last_name}
                           </Typography>
                         </Box>

@@ -1,25 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-// import { Grid, Typography } from '@material-ui/core';
-import moment from 'moment';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
   Grid,
-  Typography,
   Box,
-  Avatar,
   Button,
-  Paper,
   TextField,
   Link,
   FormControl,
-  FormLabel,
+  Radio,
 } from '@material-ui/core';
-
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { RadioGroup } from '@material-ui/core';
 import { AdminFarmContext } from './AdminFarmContext';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -33,7 +25,6 @@ import IconButton from '@material-ui/core/IconButton';
 import CustomerSrc from '../../sf-svg-icons/Polygon1.svg';
 import Popover from '@material-ui/core/Popover';
 import appColors from '../../styles/AppColors';
-import { Radio } from '@material-ui/icons';
 import save from '../icon/save.png';
 import del from '../icon/delete.png';
 import Dialog from '@material-ui/core/Dialog';
@@ -41,7 +32,21 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-
+import blankImg from '../../images/blank_img.svg';
+import styles from './farmprofile.module.css';
+const BUSINESS_DETAILS_URL =
+  'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_details_update/';
+const API_URL =
+  'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/';
+const GreenRadio = withStyles({
+  root: {
+    color: appColors.primary,
+    '&$checked': {
+      color: appColors.primary,
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -95,12 +100,13 @@ const useStyles = makeStyles((theme) => ({
     letterSpacing: '-0.34px',
     color: '#000000',
     opacity: 1,
+    padding: '3px',
   },
   profileInput: {
-    width: '200px',
+    width: '250px',
     background: '#FFFFFF 0% 0% no-repeat padding-box',
     border: '1px solid #747474',
-    padding: '5px',
+    padding: '3px',
   },
   profileData: {
     textAlign: 'left',
@@ -108,6 +114,7 @@ const useStyles = makeStyles((theme) => ({
     letterSpacing: '-0.34px',
     color: '#000000D9',
     opacity: 1,
+    textTransform: 'none',
   },
 }));
 
@@ -151,27 +158,55 @@ function fetchBusinessInfo(setselectedBusiness, id, setProfit1) {
       console.error(error);
     });
 }
-
+function fetchDeliveryDetails(setDeliveryDetails, id) {
+  fetch(
+    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_delivery_details/` +
+      id,
+    {
+      method: 'GET',
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json();
+    })
+    .then((json) => {
+      const deliveryDetails = json.result;
+      setDeliveryDetails(deliveryDetails);
+      console.log('Delivery Details:', deliveryDetails);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
 function FarmProfiles() {
   const classes = useStyles();
   const context = useContext(AdminFarmContext);
   const Auth = useContext(AuthContext);
+  const [settings, setSettings] = useState({});
+  const [error, setError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     farmerObj();
   }, []);
   useEffect(() => {
     fetchProducts();
   }, []);
+
   let [farmerInfo, setfarmerInfo] = useState([]);
   let [busiSelect, setBusiSelect] = useState([]);
   let [SelectedBusiness, setselectedBusiness] = useState([]);
-  let [businessProfile, setbusinessProfile] = useState([]);
   let [profit1, setProfit1] = useState([]);
   let [products, setProducts] = useState([]);
+  let [deliveryDetails, setDeliveryDetails] = useState([]);
+
   let [selectedProduct, setSelectedProduct] = useState({});
   const [confirmPass, setConfirmPass] = useState('');
   const [saltPack, setSaltPack] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [produceDict, setProduceDict] = useState({});
   //use this state below to set up information of middle column
   const [businessAndFarmDetail, setBusFarm] = useState({});
@@ -182,86 +217,13 @@ function FarmProfiles() {
   // const [image,setImage]=useState({});
   const [imageUpload, setImageUpload] = useState({
     file: null,
-    path: businessProfile.business_image,
+    path: settings ? settings.business_image : settings.business_image,
   });
   // Regular Hours for Business
   const [regularHours, setRegularHours] = useState([]);
   const [acceptTime, setAcceptTime] = useState(context.timeChange);
   const [deliveryTime, setDeliveryTime] = useState(context.deliveryTime);
-
-  useEffect(() => {
-    console.log(imageUpload);
-  }, [imageUpload]);
-  useEffect(() => {
-    if (businessProfile) {
-      setImageUpload({
-        file: null,
-        path: businessProfile.business_image,
-      });
-      console.log('test log the email: ', businessProfile.business_email);
-      if (businessProfile.business_email === undefined) {
-        console.log('true undifined');
-      }
-      var objEmail = {
-        email: businessProfile.business_email,
-      };
-      objEmail = JSON.stringify(objEmail);
-      axios
-        .post(
-          'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/AccountSalt',
-          objEmail
-        )
-        .then((response) => {
-          // console.log(response);
-          // console.log("New Test",response.data.code);
-          if (response.data.code === 280) {
-            let hashAlg = response.data.result[0].password_algorithm;
-            let salt = response.data.result[0].password_salt;
-            if (hashAlg !== null && salt !== null) {
-              if (hashAlg !== '' && salt !== '') {
-                switch (hashAlg) {
-                  case 'SHA512':
-                    hashAlg = 'SHA-512';
-                    break;
-                  default:
-                    console.log('display default falling into');
-                    break;
-                }
-                let newObj = {
-                  hashAlg: hashAlg,
-                  salt: salt,
-                };
-                setSaltPack(newObj);
-              }
-            }
-          }
-        });
-    }
-  }, [businessProfile]);
-
-  //get items for each farm
-  const fetchProducts = async (id) => {
-    setProducts([]);
-    await axios
-      .get(
-        'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/admin_farmer_items/' +
-          id
-      )
-      .then((response) => {
-        // console.log(response.data.result.result);
-        setProducts(response.data.result.result);
-        // setbusinessProfile(response.data.result[0]);
-        // console.log(businessProfile);
-        // console.log(products)
-        const temp_dict = {};
-        response.data.result.result.map(
-          (item) => (temp_dict[item.item_uid] = item)
-        );
-
-        setProduceDict(temp_dict);
-        // console.log("dict is",produceDict)
-      });
-  };
+  const [farmerID, setFarmerID] = useState([]);
 
   const handleImgChange = (e) => {
     if (e.target.files > 0)
@@ -285,26 +247,6 @@ function FarmProfiles() {
     // setProducts(preState => ({}))
     // console.log(selectedProduct);
   };
-  const handleChange = (event) => {
-    if (event.target.name === 'phone') {
-      let holdNumber = event.target.value;
-      let createCorrectFormat = holdNumber;
-      setBusFarm({
-        ...businessAndFarmDetail,
-        [event.target.name]: createCorrectFormat,
-      });
-    } else if (event.target.name === 'password') {
-      setPass(event.target.value);
-    } else if (event.target.name === 'passwordConfirm') {
-      setConfirmPass(event.target.value);
-    } else if (event.target.name === 'email') {
-    } else {
-      setBusFarm({
-        ...businessAndFarmDetail,
-        [event.target.name]: event.target.value,
-      });
-    }
-  };
   //farm item update
   const handleSave = (id, action) => {
     // console.log(id,action,products[id]);
@@ -322,8 +264,31 @@ function FarmProfiles() {
         console.log(er);
       });
   };
+
+  useEffect(() => {
+    console.log(imageUpload);
+  }, [imageUpload]);
+
+  //get items for each farm
+  const fetchProducts = async (id) => {
+    setProducts([]);
+    await axios
+      .get(
+        'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/admin_farmer_items/' +
+          id
+      )
+      .then((response) => {
+        setProducts(response.data.result.result);
+        const temp_dict = {};
+        response.data.result.result.map(
+          (item) => (temp_dict[item.item_uid] = item)
+        );
+        setProduceDict(temp_dict);
+      });
+  };
+
   async function update() {
-    var tempoData = { ...businessProfile };
+    var tempoData = { ...settings };
 
     tempoData.business_name = businessAndFarmDetail.business_name;
     tempoData.business_desc = businessAndFarmDetail.description;
@@ -397,38 +362,32 @@ function FarmProfiles() {
       )
       .then((res) => {
         console.log('success posting check password: ', res);
+        setSaveDialogOpen(true);
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-  //farmProfile update
-  const fetchFarmProfile = async (id) => {
-    await axios
-      .post(
-        'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_details_update/Get',
-        { business_uid: id }
-      )
-      .then((response) => {
-        console.log(response.data.result[0]);
-        setbusinessProfile(response.data.result[0]);
-        console.log(businessProfile);
+  const handleChange = (event) => {
+    if (event.target.name === 'phone') {
+      let holdNumber = event.target.value;
+      let createCorrectFormat = holdNumber;
+      setBusFarm({
+        ...businessAndFarmDetail,
+        [event.target.name]: createCorrectFormat,
       });
-
-    //   if (!response.ok) {
-    //     throw response;
-    //   }
-
-    //   return response.json();
-    // })
-    // .then((json) => {
-    //   console.log(json);
-
-    // })
-    // .catch((error) => {
-    //   console.error(error);
-    // })
+    } else if (event.target.name === 'password') {
+      setPass(event.target.value);
+    } else if (event.target.name === 'passwordConfirm') {
+      setConfirmPass(event.target.value);
+    } else if (event.target.name === 'email') {
+    } else {
+      setBusFarm({
+        ...businessAndFarmDetail,
+        [event.target.name]: event.target.value,
+      });
+    }
   };
 
   const [deliverStrategy, setDeliveryStrategy] = useState({
@@ -493,13 +452,143 @@ function FarmProfiles() {
       };
     }
     setDeliveryStrategy(newDeliveryObj);
+    console.log(newDeliveryObj);
   };
-
-  /*  useEffect(() => {
-    fetchFarmProfile();
+  useEffect(() => {
+    getFarmSettings();
     // getSaltPassword();
-  }, [farmID]); */
-  //farmerInfo
+  }, [farmerID]);
+
+  useEffect(() => {
+    if (settings) {
+      setImageUpload({
+        file: null,
+        path: settings.business_image,
+      });
+      console.log('test log the email: ', settings.business_email);
+      if (settings.business_email === undefined) {
+        console.log('true undifined');
+      }
+      var objEmail = {
+        email: settings.business_email,
+      };
+      objEmail = JSON.stringify(objEmail);
+      axios.post(API_URL + 'AccountSalt', objEmail).then((response) => {
+        if (response.data.code === 280) {
+          let hashAlg = response.data.result[0].password_algorithm;
+          let salt = response.data.result[0].password_salt;
+          if (hashAlg !== null && salt !== null) {
+            if (hashAlg !== '' && salt !== '') {
+              switch (hashAlg) {
+                case 'SHA512':
+                  hashAlg = 'SHA-512';
+                  break;
+                default:
+                  console.log('display default falling into');
+                  break;
+              }
+              let newObj = {
+                hashAlg: hashAlg,
+                salt: salt,
+              };
+              setSaltPack(newObj);
+            }
+          }
+        }
+      });
+    }
+  }, [settings]);
+
+  const getFarmSettings = () => {
+    axios
+      .post(BUSINESS_DETAILS_URL + 'Get', { business_uid: farmerID })
+      .then((response) => {
+        console.log('Settings:', response.data.result[0]);
+        setSettings(response.data.result[0]);
+        context.setTimeChange(
+          JSON.parse(response.data.result[0].business_accepting_hours)
+        );
+        context.setDeliveryTime(
+          JSON.parse(response.data.result[0].business_delivery_hours)
+        );
+        setRegularHours(JSON.parse(response.data.result[0].business_hours));
+        var holdData = response.data.result[0];
+        // Convert null values to empty string
+        let keys = Object.keys(holdData);
+        for (const key of keys) {
+          if (holdData[key] === null) {
+            holdData[key] = '';
+          }
+        }
+        console.log(holdData);
+        var BusAndFarmObj = {
+          business_name: holdData.business_name,
+          description: holdData.business_desc,
+          businessAssociation: holdData.business_association,
+          firstName: holdData.business_contact_first_name,
+          lastName: holdData.business_contact_last_name,
+          phone: holdData.business_phone_num,
+          email: holdData.business_email,
+          street: holdData.business_address,
+          city: holdData.business_city,
+          state: holdData.business_state,
+          zip: holdData.business_zip,
+          businessLicense: holdData.business_license || '',
+          businessUsdot: holdData.business_USDOT || '',
+          businessEin: holdData.business_EIN || '',
+          businessWaubi: holdData.business_WAUBI || '',
+          businessNotiApprov: holdData.business_notification_approval || '',
+          platformFee: holdData.platform_fee,
+          transactionFee: holdData.transaction_fee,
+          revenueSharing: holdData.revenue_sharing,
+          profitSharing: holdData.profit_sharing,
+          password: holdData.business_password,
+          // madeUpPassword:"test123"
+        };
+        if (holdData.delivery === 0) {
+          setDeliveryStrategy({
+            pickupStatus: true,
+            deliverStatus: false,
+          });
+        } else {
+          setDeliveryStrategy({
+            pickupStatus: false,
+            deliverStatus: true,
+          });
+        }
+
+        if (holdData.can_cancel === 0) {
+          setCancellation({
+            allowCancel: false,
+            noAllowCancel: true,
+          });
+        } else {
+          setCancellation({
+            allowCancel: true,
+            noAllowCancel: false,
+          });
+        }
+
+        if (holdData.reusable === 0) {
+          setStorage({
+            reusable: false,
+            disposable: true,
+          });
+        } else {
+          setStorage({
+            reusable: true,
+            disposable: false,
+          });
+        }
+
+        setBusFarm(BusAndFarmObj);
+        setLoaded(true);
+      })
+      .catch((err) => {
+        console.log(err.response || err);
+        setError(true);
+      });
+  };
   const farmerObj = async () => {
     await axios
       .get(
@@ -513,6 +602,19 @@ function FarmProfiles() {
             var textB = b.business_name.toUpperCase();
             return textA < textB ? -1 : textA > textB ? 1 : 0;
           })
+        );
+        setFarmerID(response.data.result.result[0].business_uid);
+        setBusiSelect(response.data.result.result[0]);
+        fetchBusinessInfo(
+          setselectedBusiness,
+          response.data.result.result[0].business_uid,
+          setProfit1
+        );
+        getFarmSettings(response.data.result.result[0].business_uid);
+        fetchProducts(response.data.result.result[0].business_uid);
+        fetchDeliveryDetails(
+          setDeliveryDetails,
+          response.data.result.result[0].business_uid
         );
       });
   };
@@ -542,14 +644,19 @@ function FarmProfiles() {
                   className={classes.tr}
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
+                    setFarmerID(profile.business_uid);
                     setBusiSelect(profile);
                     fetchBusinessInfo(
                       setselectedBusiness,
                       profile.business_uid,
                       setProfit1
                     );
-                    fetchFarmProfile(profile.business_uid);
+                    getFarmSettings(profile.business_uid);
                     fetchProducts(profile.business_uid);
+                    fetchDeliveryDetails(
+                      setDeliveryDetails,
+                      profile.business_uid
+                    );
                     handleClose();
                   }}
                 >
@@ -640,6 +747,14 @@ function FarmProfiles() {
     { id: 'item_status', label: 'Status' },
     { id: 'update delete', label: 'Action' },
   ];
+
+  const [selectedClient, setSelectedClient] = useState([]);
+
+  function handleChangeZone(event) {
+    setSelectedClient(event.target.value);
+    console.log(event.target.value);
+  }
+
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -665,7 +780,7 @@ function FarmProfiles() {
                   float: 'left',
                   borderRadius: '11px',
                 }}
-                src={busiSelect.business_image}
+                src={imageUpload.path || blankImg}
               ></img>
               <div style={{ float: 'left' }}>
                 <h2
@@ -928,112 +1043,111 @@ function FarmProfiles() {
               </h2>
               <Box
                 style={{
-                  marginLeft: '1rem',
-                  textAlign: 'left',
-                  width: '40%',
-                  float: 'left',
-                }}
-              >
-                <p className={classes.profileHeader}>Business Name</p>
-                <input
-                  type="text"
-                  className={classes.profileInput}
-                  defaultValue={businessProfile.business_name}
-                ></input>
-                <p className={classes.profileHeader}>Description</p>
-                <textarea
-                  className={classes.profileInput}
-                  defaultValue={businessProfile.business_desc}
-                ></textarea>
-                <p className={classes.profileHeader}>Business Rep First Name</p>
-                <input
-                  type="text"
-                  className={classes.profileInput}
-                  defaultValue={businessProfile.business_contact_first_name}
-                ></input>
-                <p className={classes.profileHeader}>Business Rep Last Name</p>
-                <input
-                  type="text"
-                  className={classes.profileInput}
-                  defaultValue={businessProfile.business_contact_last_name}
-                ></input>
-                <p className={classes.profileHeader}>
-                  Business Rep Phone Number
-                </p>
-                <input
-                  type="text"
-                  className={classes.profileInput}
-                  defaultValue={businessProfile.business_phone_num}
-                ></input>
-
-                <h3>Farm Details</h3>
-                <hr></hr>
-                <p className={classes.profileHeader}>Street</p>
-                <input
-                  type="text"
-                  className={classes.profileInput}
-                  defaultValue={businessProfile.business_address}
-                ></input>
-                <p className={classes.profileHeader}>Farm City</p>
-                <input
-                  type="text"
-                  defaultValue={businessProfile.business_city}
-                ></input>
-                <p className={classes.profileHeader}>State</p>
-                <input
-                  type="text"
-                  className={classes.profileInput}
-                  defaultValue={businessProfile.business_state}
-                ></input>
-                <p className={classes.profileHeader}>Zip</p>
-                <input
-                  type="text"
-                  className={classes.profileInput}
-                  defaultValue={businessProfile.business_zip}
-                ></input>
-                {/* <div>
-                  <p>Description</p>
-                <textarea  defaultValue={businessProfile.business_desc}></textarea>
-                </div>
-                <div>
-                  <p>Business Rep First Name</p>
-                <input type="text" defaultValue={businessProfile.business_contact_first_name}></input>
-                </div>
-                <div>
-                  <p>Business Rep Last Name</p>
-                <input type="text" defaultValue={businessProfile.business_contact_last_name}></input>
-                </div>
-                <div>
-                  <p>Business Rep Phone Number</p>
-                <input type="text" defaultValue={businessProfile.business_phone_num}></input>
-                </div>
-                <h3>Farm Details</h3>
-                <div>
-                  <p>Street</p>
-                <input type="text" defaultValue={businessProfile.business_address}></input>
-                </div>
-                <div>
-                  <p>Farm City</p>
-                <input type="text" defaultValue={businessProfile.business_city}></input>
-                </div>
-                <div>
-                  <div style={{float:'left' ,marginRight:'10px'}}>
-                  <p>State</p>
-                <input type="text" defaultValue={businessProfile.business_state}></input>
-                </div>
-                <div style={{float:'left'}}>
-                  <p>Zip</p>
-                <input type="text" defaultValue={businessProfile.business_zip}></input>
-                </div>
-                </div> */}
-              </Box>
-              <Box
-                style={{
                   textAlign: 'left',
                   width: '50%',
                   float: 'left',
+                }}
+              >
+                <div className={classes.profileHeader}>Business Name</div>
+                <TextField
+                  value={businessAndFarmDetail.business_name}
+                  className={classes.profileInput}
+                  InputProps={{ disableUnderline: true }}
+                  name="business_name"
+                  onChange={handleChange}
+                />
+                <div className={classes.profileHeader}>Description</div>
+                <TextField
+                  value={businessAndFarmDetail.description}
+                  className={classes.profileInput}
+                  name="description"
+                  multiline="true"
+                  InputProps={{ disableUnderline: true }}
+                  onChange={handleChange}
+                />
+                <div className={classes.profileHeader}>
+                  Business Rep First Name
+                </div>
+                <TextField
+                  value={businessAndFarmDetail.firstName}
+                  className={classes.profileInput}
+                  name="firstName"
+                  InputProps={{ disableUnderline: true }}
+                  onChange={handleChange}
+                />
+                <div className={classes.profileHeader}>
+                  Business Rep Last Name
+                </div>
+                <TextField
+                  value={businessAndFarmDetail.lastName}
+                  className={classes.profileInput}
+                  name="lastName"
+                  InputProps={{ disableUnderline: true }}
+                  onChange={handleChange}
+                />
+                <div className={classes.profileHeader}>
+                  Business Rep Phone Number
+                </div>
+                <TextField
+                  value={businessAndFarmDetail.phone}
+                  className={classes.profileInput}
+                  name="phone"
+                  InputProps={{ disableUnderline: true }}
+                  onChange={handleChange}
+                />
+
+                <h3>Farm Details</h3>
+                <hr></hr>
+                <div className={classes.profileHeader}>Street</div>
+                <TextField
+                  value={businessAndFarmDetail.street}
+                  className={classes.profileInput}
+                  name="street"
+                  InputProps={{ disableUnderline: true }}
+                  onChange={handleChange}
+                />
+                <div className={classes.profileHeader}>Farm City</div>
+                <TextField
+                  value={businessAndFarmDetail.city}
+                  className={classes.profileInput}
+                  name="city"
+                  InputProps={{ disableUnderline: true }}
+                  onChange={handleChange}
+                />
+                <Box display="flex">
+                  <div className={classes.profileHeader}>
+                    State
+                    <TextField
+                      value={businessAndFarmDetail.state}
+                      className={classes.profileInput}
+                      name="state"
+                      InputProps={{ disableUnderline: true }}
+                      onChange={handleChange}
+                      style={{ width: '115px' }}
+                    />
+                  </div>
+                  <div className={classes.profileHeader}>
+                    Zip
+                    <TextField
+                      value={businessAndFarmDetail.zip}
+                      className={classes.profileInput}
+                      name="zip"
+                      InputProps={{ disableUnderline: true }}
+                      style={{ width: '115px', marginRight: '20px' }}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </Box>
+              </Box>
+              <Box
+                display="flex"
+                flexDirection="column"
+                style={{
+                  textAlign: 'left',
+                  width: '45%',
+                  float: 'left',
                   borderLeft: '1px solid #F5841F',
-                  padding: '1rem',
+                  paddingLeft: '1rem',
                 }}
               >
                 <Box
@@ -1044,7 +1158,7 @@ function FarmProfiles() {
                   }}
                 >
                   <img
-                    src={busiSelect.business_image}
+                    src={imageUpload.path || blankImg}
                     style={{
                       width: '163px',
                       height: '163px',
@@ -1075,34 +1189,191 @@ function FarmProfiles() {
                     />
                   </Link>
                 </Box>
-                <h3 className={classes.profileHeader}>Delivery Zones</h3>
-                <select></select>
-                <h3 style={{ color: '#F5841F' }}>Add a Zone</h3>
+                <Box>
+                  <h3 className={classes.profileHeader}>Delivery Zones</h3>
+                  <select
+                    onChange={handleChangeZone}
+                    className={styles.dropdown}
+                    style={{
+                      maxWidth: '98%',
+                      margin: '1%',
+                      float: 'left',
+                      borderStyle: 'solid',
+                      borderWidth: '1px',
+                      borderColor: '#CED4DA',
+                      borderRadius: '.25rem',
+                      padding: '.375rem .75rem',
+                      color: '#495057',
+                      height: 'calc(1.5em + .75rem + 2px)',
+                      lineHeight: '1.5',
+                      fontSize: '1rem',
+                      fontWeight: '400',
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {deliveryDetails.map((item, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={item.zone_name}
+                          onChange={handleChangeZone}
+                        >
+                          {item.zone_name.substring(
+                            item.zone_name.lastIndexOf('-') + 1
+                          )}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </Box>
+
+                <Box
+                  display="flex"
+                  justifyContent="start"
+                  style={{
+                    verticalAlign: 'middle',
+                  }}
+                >
+                  <h3 style={{ color: '#F5841F' }}>Add a Zone</h3>
+                  <img
+                    src="/add.png"
+                    id="newProduce"
+                    height="20"
+                    width="20"
+                    style={{
+                      marginLeft: '10px',
+                      cursor: 'pointer',
+                      paddingTop: '20px',
+                    }}
+                  />
+                </Box>
+
                 <p className={classes.profileHeader}>Days of Delivery</p>
-                <p className={classes.profileData}>Wednesday (10am to 1pm)</p>
-                <p className={classes.profileData}>Saturday (10 am to 1pm)</p>
-                <p className={classes.profileHeader}>Delivery Strategy</p>
-                {/*  <input type="radio" className={classes.profileData} />
-                Pickup at Farmer’s Market <br />
-                <input type="radio" className={classes.profileData} />
-                Deliver to Customer*/}
-                <p className={classes.profileHeader}>Storage</p>
-                {/* <input type="radio" className={classes.profileData} />
-                Reusble
-                <br />
-                <input type="radio" className={classes.profileData} />
-                Disposable*/}
-                <p className={classes.profileHeader}>Cancellation</p>
-                {/* <input type="radio" className={classes.profileData} />
-                Allow cancellation within ordering hours
-                <br />
-                <input type="radio" className={classes.profileData} />
-                Cancellations not allowed */}
+                {deliveryDetails.map((item, index) => {
+                  return selectedClient === item.zone_name ? (
+                    <p className={classes.profileData}>
+                      {item.z_delivery_day}( {item.z_delivery_time})
+                    </p>
+                  ) : null;
+                })}
+
+                <FormControl component="fieldset">
+                  <p className={classes.profileHeader}>Delivery Strategy</p>
+                  {/* <FormLabel component="legend">Delivery Strategy</FormLabel> */}
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <GreenRadio
+                          checked={deliverStrategy.pickupStatus}
+                          onChange={handleChangeDelivery}
+                          name="pickupStatus"
+                        />
+                      }
+                      label="Pickup at Farmer's Market"
+                    />
+                    <FormControlLabel
+                      control={
+                        <GreenRadio
+                          checked={deliverStrategy.deliverStatus}
+                          onChange={handleChangeDelivery}
+                          name="deliverStatus"
+                        />
+                      }
+                      label="Deliver to Customer"
+                    />
+                  </FormGroup>
+
+                  <FormGroup>
+                    <p className={classes.profileHeader}>Storage</p>
+                    {/* <FormLabel component="legend">Storage</FormLabel> */}
+                    <FormControlLabel
+                      control={
+                        <GreenRadio
+                          checked={storage.reusable}
+                          onChange={handleChangeStorage}
+                          name="reusable"
+                        />
+                      }
+                      label="Reusable"
+                    />
+                    <FormControlLabel
+                      control={
+                        <GreenRadio
+                          checked={storage.disposable}
+                          onChange={handleChangeStorage}
+                          name="disposable"
+                        />
+                      }
+                      label="Disposable"
+                    />
+                  </FormGroup>
+
+                  <FormGroup>
+                    <p className={classes.profileHeader}>Cancellation</p>
+                    {/* <FormLabel component="legend">Cancellation</FormLabel> */}
+                    <FormControlLabel
+                      control={
+                        <GreenRadio
+                          checked={cancellation.allowCancel}
+                          onChange={handleChangeCancel}
+                          name="allowCancel"
+                        />
+                      }
+                      label="Allow cancellation within ordering hours"
+                    />
+                    <FormControlLabel
+                      control={
+                        <GreenRadio
+                          checked={cancellation.noAllowCancel}
+                          onChange={handleChangeCancel}
+                          name="noAllowCancel"
+                        />
+                      }
+                      label="Cancellations not allowed"
+                    />
+                  </FormGroup>
+                </FormControl>
               </Box>
             </Box>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={update}
+              style={{
+                backgroundColor: appColors.primary,
+                color: 'white',
+                height: '30px',
+                marginTop: '35px',
+                marginLeft: '35px',
+                width: '500px',
+              }}
+            >
+              Save Changes
+            </Button>
           </Grid>
         </Grid>
       </Grid>
+
+      <Dialog open={saveDialogOpen} onClose={() => setSaveDialogOpen(false)}>
+        <DialogTitle>{'Successful!!'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Business information has been updated!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setSaveDialogOpen(false)}
+            color="primary"
+            autoFocus
+          >
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogTitle>{'Successful!!'}</DialogTitle>
         <DialogContent>

@@ -235,7 +235,7 @@ function Admin(authLevel, isAuth) {
                 <Zones />
               </Route>
               <Route exact path="/admin/farmprofiles">
-                <FarmProfiles />
+                <FarmProfiles farmID={farmID} />
               </Route>
               <Route exact path="/admin/farmorders">
                 <FarmOrders />
