@@ -657,37 +657,6 @@ function Zones ({history,...props}) {
     
   }
 
-  const activeSwitch = () => {
-    
-    if (state.zone_active == true) {
-      return (
-        <div style={{width: "100%", display: "inline-block"}}
-        // onClick={() => {
-        //   dispatch({ type: 'TOGGLE_ACTIVE', payload: false})
-        //   console.log(state.zone_active)
-        // }}
-        >
-          <img src={switchOn}
-            
-          ></img>
-        </div>
-      )
-    } else {
-      return (
-        <div style={{width: "100%", display: "inline-block"}}
-        // onClick={() => {
-        //   dispatch({ type: 'TOGGLE_ACTIVE', payload: true})
-        //   console.log(state.zone_active)
-        // }}
-        >
-          <img src={switchOff}
-            
-          ></img>
-        </div>
-      )
-    }
-  }
-
   const setSwitchImage = () => {
     if (state.editedZone.zone_status == "ACTIVE") {
       state.switch_image = switchOn
