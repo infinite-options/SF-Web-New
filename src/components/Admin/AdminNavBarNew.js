@@ -280,40 +280,40 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
                   >
                     Settings
                   </Button>
+                  <Button
+                    size={'small'}
+                    className={
+                      clicked == 'Analytics'
+                        ? `${classes.activeButton}`
+                        : `${classes.button}`
+                    }
+                    onClick={() => {
+                      history.push('/admin/analytics');
+                      setClicked('Analytics');
+                    }}
+                    //onClick={() => setTab(3)}
+                  >
+                    Analytics
+                  </Button>
+                  <Button
+                    size={'small'}
+                    className={
+                      clicked == 'Revenue'
+                        ? `${classes.activeButton}`
+                        : `${classes.button}`
+                    }
+                    onClick={() => {
+                      history.push('/admin/revenue');
+                      setClicked('Revenue');
+                    }}
+                    //onClick={() => setTab(4)}
+                  >
+                    Revenue
+                  </Button>
                 </Box>
               </React.Fragment>
             )}
             <div className={classes.rightButtons}>
-              <Button
-                size={'small'}
-                className={
-                  clicked == 'Analytics'
-                    ? `${classes.activeButton}`
-                    : `${classes.button}`
-                }
-                onClick={() => {
-                  history.push('/admin/analytics');
-                  setClicked('Analytics');
-                }}
-                //onClick={() => setTab(3)}
-              >
-                Analytics
-              </Button>
-              <Button
-                size={'small'}
-                className={
-                  clicked == 'Revenue'
-                    ? `${classes.activeButton}`
-                    : `${classes.button}`
-                }
-                onClick={() => {
-                  history.push('/admin/revenue');
-                  setClicked('Revenue');
-                }}
-                //onClick={() => setTab(4)}
-              >
-                Revenue
-              </Button>
               <Typography
                 style={{
                   color: appColors.secondary,
