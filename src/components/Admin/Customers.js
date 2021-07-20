@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import clsx from 'clsx';
 import moment from 'moment';
@@ -11,12 +11,18 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import { Grid, Typography, Box, Avatar, Paper } from '@material-ui/core';
+import {
+  Grid,
+  Typography,
+  Box,
+  Avatar,
+  Paper,
+  ClickAwayListener,
+} from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import CustomerSrc from '../../sf-svg-icons/Polygon1.svg';
-import { AdminFarmContext } from './AdminFarmContext';
 import appColors from '../../styles/AppColors';
 import Delivered from '../../sf-svg-icons/delivered.svg';
 import couponUnavaliable from '../../images/couponUnavaliable.svg';
@@ -246,6 +252,24 @@ const useStyles = makeStyles((theme) => ({
     height: '33px',
     fontSize: '16px',
   },
+  menuitem: {
+    color: 'red',
+  },
+  activePaymentInfo: {
+    textAlign: 'center',
+    fontSize: '14px',
+    fontWeight: 'medium',
+    font: 'SF Pro Text',
+    letterSpacing: ' -0.34px',
+    opacity: 1,
+    borderBottom: ' 1px solid #0000001A',
+    cursor: 'pointer',
+    boxShadow: 'none',
+    backgroundColor: '#1C6D74',
+    borderColor: '#005cbf',
+    color: 'white',
+    outline: 'none',
+  },
 }));
 
 const StyledTabs = withStyles({
@@ -410,7 +434,10 @@ function fetchCoupons(setCoupons, custEmail) {
 function Customers() {
   const classes = useStyles();
   const Auth = useContext(AuthContext);
-  const { custList } = useContext(AdminFarmContext);
+  const [custList, setCustList] = useState([]);
+  useEffect(() => {
+    farmerObj();
+  }, []);
   const [searchName, setSearchName] = useState('');
   const [searchAddress, setSearchAddress] = useState('');
   const [searchID, setSearchID] = useState('');
@@ -426,7 +453,35 @@ function Customers() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
+  const [clicked, setClicked] = useState([]);
+  const [custClicked, setCustClicked] = useState([]);
 
+  const farmerObj = async () => {
+    await axios
+      .get(
+        'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/adminCustomerInfo/all'
+      )
+      .then((response) => {
+        console.log(response.data.result);
+        setCustList(
+          response.data.result.sort(function (a, b) {
+            var textA = a.customer_first_name.toUpperCase();
+            var textB = b.customer_first_name.toUpperCase();
+            return textA < textB ? -1 : textA > textB ? 1 : 0;
+          })
+        );
+        fetchCustomers(setPayments, response.data.result[0].customer_uid);
+        fetchHistory(setHistory, response.data.result[0].customer_uid);
+        fetchCustomerInfo(
+          setSelectedCustomer,
+          response.data.result[0].customer_uid
+        );
+        fetchFarm(setFarms, response.data.result[0].customer_uid);
+        fetchProduce(setProduceOrdered, response.data.result[0].customer_uid);
+        fetchCoupons(setCoupons, response.data.result[0].customer_email);
+        setEmail(response.data.result[0].customer_email);
+      });
+  };
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
       return (
@@ -516,7 +571,11 @@ function Customers() {
                 <tbody>
                   <tr
                     key={profile.customer_uid}
-                    className={classes.infoRow}
+                    className={
+                      custClicked == profile.customer_uid
+                        ? `${classes.activePaymentInfo}`
+                        : `${classes.infoRow}`
+                    }
                     style={{ cursor: 'pointer' }}
                     onClick={() => {
                       fetchCustomers(setPayments, profile.customer_uid);
@@ -529,6 +588,7 @@ function Customers() {
                       fetchProduce(setProduceOrdered, profile.customer_uid);
                       fetchCoupons(setCoupons, profile.customer_email);
                       setEmail(profile.customer_email);
+                      setCustClicked(profile.customer_uid);
                       handleClose();
                       setSearchName('');
                       setSearchAddress('');
@@ -572,8 +632,13 @@ function Customers() {
   //popover open and close
   const handleClick = (setPurchaseID, event) => {
     const purchaseID = [];
+
     setPurchaseID(purchaseID);
     setAnchorEl(event.currentTarget);
+  };
+  const handleClear = (setPurchaseID, setClicked, event) => {
+    const purchaseID = [];
+    setPurchaseID(purchaseID);
   };
 
   const handleClose = () => {
@@ -591,6 +656,7 @@ function Customers() {
   const filterOnClick = (setPurchaseID, pid) => {
     const purchaseID = pid;
     setPurchaseID(purchaseID);
+    console.log('PurchasID:', purchaseID);
   };
 
   const historyView =
@@ -712,896 +778,936 @@ function Customers() {
     { id: 'quantity', label: 'Qty' },
     { id: 'revenue', label: 'Revenue' },
   ];
+  const handleClickAway = () => {
+    setClicked('');
+    setPurchaseID([]);
+  };
+
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid
-          item
-          xs={12}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            marginBottom: '3rem',
-            background: '#FFFFFF 0% 0% no-repeat padding-box',
-            borderRadius: '20px',
-            opacity: 1,
-          }}
-        >
-          <div>
-            <Box className={classes.currUserInf}>
-              <Avatar src={'no-link'} className={classes.currUserPic}>
-                {selectedCustomer.map((info) => (
-                  <Typography style={{ fontSize: '30px' }}>
-                    {info.customer_first_name || info.customer_last_name
-                      ? `${info.customer_first_name[0]}${info.customer_last_name[0]}`
-                      : 'JD'}
-                  </Typography>
-                ))}
-              </Avatar>
-              <Box>
-                <Box>
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <div className={classes.root}>
+        <Grid container spacing={3}>
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              marginBottom: '3rem',
+              background: '#FFFFFF 0% 0% no-repeat padding-box',
+              borderRadius: '20px',
+              opacity: 1,
+            }}
+          >
+            <div>
+              <Box className={classes.currUserInf}>
+                <Avatar src={'no-link'} className={classes.currUserPic}>
                   {selectedCustomer.map((info) => (
-                    <Typography
-                      variant="caption"
-                      style={{
-                        textAlign: 'left',
-                        font: 'normal normal 600 20px SF Pro Display',
-                        color: '#1C6D74',
-                        opacity: 1,
-                      }}
-                    >
-                      {info.customer_first_name} {info.customer_last_name}
+                    <Typography style={{ fontSize: '30px' }}>
+                      {info.customer_first_name || info.customer_last_name
+                        ? `${info.customer_first_name[0]}${info.customer_last_name[0]}`
+                        : 'JD'}
                     </Typography>
                   ))}
-                  <IconButton
-                    aria-describedby={id}
-                    variant="contained"
-                    color="primary"
-                    onClick={(e) => {
-                      handleClick(setPurchaseID, e);
-                    }}
-                  >
-                    <img src={CustomerSrc} alt="user pic" />
-                  </IconButton>
-                  <Popover
-                    id={id}
-                    open={open}
-                    anchorEl={anchorEl}
-                    onClose={handleClose}
-                    anchorReference="anchorPosition"
-                    anchorPosition={{ top: 700, left: 1000 }}
-                    anchorOrigin={{
-                      vertical: 'center',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'center',
-                    }}
-                    style={{
-                      backgroundClip: 'context-box',
-                      borderRadius: '20px',
-                    }}
-                  >
-                    {customerlist()}
-                  </Popover>
-                </Box>
-                <Typography
-                  variant="title"
-                  style={{
-                    textTransform: 'none',
-                    textDecorationColor: 'none',
-                    letterSpacing: '0.25px',
-                    color: ' #1C6D74',
-                    opacity: 1,
-                  }}
-                >
-                  <a
-                    href="/admin/messages"
+                </Avatar>
+                <Box>
+                  <Box>
+                    {selectedCustomer.map((info) => (
+                      <Typography
+                        variant="caption"
+                        style={{
+                          textAlign: 'left',
+                          font: 'normal normal 600 20px SF Pro Display',
+                          color: '#1C6D74',
+                          opacity: 1,
+                        }}
+                      >
+                        {info.customer_first_name} {info.customer_last_name}
+                      </Typography>
+                    ))}
+                    <IconButton
+                      aria-describedby={id}
+                      variant="contained"
+                      color="primary"
+                      onClick={(e) => {
+                        handleClick(setPurchaseID, e);
+                      }}
+                    >
+                      <img src={CustomerSrc} alt="user pic" />
+                    </IconButton>
+                    <Popover
+                      id={id}
+                      open={open}
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      anchorReference="anchorPosition"
+                      anchorPosition={{ top: 700, left: 1000 }}
+                      anchorOrigin={{
+                        vertical: 'center',
+                        horizontal: 'right',
+                      }}
+                      transformOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                      }}
+                      style={{
+                        backgroundClip: 'context-box',
+                        borderRadius: '20px',
+                      }}
+                    >
+                      {customerlist()}
+                    </Popover>
+                  </Box>
+                  <Typography
+                    variant="title"
                     style={{
                       textTransform: 'none',
                       textDecorationColor: 'none',
+                      letterSpacing: '0.25px',
                       color: ' #1C6D74',
+                      opacity: 1,
                     }}
                   >
-                    Send Message
-                  </a>
-                  &nbsp;
-                  <a
-                    onClick={() => {
-                      setRightTabChosen(1);
-                    }}
-                    style={{
-                      textDecoration: 'underline',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Issue Coupon
-                  </a>
-                </Typography>
-              </Box>
-              <Box
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  marginLeft: '6rem',
-                }}
-              >
-                <table>
-                  <thead>
-                    <tr>
-                      <td className={classes.infoTitle}>Phone Number</td>
-                      <td className={classes.infoTitle}>Delivery Address </td>
-                      <td className={classes.infoTitle}>Delivery Zone</td>
-                      <td className={classes.infoTitle}>Last Order Received</td>
-                      <td className={classes.infoTitle}>Total no. of Orders</td>
-                      <td className={classes.infoTitle}>Total Revenue</td>
-                    </tr>
-                  </thead>
-                  {selectedCustomer.map((info) => (
-                    <tbody>
-                      <tr>
-                        <td className={classes.desc}>
-                          {info.customer_phone_num}
-                        </td>
-                        <td className={classes.desc}>
-                          {info.customer_address},&nbsp;
-                          <br /> {info.customer_city},&nbsp;{' '}
-                          {info.customer_state}&nbsp; {info.customer_zip}
-                        </td>
-                        <td className={classes.desc}>{info.zone}</td>
-                        <td className={classes.desc}>
-                          {moment(info.last_order_date).format('LL')}
-                        </td>
-                        <td className={classes.desc}>{info.total_orders} </td>
-                        <td className={classes.desc}>{info.total_revenue}</td>
-                      </tr>
-                    </tbody>
-                  ))}
-                </table>
-              </Box>
-            </Box>
-          </div>
-        </Grid>
-      </Grid>
-      <Grid container spacing={3}>
-        <Grid
-          item
-          xs
-          style={{
-            display: 'flex',
-            marginBottom: '1rem',
-            marginRight: '1rem',
-            flexDirection: 'column',
-            background: '#FFFFFF 0% 0% no-repeat padding-box',
-            borderRadius: '20px',
-            opacity: 1,
-            minHeight: '80vh',
-            height: 'auto',
-            overflowY: 'hidden',
-          }}
-        >
-          <Typography className={classes.header}>Payment History</Typography>
-          {historyView.map((history) => (
-            <Box className={classes.card}>
-              <Box className={classes.delivered}>
-                <img src={Delivered} alt="user pic" />
-                &nbsp; Order Delivered
-              </Box>
-              <Box className={classes.date}>
-                {moment(history.start_delivery_date).format('LL')} at{' '}
-                {moment(history.start_delivery_date).format('LT')} <br></br>
-                Purchase ID: #{history.purchase_id.substring(4)}
-              </Box>
-
-              <Box
-                className={clsx(
-                  classes.items,
-                  classes.savingDetails,
-                  classes.section
-                )}
-                display="flex"
-                style={{
-                  fontSize: '16px',
-                  font: 'normal normal bold 20px/22px SF Pro Text',
-                }}
-              >
-                Subtotal
-                <Box flexGrow={1} />${history.subtotal.toFixed(2)}
-              </Box>
-              <Box
-                className={clsx(
-                  classes.items,
-                  classes.savingDetails,
-                  classes.section
-                )}
-                display="flex"
-                style={{
-                  color: '#136274',
-                }}
-              >
-                Coupon Applied
-                <Box flexGrow={1} />
-                -${history.amount_discount.toFixed(2)}
-              </Box>
-              <Box
-                className={clsx(
-                  classes.items,
-                  classes.savingDetails,
-                  classes.section
-                )}
-                display="flex"
-              >
-                Delivery Fee
-                <Box flexGrow={1} />${history.delivery_fee.toFixed(2)}
-              </Box>
-              <Box
-                className={clsx(
-                  classes.items,
-                  classes.savingDetails,
-                  classes.section
-                )}
-                display="flex"
-              >
-                Service Fee
-                <Box flexGrow={1} />${history.service_fee.toFixed(2)}
-              </Box>
-              <Box
-                className={clsx(
-                  classes.items,
-                  classes.savingDetails,
-                  classes.section
-                )}
-                display="flex"
-              >
-                Driver Tip
-                <Box flexGrow={1} />${history.driver_tip.toFixed(2)}
-              </Box>
-
-              <Box
-                className={clsx(
-                  classes.items,
-                  classes.savingDetails,
-                  classes.section
-                )}
-                display="flex"
-              >
-                Taxes
-                <Box flexGrow={1} />${history.taxes.toFixed(2)}
-              </Box>
-
-              <Box
-                className={clsx(
-                  classes.items,
-                  classes.savingDetails,
-                  classes.section
-                )}
-                display="flex"
-              >
-                Ambassador Code
-                <Box flexGrow={1} />
-                -${history.ambassador_code}
-              </Box>
-              <Box
-                className={clsx(classes.items, classes.total, classes.section)}
-                display="flex"
-                style={{
-                  fontSize: '18px',
-                  font: 'normal normal bold 20px/22px SF Pro Text',
-                }}
-              >
-                Total
-                <Box flexGrow={1} />${history.amount_paid.toFixed(2)}
-              </Box>
-            </Box>
-          ))}
-        </Grid>
-        <Grid
-          item
-          xs={6}
-          style={{
-            display: 'flex',
-            marginBottom: '1rem',
-            marginRight: '1rem',
-            flexDirection: 'column',
-            background: '#FFFFFF 0% 0% no-repeat padding-box',
-            borderRadius: '20px',
-            opacity: 1,
-          }}
-        >
-          <Typography className={classes.header}>Payment Made</Typography>
-          <table className={classes.paymentTable}>
-            <thead>
-              <tr className={classes.paymentHeader}>
-                <td className={classes.td}>Payment ID</td>
-                <td className={classes.td}>Purchase ID</td>
-                <td className={classes.td}>Delivery Date</td>
-                <td className={classes.td}>COGS</td>
-                <td className={classes.td}>Tip</td>
-                <td className={classes.td}>Taxes</td>
-                <td className={classes.td}>Profit</td>
-                <td className={classes.td}>Payment</td>
-              </tr>
-            </thead>
-            <tbody>
-              {payments.map((payment) => (
-                <tr
-                  className={classes.paymentInfo}
-                  onClick={() => {
-                    filterOnClick(setPurchaseID, payment.purchase_id);
+                    <a
+                      href="/admin/messages"
+                      style={{
+                        textTransform: 'none',
+                        textDecorationColor: 'none',
+                        color: ' #1C6D74',
+                      }}
+                    >
+                      Send Message
+                    </a>
+                    &nbsp;
+                    <a
+                      onClick={() => {
+                        setRightTabChosen(1);
+                      }}
+                      style={{
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Issue Coupon
+                    </a>
+                  </Typography>
+                </Box>
+                <Box
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    marginLeft: '6rem',
                   }}
                 >
-                  <td className={classes.td}>
-                    #{payment.payment_id.substring(4)}
-                  </td>
-                  <td className={classes.td}>
-                    #{payment.purchase_id.substring(4)}{' '}
-                  </td>
-                  <td className={classes.td}>
-                    {moment(payment.start_delivery_date).format('LL')}
-                  </td>
-                  <td className={classes.td}>${payment.subtotal.toFixed(2)}</td>
-                  <td className={classes.td}>
-                    ${payment.driver_tip.toFixed(2)}{' '}
-                  </td>
-                  <td className={classes.td}>${payment.taxes.toFixed(2)}</td>
-                  <td className={classes.td}>${payment.profit.toFixed(2)}</td>
-                  <td className={classes.td}>
-                    ${payment.amount_paid.toFixed(2)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  <table>
+                    <thead>
+                      <tr>
+                        <td className={classes.infoTitle}>Phone Number</td>
+                        <td className={classes.infoTitle}>Delivery Address </td>
+                        <td className={classes.infoTitle}>Delivery Zone</td>
+                        <td className={classes.infoTitle}>
+                          Last Order Received
+                        </td>
+                        <td className={classes.infoTitle}>
+                          Total no. of Orders
+                        </td>
+                        <td className={classes.infoTitle}>Total Revenue</td>
+                      </tr>
+                    </thead>
+                    {selectedCustomer.map((info) => (
+                      <tbody>
+                        <tr>
+                          <td className={classes.desc}>
+                            {info.customer_phone_num}
+                          </td>
+                          <td className={classes.desc}>
+                            {info.customer_address},&nbsp;
+                            <br /> {info.customer_city},&nbsp;{' '}
+                            {info.customer_state}&nbsp; {info.customer_zip}
+                          </td>
+                          <td className={classes.desc}>{info.zone}</td>
+                          <td className={classes.desc}>
+                            {moment(info.last_order_date).format('LL')}
+                          </td>
+                          <td className={classes.desc}>{info.total_orders} </td>
+                          <td className={classes.desc}>{info.total_revenue}</td>
+                        </tr>
+                      </tbody>
+                    ))}
+                  </table>
+                </Box>
+              </Box>
+            </div>
+          </Grid>
         </Grid>
-        <Grid
-          item
-          xs={3}
-          style={{
-            display: 'flex',
-            marginBottom: '1rem',
-            flexDirection: 'column',
-            background: '#FFFFFF 0% 0% no-repeat padding-box',
-            borderRadius: '20px',
-            opacity: 1,
-            overflow: 'hidden',
-            padding: '0',
-          }}
-        >
-          <Paper elevation={0}>
-            <StyledTabs
-              value={rightTabChosen}
-              onChange={handleChange}
-              indicatorColor="#F5841F"
-              textColor="#F5841F"
-              aria-label="styled tabs example"
-              centered
-            >
-              <StyledTab
-                label="Produce"
-                style={{ fontSize: '16px', fontWeight: '700', minWidth: 100 }}
-              />
+        <Grid container spacing={3}>
+          <Grid
+            item
+            xs
+            style={{
+              display: 'flex',
+              marginBottom: '1rem',
+              marginRight: '1rem',
+              flexDirection: 'column',
+              background: '#FFFFFF 0% 0% no-repeat padding-box',
+              borderRadius: '20px',
+              opacity: 1,
+              minHeight: '80vh',
+              height: 'auto',
+              overflowY: 'hidden',
+            }}
+          >
+            <Typography className={classes.header}>Payment History</Typography>
+            {historyView.map((history) => (
+              <Box className={classes.card}>
+                <Box className={classes.delivered}>
+                  <img src={Delivered} alt="user pic" />
+                  &nbsp; Order Delivered
+                </Box>
+                <Box className={classes.date}>
+                  {moment(history.start_delivery_date).format('LL')} at{' '}
+                  {moment(history.start_delivery_date).format('LT')} <br></br>
+                  Purchase ID: #{history.purchase_id.substring(4)}
+                </Box>
 
-              <StyledTab
-                label="Coupon"
-                style={{ fontSize: '16px', fontWeight: '700', minWidth: 100 }}
-              />
+                <Box
+                  className={clsx(
+                    classes.items,
+                    classes.savingDetails,
+                    classes.section
+                  )}
+                  display="flex"
+                  style={{
+                    fontSize: '16px',
+                    font: 'normal normal bold 20px/22px SF Pro Text',
+                  }}
+                >
+                  Subtotal
+                  <Box flexGrow={1} />${history.subtotal.toFixed(2)}
+                </Box>
+                <Box
+                  className={clsx(
+                    classes.items,
+                    classes.savingDetails,
+                    classes.section
+                  )}
+                  display="flex"
+                  style={{
+                    color: '#136274',
+                  }}
+                >
+                  Coupon Applied
+                  <Box flexGrow={1} />
+                  -${history.amount_discount.toFixed(2)}
+                </Box>
+                <Box
+                  className={clsx(
+                    classes.items,
+                    classes.savingDetails,
+                    classes.section
+                  )}
+                  display="flex"
+                >
+                  Delivery Fee
+                  <Box flexGrow={1} />${history.delivery_fee.toFixed(2)}
+                </Box>
+                <Box
+                  className={clsx(
+                    classes.items,
+                    classes.savingDetails,
+                    classes.section
+                  )}
+                  display="flex"
+                >
+                  Service Fee
+                  <Box flexGrow={1} />${history.service_fee.toFixed(2)}
+                </Box>
+                <Box
+                  className={clsx(
+                    classes.items,
+                    classes.savingDetails,
+                    classes.section
+                  )}
+                  display="flex"
+                >
+                  Driver Tip
+                  <Box flexGrow={1} />${history.driver_tip.toFixed(2)}
+                </Box>
 
-              <StyledTab
-                label="Stats"
-                style={{ fontSize: '16px', fontWeight: '700', minWidth: 100 }}
-              />
-            </StyledTabs>
+                <Box
+                  className={clsx(
+                    classes.items,
+                    classes.savingDetails,
+                    classes.section
+                  )}
+                  display="flex"
+                >
+                  Taxes
+                  <Box flexGrow={1} />${history.taxes.toFixed(2)}
+                </Box>
 
-            <Paper
-              elevation={0}
-              style={{
-                marginTop: 10,
-                minHeight: '80vh',
-                maxHeight: '100%',
-                overflowY: 'auto',
-              }}
-            >
-              <Box hidden={rightTabChosen !== 0}>
-                {historyView.map((history) => (
-                  <Box className={classes.card} style={{ padding: '10px' }}>
-                    <Box className={classes.delivered}>
-                      <img src={Delivered} alt="user pic" />
-                      &nbsp; Order Delivered
-                    </Box>
-                    <Box className={classes.date}>
-                      {moment(history.start_delivery_date).format('LL')} at{' '}
-                      {moment(history.start_delivery_date).format('LT')}{' '}
-                      <br></br>
-                      Purchase ID: #{history.purchase_id.substring(4)}
-                    </Box>
-                    <Box className={classes.sectionHeader} display="flex">
-                      <Box width="60%" textAlign="left">
-                        Name
+                <Box
+                  className={clsx(
+                    classes.items,
+                    classes.savingDetails,
+                    classes.section
+                  )}
+                  display="flex"
+                >
+                  Ambassador Code
+                  <Box flexGrow={1} />
+                  -${history.ambassador_code}
+                </Box>
+                <Box
+                  className={clsx(
+                    classes.items,
+                    classes.total,
+                    classes.section
+                  )}
+                  display="flex"
+                  style={{
+                    fontSize: '18px',
+                    font: 'normal normal bold 20px/22px SF Pro Text',
+                  }}
+                >
+                  Total
+                  <Box flexGrow={1} />${history.amount_paid.toFixed(2)}
+                </Box>
+              </Box>
+            ))}
+          </Grid>
+          <Grid
+            item
+            xs={6}
+            style={{
+              display: 'flex',
+              marginBottom: '1rem',
+              marginRight: '1rem',
+              flexDirection: 'column',
+              background: '#FFFFFF 0% 0% no-repeat padding-box',
+              borderRadius: '20px',
+              opacity: 1,
+            }}
+          >
+            <Typography className={classes.header}>Payment Made</Typography>
+            <table className={classes.paymentTable}>
+              <thead>
+                <tr className={classes.paymentHeader}>
+                  <td className={classes.td}>Payment ID</td>
+                  <td className={classes.td}>Purchase ID</td>
+                  <td className={classes.td}>Delivery Date</td>
+                  <td className={classes.td}>COGS</td>
+                  <td className={classes.td}>Tip</td>
+                  <td className={classes.td}>Taxes</td>
+                  <td className={classes.td}>Profit</td>
+                  <td className={classes.td}>Payment</td>
+                </tr>
+              </thead>
+              <tbody>
+                {payments.map((payment) => (
+                  <tr
+                    className={classes.paymentInfo}
+                    onClick={() => {
+                      filterOnClick(setPurchaseID, payment.purchase_id);
+                      setClicked(payment.purchase_id);
+                    }}
+                    className={
+                      clicked == payment.purchase_id
+                        ? `${classes.activePaymentInfo}`
+                        : `${classes.paymentInfo}`
+                    }
+                  >
+                    <td className={classes.td}>
+                      #{payment.payment_id.substring(4)}
+                    </td>
+                    <td className={classes.td}>
+                      #{payment.purchase_id.substring(4)}{' '}
+                    </td>
+                    <td className={classes.td}>
+                      {moment(payment.start_delivery_date).format('LL')}
+                    </td>
+                    <td className={classes.td}>
+                      ${payment.subtotal.toFixed(2)}
+                    </td>
+                    <td className={classes.td}>
+                      ${payment.driver_tip.toFixed(2)}{' '}
+                    </td>
+                    <td className={classes.td}>${payment.taxes.toFixed(2)}</td>
+                    <td className={classes.td}>${payment.profit.toFixed(2)}</td>
+                    <td className={classes.td}>
+                      ${payment.amount_paid.toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Grid>
+          <Grid
+            item
+            xs={3}
+            style={{
+              display: 'flex',
+              marginBottom: '1rem',
+              flexDirection: 'column',
+              background: '#FFFFFF 0% 0% no-repeat padding-box',
+              borderRadius: '20px',
+              opacity: 1,
+              overflow: 'hidden',
+              padding: '0',
+            }}
+          >
+            <Paper elevation={0}>
+              <StyledTabs
+                value={rightTabChosen}
+                onChange={handleChange}
+                onClick={(e) => {
+                  handleClear(setPurchaseID, e);
+                  setClicked('');
+                }}
+                indicatorColor="#F5841F"
+                textColor="#F5841F"
+                aria-label="styled tabs example"
+                centered
+              >
+                <StyledTab
+                  label="Produce"
+                  style={{ fontSize: '16px', fontWeight: '700', minWidth: 100 }}
+                />
+
+                <StyledTab
+                  label="Coupon"
+                  style={{ fontSize: '16px', fontWeight: '700', minWidth: 100 }}
+                />
+
+                <StyledTab
+                  label="Stats"
+                  style={{ fontSize: '16px', fontWeight: '700', minWidth: 100 }}
+                />
+              </StyledTabs>
+
+              <Paper
+                elevation={0}
+                style={{
+                  marginTop: 10,
+                  minHeight: '80vh',
+                  maxHeight: '100%',
+                  overflowY: 'auto',
+                }}
+              >
+                <Box hidden={rightTabChosen !== 0}>
+                  {historyView.map((history) => (
+                    <Box className={classes.card} style={{ padding: '10px' }}>
+                      <Box className={classes.delivered}>
+                        <img src={Delivered} alt="user pic" />
+                        &nbsp; Order Delivered
                       </Box>
-                      <Box width="20%" textAlign="center">
-                        Quantity
+                      <Box className={classes.date}>
+                        {moment(history.start_delivery_date).format('LL')} at{' '}
+                        {moment(history.start_delivery_date).format('LT')}{' '}
+                        <br></br>
+                        Purchase ID: #{history.purchase_id.substring(4)}
                       </Box>
-                      <Box width="22%" textAlign="right">
-                        Price
+                      <Box className={classes.sectionHeader} display="flex">
+                        <Box width="60%" textAlign="left">
+                          Name
+                        </Box>
+                        <Box width="20%" textAlign="center">
+                          Quantity
+                        </Box>
+                        <Box width="22%" textAlign="right">
+                          Price
+                        </Box>
+                      </Box>
+                      <Box className={classes.items}>
+                        {JSON.parse(history['items']).map((item) => {
+                          return (
+                            <Box display="flex" justifyContent="start">
+                              <Box
+                                width="60%"
+                                textAlign="left"
+                                display="inline-block"
+                              >
+                                <img
+                                  src={item['img']}
+                                  alt=""
+                                  height="50"
+                                  width="50"
+                                  style={{
+                                    borderRadius: '10px',
+                                    marginRight: '5px',
+                                    verticalAlign: 'middle',
+                                  }}
+                                />
+                                {item['name']}
+                              </Box>
+                              <Box
+                                width="20%"
+                                textAlign="center"
+                                paddingTop="10px"
+                              >
+                                {item['qty']}
+                              </Box>
+                              <Box
+                                width="20%"
+                                textAlign="right"
+                                paddingTop="10px"
+                              >
+                                ${item['price'].toFixed(2)}
+                              </Box>
+                            </Box>
+                          );
+                        })}
                       </Box>
                     </Box>
-                    <Box className={classes.items}>
-                      {JSON.parse(history['items']).map((item) => {
-                        return (
-                          <Box display="flex" justifyContent="start">
+                  ))}
+                </Box>
+                <Box id="coupon" hidden={rightTabChosen !== 1}>
+                  <Box
+                    style={{
+                      borderBottom: '3px solid #BCCDCE ',
+                      marginBottom: '20px',
+                    }}
+                  >
+                    <form onSubmit={(e) => submit(e, email)}>
+                      <Box display="flex" mb={1}>
+                        <Box width="50%">
+                          <Typography className={classes.paymentHeader}>
+                            Coupon Title
+                          </Typography>
+                          <input
+                            className={classes.couponInput}
+                            type="text"
+                            placeholder="Coupon Title"
+                            id="coupon_title"
+                            onChange={(e) => handle(e)}
+                            value={createCoupon.coupon_title}
+                            style={{ margin: 6 }}
+                          />
+                        </Box>
+                        <Box width="50%">
+                          <Typography className={classes.paymentHeader}>
+                            Threshold
+                          </Typography>
+                          <input
+                            className={classes.couponInput}
+                            placeholder="Order Subtotal "
+                            type="text"
+                            id="threshold"
+                            onChange={(e) => handle(e)}
+                            value={createCoupon.threshold}
+                            style={{ margin: 6 }}
+                          />
+                        </Box>
+                      </Box>
+                      <Box display="flex" mb={1}>
+                        <Box width="50%">
+                          <Typography className={classes.paymentHeader}>
+                            Coupon ID
+                          </Typography>
+                          <input
+                            className={classes.couponInput}
+                            type="text"
+                            placeholder="CouponID"
+                            id="coupon_id"
+                            onChange={(e) => handle(e)}
+                            value={createCoupon.coupon_id}
+                            style={{ margin: 6 }}
+                          />
+                        </Box>
+                        <Box width="50%">
+                          <Typography className={classes.paymentHeader}>
+                            Discount Percentage
+                          </Typography>
+                          <input
+                            className={classes.couponInput}
+                            type="text"
+                            placeholder="% discount"
+                            id="discount_percent"
+                            onChange={(e) => handle(e)}
+                            value={createCoupon.discount_percent}
+                            style={{ margin: 6 }}
+                          />
+                        </Box>
+                      </Box>
+                      <Box display="flex" mb={1}>
+                        <Box width="50%">
+                          <Typography className={classes.paymentHeader}>
+                            Valid
+                          </Typography>
+                          <input
+                            className={classes.couponInput}
+                            type="text"
+                            id="valid"
+                            placeholder="TRUE/FALSE"
+                            onChange={(e) => handle(e)}
+                            value={createCoupon.valid}
+                            style={{ margin: 6 }}
+                          />
+                        </Box>
+                        <Box width="50%">
+                          <Typography className={classes.paymentHeader}>
+                            Discount Amount
+                          </Typography>
+                          <input
+                            className={classes.couponInput}
+                            type="text"
+                            id="discount_amount"
+                            placeholder="$ discount"
+                            onChange={(e) => handle(e)}
+                            value={createCoupon.discount_amount}
+                            style={{ margin: 6 }}
+                          />
+                        </Box>
+                      </Box>
+                      <Box display="flex" mb={1}>
+                        <Box width="50%">
+                          <Typography className={classes.paymentHeader}>
+                            Expiration Date
+                          </Typography>
+                          <input
+                            className={classes.couponInput}
+                            type="date"
+                            id="expire_date"
+                            onChange={(e) => handle(e)}
+                            value={createCoupon.expire_date}
+                            style={{ margin: 6 }}
+                          />
+                        </Box>
+                        <Box width="50%">
+                          <Typography className={classes.paymentHeader}>
+                            Discount Shipping
+                          </Typography>
+                          <input
+                            className={classes.couponInput}
+                            type="text"
+                            id="discount_shipping"
+                            placeholder="$ shipping"
+                            onChange={(e) => handle(e)}
+                            value={createCoupon.discount_shipping}
+                            style={{ margin: 6 }}
+                          />
+                        </Box>
+                      </Box>
+                      <Box display="flex" mb={1}>
+                        <Box width="50%">
+                          <Typography className={classes.paymentHeader}>
+                            Limits
+                          </Typography>
+                          <input
+                            className={classes.couponInput}
+                            type="text"
+                            id="limits"
+                            placeholder="No. of coupons"
+                            onChange={(e) => handle(e)}
+                            value={createCoupon.limits}
+                            style={{ margin: 6 }}
+                          />
+                        </Box>
+                        <Box width="50%">
+                          <Typography className={classes.paymentHeader}>
+                            Notes
+                          </Typography>
+                          <textarea
+                            className={classes.couponInput}
+                            type="text"
+                            id="notes"
+                            placeholder="Description"
+                            onChange={(e) => handle(e)}
+                            value={createCoupon.notes}
+                            rows={4}
+                            style={{ margin: 6 }}
+                          />
+                        </Box>
+                      </Box>
+                      <button className={classes.btn}>Submit</button>
+                    </form>
+                  </Box>
+
+                  <Box className={classes.card} component="div">
+                    <Grid
+                      container
+                      direction="row"
+                      justify="space-between"
+                      alignItems="center"
+                      style={{ padding: '10px' }}
+                    >
+                      <Grid
+                        item
+                        xs={12}
+                        sm
+                        container
+                        className={classes.header}
+                      >
+                        Current Coupons
+                      </Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        sm
+                        container
+                        direction="row"
+                        justify="space-between"
+                        alignItems="center"
+                        style={{ fontSize: '14px', fontWeight: 'bold' }}
+                      >
+                        <Grid item style={{ paddingLeft: '20px' }}>
+                          %
+                        </Grid>
+                        <Grid item>$</Grid>
+                        <Grid item>Shipping</Grid>
+                      </Grid>
+                    </Grid>
+
+                    {coupons.map((coupon) => (
+                      <Grid
+                        container
+                        direction="row"
+                        justify="space-between"
+                        alignItems="center"
+                        style={{ padding: '15px 0px' }}
+                      >
+                        <Grid item>
+                          <Box
+                            style={{
+                              width: '170px',
+                              height: '73px',
+                              backgroundImage: `url(${couponUnavaliable})`,
+                              backgroundSize: '100% 100%',
+                              backgroundPosition: 'center center',
+                              backgroundRepeat: 'no-repeat',
+                            }}
+                          >
                             <Box
-                              width="60%"
-                              textAlign="left"
-                              display="inline-block"
+                              display="flex"
+                              flexDirection="column"
+                              alignItems="flex-start"
+                              justifyContent="center"
+                              marginLeft="1.5rem"
                             >
+                              <Box
+                                fontSize="12px"
+                                pr={1}
+                                fontWeight="bold"
+                                marginTop="0.5rem"
+                              >
+                                {coupon.coupon_title}
+                              </Box>
+                              <Box fontSize="10px">{coupon.notes}</Box>
+                              <Box fontSize="10px">
+                                Spend $ {coupon.threshold} more to use
+                              </Box>
+                              <Box fontSize="10px">
+                                Expires:{' '}
+                                {moment(coupon.expire_date).format('LL')}
+                              </Box>
+                            </Box>
+                          </Box>
+                        </Grid>
+                        <Grid item style={{ padding: '10px' }}>
+                          <Grid
+                            item
+                            xs={12}
+                            sm
+                            container
+                            direction="row"
+                            justify="space-between"
+                            alignItems="center"
+                            style={{ fontSize: '14px', paddingRight: '10px' }}
+                          >
+                            <Grid item>
+                              <Typography>
+                                {coupon.discount_percent}%{' '}
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography>${coupon.discount_amount}</Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography>
+                                ${coupon.discount_shipping}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid item>
+                            {' '}
+                            <Typography>
+                              No. of uses:{coupon.num_used}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    ))}
+                  </Box>
+                </Box>
+                <Box hidden={rightTabChosen !== 2}>
+                  <Box
+                    className={classes.card}
+                    style={{
+                      padding: '0',
+                      margin: '0',
+                    }}
+                  >
+                    <Typography
+                      className={classes.header}
+                      style={{ padding: '10px' }}
+                    >
+                      Farms Supported
+                    </Typography>
+                    <TableContainer>
+                      <TableHead>
+                        <TableRow>
+                          {farmHead.map((headCell) => (
+                            <TableCell
+                              style={{
+                                fontWeight: 'bold',
+                              }}
+                              padding="none"
+                              key={headCell.id}
+                              sortDirection={
+                                orderBy === headCell.id ? order : false
+                              }
+                            >
+                              {headCell.disableSorting ? (
+                                headCell.label
+                              ) : (
+                                <TableSortLabel
+                                  active={orderBy === headCell.id}
+                                  direction={
+                                    orderBy === headCell.id ? order : 'asc'
+                                  }
+                                  onClick={() => {
+                                    handleSortRequest(headCell.id);
+                                  }}
+                                >
+                                  {headCell.label}
+                                </TableSortLabel>
+                              )}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {farmsSort().map((farm) => (
+                          <TableRow>
+                            <TableCell padding="none">
                               <img
-                                src={item['img']}
+                                src={farm.business_image}
                                 alt=""
                                 height="50"
                                 width="50"
                                 style={{
                                   borderRadius: '10px',
                                   marginRight: '5px',
-                                  verticalAlign: 'middle',
                                 }}
                               />
-                              {item['name']}
-                            </Box>
-                            <Box
-                              width="20%"
-                              textAlign="center"
-                              paddingTop="10px"
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              align="left"
+                              style={{ paddingRight: '20px' }}
                             >
-                              {item['qty']}
-                            </Box>
-                            <Box
-                              width="20%"
-                              textAlign="right"
-                              paddingTop="10px"
-                            >
-                              ${item['price'].toFixed(2)}
-                            </Box>
-                          </Box>
-                        );
-                      })}
-                    </Box>
+                              {farm.business_name}
+                            </TableCell>
+                            <TableCell padding="none">
+                              {farm.total_orders}
+                            </TableCell>
+                            <TableCell padding="none">
+                              ${farm.Revenue.toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </TableContainer>
                   </Box>
-                ))}
-              </Box>
-              <Box id="coupon" hidden={rightTabChosen !== 1}>
-                <Box
-                  style={{
-                    borderBottom: '3px solid #BCCDCE ',
-                    marginBottom: '20px',
-                  }}
-                >
-                  <form onSubmit={(e) => submit(e, email)}>
-                    <Box display="flex" mb={1}>
-                      <Box width="50%">
-                        <Typography className={classes.paymentHeader}>
-                          Coupon Title
-                        </Typography>
-                        <input
-                          className={classes.couponInput}
-                          type="text"
-                          placeholder="Coupon Title"
-                          id="coupon_title"
-                          onChange={(e) => handle(e)}
-                          value={createCoupon.coupon_title}
-                          style={{ margin: 6 }}
-                        />
-                      </Box>
-                      <Box width="50%">
-                        <Typography className={classes.paymentHeader}>
-                          Threshold
-                        </Typography>
-                        <input
-                          className={classes.couponInput}
-                          placeholder="Order Subtotal "
-                          type="text"
-                          id="threshold"
-                          onChange={(e) => handle(e)}
-                          value={createCoupon.threshold}
-                          style={{ margin: 6 }}
-                        />
-                      </Box>
-                    </Box>
-                    <Box display="flex" mb={1}>
-                      <Box width="50%">
-                        <Typography className={classes.paymentHeader}>
-                          Coupon ID
-                        </Typography>
-                        <input
-                          className={classes.couponInput}
-                          type="text"
-                          placeholder="CouponID"
-                          id="coupon_id"
-                          onChange={(e) => handle(e)}
-                          value={createCoupon.coupon_id}
-                          style={{ margin: 6 }}
-                        />
-                      </Box>
-                      <Box width="50%">
-                        <Typography className={classes.paymentHeader}>
-                          Discount Percentage
-                        </Typography>
-                        <input
-                          className={classes.couponInput}
-                          type="text"
-                          placeholder="% discount"
-                          id="discount_percent"
-                          onChange={(e) => handle(e)}
-                          value={createCoupon.discount_percent}
-                          style={{ margin: 6 }}
-                        />
-                      </Box>
-                    </Box>
-                    <Box display="flex" mb={1}>
-                      <Box width="50%">
-                        <Typography className={classes.paymentHeader}>
-                          Valid
-                        </Typography>
-                        <input
-                          className={classes.couponInput}
-                          type="text"
-                          id="valid"
-                          placeholder="TRUE/FALSE"
-                          onChange={(e) => handle(e)}
-                          value={createCoupon.valid}
-                          style={{ margin: 6 }}
-                        />
-                      </Box>
-                      <Box width="50%">
-                        <Typography className={classes.paymentHeader}>
-                          Discount Amount
-                        </Typography>
-                        <input
-                          className={classes.couponInput}
-                          type="text"
-                          id="discount_amount"
-                          placeholder="$ discount"
-                          onChange={(e) => handle(e)}
-                          value={createCoupon.discount_amount}
-                          style={{ margin: 6 }}
-                        />
-                      </Box>
-                    </Box>
-                    <Box display="flex" mb={1}>
-                      <Box width="50%">
-                        <Typography className={classes.paymentHeader}>
-                          Expiration Date
-                        </Typography>
-                        <input
-                          className={classes.couponInput}
-                          type="date"
-                          id="expire_date"
-                          onChange={(e) => handle(e)}
-                          value={createCoupon.expire_date}
-                          style={{ margin: 6 }}
-                        />
-                      </Box>
-                      <Box width="50%">
-                        <Typography className={classes.paymentHeader}>
-                          Discount Shipping
-                        </Typography>
-                        <input
-                          className={classes.couponInput}
-                          type="text"
-                          id="discount_shipping"
-                          placeholder="$ shipping"
-                          onChange={(e) => handle(e)}
-                          value={createCoupon.discount_shipping}
-                          style={{ margin: 6 }}
-                        />
-                      </Box>
-                    </Box>
-                    <Box display="flex" mb={1}>
-                      <Box width="50%">
-                        <Typography className={classes.paymentHeader}>
-                          Limits
-                        </Typography>
-                        <input
-                          className={classes.couponInput}
-                          type="text"
-                          id="limits"
-                          placeholder="No. of coupons"
-                          onChange={(e) => handle(e)}
-                          value={createCoupon.limits}
-                          style={{ margin: 6 }}
-                        />
-                      </Box>
-                      <Box width="50%">
-                        <Typography className={classes.paymentHeader}>
-                          Notes
-                        </Typography>
-                        <textarea
-                          className={classes.couponInput}
-                          type="text"
-                          id="notes"
-                          placeholder="Description"
-                          onChange={(e) => handle(e)}
-                          value={createCoupon.notes}
-                          rows={4}
-                          style={{ margin: 6 }}
-                        />
-                      </Box>
-                    </Box>
-                    <button className={classes.btn}>Submit</button>
-                  </form>
-                </Box>
-
-                <Box className={classes.card} component="div">
-                  <Grid
-                    container
-                    direction="row"
-                    justify="space-between"
-                    alignItems="center"
-                    style={{ padding: '10px' }}
+                  <Box
+                    className={classes.card}
+                    style={{
+                      padding: '0',
+                      margin: '0',
+                    }}
                   >
-                    <Grid item xs={12} sm container className={classes.header}>
-                      Current Coupons
-                    </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      sm
-                      container
-                      direction="row"
-                      justify="space-between"
-                      alignItems="center"
-                      style={{ fontSize: '14px', fontWeight: 'bold' }}
+                    <Typography
+                      className={classes.header}
+                      style={{ padding: '10px' }}
                     >
-                      <Grid item style={{ paddingLeft: '20px' }}>
-                        %
-                      </Grid>
-                      <Grid item>$</Grid>
-                      <Grid item>Shipping</Grid>
-                    </Grid>
-                  </Grid>
-
-                  {coupons.map((coupon) => (
-                    <Grid
-                      container
-                      direction="row"
-                      justify="space-between"
-                      alignItems="center"
-                      style={{ padding: '15px 0px' }}
-                    >
-                      <Grid item>
-                        <Box
-                          style={{
-                            width: '170px',
-                            height: '73px',
-                            backgroundImage: `url(${couponUnavaliable})`,
-                            backgroundSize: '100% 100%',
-                            backgroundPosition: 'center center',
-                            backgroundRepeat: 'no-repeat',
-                          }}
-                        >
-                          <Box
-                            display="flex"
-                            flexDirection="column"
-                            alignItems="flex-start"
-                            justifyContent="center"
-                            marginLeft="1.5rem"
-                          >
-                            <Box
-                              fontSize="12px"
-                              pr={1}
-                              fontWeight="bold"
-                              marginTop="0.5rem"
+                      Produce Ordered
+                    </Typography>
+                    <TableContainer>
+                      <TableHead>
+                        <TableRow>
+                          {produceHead.map((headCell) => (
+                            <TableCell
+                              style={{
+                                fontWeight: 'bold',
+                              }}
+                              key={headCell.id}
+                              padding="none"
+                              sortDirection={
+                                orderBy === headCell.id ? order : false
+                              }
                             >
-                              {coupon.coupon_title}
-                            </Box>
-                            <Box fontSize="10px">{coupon.notes}</Box>
-                            <Box fontSize="10px">
-                              Spend $ {coupon.threshold} more to use
-                            </Box>
-                            <Box fontSize="10px">
-                              Expires: {moment(coupon.expire_date).format('LL')}
-                            </Box>
-                          </Box>
-                        </Box>
-                      </Grid>
-                      <Grid item style={{ padding: '10px' }}>
-                        <Grid
-                          item
-                          xs={12}
-                          sm
-                          container
-                          direction="row"
-                          justify="space-between"
-                          alignItems="center"
-                          style={{ fontSize: '14px', paddingRight: '10px' }}
-                        >
-                          <Grid item>
-                            <Typography>{coupon.discount_percent}% </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography>${coupon.discount_amount}</Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography>${coupon.discount_shipping}</Typography>
-                          </Grid>
-                        </Grid>
-                        <Grid item>
-                          {' '}
-                          <Typography>No. of uses:{coupon.num_used}</Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  ))}
-                </Box>
-              </Box>
-              <Box hidden={rightTabChosen !== 2}>
-                <Box
-                  className={classes.card}
-                  style={{
-                    padding: '0',
-                    margin: '0',
-                  }}
-                >
-                  <Typography
-                    className={classes.header}
-                    style={{ padding: '10px' }}
-                  >
-                    Farms Supported
-                  </Typography>
-                  <TableContainer>
-                    <TableHead>
-                      <TableRow>
-                        {farmHead.map((headCell) => (
-                          <TableCell
-                            style={{
-                              fontWeight: 'bold',
-                            }}
-                            padding="none"
-                            key={headCell.id}
-                            sortDirection={
-                              orderBy === headCell.id ? order : false
-                            }
-                          >
-                            {headCell.disableSorting ? (
-                              headCell.label
-                            ) : (
-                              <TableSortLabel
-                                active={orderBy === headCell.id}
-                                direction={
-                                  orderBy === headCell.id ? order : 'asc'
-                                }
-                                onClick={() => {
-                                  handleSortRequest(headCell.id);
-                                }}
-                              >
-                                {headCell.label}
-                              </TableSortLabel>
-                            )}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {farmsSort().map((farm) => (
-                        <TableRow>
-                          <TableCell padding="none">
-                            <img
-                              src={farm.business_image}
-                              alt=""
-                              height="50"
-                              width="50"
-                              style={{
-                                borderRadius: '10px',
-                                marginRight: '5px',
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell
-                            padding="none"
-                            align="left"
-                            style={{ paddingRight: '20px' }}
-                          >
-                            {farm.business_name}
-                          </TableCell>
-                          <TableCell padding="none">
-                            {farm.total_orders}
-                          </TableCell>
-                          <TableCell padding="none">
-                            ${farm.Revenue.toFixed(2)}
-                          </TableCell>
+                              {headCell.disableSorting ? (
+                                headCell.label
+                              ) : (
+                                <TableSortLabel
+                                  active={orderBy === headCell.id}
+                                  direction={
+                                    orderBy === headCell.id ? order : 'asc'
+                                  }
+                                  onClick={() => {
+                                    handleSortRequest(headCell.id);
+                                  }}
+                                >
+                                  {headCell.label}
+                                </TableSortLabel>
+                              )}
+                            </TableCell>
+                          ))}
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </TableContainer>
-                </Box>
-                <Box
-                  className={classes.card}
-                  style={{
-                    padding: '0',
-                    margin: '0',
-                  }}
-                >
-                  <Typography
-                    className={classes.header}
-                    style={{ padding: '10px' }}
-                  >
-                    Produce Ordered
-                  </Typography>
-                  <TableContainer>
-                    <TableHead>
-                      <TableRow>
-                        {produceHead.map((headCell) => (
-                          <TableCell
-                            style={{
-                              fontWeight: 'bold',
-                            }}
-                            key={headCell.id}
-                            padding="none"
-                            sortDirection={
-                              orderBy === headCell.id ? order : false
-                            }
-                          >
-                            {headCell.disableSorting ? (
-                              headCell.label
-                            ) : (
-                              <TableSortLabel
-                                active={orderBy === headCell.id}
-                                direction={
-                                  orderBy === headCell.id ? order : 'asc'
-                                }
-                                onClick={() => {
-                                  handleSortRequest(headCell.id);
+                      </TableHead>
+
+                      <TableBody>
+                        {produceSort().map((produce) => (
+                          <TableRow>
+                            <TableCell padding="none">
+                              <img
+                                src={produce.img}
+                                alt=""
+                                height="50"
+                                width="50"
+                                style={{
+                                  borderRadius: '10px',
+                                  marginRight: '5px',
                                 }}
-                              >
-                                {headCell.label}
-                              </TableSortLabel>
-                            )}
-                          </TableCell>
+                              />
+                            </TableCell>
+                            <TableCell
+                              padding="none"
+                              align="left"
+                              style={{ paddingRight: '20px' }}
+                            >
+                              {produce.name}
+                            </TableCell>
+
+                            <TableCell padding="none">
+                              {produce.quantity}
+                            </TableCell>
+                            <TableCell padding="none">
+                              ${produce.revenue.toFixed(2)}
+                            </TableCell>
+                          </TableRow>
                         ))}
-                      </TableRow>
-                    </TableHead>
-
-                    <TableBody>
-                      {produceSort().map((produce) => (
-                        <TableRow>
-                          <TableCell padding="none">
-                            <img
-                              src={produce.img}
-                              alt=""
-                              height="50"
-                              width="50"
-                              style={{
-                                borderRadius: '10px',
-                                marginRight: '5px',
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell
-                            padding="none"
-                            align="left"
-                            style={{ paddingRight: '20px' }}
-                          >
-                            {produce.name}
-                          </TableCell>
-
-                          <TableCell padding="none">
-                            {produce.quantity}
-                          </TableCell>
-                          <TableCell padding="none">
-                            ${produce.revenue.toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </TableContainer>
+                      </TableBody>
+                    </TableContainer>
+                  </Box>
                 </Box>
-              </Box>
+              </Paper>
             </Paper>
-          </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
+      </div>
+    </ClickAwayListener>
   );
 }
 

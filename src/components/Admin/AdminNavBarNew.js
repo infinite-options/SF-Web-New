@@ -14,7 +14,7 @@ import { withRouter } from 'react-router';
 import { AuthContext } from '../../auth/AuthContext';
 import { AdminFarmContext } from './AdminFarmContext';
 import appColors from 'styles/AppColors';
-
+import MenuNavButton from '../../utils/MenuNavButton';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 const theme = createMuiTheme({
@@ -43,12 +43,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#136D74',
     color: 'white',
     textTransform: 'none',
-    '&:hover': {
-      backgroundColor: '#136D74',
-      color: '#FF8500',
-    },
+  },
+  activeButton: {
+    marginRight: theme.spacing(1),
+    backgroundColor: '#136D74',
+    textTransform: 'none',
+    backgroundColor: '#136D74',
+    color: '#FF8500',
   },
   rightButtons: {
+    display: 'flex',
+    flexDirection: 'row',
     position: 'absolute',
     right: '10px',
     color: 'white',
@@ -59,6 +64,9 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+  },
+  menuButton: {
+    color: appColors.secondary,
   },
 }));
 
@@ -75,7 +83,7 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
     handleChangeFarm,
     farmDict,
   } = useContext(AdminFarmContext);
-
+  const [clicked, setClicked] = useState('');
   const [defaultFarm, setDefaultFarm] = useState(
     farmList.includes(localStorage.getItem('farmID'))
       ? localStorage.getItem('farmID')
@@ -113,7 +121,6 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
     localStorage.removeItem('cartItems');
     Cookies.remove('login-session');
     Cookies.remove('customer_uid');
-
     Auth.setIsAuth(false);
     Auth.setAuthLevel(0);
     props.history.push('/');
@@ -196,6 +203,7 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
                   aria-label="Menu list"
                 />
               </IconButton>
+              {/*  <MenuNavButton style={{ border: '1px solid #1c6d74' }} /> */}
             </Box>
             {Auth.authLevel >= 1 && (
               <React.Fragment>
@@ -205,7 +213,7 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
                       style={{
                         color: '#136D74',
                         textTransform: 'none',
-                        paddingRight: '30px',
+                        paddingRight: '20px',
                       }}
                     >
                       Admin
@@ -218,7 +226,7 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
                       style={{
                         color: '#136D74',
                         textTransform: 'none',
-                        paddingRight: '30px',
+                        paddingRight: '10px',
                       }}
                     >
                       Farm
@@ -229,72 +237,110 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
                 <Box>
                   <Button
                     size={'small'}
-                    className={classes.button}
-                    onClick={() => history.push('/admin/adminitems')}
+                    className={
+                      clicked == 'Items'
+                        ? `${classes.activeButton}`
+                        : `${classes.button}`
+                    }
+                    onClick={() => {
+                      history.push('/admin/adminitems');
+                      setClicked('Items');
+                    }}
                     //onClick={() => setTab(0)}
                   >
                     Items
                   </Button>
                   <Button
                     size={'small'}
-                    className={classes.button}
-                    onClick={() => history.push('/admin/farmerreport')}
+                    className={
+                      clicked == 'Orders'
+                        ? `${classes.activeButton}`
+                        : `${classes.button}`
+                    }
+                    onClick={() => {
+                      history.push('/admin/farmerreport');
+                      setClicked('Orders');
+                    }}
                     //onClick={() => setTab(1)}
                   >
                     Orders
                   </Button>
                   <Button
                     size={'small'}
-                    className={classes.button}
-                    onClick={() => history.push('/admin/farmersettings')}
+                    className={
+                      clicked == 'Settings'
+                        ? `${classes.activeButton}`
+                        : `${classes.button}`
+                    }
+                    onClick={() => {
+                      history.push('/admin/farmersettings');
+                      setClicked('Settings');
+                    }}
                     //onClick={() => setTab(2)}
                   >
                     Settings
+                  </Button>
+                  <Button
+                    size={'small'}
+                    className={
+                      clicked == 'Analytics'
+                        ? `${classes.activeButton}`
+                        : `${classes.button}`
+                    }
+                    onClick={() => {
+                      history.push('/admin/analytics');
+                      setClicked('Analytics');
+                    }}
+                    //onClick={() => setTab(3)}
+                  >
+                    Analytics
+                  </Button>
+                  <Button
+                    size={'small'}
+                    className={
+                      clicked == 'Revenue'
+                        ? `${classes.activeButton}`
+                        : `${classes.button}`
+                    }
+                    onClick={() => {
+                      history.push('/admin/revenue');
+                      setClicked('Revenue');
+                    }}
+                    //onClick={() => setTab(4)}
+                  >
+                    Revenue
                   </Button>
                 </Box>
               </React.Fragment>
             )}
             <div className={classes.rightButtons}>
-              <Button
-                size={'small'}
-                className={classes.button}
-                //onClick={() => setTab(8)}
-                onClick={() => history.push('/admin/pricecompare')}
+              <Typography
+                style={{
+                  color: appColors.secondary,
+                  textAlign: 'left',
+                  letterSpacing: '0.25px',
+                  marginTop: '0.75rem',
+                }}
               >
-                Price Compare
-              </Button>
-              <Button
-                size={'small'}
-                className={classes.button}
-                onClick={() => history.push('/admin/analytics')}
-                //onClick={() => setTab(3)}
-              >
-                Analytics
-              </Button>
-              <Button
-                size={'small'}
-                className={classes.button}
-                onClick={() => history.push('/admin/revenue')}
-                //onClick={() => setTab(4)}
-              >
-                Revenue
-              </Button>
-              <Button
-                size={'small'}
-                className={classes.button}
-                onClick={() => history.push('/admin/zones')}
-                //onClick={() => setTab(4)}
-              >
-                Zones
-              </Button>
+                Need Support?
+                <a
+                  href="tel:+1-925-400-7469"
+                  style={{
+                    textDecoration: 'none',
+                    color: appColors.secondary,
+                  }}
+                >
+                  (925) 400-7469
+                </a>
+              </Typography>
               <Button
                 variant="contained"
                 size="small"
                 style={{
                   backgroundColor: '#F5841F',
                   color: 'white',
-                  marginLeft: '2rem',
                   height: '2rem',
+                  marginLeft: '2rem',
                   marginTop: '0.75rem',
                   textTransform: 'none',
                 }}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 // import { Grid, Typography } from '@material-ui/core';
 import moment from 'moment';
@@ -26,7 +26,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 const useStyles = makeStyles((theme) => ({
-  
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -172,8 +171,8 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '10px',
     paddingBottom: '10px',
   },
-  tableRow:{
-    borderBottom:'1px solid black'
+  tableRow: {
+    borderBottom: '1px solid black',
   },
   buttonRight: {
     textAlign: 'left',
@@ -185,9 +184,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function fetchBusinessInfo(setselectedBusiness, id,setProfit1,day) {
+function fetchBusinessInfo(setselectedBusiness, id, setProfit1, day) {
   fetch(
-    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farmer_order_summary_page/`+day+`,`+id,
+    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farmer_order_summary_page/` +
+      day +
+      `,` +
+      id,
     {
       method: 'GET',
     }
@@ -200,105 +202,103 @@ function fetchBusinessInfo(setselectedBusiness, id,setProfit1,day) {
       return response.json();
     })
     .then((json) => {
-      console.log(" in endpoint lets dance ",json)
-      let flag = 0
-      if(json.code != 280 || json.result.length === 0){
-        flag = 1
+      console.log(' in endpoint lets dance ', json);
+      let flag = 0;
+      if (json.code != 280 || json.result.length === 0) {
+        flag = 1;
         json = {
-          "message": "Successfully executed SQL query.",
-          "code": 280,
-          "result": [
-              {
-                  "name": "No Data for this delivery date",
-                  "img": "https://servingfresh.s3.us-west-1.amazonaws.com/sf_logo.png",
-                  "unit": "null",
-                  "business_name": "Alberto's Farms",
-                  "business_price": "0",
-                  "price": "0",
-                  "profit": 0,
-                  "quantity": 0,
-                  "total_revenue": 0,
-                  "total_profit": 0,
-                  "farms": "Alberto's Farms,1"
-              }]}
+          message: 'Successfully executed SQL query.',
+          code: 280,
+          result: [
+            {
+              name: 'No Data for this delivery date',
+              img: 'https://servingfresh.s3.us-west-1.amazonaws.com/sf_logo.png',
+              unit: 'null',
+              business_name: "Alberto's Farms",
+              business_price: '0',
+              price: '0',
+              profit: 0,
+              quantity: 0,
+              total_revenue: 0,
+              total_profit: 0,
+              farms: "Alberto's Farms,1",
+            },
+          ],
+        };
       }
-      console.log(json)
+      console.log(json);
       const selectedB = json.result;
       setselectedBusiness(selectedB);
       console.log(selectedB);
-      
-      let p=0;
-      let q=0;
-      let numItems=selectedB.length;
-    for(let i=0;i<selectedB.length;i++){
-      p=p+selectedB[i]['total_revenue']
-      q=q+selectedB[i]['quantity']
-    }
-    console.log(p);
-    console.log(q);
 
-    if(flag == 1){
-      numItems = 0
-    }
-  
-    setProfit1({
-      profit:p,
-      num:numItems,
-      quantity:q
-    })
-      
+      let p = 0;
+      let q = 0;
+      let numItems = selectedB.length;
+      for (let i = 0; i < selectedB.length; i++) {
+        p = p + selectedB[i]['total_revenue'];
+        q = q + selectedB[i]['quantity'];
+      }
+      console.log(p);
+      console.log(q);
+
+      if (flag == 1) {
+        numItems = 0;
+      }
+
+      setProfit1({
+        profit: p,
+        num: numItems,
+        quantity: q,
+      });
     })
     .catch((error) => {
       console.error(error);
-    })
-  };
+    });
+}
 
 function fetchBusinessPackingInfo(setPacking, id, day) {
-    fetch(
-      `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farmer_packing_data/`+id+`,`+day+`,NF`,
-      {
-        method: 'GET',
+  fetch(
+    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farmer_packing_data/` +
+      id +
+      `,` +
+      day +
+      `,NF`,
+    {
+      method: 'GET',
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
       }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw response;
-        }
-  
-        return response.json();
-      })
-      .then((response) => {
-        
-        console.log("response is ---------",response)
-        if (response === 'no data'){
-          response = [
-            {
-                "Name": "No Data for this delivery date",
-                "Unit": "Null",
-                "Img": "https://servingfresh.s3.us-west-1.amazonaws.com/sf_logo.png",
-                "Packing": "0"
-            }]}
-        setPacking(response);
-        
-        
-       
-    
-      
-        
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-    };
-  
+
+      return response.json();
+    })
+    .then((response) => {
+      console.log('response is ---------', response);
+      if (response === 'no data') {
+        response = [
+          {
+            Name: 'No Data for this delivery date',
+            Unit: 'Null',
+            Img: 'https://servingfresh.s3.us-west-1.amazonaws.com/sf_logo.png',
+            Packing: '0',
+          },
+        ];
+      }
+      setPacking(response);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
 function FarmOrders() {
   const classes = useStyles();
   const Auth = useContext(AuthContext);
   useEffect(() => {
     farmerObj();
-}, []);
-
-  
+  }, []);
 
   let [farmerInfo, setfarmerInfo] = useState([]);
   let [busiSelect, setBusiSelect] = useState([]);
@@ -307,21 +307,23 @@ function FarmOrders() {
   let [packing, setPacking] = useState([]);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
-  
-  
-  const [deliveryDate, setDeliveryDate] = useState(() => { 
-    let currDate = moment().format('YYYY-MM-DD')
-    let wedDate = moment().isoWeekday(3).format('YYYY-MM-DD')
-    let sunDate = moment().clone().add(1, 'weeks').startOf('week').format('YYYY-MM-DD')
-    let resDate = ''
-    if (currDate > wedDate){
-      resDate = sunDate
-    }  
-    else{
-      resDate = wedDate
+
+  const [deliveryDate, setDeliveryDate] = useState(() => {
+    let currDate = moment().format('YYYY-MM-DD');
+    let wedDate = moment().isoWeekday(3).format('YYYY-MM-DD');
+    let sunDate = moment()
+      .clone()
+      .add(1, 'weeks')
+      .startOf('week')
+      .format('YYYY-MM-DD');
+    let resDate = '';
+    if (currDate > wedDate) {
+      resDate = sunDate;
+    } else {
+      resDate = wedDate;
     }
-    return (resDate) 
-  })
+    return resDate;
+  });
 
   const handleDeliveryDate = (day) => {
     let tmp_ip_day = day.toLocaleDateString().split('/');
@@ -339,16 +341,17 @@ function FarmOrders() {
     res_day = res_day.slice(0, -1);
     setDeliveryDate(res_day);
     //console.log(ip_day);
-    
-
   };
 
-  useEffect(() =>{
-    fetchBusinessInfo(setselectedBusiness,busiSelect.business_uid,setProfit1,deliveryDate);
-    fetchBusinessPackingInfo(setPacking,busiSelect.business_uid,deliveryDate)
-
-  },[deliveryDate]);
-
+  useEffect(() => {
+    fetchBusinessInfo(
+      setselectedBusiness,
+      busiSelect.business_uid,
+      setProfit1,
+      deliveryDate
+    );
+    fetchBusinessPackingInfo(setPacking, busiSelect.business_uid, deliveryDate);
+  }, [deliveryDate]);
 
   const farmerObj = () => {
     axios
@@ -357,24 +360,30 @@ function FarmOrders() {
       )
       .then((response) => {
         console.log(response);
-        console.log("gotcha")
+        console.log('gotcha');
         setfarmerInfo(response.data.result.result);
         setBusiSelect(response.data.result.result[1]);
-        fetchBusinessInfo(setselectedBusiness,response.data.result.result[1].business_uid,setProfit1,deliveryDate);
-        fetchBusinessPackingInfo(setPacking,response.data.result.result[1].business_uid,deliveryDate)
-  
-        
-        interObj()
-        
+        fetchBusinessInfo(
+          setselectedBusiness,
+          response.data.result.result[1].business_uid,
+          setProfit1,
+          deliveryDate
+        );
+        fetchBusinessPackingInfo(
+          setPacking,
+          response.data.result.result[1].business_uid,
+          deliveryDate
+        );
+
+        interObj();
       });
   };
 
-  const interObj = () =>{
-    console.log("happy hacking ",farmerInfo)
-    console.log(farmerInfo[1])
-    }
-  
-  
+  const interObj = () => {
+    console.log('happy hacking ', farmerInfo);
+    console.log(farmerInfo[1]);
+  };
+
   const farm = () => {
     if (Auth.authLevel >= 2) {
       return (
@@ -382,7 +391,6 @@ function FarmOrders() {
           <table className={classes.table}>
             <thead>
               <tr className={classes.tr}>
-              
                 <td className={classes.usrTitle}>Business Name</td>
                 <td className={classes.usrTitle}>City</td>
                 <td className={classes.usrTitle}>Business Id</td>
@@ -397,29 +405,40 @@ function FarmOrders() {
                   key={profile.business_uid}
                   className={classes.tr}
                   style={{ cursor: 'pointer' }}
-                  onClick={()=>{
+                  onClick={() => {
                     setBusiSelect(profile);
-                    fetchBusinessInfo(setselectedBusiness,profile.business_uid,setProfit1,deliveryDate);
-                    fetchBusinessPackingInfo(setPacking,profile.business_uid,deliveryDate)
-                    handleClose()
+                    fetchBusinessInfo(
+                      setselectedBusiness,
+                      profile.business_uid,
+                      setProfit1,
+                      deliveryDate
+                    );
+                    fetchBusinessPackingInfo(
+                      setPacking,
+                      profile.business_uid,
+                      deliveryDate
+                    );
+                    handleClose();
                   }}
-                  
-                
                 >
                   <td className={classes.usrDesc}>
                     {profile.business_name}&nbsp;
-                    
                   </td>
                   <td className={classes.usrDesc}>{profile.business_city}</td>
                   <td className={classes.usrDesc}>{profile.business_uid}</td>
-                  
+
                   <td className={classes.usrDesc}>
                     {profile.business_zip},&nbsp;
-                    
                   </td>
-                  <td className={classes.usrDesc}>{profile.business_phone_num}</td>
-                  <td><img style={{height:'40px'}}src={profile.business_image}></img></td>
-
+                  <td className={classes.usrDesc}>
+                    {profile.business_phone_num}
+                  </td>
+                  <td>
+                    <img
+                      style={{ height: '40px' }}
+                      src={profile.business_image}
+                    ></img>
+                  </td>
                 </tr>
               </tbody>
             ))}
@@ -428,7 +447,6 @@ function FarmOrders() {
       );
     }
   };
-
 
   // sorting logic
   const handleSortRequest = (cellId) => {
@@ -476,7 +494,6 @@ function FarmOrders() {
     { id: 'quantity', label: 'Quantity' },
     { id: 'total_revenue', label: 'Farm Revenue' },
     { id: 'packing', label: 'Packing Order' },
-    
   ];
 
   const farmHeadRight = [
@@ -484,293 +501,284 @@ function FarmOrders() {
     { id: 'Img', label: 'Picture' },
     { id: 'Unit', label: 'Unit' },
     { id: 'Packing', label: 'Packing Order' },
-    
   ];
 
   const farmsSortRight = () => {
     return stableSort(packing, getComparator(order, orderBy));
   };
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-const handleClick = (event) => {
-  setAnchorEl(event.currentTarget);
-};
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
-const handleClose = () => {
-  setAnchorEl(null);
-};
-
-const open = Boolean(anchorEl);
-const id = open ? 'simple-popover' : undefined;
-
-return (
-  <div className={classes.root}>
-    <Grid container spacing={3}>
-      <Grid
-        item
-        xs={12}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          marginBottom: '2rem',
-          background: '#FFFFFF 0% 0% no-repeat padding-box',
-          borderRadius: '20px',
-          opacity: 1,
-          height: '121px',
-        }}
-      >
-        <div>
-          <Box style={{ float: 'left' }}>
-            <img
-              style={{
-                height: '91px',
-                width: '91px',
-                float: 'left',
-                borderRadius: '11px',
-              }}
-              src={busiSelect.business_image}
-            ></img>
-            <div style={{ float: 'left' }}>
-              <h2
-                style={{
-                  marginLeft: '20px',
-                  marginTop: '20px',
-                  color: '#1C6D74',
-                }}
-              >
-                {busiSelect.business_name}
-              </h2>
-              <h5
-                style={{
-                  marginTop: '5px',
-                  marginLeft: '20px',
-                  color: '#1C6D74',
-                  textDecoration: 'underline',
-                }}
-              >
-                Send message
-              </h5>
-            </div>
-          </Box>
-          <Box style={{ float: 'left', marginLeft: '20px' }}>
-            <IconButton
-              aria-describedby={id}
-              variant="contained"
-              color="primary"
-              onClick={handleClick}
-              style={{ margin: '15%' }}
-            >
-              <img src={CustomerSrc} alt="user pic" style={{}} />
-            </IconButton>
-          </Box>
-          <Box>
-            
-            <div
-              style={{
-                float: 'right',
-                marginRight: '20px',
-                color: '#1C6D74',
-              }}
-            >
-              <h5>Select Delivery Date</h5>
-              <p
-                style={{
-                  color: 'black',
-                  fontWeight: 'bolder',
-                  fontSize: '25px',
-                }}
-              >
-                <DayPickerInput
-                          placeholder={deliveryDate}
-                          value={deliveryDate}
-                          format="MM/DD/YYYY"
-                          onDayChange={handleDeliveryDate}/>
-                
-              </p>
-            </div>
-
-            <div
-              style={{
-                float: 'right',
-                marginRight: '20px',
-                color: '#1C6D74',
-              }}
-            >
-              <h5>Revenue for Farm</h5>
-              <p
-                style={{
-                  color: 'black',
-                  fontWeight: 'bolder',
-                  fontSize: '25px',
-                }}
-              >
-                $ {profit1.profit}
-                
-              </p>
-            </div>
-            
-            <div
-              style={{
-                float: 'right',
-                marginRight: '20px',
-                color: '#1C6D74',
-              }}
-            >
-              <h5>Total no. Orders</h5>
-              <p
-                style={{
-                  color: 'black',
-                  fontWeight: 'bolder',
-                  fontSize: '25px',
-                }}
-              >
-                {profit1.num}
-              </p>
-            </div>
-            
-            <div
-              style={{
-                float: 'right',
-                marginRight: '20px',
-                color: '#1C6D74',
-              }}
-            >
-              <h5>No. of Items</h5>
-              <p
-                style={{
-                  color: 'black',
-                  fontWeight: 'bolder',
-                  fontSize: '25px',
-                }}
-              >
-                {profit1.quantity}
-              </p>
-            </div>
-          
-          </Box>
-        </div>
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorReference="anchorPosition"
-          anchorPosition={{ top: 600, left: 600 }}
-          anchorOrigin={{
-            vertical: 'center',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          style={{ borderRadius: '20px' }}
-        >
-          {farm()}
-        </Popover>
-      </Grid>
-      <Grid container spacing={2}>
+  return (
+    <div className={classes.root}>
+      <Grid container spacing={3}>
         <Grid
           item
           xs={12}
           style={{
             display: 'flex',
-            marginBottom: '1rem',
-            marginRight: '1rem',
             flexDirection: 'column',
+            marginBottom: '2rem',
             background: '#FFFFFF 0% 0% no-repeat padding-box',
             borderRadius: '20px',
             opacity: 1,
-            minHeight: '80vh',
-            height: 'auto',
-            overflowY: 'hidden',
+            height: '121px',
           }}
         >
-          <div style={{ marginLeft: '1rem', textAlign: 'left' }}>
-            <h2 style={{ color: '#F5841F' }}>Upcoming Revenue</h2>
-            <div>
-              <TableContainer>
-                <TableHead>
-                  <TableRow>
-                    {farmHead.map((headCell) => (
-                      <TableCell
-                        className={classes.usrTitle}
-                        // style={{
-                        //   fontWeight: 'bold',
-                        //   textAlign:'center',
-                        // }}
+          <div>
+            <Box style={{ float: 'left' }}>
+              <img
+                style={{
+                  height: '91px',
+                  width: '91px',
+                  float: 'left',
+                  borderRadius: '11px',
+                }}
+                src={busiSelect.business_image}
+              ></img>
+              <div style={{ float: 'left' }}>
+                <h2
+                  style={{
+                    marginLeft: '20px',
+                    marginTop: '20px',
+                    color: '#1C6D74',
+                  }}
+                >
+                  {busiSelect.business_name}
+                </h2>
+                <h5
+                  style={{
+                    marginTop: '5px',
+                    marginLeft: '20px',
+                    color: '#1C6D74',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  Send message
+                </h5>
+              </div>
+            </Box>
+            <Box style={{ float: 'left', marginLeft: '20px' }}>
+              <IconButton
+                aria-describedby={id}
+                variant="contained"
+                color="primary"
+                onClick={handleClick}
+                style={{ margin: '15%' }}
+              >
+                <img src={CustomerSrc} alt="user pic" style={{}} />
+              </IconButton>
+            </Box>
+            <Box>
+              <div
+                style={{
+                  float: 'right',
+                  marginRight: '20px',
+                  color: '#1C6D74',
+                }}
+              >
+                <h5>Select Delivery Date</h5>
+                <p
+                  style={{
+                    color: 'black',
+                    fontWeight: 'bolder',
+                    fontSize: '25px',
+                  }}
+                >
+                  <DayPickerInput
+                    placeholder={deliveryDate}
+                    value={deliveryDate}
+                    format="MM/DD/YYYY"
+                    onDayChange={handleDeliveryDate}
+                  />
+                </p>
+              </div>
 
-                        padding="none"
-                        key={headCell.id}
-                        sortDirection={
-                          orderBy === headCell.id ? order : false
-                        }
-                      >
-                        {headCell.disableSorting ? (
-                          headCell.label
-                        ) : (
-                          <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={
-                              orderBy === headCell.id ? order : 'asc'
-                            }
-                            onClick={() => {
-                              handleSortRequest(headCell.id);
-                            }}
-                            style = {{marginLeft:'0px'}}
-                          >
-                            {headCell.label}
-                          </TableSortLabel>
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {farmsSort().map((info, index) => (
-                    <TableRow
-                      key={info.name}
-                      className={classes.tr}
-                    >
-                      <TableCell className={classes.usrDesc}>
-                        {info.name}
-                      </TableCell>
-                      <TableCell className={classes.usrDesc}>
-                        <img
-                          style={{
-                            width: '52px',
-                            height: '42px',
-                            borderRadius: '10px',
-                          }}
-                          src={info.img}
-                        ></img>
-                      </TableCell>
-                      <TableCell className={classes.usrDesc}>
-                        {info.unit}
-                      </TableCell>
-                      <TableCell className={classes.usrDesc}>
-                        $ {Number(info.business_price).toFixed(2)}
-                      </TableCell>
-                      <TableCell className={classes.usrDesc}>
-                        {info.quantity}
-                      </TableCell>
-                      <TableCell className={classes.usrDesc}>
-                        $ {Number(info.total_revenue).toFixed(2)}
-                      </TableCell>
-                      <TableCell className={classes.usrDesc}>
-                        {info.packing}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </TableContainer>
-            </div> 
+              <div
+                style={{
+                  float: 'right',
+                  marginRight: '20px',
+                  color: '#1C6D74',
+                }}
+              >
+                <h5>Revenue for Farm</h5>
+                <p
+                  style={{
+                    color: 'black',
+                    fontWeight: 'bolder',
+                    fontSize: '25px',
+                  }}
+                >
+                  $ {profit1.profit}
+                </p>
+              </div>
+
+              <div
+                style={{
+                  float: 'right',
+                  marginRight: '20px',
+                  color: '#1C6D74',
+                }}
+              >
+                <h5>Total no. Orders</h5>
+                <p
+                  style={{
+                    color: 'black',
+                    fontWeight: 'bolder',
+                    fontSize: '25px',
+                  }}
+                >
+                  {profit1.num}
+                </p>
+              </div>
+
+              <div
+                style={{
+                  float: 'right',
+                  marginRight: '20px',
+                  color: '#1C6D74',
+                }}
+              >
+                <h5>No. of Items</h5>
+                <p
+                  style={{
+                    color: 'black',
+                    fontWeight: 'bolder',
+                    fontSize: '25px',
+                  }}
+                >
+                  {profit1.quantity}
+                </p>
+              </div>
+            </Box>
           </div>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorReference="anchorPosition"
+            anchorPosition={{ top: 600, left: 600 }}
+            anchorOrigin={{
+              vertical: 'center',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            style={{ borderRadius: '20px' }}
+          >
+            {farm()}
+          </Popover>
         </Grid>
-        {/* <Grid
+        <Grid container spacing={2}>
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: 'flex',
+              marginBottom: '1rem',
+              marginRight: '1rem',
+              flexDirection: 'column',
+              background: '#FFFFFF 0% 0% no-repeat padding-box',
+              borderRadius: '20px',
+              opacity: 1,
+              minHeight: '80vh',
+              height: 'auto',
+              overflowY: 'hidden',
+            }}
+          >
+            <div style={{ marginLeft: '1rem', textAlign: 'left' }}>
+              <h2 style={{ color: '#F5841F' }}>Upcoming Revenue</h2>
+              <div>
+                <TableContainer>
+                  <TableHead>
+                    <TableRow>
+                      {farmHead.map((headCell) => (
+                        <TableCell
+                          className={classes.usrTitle}
+                          // style={{
+                          //   fontWeight: 'bold',
+                          //   textAlign:'center',
+                          // }}
+
+                          padding="none"
+                          key={headCell.id}
+                          sortDirection={
+                            orderBy === headCell.id ? order : false
+                          }
+                        >
+                          {headCell.disableSorting ? (
+                            headCell.label
+                          ) : (
+                            <TableSortLabel
+                              active={orderBy === headCell.id}
+                              direction={
+                                orderBy === headCell.id ? order : 'asc'
+                              }
+                              onClick={() => {
+                                handleSortRequest(headCell.id);
+                              }}
+                              style={{ marginLeft: '0px' }}
+                            >
+                              {headCell.label}
+                            </TableSortLabel>
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {farmsSort().map((info, index) => (
+                      <TableRow key={info.name} className={classes.tr}>
+                        <TableCell className={classes.usrDesc}>
+                          {info.name}
+                        </TableCell>
+                        <TableCell className={classes.usrDesc}>
+                          <img
+                            style={{
+                              width: '52px',
+                              height: '42px',
+                              borderRadius: '10px',
+                            }}
+                            src={info.img}
+                          ></img>
+                        </TableCell>
+                        <TableCell className={classes.usrDesc}>
+                          {info.unit}
+                        </TableCell>
+                        <TableCell className={classes.usrDesc}>
+                          $ {Number(info.business_price).toFixed(2)}
+                        </TableCell>
+                        <TableCell className={classes.usrDesc}>
+                          {info.quantity}
+                        </TableCell>
+                        <TableCell className={classes.usrDesc}>
+                          $ {Number(info.total_revenue).toFixed(2)}
+                        </TableCell>
+                        <TableCell className={classes.usrDesc}>
+                          {info.packing}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </TableContainer>
+              </div>
+            </div>
+          </Grid>
+          {/* <Grid
           item
           xs
           style={{
@@ -856,11 +864,10 @@ return (
             </div> 
           </div>
         </Grid> */}
+        </Grid>
       </Grid>
-    </Grid>
-    
-  </div>
-);
+    </div>
+  );
 }
 
 export default FarmOrders;
