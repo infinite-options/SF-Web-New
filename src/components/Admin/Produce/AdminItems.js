@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '0.9rem',
     fontWeight: 'bold',
     letterSpacing: '0.25px',
-    color: '#00000',
+    color: '#1C6D74',
     opacity: 1,
     justifyContent: 'start',
     padding: '10px',
@@ -144,6 +144,7 @@ function AdminItems() {
 
     const [orderBy, setOrderBy] = useState();
     const [order, setOrder] = useState();
+    const [allFarms,setAllFarms] = useState([])
 
 
     const farmFetch = () => {
@@ -216,6 +217,8 @@ function AdminItems() {
 
     useEffect(() => {
       fetchProduceInfo();
+      fetchFarms();
+      console.log("all farms",allFarms)
       
   }, [openModel]);
   
@@ -242,6 +245,21 @@ function AdminItems() {
           console.log(err);
         });
     };
+
+    const fetchFarms = () => {
+      axios
+        .get('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/all_businesses')
+        .then((res) => {
+          setAllFarms(res.data.result)
+          
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response);
+          }
+          console.log(err);
+        });
+    };
    
     const handleEdit = (e) => {
         console.log("in handle edit of admin items", selectedUID)
@@ -254,7 +272,7 @@ function AdminItems() {
   
     const modelBody = (
       <div>
-        <AdminItemAddModel produceDict={selectedUID==='newProduce'?selectedUID:produceDict[selectedUID]} handleClose={closeModel} farmData={farmData}/>
+        <AdminItemAddModel produceDict={selectedUID==='newProduce'?selectedUID:produceDict[selectedUID]} allFarms = {allFarms} handleClose={closeModel} farmData={farmData}/>
       </div>
     );
   
@@ -298,9 +316,10 @@ function AdminItems() {
                       <TableRow>
                         {farmHead.map((headCell) => (
                           <TableCell
-                            style={{
-                              fontWeight: 'bold',
-                            }}
+                            className={classes.usrTitle}
+                            // style={{
+                            //   fontWeight: 'bold',
+                            // }}
                             padding="none"
                             key={headCell.id}
                             sortDirection={
@@ -328,15 +347,16 @@ function AdminItems() {
                     </TableHead>
                     <TableBody>
                       {farmsSort().map((produceVal) => (
-                        <TableRow style={{ cursor: 'pointer' }} onClick={()=>{setSelectedUID(produceVal.item_uid);handleEdit();}}>
+                        <TableRow 
+                          className={classes.tr}
+                          style={{ cursor: 'pointer' }} 
+                          onClick={()=>{setSelectedUID(produceVal.item_uid);handleEdit();}}>
                           <TableCell
-                            padding="none"
-                            align="left"
-                            style={{ paddingRight: '20px' }}
+                            className={classes.usrDesc}
                           >
                             {produceVal.item_name}
                           </TableCell>
-                          <TableCell padding="none">
+                          <TableCell className={classes.usrDesc}>
                             <img
                               src={produceVal.item_photo}
                               alt=""
@@ -349,34 +369,32 @@ function AdminItems() {
                             />
                           </TableCell>
                           <TableCell
-                            padding="none"
-                            align="left"
-                            style={{ paddingRight: '20px' }}
+                            className={classes.usrDesc}
                           >
                             {produceVal.item_type}
                           </TableCell>
-                          <TableCell padding="none">
+                          <TableCell className={classes.usrDesc}>
                             {produceVal.item_desc}
                           </TableCell>
-                          <TableCell padding="none">
+                          <TableCell className={classes.usrDesc}>
                             {produceVal.item_unit}
                           </TableCell>
-                          <TableCell padding="none">
+                          <TableCell className={classes.usrDesc}>
                             {produceVal.item_price}
                           </TableCell>
-                          <TableCell padding="none">
+                          <TableCell className={classes.usrDesc}>
                             {produceVal.item_sizes}
                           </TableCell>
-                          <TableCell padding="none">
+                          <TableCell className={classes.usrDesc}>
                             {produceVal.taxable}
                           </TableCell>
-                          <TableCell padding="none">
+                          <TableCell className={classes.usrDesc}>
                             {produceVal.item_display}
                           </TableCell>
-                          <TableCell padding="none" >
+                          <TableCell className={classes.usrDesc} >
                             {produceVal.farms.length}
                           </TableCell>
-                          <TableCell padding="none" onClick={e => e.stopPropagation()}>
+                          <TableCell className={classes.usrDesc} onClick={e => e.stopPropagation()}>
                             <select style={{border:'0px',textAlign:'center',width:"auto"}}>
                                   {produceVal.farms.map((item,index) => (
                                           <option 

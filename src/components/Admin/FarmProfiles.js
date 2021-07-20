@@ -796,7 +796,24 @@ function FarmProfiles() {
             }}
           >
             <div style={{ marginLeft: '1rem', textAlign: 'left' }}>
-              <h2 style={{ color: '#F5841F' }}>Produce Offered</h2>
+              
+            <div
+              style={{
+                fontSize: '1.5rem',
+                textAlign: 'left',
+                fontWeight: 'bold',
+                letterSpacing: '0.32px',
+                color: '#F5841F',
+                opacity: 1,
+                margin: '1rem',
+              }}> 
+                Produce Offered
+                <img src='/add.png' id='newProduce' height="20" width="20" style={{ marginLeft:"10px",cursor:"pointer"}}
+                //  onClick={()=> {setSelectedUID("newProduce");handleEdit()}} 
+                 />
+
+              </div>
+              
               <div>
                 <TableContainer>
                   <TableHead>

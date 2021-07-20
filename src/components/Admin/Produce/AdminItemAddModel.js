@@ -4,6 +4,7 @@ import { AuthContext } from '../../../auth/AuthContext';
 import axios from 'axios';
 import { Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import Multiselect from 'multiselect-react-dropdown';
 
 
 
@@ -84,6 +85,28 @@ const useStyles = makeStyles((theme) => ({
     color: 'red',
   },
 
+  up_arrow: {
+    display: 'inline-block',
+    content: " ",
+    marginLeft: '4px',
+    marginBottom: '4px',
+    borderLeft: '5px solid transparent',
+    borderRight: '5px solid transparent',
+    borderBottom: '5px solid black',
+  },
+  
+  down_arrow: {
+    display: 'inline-block',
+    content: " ",
+    marginLeft: '4px',
+    marginBottom: '4px',
+    borderLeft: '5px solid transparent',
+    borderRight: '5px solid transparent',
+    borderTop: '5px solid black',
+  },
+  
+  
+
   
   
 }));
@@ -92,6 +115,10 @@ function AdminItemAddModel (props){
   
   const auth = useContext(AuthContext);
   const classes = useStyles();
+  const [allFarms,setAllFarms] = useState([]);
+  const [allSelectedFarmsUID,setAllSelectedFarmsUID] = useState(props.produceDict != 'newProduce'?props.produceDict["farms"].map((item)=>item[0]):[]);
+  const [allSelectedFarms,setAllSelectedFarms] = useState(props.produceDict != 'newProduce'?props.produceDict["farms"].map((item)=>item[4]):[]);
+  
   const [inProduceDict, setInProduceDict] = useState(props.produceDict != 'newProduce'?
                                                       {
                                                         "item_uid":props.produceDict["item_uid"],
@@ -123,6 +150,7 @@ function AdminItemAddModel (props){
                                                         "item_status":''
                                                       }
                                                     )
+  
   const handleChange = (event) => {
     const { id, value} = event.target;
     setInProduceDict(prevState => ({...prevState, [id]: value }))
@@ -202,8 +230,15 @@ function AdminItemAddModel (props){
         });
   };
 
-  const insertAPI =
-    process.env.REACT_APP_SERVER_BASE_URI + 'addItems_Prime/Insert';
+  
+  const handleSelectChange = (e) => {
+    console.log(e)
+    setAllFarms(e.map((item)=>item['business_uid']))
+    
+  };
+
+
+  
 
   
 
@@ -296,21 +331,15 @@ function AdminItemAddModel (props){
                           <TextField id="business_price"  onChange={handleChange}/> 
                         </td>
                         
-                        <td className={classes.usrDesc}>
-                            <select style={{border:'0px',textAlign:'center',width:"auto"}}
-                            onChange={handleFarmSelection}>
-                              
-                                {props.farmData.map((item,index) => (
-                                        <option 
-                                         selected={index===0 || item[0]===inProduceDict['business_uid'] ? "selected":"nothing"} 
-                                                    key={item[0]} 
-                                                    value={item[0]}
-                                                    
-                                                    >
-                                            {item[1]}
-                                        </option>
-                                  ))}
-                            </select>
+                        <td>
+                        <Multiselect
+                                  options={props.allFarms}
+                                  displayValue="business_name" 
+                                  // isObject={false}
+                                  showCheckbox
+                                  onSelect={handleSelectChange} 
+                                  onRemove={handleSelectChange}
+                                />
                         </td>
 
                         <td className={classes.usrDesc}>
@@ -384,21 +413,35 @@ function AdminItemAddModel (props){
                         
                         <td className={classes.usrDesc} >{inProduceDict['farms'].length}</td>
                         
+                        {/* <td>
+                          <Multiselect
+                                  options={props.allFarms.map((item)=>item['business_name'])}
+                                  selectedValues={allSelectedFarms} 
+                                  isObject={false}
+                                  showCheckbox
+                                  onSelect={handleSelectChange} 
+                                  onRemove={handleSelectChange}
+                                />
+                        </td> */}
+
                         <td className={classes.usrDesc}>
-                            <select style={{border:'0px',textAlign:'center',width:"auto"}}>
-                                {inProduceDict['farms'].map((item,index) => (
+                            <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                            onChange={handleFarmSelection}>
+                              
+                                {props.farmData.map((item,index) => (
                                         <option 
-                                        className={index===0? classes.original:classes.replacement} 
-                                                    key={index} 
-                                                    //value={inProduceDict[item_uid+","+item[2]+","+String(item[3])}
+                                         selected={index===0 || item[0]===inProduceDict['business_uid'] ? "selected":"nothing"} 
+                                                    key={item[0]} 
+                                                    value={item[0]}
+                                                    
                                                     >
-                                            {item[item.length-1]+", "+item[item.length-2]+", "+item[item.length-3]}
+                                            {item[1]}
                                         </option>
                                   ))}
                             </select>
                         </td>
-                        
-                        
+
+
                     </tr>
                     
               </tbody>
