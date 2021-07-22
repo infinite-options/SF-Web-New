@@ -667,7 +667,28 @@ const Landing = ({ ...props }) => {
         <Farmers />
       </Box>
       {/* END: Farmer Information */}
-
+      <Box
+        className={classes.testimonial}
+        style={{
+          backgroundColor: '#F1F4F4',
+          // height: '20em',
+          width: '100%',
+          border: '0px solid black',
+        }}
+      >
+        <Box
+          className={classes.title}
+          style={{
+            marginLeft: '50px',
+            paddingBottom: 'px',
+            textAlign: 'left',
+            backgroundColor: '#F1F4F4',
+          }}
+        >
+          <u>Testimonials</u>
+        </Box>
+        <Testimonial></Testimonial>
+      </Box>
       {/* START: Info Section */}
       <Box style={{ backgroundImage: `url(${bg})` }}>
         <Box
@@ -803,28 +824,6 @@ const Landing = ({ ...props }) => {
 
       {/* </Box> */}
       <div>
-        <Box
-          className={classes.testimonial}
-          style={{
-            backgroundColor: '#F1F4F4',
-            // height: '20em',
-            width: '100%',
-            border: '0px solid black',
-          }}
-        >
-          <Box
-            className={classes.title}
-            style={{
-              marginLeft: '50px',
-              paddingBottom: 'px',
-              textAlign: 'left',
-              backgroundColor: '#F1F4F4',
-            }}
-          >
-            <u>Testimonials</u>
-          </Box>
-          <Testimonial></Testimonial>
-        </Box>
         <Box style={{ marginBottom: '20px' }}>
           <Order
             isLoginShown={isLoginShown}

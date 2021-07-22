@@ -17,6 +17,7 @@ import appColors from 'styles/AppColors';
 import MenuNavButton from '../../utils/MenuNavButton';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import MenuButton from './MenuButton';
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -196,14 +197,14 @@ function AdminNavBarNew({ tab, setTab, ...props }) {
               />
             </Box>
             <Box>
-              <IconButton ref={anchorRef} aria-haspopup="true">
+              {/*  <IconButton ref={anchorRef} aria-haspopup="true">
                 <MenuIcon
                   style={{ color: '#1c6d74', width: '3rem', height: '3rem' }}
                   aria-hidden="false"
                   aria-label="Menu list"
                 />
-              </IconButton>
-              {/*  <MenuNavButton style={{ border: '1px solid #1c6d74' }} /> */}
+              </IconButton> */}
+              <MenuButton />
             </Box>
             {Auth.authLevel >= 1 && (
               <React.Fragment>
