@@ -10,6 +10,11 @@ import {
   Button,
 } from '@material-ui/core';
 import moment from 'moment';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import BusinessAnalytics from './Analytics/BusinessAnalytics';
 import ItemAnalytics from './Analytics/ItemAnalytics';
 import DateAnalytics from './Analytics/DateAnalytics';
@@ -146,7 +151,8 @@ function AdminDashboard() {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [newCustomers, setNewCustomers] = useState(0);
   const [newOrders, setNewOrders] = useState([]);
-  console.log('Sweepstake:', auth.sweepstakeActive);
+  const [open, setOpen] = useState(false);
+  console.log('Sweepstake in AdminDashboard:', auth.sweepstakeActive);
   useEffect(() => {
     axios
       .get(
@@ -212,6 +218,13 @@ function AdminDashboard() {
         console.log(err);
       });
   }, []);
+  const sweepstakeToggle = () => {
+    console.log('Sweepstake in Toggle function:', auth.sweepstakeActive);
+    auth.sweepstakeActive = !auth.sweepstakeActive;
+    auth.setSweepstakeActive(auth.sweepstakeActive);
+    console.log('Sweepstake after toggle:', auth.sweepstakeActive);
+    setOpen(true);
+  };
 
   return (
     <div className={classes.root}>
@@ -280,7 +293,7 @@ function AdminDashboard() {
           </Grid>
           <Grid item>
             <Button
-              onClick={() => auth.setSweepstakeActive(!auth.sweepstakeActive)}
+              onClick={sweepstakeToggle}
               style={{
                 backgroundColor: '#F5841F',
                 color: 'white',
@@ -375,6 +388,22 @@ function AdminDashboard() {
             </Paper>
           </Grid>
         </Grid>
+      </div>
+      <div>
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>{'Sweepstake Toggle'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Sweepstake set to:
+              {auth.sweepstakeActive ? <div>Active</div> : <div>Inactive</div>}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} color="primary" autoFocus>
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );
