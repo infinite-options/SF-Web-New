@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Container, Row, Col } from 'react-grid-system';
-import { Visible, Hidden } from 'react-grid-system';
 
 import { useHistory } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
@@ -9,9 +8,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import appColors from '../../styles/AppColors';
 import LandingNavBar from '../LandingNavBar/LandingNavBar';
-import CheckoutStoreTab from '../Tabs/CheckoutStoreTab';
 import AdminLogin from '../LogIn/AdminLogin';
-// import Signup from '../SignUp/Signup';
 import Signup from '../SignUp/newSignUp';
 import ProductDisplay from '../ProductDisplay/ProductDisplay';
 import DeliveryLocationSearch from '../DeliverySearch/DeliveryLocationSearch';
@@ -19,10 +16,10 @@ import Farmers from '../Farmers/Farmers';
 import Testimonial from '../Testimonial/Testimonial';
 import Order from '../Order/Order';
 import Footer from '../Footer/Footer';
-import { LeftEmptyCell } from '@material-ui/data-grid';
 import bg from '../../icon/bg.svg';
 import ConfirmatioModal from 'components/SignUp/ConfirmationModal';
-
+import { AdminFarmContext } from '../Admin/AdminFarmContext';
+import { AuthContext } from '../../auth/AuthContext';
 const useStyles = makeStyles((theme) => ({
   authModal: {
     position: 'absolute',
@@ -138,11 +135,13 @@ function useOutsideAlerter(ref) {
 const Landing = ({ ...props }) => {
   const classes = useStyles();
   const history = useHistory();
+  const adminFarm = useContext(AdminFarmContext);
+  const auth = useContext(AuthContext);
   // Toggles for the login and signup box to be passed in as props to the Landing Nav Bar
   const [isLoginShown, setIsLoginShown] = useState(false); // checks if user is logged in
   const [isSignUpShown, setIsSignUpShown] = useState(false);
   const [confirmEmailstate, setConfirmEmail] = useState(false);
-
+  console.log('Landing Sweepstake Value:', auth.sweepstakeActive);
   const loginWrapperRef = useRef(null);
   useOutsideAlerter(loginWrapperRef, setIsLoginShown);
   const signupWrapperRef = useRef(null);
@@ -172,7 +171,6 @@ const Landing = ({ ...props }) => {
         setIsSignUpShown={setIsSignUpShown}
       />
       {/* START: Login/SignUp Modal */}
-
       <Box display="flex" justifyContent="flex-end">
         {/* Login Modal */}
         <Box
@@ -232,6 +230,57 @@ const Landing = ({ ...props }) => {
           />
         )}
       </Box>
+      <div>
+        {auth.sweepstakeActive ? (
+          <div>
+            <Box
+              onClick={() => history.push('/sweepstakes')}
+              style={{
+                background: '#F8851B 0% 0% no-repeat padding-box',
+                opacity: 1,
+                height: '60px',
+                paddingTop: '10px',
+                cursor: 'pointer',
+              }}
+            >
+              <span
+                style={{
+                  textAlign: 'center',
+                  fontSize: ' 40px ',
+                  fontWeight: '600',
+                  color: '#FFFFFF',
+                  opacity: 1,
+                  paddingRight: '30px',
+                  marginTop: '20px',
+                }}
+              >
+                Free Fresh Food!
+              </span>
+              <span
+                style={{
+                  textAlign: 'center',
+                  fontSize: ' 20px ',
+                  fontWeight: '600',
+                  color: '#FFFFFF',
+                  opacity: 1,
+                }}
+              >
+                Click here to enter now to &nbsp;
+                <span
+                  style={{
+                    fontWeight: '600',
+                    color: '#2B6D74',
+                  }}
+                >
+                  win $50 worth &nbsp;
+                </span>
+                of fresh produce, delivered free of charge to your door
+              </span>
+            </Box>
+          </div>
+        ) : null}
+      </div>
+
       {/* END: Login/SignUp Modal */}
       {/* START: landing Logo and Guest Login */}
       {/* <Container
@@ -280,9 +329,7 @@ const Landing = ({ ...props }) => {
             </Row>
           </Container> */}
       {/* END: Landing Page Logo */}
-
       {/* START: Info Section */}
-
       {/* <Box className={classes.title} style={{ paddingTop: '30px',position:'sticky' }}>
             Why try Serving Fresh
           </Box>
@@ -414,7 +461,6 @@ const Landing = ({ ...props }) => {
               </Col>
             </Row>
           </Container> */}
-
       {/* </Box>
       </Box> */}
       {/* END: Login/SignUp Modal */}
@@ -476,7 +522,6 @@ const Landing = ({ ...props }) => {
         </Row>
       </Container>
       {/* END: Landing Page Logo */}
-
       <Box
         className="hero-right"
         display="flex"
@@ -514,7 +559,6 @@ const Landing = ({ ...props }) => {
           />
         </Box>
       </Box>
-
       <Box
         className={classes.title}
         style={{
@@ -549,7 +593,7 @@ const Landing = ({ ...props }) => {
               <p
                 style={{
                   textAlign: 'center',
-                  font: 'normal normal 600 24px SF Pro Display',
+                  font: 'normal normal 600 24px',
                   letterSpacing: '0.45px',
                   color: appColors.secondary,
                   opacity: 1,
@@ -576,7 +620,7 @@ const Landing = ({ ...props }) => {
               <p
                 style={{
                   textAlign: 'center',
-                  font: 'normal normal 600 24px SF Pro Display',
+                  font: 'normal normal 600 24px ',
                   letterSpacing: '0.45px',
                   color: appColors.secondary,
                   opacity: 1,
@@ -603,7 +647,7 @@ const Landing = ({ ...props }) => {
               <p
                 style={{
                   textAlign: 'center',
-                  font: 'normal normal 600 24px SF Pro Display',
+                  font: 'normal normal 600 24px',
                   letterSpacing: '0.45px',
                   color: appColors.secondary,
                   opacity: 1,
@@ -650,7 +694,6 @@ const Landing = ({ ...props }) => {
           </Button>
         </Box>
       </Box>
-
       {/* END: Info Section */}
       {/* START: Farmer information */}
       <Box className={classes.farmer}>
@@ -737,9 +780,7 @@ const Landing = ({ ...props }) => {
       </Box>
       {/* END: Info Section */}
       {/* START: Local Produce Search */}
-
       {/* END: Local Produce Search */}
-
       {/* <Container
             fluid
             style={{
@@ -821,7 +862,6 @@ const Landing = ({ ...props }) => {
               </Col>
             </Row>
           </Container> */}
-
       {/* </Box> */}
       <div>
         <Box style={{ marginBottom: '20px' }}>

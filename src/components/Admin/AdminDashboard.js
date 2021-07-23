@@ -1,7 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box, Paper, Typography, Avatar } from '@material-ui/core';
+import {
+  Grid,
+  Box,
+  Paper,
+  Typography,
+  Avatar,
+  Button,
+} from '@material-ui/core';
 import moment from 'moment';
 import BusinessAnalytics from './Analytics/BusinessAnalytics';
 import ItemAnalytics from './Analytics/ItemAnalytics';
@@ -9,6 +16,7 @@ import DateAnalytics from './Analytics/DateAnalytics';
 import CustomerRevenue from './Revenue/CustomerRevenue';
 import BusinessRevenue from './Revenue/BusinessRevenue';
 import ItemRevenue from './Revenue/ItemRevenue';
+import { AuthContext } from '../../auth/AuthContext';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -23,8 +31,56 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
     borderRadius: '20px',
-    width: '260px',
-    minWidth: '260px',
+
+    '@media (min-width: 380px)': {
+      width: '160px',
+    },
+    '@media (min-width: 680px)': {
+      width: '200px',
+    },
+    '@media (min-width: 980px)': {
+      width: '260px',
+    },
+
+    '@media (min-width: 1380px)': {
+      width: '280px',
+    },
+    '@media (min-width: 1580px)': {
+      width: '360px',
+    },
+    '@media (min-width: 1680px)': {
+      width: '400px',
+    },
+    '@media (min-width: 1920px)': {
+      width: '460px',
+    },
+  },
+  paper1: {
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    borderRadius: '20px',
+    '@media (min-width: 380px)': {
+      width: '160px',
+    },
+    '@media (min-width: 680px)': {
+      width: '200px',
+    },
+    '@media (min-width: 980px)': {
+      width: '260px',
+    },
+    '@media (min-width: 1380px)': {
+      width: '260px',
+    },
+    '@media (min-width: 1580px)': {
+      width: '300px',
+    },
+    '@media (min-width: 1680px)': {
+      width: '320px',
+    },
+    '@media (min-width: 1920px)': {
+      width: '360px',
+    },
   },
   chart: {
     padding: theme.spacing(1),
@@ -32,7 +88,23 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     borderRadius: '20px',
     width: '800px',
-    margin: '1rem',
+    marginBottom: '1rem',
+
+    '@media (min-width: 980px)': {
+      width: '800px',
+    },
+    '@media (min-width: 1380px)': {
+      width: '860px',
+    },
+    '@media (min-width: 1580px)': {
+      width: '900px',
+    },
+    '@media (min-width: 1680px)': {
+      width: '1000px',
+    },
+    '@media (min-width: 1920px)': {
+      width: '1160px',
+    },
   },
   header: {
     textAlign: 'center',
@@ -67,13 +139,14 @@ const useStyles = makeStyles((theme) => ({
 
 function AdminDashboard() {
   const classes = useStyles();
-
+  const auth = useContext(AuthContext);
   //upcoming orders
   const [upcomingOrders, setUpcomingOrders] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [newCustomers, setNewCustomers] = useState(0);
   const [newOrders, setNewOrders] = useState([]);
+  console.log('Sweepstake:', auth.sweepstakeActive);
   useEffect(() => {
     axios
       .get(
@@ -156,7 +229,7 @@ function AdminDashboard() {
                       style={{
                         display: 'flex',
                         borderBottom: '0.5px solid #F5841F',
-                        padding: '2px',
+                        padding: '4px',
                       }}
                     >
                       <Box
@@ -205,12 +278,28 @@ function AdminDashboard() {
               </div>
             </Paper>
           </Grid>
+          <Grid item>
+            <Button
+              onClick={() => auth.setSweepstakeActive(!auth.sweepstakeActive)}
+              style={{
+                backgroundColor: '#F5841F',
+                color: 'white',
+                height: '2rem',
+                marginLeft: '4rem',
+                marginTop: '0.75rem',
+                textTransform: 'none',
+                alignContent: 'center',
+              }}
+            >
+              Toggle Sweepstake
+            </Button>
+          </Grid>
         </Grid>
       </div>
       <div>
         <Grid container spacing={3}>
           <Grid item>
-            <Paper className={classes.paper}>
+            <Paper className={classes.paper1}>
               <Typography className={classes.header}>
                 First time customers
               </Typography>
@@ -220,7 +309,7 @@ function AdminDashboard() {
             </Paper>
           </Grid>
           <Grid item>
-            <Paper className={classes.paper}>
+            <Paper className={classes.paper1}>
               <Typography className={classes.header}>
                 Number of Upcoming Orders
               </Typography>
@@ -230,7 +319,7 @@ function AdminDashboard() {
             </Paper>
           </Grid>
           <Grid item>
-            <Paper className={classes.paper}>
+            <Paper className={classes.paper1}>
               <Typography className={classes.header}>
                 Upcoming Revenue
               </Typography>
