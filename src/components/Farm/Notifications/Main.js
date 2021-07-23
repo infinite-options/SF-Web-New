@@ -21,7 +21,8 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import './Main.css'
+import './Main.css';
+import SMSForm from "../../Message/SMSForm";
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -316,7 +317,9 @@ function NotificationMain({
                         </div>
                     {/*</Grid>
                 </Grid>*/}
-
+                {/*<iframe is="x-frame-bypass" src="https://voice.google.com/u/0/messages"/>
+                <webview src="https://voice.google.com/u/0/messages" width="640" height="480"/>*/}
+                <SMSForm/>
             </div>
         </div>
 

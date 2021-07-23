@@ -20,7 +20,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c55e7531-7ba9-4fd4-83fe-ea55fbc88158" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Message/SMSForm.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Message/SMSForm.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Sweeptakes/Sweeptakes.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Sweeptakes/Sweeptakes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Sweeptakes/Sweeptakes2.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Sweeptakes/Sweeptakes3.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Sweeptakes/Sweeptakes4.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/images/Mask Group 1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/images/en_badge_web_generic.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/SF-Web-v2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SF-Web-v2.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Nav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Nav.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Farm/Notifications/Main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Farm/Notifications/Main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Farm/Notifications/Main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Farm/Notifications/Main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +50,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -45,13 +65,22 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/Message" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\vn100\Desktop\SF-Web-v2\src\images" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\vn100\Desktop\SF-Web-v2\src\components\Message" />
+    </key>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -73,6 +102,17 @@
       <workItem from="1625077863859" duration="2482000" />
       <workItem from="1625122415130" duration="2096000" />
       <workItem from="1625164501693" duration="619000" />
+      <workItem from="1626196693701" duration="5966000" />
+      <workItem from="1626233048501" duration="3763000" />
+      <workItem from="1626279715388" duration="4522000" />
+      <workItem from="1626372246330" duration="1009000" />
+      <workItem from="1626386738655" duration="2936000" />
+      <workItem from="1626459322480" duration="1409000" />
+      <workItem from="1626885471356" duration="6074000" />
+      <workItem from="1626942447692" duration="7240000" />
+      <workItem from="1626976739691" duration="629000" />
+      <workItem from="1627026729533" duration="727000" />
+      <workItem from="1627056084346" duration="8651000" />
     </task>
     <servers />
   </component>
@@ -92,10 +132,26 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="667" y="253" width="585" height="534" key="find.popup" timestamp="1625041885636">
+    <state width="1899" height="282" key="GridCell.Tab.0.bottom" timestamp="1626287617801">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="282" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1626287617801" />
+    <state width="1899" height="282" key="GridCell.Tab.0.center" timestamp="1626287617801">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="282" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1626287617801" />
+    <state width="1899" height="282" key="GridCell.Tab.0.left" timestamp="1626287617801">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="282" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1626287617801" />
+    <state width="1899" height="282" key="GridCell.Tab.0.right" timestamp="1626287617801">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="282" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1626287617801" />
+    <state x="667" y="253" width="585" height="534" key="find.popup" timestamp="1627062083552">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="667" y="253" width="585" height="534" key="find.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625041885636" />
-    <state x="2587" y="253" width="585" height="534" key="find.popup/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1624299158602" />
+    <state x="667" y="253" width="585" height="534" key="find.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1627062083552" />
+    <state x="2587" y="253" width="585" height="534" key="find.popup/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1626949413258" />
   </component>
 </project>
