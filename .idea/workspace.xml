@@ -21,6 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c55e7531-7ba9-4fd4-83fe-ea55fbc88158" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Nav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Nav.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Home/Landing.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Home/Landing.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +75,8 @@
       <workItem from="1625077863859" duration="2482000" />
       <workItem from="1625122415130" duration="2096000" />
       <workItem from="1625164501693" duration="619000" />
+      <workItem from="1627070543067" duration="98000" />
+      <workItem from="1627071162391" duration="70000" />
     </task>
     <servers />
   </component>
@@ -92,10 +96,18 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="667" y="253" width="585" height="534" key="find.popup" timestamp="1625041885636">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1627070639639">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="740" y="275" key="FileChooserDialogImpl/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1627070639639" />
+    <state x="719" y="281" key="RollbackChangesDialog" timestamp="1627071215801">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="719" y="281" key="RollbackChangesDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1627071215801" />
+    <state x="2587" y="253" width="585" height="534" key="find.popup" timestamp="1627071176532">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
     <state x="667" y="253" width="585" height="534" key="find.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625041885636" />
-    <state x="2587" y="253" width="585" height="534" key="find.popup/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1624299158602" />
+    <state x="2587" y="253" width="585" height="534" key="find.popup/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1627071176532" />
   </component>
 </project>

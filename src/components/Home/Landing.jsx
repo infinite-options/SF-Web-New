@@ -234,7 +234,7 @@ const Landing = ({ ...props }) => {
         {auth.sweepstakeActive ? (
           <div>
             <Box
-              onClick={() => history.push('/sweepstakes')}
+              onClick={() => history.push('/sweeptakes')}
               style={{
                 background: '#F8851B 0% 0% no-repeat padding-box',
                 opacity: 1,
