@@ -1,11 +1,8 @@
-import React, { useContext, useState, forwardRef, useEffect } from 'react';
-import NumberFormat from 'react-number-format';
-import { AuthContext } from '../../../auth/AuthContext';
+import React, { useState} from 'react';
 import axios from 'axios';
 import { Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Multiselect from 'multiselect-react-dropdown';
-
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -113,12 +110,7 @@ const useStyles = makeStyles((theme) => ({
 
 function AdminItemAddModel (props){
   
-  const auth = useContext(AuthContext);
   const classes = useStyles();
-  const [allFarms,setAllFarms] = useState([]);
-  const [allSelectedFarmsUID,setAllSelectedFarmsUID] = useState(props.produceDict != 'newProduce'?props.produceDict["farms"].map((item)=>item[0]):[]);
-  const [allSelectedFarms,setAllSelectedFarms] = useState(props.produceDict != 'newProduce'?props.produceDict["farms"].map((item)=>item[4]):[]);
-  
   const [inProduceDict, setInProduceDict] = useState(props.produceDict != 'newProduce'?
                                                       {
                                                         "item_uid":props.produceDict["item_uid"],
@@ -151,28 +143,35 @@ function AdminItemAddModel (props){
                                                       }
                                                     )
   
+  
+  
+  const distinctVals = props.distinctVals
+  console.log("distinct values ",distinctVals['item_type'],inProduceDict['item_type'])
   const handleChange = (event) => {
     const { id, value} = event.target;
+    console.log("in handle change ", id,value)
     setInProduceDict(prevState => ({...prevState, [id]: value }))
     
   };
 
-  const handleFarmSelection = (event) => {
-    event.persist();
-    
-    if(event.target!='null'){
-      // console.log( event.target.value,event.target)
-      setInProduceDict(prevState => ({...prevState, ['business_uid']: event.target.value }))
-      
-    }
-    // console.log(inProduceDict)
-  };
-
   const handleSave = () => {
     if(props.produceDict==='newProduce'){
+
+      const res = {}
+      for (let [key, value] of Object.entries(inProduceDict)) {
+        console.log(value)
+        if(!value){
+          res[key] = "NULL"
+        }
+        else{
+          res[key] = value
+        }
+        
+      }
       
       let formData = new FormData();
-      Object.entries(inProduceDict).forEach((entry) => {
+      Object.entries(res).forEach((entry) => {
+        
         formData.append(entry[0], entry[1]);
       
     });
@@ -193,10 +192,24 @@ function AdminItemAddModel (props){
   
     }
     else{
+      
+      const res = {}
+      for (let [key, value] of Object.entries(inProduceDict)) {
+        console.log(value)
+        if(!value){
+          console.log("in")
+          res[key] = "NULL"
+        }
+        else{
+          res[key] = value
+        }
+        
+      }
+      setInProduceDict(res)
     axios
     .post(
       'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_item_admin/update',
-      inProduceDict
+      res
     )
     .then((response) => {
       console.log("produce saved")
@@ -230,224 +243,324 @@ function AdminItemAddModel (props){
         });
   };
 
-  
-  const handleSelectChange = (e) => {
-    console.log(e)
-    setAllFarms(e.map((item)=>item['business_uid']))
-    
-  };
-
-
-  
-
-  
-
   return (
-          <div id="addItm" style={{bottom:"0", position:"absolute", marginLeft:"15%", width:"auto", marginBottom:"1rem"}}>
-          <Grid 
-          lg={12}
-          style={{
-            //width: "90%",
-            display: 'flex',
-            flexDirection: 'row',
-            background: '#FFFFFF 0% 0% no-repeat padding-box',
-            borderRadius: '20px',
-            opacity: 1,
-            // marginLeft:"5%"
-          }}
-        >
+        <div id="addItm" style={{bottom:"0", position:"absolute", marginLeft:"15%", width:"auto", marginBottom:"1rem"}}>
+            <Grid 
+            lg={12}
+            style={{
+              //width: "90%",
+              display: 'flex',
+              flexDirection: 'row',
+              background: '#FFFFFF 0% 0% no-repeat padding-box',
+              borderRadius: '20px',
+              opacity: 1,
+              // marginLeft:"5%"
+            }}
+          >
       
-       <div id="inBox"
-              style={{
-                marginTop: '1rem',
-              }}> 
-              <table className={classes.table}>
-                {/* {console.log("hello there",inProduceDict,props.produceDict)} */}
-                {/* {farmFetch()} */}
-              { props.produceDict === 'newProduce' || inProduceDict['item_uid'] === '' ?
-              
-              <tbody>
-                    
-                    <tr className={classes.tr} style={{border:'0px'}}>
-                      <td className={classes.usrTitle}>Name</td>
-                      <td className={classes.usrTitle}>Photo</td>
-                      <td className={classes.usrTitle}>Type</td>
-                      <td className={classes.usrTitle}>Description</td>
-                      <td className={classes.usrTitle}>Unit </td>
-                      <td className={classes.usrTitle}>Item Price</td>
-                      <td className={classes.usrTitle}>Size</td>
-                      <td className={classes.usrTitle}>Taxable</td>
-                      <td className={classes.usrTitle}>Display</td>
-                      <td className={classes.usrTitle}>Business Price</td>
-                      <td className={classes.usrTitle}>Primary Farm</td>
-                      <td className={classes.usrTitle}>Item Status</td>
-                      
-                    </tr>
-                    
-                    <tr className={classes.tr}>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_name" onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <div>
-                            <img 
-                                  src={inProduceDict['item_photo']===""?'/fruits-and-vegetables.png':inProduceDict['item_photo']}
-                                  alt="" height="50" width="50">
-                            </img>
-                            <label htmlFor="upload-button">
-                            <img src='/editIcon.png' alt="dummy" width="15" height="15" />
-                            </label>
-                            <input
-                                type="file"
-                                id="upload-button"
-                                style={{ display: "none" }}
-                                onChange={onFileChange}
-                              />
-                          </div>
-                        </td> 
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_type"  onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_desc"  onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_unit"  onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_price"  onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_sizes"  onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="taxable"  onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_display"  onChange={handleChange}/> 
-                        </td>
+              <div id="inBox"
+                      style={{
+                        marginTop: '1rem',
+                      }}> 
+                      <table className={classes.table}>
                         
-                        <td className={classes.usrDesc}>
-                          <TextField id="business_price"  onChange={handleChange}/> 
-                        </td>
+                        { props.produceDict === 'newProduce' || inProduceDict['item_uid'] === '' ?
                         
-                        <td>
-                        <Multiselect
-                                  options={props.allFarms}
-                                  displayValue="business_name" 
-                                  // isObject={false}
-                                  showCheckbox
-                                  onSelect={handleSelectChange} 
-                                  onRemove={handleSelectChange}
-                                />
-                        </td>
-
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_status"  onChange={handleChange}/> 
-                        </td>
-                        
-                         
-                    </tr>
-                    
-              </tbody>
-            
-              :
-              
-              <tbody>
-                    
-                    <tr className={classes.tr} style={{border:'0px'}}>
-                      <td className={classes.usrTitle}>Name</td>
-                      <td className={classes.usrTitle}>Photo</td>
-                      <td className={classes.usrTitle}>Type</td>
-                      <td className={classes.usrTitle}>Description</td>
-                      <td className={classes.usrTitle}>Unit </td>
-                      <td className={classes.usrTitle}>Item Price</td>
-                      <td className={classes.usrTitle}>Size</td>
-                      <td className={classes.usrTitle}>Taxable</td>
-                      <td className={classes.usrTitle}>Display</td>
-                      <td className={classes.usrTitle}>Suppliers</td>
-                      <td className={classes.usrTitle}>Primary Farm</td>
-                      
-                    </tr>
-                    <tr className={classes.tr}>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_name" value={inProduceDict['item_name']} onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <div>
-                            <img src={inProduceDict['item_photo']}
-                                  alt="" height="50" width="50">
-                            </img>
-                            <label htmlFor="upload-button">
-                            <img src='/editIcon.png' alt="dummy" width="15" height="15" />
-                            </label>
-                            <input
-                                type="file"
-                                id="upload-button"
-                                style={{ display: "none" }}
-                                onChange={onFileChange}
-                              />
-                          </div>
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_type" value={inProduceDict['item_type']} onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_desc" value={inProduceDict['item_desc']} onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_unit" value={inProduceDict['item_unit']} onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_price" value={inProduceDict['item_price']} onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_sizes" value={inProduceDict['item_sizes']} onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="taxable" value={inProduceDict['taxable']} onChange={handleChange}/> 
-                        </td>
-                        <td className={classes.usrDesc}>
-                          <TextField id="item_display" value={inProduceDict['item_display']} onChange={handleChange}/> 
-                        </td>
-                        
-                        <td className={classes.usrDesc} >{inProduceDict['farms'].length}</td>
-                        
-                        {/* <td>
-                          <Multiselect
-                                  options={props.allFarms.map((item)=>item['business_name'])}
-                                  selectedValues={allSelectedFarms} 
-                                  isObject={false}
-                                  showCheckbox
-                                  onSelect={handleSelectChange} 
-                                  onRemove={handleSelectChange}
-                                />
-                        </td> */}
-
-                        <td className={classes.usrDesc}>
-                            <select style={{border:'0px',textAlign:'center',width:"auto"}}
-                            onChange={handleFarmSelection}>
+                        <tbody>
                               
-                                {props.farmData.map((item,index) => (
-                                        <option 
-                                         selected={index===0 || item[0]===inProduceDict['business_uid'] ? "selected":"nothing"} 
-                                                    key={item[0]} 
-                                                    value={item[0]}
-                                                    
-                                                    >
-                                            {item[1]}
-                                        </option>
-                                  ))}
-                            </select>
-                        </td>
-
-
-                    </tr>
-                    
-              </tbody>
-              
-              }
-              </table>
+                              <tr className={classes.tr} style={{border:'0px'}}>
+                                <td className={classes.usrTitle}>Name</td>
+                                <td className={classes.usrTitle}>Photo</td>
+                                <td className={classes.usrTitle}>Type</td>
+                                <td className={classes.usrTitle}>Description</td>
+                                <td className={classes.usrTitle}>Unit </td>
+                                <td className={classes.usrTitle}>Item Price</td>
+                                <td className={classes.usrTitle}>Size</td>
+                                <td className={classes.usrTitle}>Taxable</td>
+                                <td className={classes.usrTitle}>Display</td>
+                                
+                              </tr>
+                              
+                              <tr className={classes.tr}>
+                                  <td className={classes.usrDesc}>
+                                    <TextField id="item_name" onChange={handleChange}/> 
+                                  </td>
+                                  <td className={classes.usrDesc}>
+                                    <div>
+                                      <img 
+                                            src={inProduceDict['item_photo']===""?'/fruits-and-vegetables.png':inProduceDict['item_photo']}
+                                            alt="" height="50" width="50">
+                                      </img>
+                                      <label htmlFor="upload-button">
+                                      <img src='/editIcon.png' alt="dummy" width="15" height="15" />
+                                      </label>
+                                      <input
+                                          type="file"
+                                          id="upload-button"
+                                          style={{ display: "none" }}
+                                          onChange={onFileChange}
+                                        />
+                                    </div>
+                                  </td> 
+                                  
+                                  <td className={classes.usrDesc}>
+                                    <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                          onChange={handleChange}
+                                          id = 'item_type'
+                                          >
+                                            {distinctVals['item_type'].map((item,index) => {
+                                                return (<option id = {item} value={item}
+                                                        selected = {index===0?"selected":""}
+                                                > 
+                                                {item} 
+                                                </option>)
+                                            })}
+                                      </select>
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                  <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                          onChange={handleChange}
+                                          id = 'item_desc'
+                                          >
+                                            {distinctVals['item_desc'].map((item,index) => {
+                                                return (<option id = {item} value={item}
+                                                        selected = {index===0?"selected":""}
+                                                > 
+                                                {item} 
+                                                </option>)
+                                            })}
+                                      </select> 
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                  <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                          onChange={handleChange}
+                                          id = 'item_unit'
+                                          >
+                                            {distinctVals['item_unit'].map((item,index) => {
+                                                return (<option id = {item} value={item}
+                                                        selected = {index===0?"selected":""}
+                                                > 
+                                                {item} 
+                                                </option>)
+                                            })}
+                                      </select>
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                    <TextField id="item_price"  onChange={handleChange} 
+                                    InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position="start">
+                                        $
+                                      </InputAdornment>
+                                    ),
+                                  }}/> 
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                  <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                          onChange={handleChange}
+                                          id = 'item_sizes'
+                                          >
+                                            {distinctVals['item_sizes'].map((item,index) => {
+                                                return (<option id = {item} value={item}
+                                                        selected = {index===0?"selected":""}
+                                                > 
+                                                {item} 
+                                                </option>)
+                                            })}
+                                      </select>
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                  <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                          onChange={handleChange}
+                                          id = 'taxable'
+                                          >
+                                            {distinctVals['taxable'].map((item,index) => {
+                                                return (<option id = {item} value={item}
+                                                        selected = {index===0?"selected":""}
+                                                > 
+                                                {item} 
+                                                </option>)
+                                            })}
+                                      </select>
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                  <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                          onChange={handleChange}
+                                          id = 'item_display'
+                                          >
+                                            {distinctVals['item_display'].map((item,index) => {
+                                                return (<option id = {item} value={item}
+                                                        selected = {index===0?"selected":""}
+                                                > 
+                                                {item} 
+                                                </option>)
+                                            })}
+                                      </select> 
+                                  </td>
+                              </tr>
+                              
+                        </tbody>
+                        :
+                        <tbody>
+                              
+                              <tr className={classes.tr} style={{border:'0px'}}>
+                                <td className={classes.usrTitle}>Name</td>
+                                <td className={classes.usrTitle}>Photo</td>
+                                <td className={classes.usrTitle}>Type</td>
+                                <td className={classes.usrTitle}>Description</td>
+                                <td className={classes.usrTitle}>Unit </td>
+                                <td className={classes.usrTitle}>Item Price</td>
+                                <td className={classes.usrTitle}>Size</td>
+                                <td className={classes.usrTitle}>Taxable</td>
+                                <td className={classes.usrTitle}>Display</td>
+                                
+                              </tr>
+                              <tr className={classes.tr}>
+                                  <td className={classes.usrDesc}>
+                                    <TextField id="item_name" value={inProduceDict['item_name']} onChange={handleChange}/> 
+                                  </td>
+                                  <td className={classes.usrDesc}>
+                                    <div>
+                                      <img src={inProduceDict['item_photo']}
+                                            alt="" height="50" width="50">
+                                      </img>
+                                      <label htmlFor="upload-button">
+                                      <img src='/editIcon.png' alt="dummy" width="15" height="15" />
+                                      </label>
+                                      <input
+                                          type="file"
+                                          id="upload-button"
+                                          style={{ display: "none" }}
+                                          onChange={onFileChange}
+                                        />
+                                    </div>
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                    <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                        onChange={handleChange}
+                                        id = 'item_type'
+                                        
+                                        >
+                                          {distinctVals['item_type'].map((item) => {
+                                              return (<option id = {item} value={item}
+                                                      selected = {item===inProduceDict['item_type']?"selected":""}
+                                              > 
+                                              {item} 
+                                              </option>)
+                                          })}
+                                    </select>
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                    {/* <TextField id="item_desc" value={inProduceDict['item_desc']} onChange={handleChange}/>  */}
+                                    <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                        onChange={handleChange}
+                                        id = 'item_desc'
+                                        
+                                        >
+                                          {distinctVals['item_desc'].map((item) => {
+                                              return (<option id = {item} value={item}
+                                                      selected = {item===inProduceDict['item_desc']?"selected":""}
+                                              > 
+                                              {item} 
+                                              </option>)
+                                          })}
+                                    </select>
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                    {/* <TextField id="item_unit" value={inProduceDict['item_unit']} onChange={handleChange}/>  */}
+                                    <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                        onChange={handleChange}
+                                        id = 'item_unit'
+                                        
+                                        >
+                                          {distinctVals['item_unit'].map((item) => {
+                                              return (<option id = {item} value={item}
+                                                      selected = {item===inProduceDict['item_unit']?"selected":""}
+                                              > 
+                                              {item} 
+                                              </option>)
+                                          })}
+                                    </select>
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                    <TextField id="item_price" value={inProduceDict['item_price']} onChange={handleChange}
+                                      InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">
+                                            $
+                                          </InputAdornment>
+                                        ),
+                                      }}/> 
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                    {/* <TextField id="item_sizes" value={inProduceDict['item_sizes']} onChange={handleChange}/>  */}
+                                    <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                        onChange={handleChange}
+                                        id = 'item_sizes'
+                                        
+                                        >
+                                          {distinctVals['item_sizes'].map((item) => {
+                                              return (<option id = {item} value={item}
+                                                      selected = {item===inProduceDict['item_sizes']?"selected":""}
+                                              > 
+                                              {item} 
+                                              </option>)
+                                          })}
+                                    </select>
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                    {/* <TextField id="taxable" value={inProduceDict['taxable']} onChange={handleChange}/>  */}
+                                    <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                        onChange={handleChange}
+                                        id = 'taxable'
+                                        
+                                        >
+                                          {distinctVals['taxable'].map((item) => {
+                                              return (<option id = {item} value={item}
+                                                      selected = {item===inProduceDict['taxable']?"selected":""}
+                                              > 
+                                              {item} 
+                                              </option>)
+                                          })}
+                                    </select>
+                                  </td>
+                                  
+                                  <td className={classes.usrDesc}>
+                                    {/* <TextField id="item_display" value={inProduceDict['item_display']} onChange={handleChange}/>  */}
+                                    <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                        onChange={handleChange}
+                                        id = 'item_display'
+                                        
+                                        >
+                                          {distinctVals['item_display'].map((item) => {
+                                              return (<option id = {item} value={item}
+                                                      selected = {item===inProduceDict['item_display']?"selected":""}
+                                              > 
+                                              {item} 
+                                              </option>)
+                                          })}
+                                    </select>
+                                  </td>
+                                  
+                              </tr>
+                              
+                        </tbody>
+                        
+                        }
+                      </table>
+                
               <div >
                 <img
                   width="180px"
@@ -460,41 +573,12 @@ function AdminItemAddModel (props){
                   
                   />
               </div>
-        </div>
+            </div>
+          </Grid>
 
-
-        </Grid>
-
-        
         </div>
             
   );
 };
-
-//styling
-
-
-//NumberFormatCustomPrice is used to validate user input
-function NumberFormatCustomPrice(props) {
-  const { inputRef, onChange, ...other } = props;
-
-  return (
-    <NumberFormat
-      {...other}
-      getInputRef={inputRef}
-      onValueChange={(values) => {
-        onChange({
-          target: {
-            name: props.name,
-            value: values.value,
-          },
-        });
-      }}
-      thousandSeparator
-      isNumericString
-      prefix="$"
-    />
-  );
-}
 
 export default AdminItemAddModel;

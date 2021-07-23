@@ -9,6 +9,7 @@ import {
   Link,
   FormControl,
   Radio,
+  Modal,
 } from '@material-ui/core';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -34,6 +35,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import blankImg from '../../images/blank_img.svg';
 import styles from './farmprofile.module.css';
+import FarmProfileItems from './FarmProfileItems';
+
+
 const BUSINESS_DETAILS_URL =
   'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_details_update/';
 const API_URL =
@@ -197,6 +201,7 @@ function FarmProfiles() {
 
   let [farmerInfo, setfarmerInfo] = useState([]);
   let [busiSelect, setBusiSelect] = useState([]);
+  
   let [SelectedBusiness, setselectedBusiness] = useState([]);
   let [profit1, setProfit1] = useState([]);
   let [products, setProducts] = useState([]);
@@ -240,22 +245,25 @@ function FarmProfiles() {
     let idx = e.target.name;
     // console.log(e.target,idx)
     let tmpDic = products;
-    tmpDic[idx][id] = val;
+    tmpDic.map((items,index)=>{
+      if (items['item_uid'] === idx){
+        tmpDic[index][id] = val;
+      }
+    })
+    
     setProducts(tmpDic);
 
     setSelectedProduct((prevState) => ({ ...prevState, [id]: val }));
-    // setProducts(preState => ({}))
-    // console.log(selectedProduct);
+    
   };
   //farm item update
+  
   const handleSave = (id, action) => {
-    // console.log(id,action,products[id]);
-
     axios
       .post(
         'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_farmer_item_admin/' +
           action,
-        products[parseInt(id)]
+        selectedProduct
       )
       .then((response) => {
         setDialogOpen(true);
@@ -263,6 +271,7 @@ function FarmProfiles() {
       .catch((er) => {
         console.log(er);
       });
+      setOpenDiag(true)
   };
 
   useEffect(() => {
@@ -270,15 +279,18 @@ function FarmProfiles() {
   }, [imageUpload]);
 
   //get items for each farm
-  const fetchProducts = async (id) => {
+  const fetchProducts = (id) => {
     setProducts([]);
-    await axios
+    axios
       .get(
         'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/admin_farmer_items/' +
           id
       )
       .then((response) => {
         setProducts(response.data.result.result);
+        
+        
+
         const temp_dict = {};
         response.data.result.result.map(
           (item) => (temp_dict[item.item_uid] = item)
@@ -352,6 +364,11 @@ function FarmProfiles() {
     } else {
       tempoData.can_cancel = '0';
     }
+    if (status.ACTIVE === true) {
+      tempoData.business_status = 'ACTIVE';
+    } else {
+      tempoData.business_status = 'INACTIVE';
+    }
 
     console.log(JSON.stringify(tempoData));
 
@@ -404,6 +421,11 @@ function FarmProfiles() {
     allowCancel: true,
     noAllowCancel: false,
   });
+
+  const [status, setStatus] = useState({
+    ACTIVE: true,
+    INACTIVE: false,
+  });
   //this three function is to check/uncheck box and update state
   const handleChangeCancel = (event) => {
     var optionPick = event.target.name;
@@ -420,6 +442,22 @@ function FarmProfiles() {
       };
     }
     setCancellation(newCancelObj);
+  };
+  const handleStatusChange = (event) => {
+    var optionPick = event.target.name;
+    var newCancelObj = {};
+    if (optionPick === 'ACTIVE') {
+      newCancelObj = {
+        ACTIVE: true,
+        INACTIVE: false,
+      };
+    } else {
+      newCancelObj = {
+        ACTIVE: false,
+        INACTIVE: true,
+      };
+    }
+    setStatus(newCancelObj);
   };
   const handleChangeStorage = (event) => {
     var optionPick = event.target.name;
@@ -589,20 +627,14 @@ function FarmProfiles() {
         setError(true);
       });
   };
-  const farmerObj = async () => {
-    await axios
+  const farmerObj = () => {
+    axios
       .get(
         'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/businesses'
       )
       .then((response) => {
-        console.log(response);
-        setfarmerInfo(
-          response.data.result.result.sort(function (a, b) {
-            var textA = a.business_name.toUpperCase();
-            var textB = b.business_name.toUpperCase();
-            return textA < textB ? -1 : textA > textB ? 1 : 0;
-          })
-        );
+        
+        setfarmerInfo(response.data.result.result)
         setFarmerID(response.data.result.result[0].business_uid);
         setBusiSelect(response.data.result.result[0]);
         fetchBusinessInfo(
@@ -619,8 +651,7 @@ function FarmProfiles() {
       });
   };
 
-  console.log(profit1);
-  console.log(farmerInfo);
+  
   //popover data
   const farm = () => {
     if (Auth.authLevel >= 2) {
@@ -702,6 +733,7 @@ function FarmProfiles() {
   const id = open ? 'simple-popover' : undefined;
 
   //sorting produce
+
   const handleSortRequest = (cellId) => {
     const isAsc = orderBy === cellId && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -752,9 +784,51 @@ function FarmProfiles() {
 
   function handleChangeZone(event) {
     setSelectedClient(event.target.value);
-    console.log(event.target.value);
   }
 
+  // modal related objects
+  
+  const [openDiag, setOpenDiag] = useState(false);
+  const [openModel, setOpenModel] = useState(false);
+  const [produceDictModal, setProduceDictModal] = useState({});
+  
+  useEffect(() => {
+    if (openModel === false){
+      fetchProducts(farmerID)
+    }
+    fetchProduceItems()
+    
+  }, [openModel]);
+
+  const fetchProduceItems = () => {
+    axios
+          .get('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/getDistinctItems')
+          .then((json) => {
+            setProduceDictModal(json.data.result)
+          })
+            .catch((err) => {
+            if (err.response) {
+              console.log(err.response);
+            }
+            console.log(err);
+          });
+  
+}
+
+  const handleEdit = (e) => {
+    setOpenModel(true)
+  };
+
+  const closeModel = () => {setOpenModel(false); 
+    setOpenDiag(true)}
+
+  const modelBody = (
+    <div>
+      <FarmProfileItems produceDict={produceDictModal} id = {farmerID} handleClose={closeModel}/>
+    </div>
+  );
+
+  console.log("selected business ",busiSelect)
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -780,7 +854,7 @@ function FarmProfiles() {
                   float: 'left',
                   borderRadius: '11px',
                 }}
-                src={imageUpload.path || blankImg}
+                src={busiSelect.business_image}
               ></img>
               <div style={{ float: 'left' }}>
                 <h2
@@ -924,7 +998,7 @@ function FarmProfiles() {
               }}> 
                 Produce Offered
                 <img src='/add.png' id='newProduce' height="20" width="20" style={{ marginLeft:"10px",cursor:"pointer"}}
-                //  onClick={()=> {setSelectedUID("newProduce");handleEdit()}} 
+                      onClick={()=> {handleEdit()}}
                  />
 
               </div>
@@ -935,9 +1009,10 @@ function FarmProfiles() {
                     <TableRow>
                       {farmHead.map((headCell) => (
                         <TableCell
-                          style={{
-                            fontWeight: 'bold',
-                          }}
+                        className={classes.usrTitle}
+                          // style={{
+                          //   fontWeight: 'bold',
+                          // }}
                           padding="none"
                           key={headCell.id}
                           sortDirection={
@@ -967,13 +1042,13 @@ function FarmProfiles() {
                     {farmsSort().map((info, index) => (
                       <TableRow
                         key={info.business_uid}
-                        className={classes.infoRow}
+                        className={classes.tr}
                         onClick={() => setSelectedProduct(info)}
                       >
-                        <TableCell className={classes.desc}>
+                        <TableCell className={classes.usrDesc}>
                           {info.item_name}
                         </TableCell>
-                        <TableCell className={classes.desc}>
+                        <TableCell className={classes.usrDesc}>
                           <img
                             style={{
                               width: '52px',
@@ -983,13 +1058,14 @@ function FarmProfiles() {
                             src={info.item_photo}
                           ></img>
                         </TableCell>
-                        <TableCell className={classes.desc}>
+                        <TableCell className={classes.usrDesc}>
                           {info.item_unit}
                         </TableCell>
-                        <TableCell className={classes.desc}>
+                        <TableCell className={classes.usrDesc}>
                           <TextField
                             id="business_price"
-                            name={index}
+                            // name={index}
+                            name = {info['item_uid']}
                             value={info['business_price']}
                             InputProps={{
                               startAdornment: (
@@ -1002,24 +1078,28 @@ function FarmProfiles() {
                             onChange={handleProductChange}
                           />
                         </TableCell>
-                        <TableCell className={classes.desc}>
-                          <TextField
-                            id="item_status"
-                            name={index}
-                            value={info['item_status']}
-                            style={{ width: '60px' }}
-                            onChange={handleProductChange}
-                          />
+                        <TableCell className={classes.usrDesc}>
+                         
+                          <select style={{border:'0px',textAlign:'center',width:"auto"}}
+                                        onChange={handleProductChange}
+                                        id = 'item_status'
+                                        name = {info['item_uid']}
+                                        value = {info['item_status']}
+                                        >
+                                        <option id = 'item_status' value='Active'> Active </option>
+                                        <option id = 'item_status' value='Past'> Past </option>
+                                            
+                          </select>
                         </TableCell>
-                        <TableCell className={classes.desc}>
+                        <TableCell className={classes.usrDesc}>
                           <img
-                            style={{ width: '18px', marginRight: '5px' }}
+                            style={{ width: '18px', marginRight: '5px', cursor: 'pointer' }}
                             src={save}
                             onClick={() => handleSave(index, 'update')}
                             id="update"
                           ></img>
                           <img
-                            style={{ width: '15px' }}
+                            style={{ width: '15px', cursor: 'pointer' }}
                             src={del}
                             onClick={() => handleSave(index, 'delete')}
                             id="delete"
@@ -1351,6 +1431,33 @@ function FarmProfiles() {
                       label="Cancellations not allowed"
                     />
                   </FormGroup>
+
+                  
+                  <FormGroup>
+                    <p className={classes.profileHeader}>Business Status</p>
+                    {/* <FormLabel component="legend">Storage</FormLabel> */}
+                    <FormControlLabel
+                      control={
+                        <GreenRadio
+                          checked={status.ACTIVE}
+                          onChange={handleStatusChange}
+                          name="ACTIVE"
+                        />
+                      }
+                      label="ACTIVE"
+                    />
+                    <FormControlLabel
+                      control={
+                        <GreenRadio
+                          checked={status.INACTIVE}
+                          onChange={handleStatusChange}
+                          name="INACTIVE"
+                        />
+                      }
+                      label="INACTIVE"
+                    />
+                  </FormGroup>
+
                 </FormControl>
               </Box>
             </Box>
@@ -1373,39 +1480,32 @@ function FarmProfiles() {
         </Grid>
       </Grid>
 
-      <Dialog open={saveDialogOpen} onClose={() => setSaveDialogOpen(false)}>
-        <DialogTitle>{'Successful!!'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Business information has been updated!
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setSaveDialogOpen(false)}
-            color="primary"
-            autoFocus
-          >
-            Okay
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <div>
+            <Dialog open={openDiag} onClose={()=>setOpenDiag(false)}>
+              <DialogTitle>{"Successful!!"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Produce has been updated
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button 
+                onClick={()=>setOpenDiag(false)}
+                        
+                        color="primary" autoFocus>
+                  Okay
+                </Button>
+                
+              </DialogActions>
+            </Dialog>
+          </div>
 
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogTitle>{'Successful!!'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Produce has been updated</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setDialogOpen(false)}
-            color="primary"
-            autoFocus
-          >
-            Okay
-          </Button>
-        </DialogActions>
-      </Dialog>
+          <div id="boxInMain">
+        <Modal open={openModel}  onClose={()=>setOpenModel(false)} >
+            {modelBody}
+        </Modal>
+      </div>
+    
     </div>
   );
 }

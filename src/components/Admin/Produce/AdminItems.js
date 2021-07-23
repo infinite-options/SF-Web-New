@@ -145,6 +145,7 @@ function AdminItems() {
     const [orderBy, setOrderBy] = useState();
     const [order, setOrder] = useState();
     const [allFarms,setAllFarms] = useState([])
+    const [distinctVals,setDistinctVals] = useState({})
 
 
     const farmFetch = () => {
@@ -218,6 +219,7 @@ function AdminItems() {
     useEffect(() => {
       fetchProduceInfo();
       fetchFarms();
+      fetchDistinctVals();
       console.log("all farms",allFarms)
       
   }, [openModel]);
@@ -260,6 +262,22 @@ function AdminItems() {
           console.log(err);
         });
     };
+
+    const fetchDistinctVals = () => {
+      axios
+        .get('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_distinct_column_vals')
+        .then((res) => {
+          setDistinctVals(res.data.result)
+          
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response);
+          }
+          console.log(err);
+        });
+    };
+
    
     const handleEdit = (e) => {
         console.log("in handle edit of admin items", selectedUID)
@@ -267,12 +285,19 @@ function AdminItems() {
         
     };
 
-    const closeModel = () => {setOpenModel(false); 
-                                setOpen(true)}
+    const closeModel = () => {setOpenModel(false); setOpen(true)}
+
+    useEffect(() => {
+      if(open===false){
+        fetchProduceInfo()
+      }
+    },[open])
+    
+
   
     const modelBody = (
       <div>
-        <AdminItemAddModel produceDict={selectedUID==='newProduce'?selectedUID:produceDict[selectedUID]} allFarms = {allFarms} handleClose={closeModel} farmData={farmData}/>
+        <AdminItemAddModel produceDict={selectedUID==='newProduce'?selectedUID:produceDict[selectedUID]} allFarms = {allFarms} distinctVals = {distinctVals} handleClose={closeModel} farmData={farmData}/>
       </div>
     );
   
@@ -380,7 +405,7 @@ function AdminItems() {
                             {produceVal.item_unit}
                           </TableCell>
                           <TableCell className={classes.usrDesc}>
-                            {produceVal.item_price}
+                            $ {produceVal.item_price}
                           </TableCell>
                           <TableCell className={classes.usrDesc}>
                             {produceVal.item_sizes}
