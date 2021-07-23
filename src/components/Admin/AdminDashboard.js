@@ -229,8 +229,30 @@ function AdminDashboard() {
   return (
     <div className={classes.root}>
       <div style={{ paddingRight: '1rem' }}>
-        <Grid container>
+        <Grid
+          container
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+        >
           <Grid item>
+            <Button
+              onClick={sweepstakeToggle}
+              style={{
+                backgroundColor: '#F5841F',
+                color: 'white',
+                height: '2rem',
+                marginBottom: '0.75rem',
+                textTransform: 'none',
+              }}
+            >
+              {auth.sweepstakeActive ? (
+                <div>Turn Sweepstake Off</div>
+              ) : (
+                <div>Turn Sweepstake On</div>
+              )}
+            </Button>
             <Paper className={classes.paper}>
               <Typography className={classes.header}>
                 Upcoming Orders
@@ -290,22 +312,6 @@ function AdminDashboard() {
                 })}
               </div>
             </Paper>
-          </Grid>
-          <Grid item>
-            <Button
-              onClick={sweepstakeToggle}
-              style={{
-                backgroundColor: '#F5841F',
-                color: 'white',
-                height: '2rem',
-                marginLeft: '4rem',
-                marginTop: '0.75rem',
-                textTransform: 'none',
-                alignContent: 'center',
-              }}
-            >
-              Toggle Sweepstake
-            </Button>
           </Grid>
         </Grid>
       </div>
