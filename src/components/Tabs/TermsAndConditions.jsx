@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TermsAndConditions(props) {
   const classes = useStyles();
-  const auth = useContext(AuthContext); 
+  const auth = useContext(AuthContext);
   const storeContext = useContext(StoreContext);
 
   return (
@@ -50,9 +50,12 @@ export default function TermsAndConditions(props) {
         setStorePage={storeContext.setStorePage}
       /> */}
 
-        <Box hidden={!auth.isAuth}>
-          <StoreNavBar storePage={storeContext.storePage} setStorePage={storeContext.setStorePage} />
-        </Box>
+      <Box hidden={!auth.isAuth}>
+        <StoreNavBar
+          storePage={storeContext.storePage}
+          setStorePage={storeContext.setStorePage}
+        />
+      </Box>
 
       <Box className={classes.termsAndCondsContainer}>
         <Typography className={classes.pageLabel}>

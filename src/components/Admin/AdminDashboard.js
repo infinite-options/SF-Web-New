@@ -1,14 +1,27 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box, Paper, Typography, Avatar } from '@material-ui/core';
+import {
+  Grid,
+  Box,
+  Paper,
+  Typography,
+  Avatar,
+  Button,
+} from '@material-ui/core';
 import moment from 'moment';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import BusinessAnalytics from './Analytics/BusinessAnalytics';
 import ItemAnalytics from './Analytics/ItemAnalytics';
 import DateAnalytics from './Analytics/DateAnalytics';
 import CustomerRevenue from './Revenue/CustomerRevenue';
 import BusinessRevenue from './Revenue/BusinessRevenue';
 import ItemRevenue from './Revenue/ItemRevenue';
+import { AuthContext } from '../../auth/AuthContext';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -23,8 +36,56 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
     borderRadius: '20px',
-    width: '260px',
-    minWidth: '260px',
+
+    '@media (min-width: 380px)': {
+      width: '160px',
+    },
+    '@media (min-width: 680px)': {
+      width: '200px',
+    },
+    '@media (min-width: 980px)': {
+      width: '260px',
+    },
+
+    '@media (min-width: 1380px)': {
+      width: '280px',
+    },
+    '@media (min-width: 1580px)': {
+      width: '360px',
+    },
+    '@media (min-width: 1680px)': {
+      width: '400px',
+    },
+    '@media (min-width: 1920px)': {
+      width: '460px',
+    },
+  },
+  paper1: {
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    borderRadius: '20px',
+    '@media (min-width: 380px)': {
+      width: '160px',
+    },
+    '@media (min-width: 680px)': {
+      width: '200px',
+    },
+    '@media (min-width: 980px)': {
+      width: '260px',
+    },
+    '@media (min-width: 1380px)': {
+      width: '260px',
+    },
+    '@media (min-width: 1580px)': {
+      width: '300px',
+    },
+    '@media (min-width: 1680px)': {
+      width: '320px',
+    },
+    '@media (min-width: 1920px)': {
+      width: '360px',
+    },
   },
   chart: {
     padding: theme.spacing(1),
@@ -32,7 +93,23 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     borderRadius: '20px',
     width: '800px',
-    margin: '1rem',
+    marginBottom: '1rem',
+
+    '@media (min-width: 980px)': {
+      width: '800px',
+    },
+    '@media (min-width: 1380px)': {
+      width: '860px',
+    },
+    '@media (min-width: 1580px)': {
+      width: '900px',
+    },
+    '@media (min-width: 1680px)': {
+      width: '1000px',
+    },
+    '@media (min-width: 1920px)': {
+      width: '1160px',
+    },
   },
   header: {
     textAlign: 'center',
@@ -67,13 +144,15 @@ const useStyles = makeStyles((theme) => ({
 
 function AdminDashboard() {
   const classes = useStyles();
-
+  const auth = useContext(AuthContext);
   //upcoming orders
   const [upcomingOrders, setUpcomingOrders] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [newCustomers, setNewCustomers] = useState(0);
   const [newOrders, setNewOrders] = useState([]);
+  const [open, setOpen] = useState(false);
+  console.log('Sweepstake in AdminDashboard:', auth.sweepstakeActive);
   useEffect(() => {
     axios
       .get(
@@ -139,12 +218,41 @@ function AdminDashboard() {
         console.log(err);
       });
   }, []);
+  const sweepstakeToggle = () => {
+    console.log('Sweepstake in Toggle function:', auth.sweepstakeActive);
+    auth.sweepstakeActive = !auth.sweepstakeActive;
+    auth.setSweepstakeActive(auth.sweepstakeActive);
+    console.log('Sweepstake after toggle:', auth.sweepstakeActive);
+    setOpen(true);
+  };
 
   return (
     <div className={classes.root}>
       <div style={{ paddingRight: '1rem' }}>
-        <Grid container>
+        <Grid
+          container
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+        >
           <Grid item>
+            <Button
+              onClick={sweepstakeToggle}
+              style={{
+                backgroundColor: '#F5841F',
+                color: 'white',
+                height: '2rem',
+                marginBottom: '0.75rem',
+                textTransform: 'none',
+              }}
+            >
+              {auth.sweepstakeActive ? (
+                <div>Turn Sweepstake Off</div>
+              ) : (
+                <div>Turn Sweepstake On</div>
+              )}
+            </Button>
             <Paper className={classes.paper}>
               <Typography className={classes.header}>
                 Upcoming Orders
@@ -156,7 +264,7 @@ function AdminDashboard() {
                       style={{
                         display: 'flex',
                         borderBottom: '0.5px solid #F5841F',
-                        padding: '2px',
+                        padding: '4px',
                       }}
                     >
                       <Box
@@ -210,7 +318,7 @@ function AdminDashboard() {
       <div>
         <Grid container spacing={3}>
           <Grid item>
-            <Paper className={classes.paper}>
+            <Paper className={classes.paper1}>
               <Typography className={classes.header}>
                 First time customers
               </Typography>
@@ -220,7 +328,7 @@ function AdminDashboard() {
             </Paper>
           </Grid>
           <Grid item>
-            <Paper className={classes.paper}>
+            <Paper className={classes.paper1}>
               <Typography className={classes.header}>
                 Number of Upcoming Orders
               </Typography>
@@ -230,7 +338,7 @@ function AdminDashboard() {
             </Paper>
           </Grid>
           <Grid item>
-            <Paper className={classes.paper}>
+            <Paper className={classes.paper1}>
               <Typography className={classes.header}>
                 Upcoming Revenue
               </Typography>
@@ -286,6 +394,22 @@ function AdminDashboard() {
             </Paper>
           </Grid>
         </Grid>
+      </div>
+      <div>
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>{'Sweepstake Toggle'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Sweepstake set to:
+              {auth.sweepstakeActive ? <div>Active</div> : <div>Inactive</div>}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} color="primary" autoFocus>
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );

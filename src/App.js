@@ -82,6 +82,7 @@ function App() {
   const [isAuth, setIsAuth] = useState(uid === '' ? false : true); // checks if user is logged in
   const [accountType, setAccountType] = useState();
   const [isUserLoaded, setIsUserLoaded] = useState(false);
+  const [sweepstakeActive, setSweepstakeActive] = useState(false);
   const [profile, setProfile] = useState({
     email: '',
     firstName: '',
@@ -175,6 +176,8 @@ function App() {
                 setProfile,
                 cartTotal,
                 setCartTotal,
+                sweepstakeActive,
+                setSweepstakeActive,
               }}
             >
               {authLevel >= 1 ? (

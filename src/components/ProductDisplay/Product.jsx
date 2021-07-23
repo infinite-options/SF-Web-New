@@ -1,10 +1,16 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-
+import { useHistory } from 'react-router';
 const Product = (props) => {
+  const history = useHistory();
   return (
-    <Box key={props.key} property="div" style={{margin:'20px',padding:'0px'}}>
+    <Box
+      key={props.key}
+      property="div"
+      style={{ margin: '20px', padding: '0px', cursor: 'pointer' }}
+      onClick={() => history.push('/store')}
+    >
       <Grid item>
         <Box
           className="center-cropped"
@@ -22,32 +28,35 @@ const Product = (props) => {
             }}
           />
         </Box>
-        <div >
-        <Box
-          width="300px"
-          p={0.1}
-          style={{
-            fontSize: '12px',
-            
-            borderRadius: '10px',
-            paddingBottom: '5px',
-            textFont: ' SFProDisplay-Regular',
-            
-            
-            //border: '1px solid ' + appColors.border,
-          }}
-        >
-          <Box display="flex">
-            <Box style={{float:'left',fontWeight:'bold'}}>
-              {props.name}
-            </Box>
+        <div>
+          <Box
+            width="300px"
+            p={0.1}
+            style={{
+              fontSize: '12px',
+
+              borderRadius: '10px',
+              paddingBottom: '5px',
+              textFont: ' SFProDisplay-Regular',
+
+              //border: '1px solid ' + appColors.border,
+            }}
+          >
+            <Box display="flex">
+              <Box style={{ float: 'left', fontWeight: 'bold' }}>
+                {props.name}
+              </Box>
             </Box>
             {/* <Box flexGrow={1} /> */}
-            <div style={{width:'175px',float:'center',fontWeight:'bold'}}>
-            <Box style={{float:'left',fontWeight:'bold',}}>${props.price}({props.unit === 'each' ? '' : 'per '}
-              {props.unit})</Box>
+            <div
+              style={{ width: '175px', float: 'center', fontWeight: 'bold' }}
+            >
+              <Box style={{ float: 'left', fontWeight: 'bold' }}>
+                ${props.price}({props.unit === 'each' ? '' : 'per '}
+                {props.unit})
+              </Box>
             </div>
-        </Box>
+          </Box>
         </div>
       </Grid>
     </Box>

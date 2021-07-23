@@ -1,9 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  InputAdornment,
-} from '@material-ui/core';
+import { Button, InputAdornment } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import appColors from '../../styles/AppColors';
@@ -37,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Order = ({...props}) => {
+const Order = ({ ...props }) => {
   const [address, setAddress] = React.useState('');
   const [modalError, setModalErrorMessage] = useState('');
   const [modalSuccess, setModalSuccessMessage] = useState('');
@@ -154,7 +151,6 @@ const Order = ({...props}) => {
     }
   };
 
-
   // const searchAddress= async (res)=>{
   //   // console.log(value);
   //   // let addr=(value.split(','));
@@ -211,20 +207,18 @@ const Order = ({...props}) => {
     types: ['address'],
   };
 
-
-
   const errorHandleModal = () => {
     setModalErrorMessage(null);
     setModalSuccessMessage(null);
   };
 
-
   const signUpClicked = () => {
     props.setIsLoginShown(false);
+    setModalSuccessMessage(null);
     props.setIsSignUpShown(!props.isSignUpShown);
     window.scrollTo({
       top: 0,
-      behavior: "smooth"
+      behavior: 'smooth',
     });
   };
   return (
@@ -243,7 +237,6 @@ const Order = ({...props}) => {
           onConfirm={login}
           onSign={signUpClicked}
           modalClear={errorHandleModal}
-          style={{ zIndex: '100000' }}
         ></SuccessModal>
       )}
 
@@ -266,7 +259,7 @@ const Order = ({...props}) => {
             fontWeight: 'bold',
           }}
         >
-          Ready to Order
+          Ready to Order?
         </h1>
       </div>
       <div style={{ marginRight: 'auto', marginLeft: 'auto' }}>
@@ -326,7 +319,7 @@ const Order = ({...props}) => {
                 }}
                 {...getInputProps({ placeholder: 'Search for your address' })}
                 style={{
-                  width: '300px',
+                  width: '500px',
                   border: '2px solid' + appColors.secondary,
                   borderRadius: '5px',
                   left: '0%',
@@ -365,15 +358,17 @@ const Order = ({...props}) => {
       <Button
         size="large"
         variant="contained"
-        color="secondary"
+        color="primary"
         onClick={handleSelect}
         style={{
           width: '300px',
           textTransform: 'none',
           float: 'center',
+          color: 'white',
+          borderRadius: '15px',
         }}
       >
-        Find Local Produce
+        Shop local produce near me
       </Button>
       <div
         style={{

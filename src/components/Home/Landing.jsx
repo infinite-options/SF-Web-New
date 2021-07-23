@@ -1,15 +1,14 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Container, Row, Col } from 'react-grid-system';
-import { Visible, Hidden } from 'react-grid-system';
 
 import { useHistory } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
+
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import appColors from '../../styles/AppColors';
 import LandingNavBar from '../LandingNavBar/LandingNavBar';
-import CheckoutStoreTab from '../Tabs/CheckoutStoreTab';
 import AdminLogin from '../LogIn/AdminLogin';
-// import Signup from '../SignUp/Signup';
 import Signup from '../SignUp/newSignUp';
 import ProductDisplay from '../ProductDisplay/ProductDisplay';
 import DeliveryLocationSearch from '../DeliverySearch/DeliveryLocationSearch';
@@ -17,10 +16,10 @@ import Farmers from '../Farmers/Farmers';
 import Testimonial from '../Testimonial/Testimonial';
 import Order from '../Order/Order';
 import Footer from '../Footer/Footer';
-import { LeftEmptyCell } from '@material-ui/data-grid';
 import bg from '../../icon/bg.svg';
 import ConfirmatioModal from 'components/SignUp/ConfirmationModal';
-
+import { AdminFarmContext } from '../Admin/AdminFarmContext';
+import { AuthContext } from '../../auth/AuthContext';
 const useStyles = makeStyles((theme) => ({
   authModal: {
     position: 'absolute',
@@ -135,12 +134,14 @@ function useOutsideAlerter(ref) {
 // DONE:  Allow a click out of login to close it
 const Landing = ({ ...props }) => {
   const classes = useStyles();
-
+  const history = useHistory();
+  const adminFarm = useContext(AdminFarmContext);
+  const auth = useContext(AuthContext);
   // Toggles for the login and signup box to be passed in as props to the Landing Nav Bar
   const [isLoginShown, setIsLoginShown] = useState(false); // checks if user is logged in
   const [isSignUpShown, setIsSignUpShown] = useState(false);
   const [confirmEmailstate, setConfirmEmail] = useState(false);
-
+  console.log('Landing Sweepstake Value:', auth.sweepstakeActive);
   const loginWrapperRef = useRef(null);
   useOutsideAlerter(loginWrapperRef, setIsLoginShown);
   const signupWrapperRef = useRef(null);
@@ -170,7 +171,6 @@ const Landing = ({ ...props }) => {
         setIsSignUpShown={setIsSignUpShown}
       />
       {/* START: Login/SignUp Modal */}
-
       <Box display="flex" justifyContent="flex-end">
         {/* Login Modal */}
         <Box
@@ -230,6 +230,57 @@ const Landing = ({ ...props }) => {
           />
         )}
       </Box>
+      <div>
+        {auth.sweepstakeActive ? (
+          <div>
+            <Box
+              onClick={() => history.push('/sweepstakes')}
+              style={{
+                background: '#F8851B 0% 0% no-repeat padding-box',
+                opacity: 1,
+                height: '60px',
+                paddingTop: '10px',
+                cursor: 'pointer',
+              }}
+            >
+              <span
+                style={{
+                  textAlign: 'center',
+                  fontSize: ' 40px ',
+                  fontWeight: '600',
+                  color: '#FFFFFF',
+                  opacity: 1,
+                  paddingRight: '30px',
+                  marginTop: '20px',
+                }}
+              >
+                Free Fresh Food!
+              </span>
+              <span
+                style={{
+                  textAlign: 'center',
+                  fontSize: ' 20px ',
+                  fontWeight: '600',
+                  color: '#FFFFFF',
+                  opacity: 1,
+                }}
+              >
+                Click here to enter now to &nbsp;
+                <span
+                  style={{
+                    fontWeight: '600',
+                    color: '#2B6D74',
+                  }}
+                >
+                  win $50 worth &nbsp;
+                </span>
+                of fresh produce, delivered free of charge to your door
+              </span>
+            </Box>
+          </div>
+        ) : null}
+      </div>
+
       {/* END: Login/SignUp Modal */}
       {/* START: landing Logo and Guest Login */}
       {/* <Container
@@ -278,9 +329,7 @@ const Landing = ({ ...props }) => {
             </Row>
           </Container> */}
       {/* END: Landing Page Logo */}
-
       {/* START: Info Section */}
-
       {/* <Box className={classes.title} style={{ paddingTop: '30px',position:'sticky' }}>
             Why try Serving Fresh
           </Box>
@@ -412,7 +461,6 @@ const Landing = ({ ...props }) => {
               </Col>
             </Row>
           </Container> */}
-
       {/* </Box>
       </Box> */}
       {/* END: Login/SignUp Modal */}
@@ -474,36 +522,216 @@ const Landing = ({ ...props }) => {
         </Row>
       </Container>
       {/* END: Landing Page Logo */}
-
       <Box
         className="hero-right"
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
         style={{
-          backgroundColor: 'rgb(251,132,0)',
+          backgroundColor: '#2F787F',
           minHeight: '200px',
           maxHeight: '300px',
+          width: 'auto',
         }}
       >
         {/* <ZipcodeSearch/> */}
-        <p
+        <Box style={{ width: '50%' }}>
+          <p
+            style={{
+              color: appColors.buttonText,
+              fontSize: '45px',
+              textAlign: 'left',
+              fontWeight: '700',
+              marginLeft: '20px',
+              letterSpacing: '0.95px',
+            }}
+          >
+            Local produce delivered <br />
+            to your doorstep
+          </p>
+        </Box>
+        <Box style={{ width: '50%' }}>
+          <DeliveryLocationSearch
+            isLoginShown={isLoginShown}
+            setIsLoginShown={setIsLoginShown}
+            isSignUpShown={isSignUpShown}
+            setIsSignUpShown={setIsSignUpShown}
+          />
+        </Box>
+      </Box>
+      <Box
+        className={classes.title}
+        style={{
+          textAlign: 'left',
+          paddingBottom: '00px',
+          backgroundColor: '#2F787F26',
+          paddingTop: '20px',
+        }}
+      >
+        <u style={{ marginLeft: '50px' }}>Weekly Fresh Produce</u>
+      </Box>
+      <ProductDisplay />
+      {/* START: Info Section */}
+      <Box className={classes.root} style={{}}>
+        <Box
+          // display="flex"
+          className="info-container"
+        >
+          <Box className={classes.infoSection} id="mobileInfoSection">
+            <div className={classes.infoDesc}>
+              <p
+                style={{
+                  color: appColors.secondary,
+                  fontSize: '40px',
+                  textAlign: 'center',
+                  fontWeight: '600',
+                  marginLeft: '20px',
+                }}
+              >
+                55+ items
+              </p>
+              <p
+                style={{
+                  textAlign: 'center',
+                  font: 'normal normal 600 24px',
+                  letterSpacing: '0.45px',
+                  color: appColors.secondary,
+                  opacity: 1,
+                }}
+              >
+                Fruits, vegetables and other organic produce to choose from
+              </p>
+            </div>
+          </Box>
+
+          <Box className={classes.infoSection} id="mobileInfoSection">
+            <div className={classes.infoDesc}>
+              <p
+                style={{
+                  color: appColors.secondary,
+                  fontSize: '40px',
+                  textAlign: 'center',
+                  fontWeight: '600',
+                  marginLeft: '20px',
+                }}
+              >
+                17% Savings
+              </p>
+              <p
+                style={{
+                  textAlign: 'center',
+                  font: 'normal normal 600 24px ',
+                  letterSpacing: '0.45px',
+                  color: appColors.secondary,
+                  opacity: 1,
+                }}
+              >
+                Our affordable produce can help you save an average of 17% more
+                than that compared to organic produce at local grocery stores.
+              </p>
+            </div>
+          </Box>
+          <Box className={classes.infoSection} id="mobileInfoSection">
+            <div className={classes.infoDesc}>
+              <p
+                style={{
+                  color: appColors.secondary,
+                  fontSize: '40px',
+                  textAlign: 'center',
+                  fontWeight: '600',
+                  marginLeft: '20px',
+                }}
+              >
+                7+ Farms
+              </p>
+              <p
+                style={{
+                  textAlign: 'center',
+                  font: 'normal normal 600 24px',
+                  letterSpacing: '0.45px',
+                  color: appColors.secondary,
+                  opacity: 1,
+                }}
+              >
+                Support our farm partners by ordering here and stay updated with
+                new, seasonal produce.
+              </p>
+            </div>
+          </Box>
+        </Box>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <p
+            style={{
+              textAlign: 'center',
+              font: 'normal normal 600 24px SF Pro Display',
+              letterSpacing: '0.45px',
+              color: appColors.secondary,
+              opacity: 1,
+            }}
+          >
+            We are currently Serving <br />
+            Sunnyvale, Cupertino, Saratoga, Los Gatos, Willow Glen, San Jose
+          </p>
+          <Button
+            size="large"
+            variant="contained"
+            color="primary"
+            onClick={() => history.push('/store')}
+            style={{
+              width: '300px',
+              textTransform: 'none',
+              float: 'center',
+              color: 'white',
+              borderRadius: '15px',
+            }}
+          >
+            Shop Fresh Produce
+          </Button>
+        </Box>
+      </Box>
+      {/* END: Info Section */}
+      {/* START: Farmer information */}
+      <Box className={classes.farmer}>
+        <Box
+          className={classes.title}
           style={{
-            color: appColors.buttonText,
-            fontSize: '30px',
-            textAlign: 'center',
-            fontWeight: '700',
-            marginLeft: '20px',
-            marginBottom: '50px',
+            textAlign: 'left',
+            marginLeft: '50px',
+            paddingBottom: '20px',
           }}
         >
-          Local produce delivered to your doorstep
-        </p>
-        <DeliveryLocationSearch
-          isLoginShown={isLoginShown}
-          setIsLoginShown={setIsLoginShown}
-          isSignUpShown={isSignUpShown}
-          setIsSignUpShown={setIsSignUpShown}
-        />
+          <u>Meet the Farmers</u>
+        </Box>
+        <Farmers />
       </Box>
-
+      {/* END: Farmer Information */}
+      <Box
+        className={classes.testimonial}
+        style={{
+          backgroundColor: '#F1F4F4',
+          // height: '20em',
+          width: '100%',
+          border: '0px solid black',
+        }}
+      >
+        <Box
+          className={classes.title}
+          style={{
+            marginLeft: '50px',
+            paddingBottom: 'px',
+            textAlign: 'left',
+            backgroundColor: '#F1F4F4',
+          }}
+        >
+          <u>Testimonials</u>
+        </Box>
+        <Testimonial></Testimonial>
+      </Box>
       {/* START: Info Section */}
       <Box style={{ backgroundImage: `url(${bg})` }}>
         <Box
@@ -552,23 +780,7 @@ const Landing = ({ ...props }) => {
       </Box>
       {/* END: Info Section */}
       {/* START: Local Produce Search */}
-
-      <Box
-        className={classes.title}
-        style={{
-          textAlign: 'left',
-          marginLeft: '00px',
-          paddingBottom: '00px',
-          backgroundColor: '#2F787F26',
-          paddingTop: '20px',
-        }}
-      >
-        <u style={{ marginLeft: '50px' }}>Weekly Fresh Produce</u>
-      </Box>
-      <ProductDisplay />
-
       {/* END: Local Produce Search */}
-      {/* START: Farmer information */}
       {/* <Container
             fluid
             style={{
@@ -650,107 +862,8 @@ const Landing = ({ ...props }) => {
               </Col>
             </Row>
           </Container> */}
-      <Box className={classes.farmer}>
-        <Box
-          className={classes.title}
-          style={{
-            textAlign: 'left',
-            marginLeft: '50px',
-            paddingBottom: '20px',
-          }}
-        >
-          <u>Meet the Farmers</u>
-        </Box>
-        <Farmers />
-      </Box>
-      {/* END: Farmer Information */}
-      {/* START: Info Section */}
-      <Box className={classes.root} style={{}}>
-        <Box
-          // display="flex"
-          className="info-container"
-        >
-          <Box className={classes.infoSection} id="mobileInfoSection">
-            <div className={classes.infoDesc}>
-              <p
-                style={{
-                  color: appColors.secondary,
-                  fontSize: '40px',
-                  textAlign: 'center',
-                  fontWeight: '600',
-                  marginLeft: '20px',
-                }}
-              >
-                55+ items
-              </p>
-              Fruits, vegetables and other organic produce to choose from
-            </div>
-          </Box>
-
-          <Box className={classes.infoSection} id="mobileInfoSection">
-            <div className={classes.infoDesc}>
-              <p
-                style={{
-                  color: appColors.secondary,
-                  fontSize: '40px',
-                  textAlign: 'center',
-                  fontWeight: '600',
-                  marginLeft: '20px',
-                  marginTop: '40px',
-                }}
-              >
-                17% Savings
-              </p>
-              Our affordable produce can help you save an average of 17% more
-              than that compared to organic produce at local grocery stores.
-            </div>
-          </Box>
-          <Box className={classes.infoSection} id="mobileInfoSection">
-            <div className={classes.infoDesc}>
-              <p
-                style={{
-                  color: appColors.secondary,
-                  fontSize: '40px',
-                  textAlign: 'center',
-                  fontWeight: '600',
-                  marginLeft: '20px',
-                }}
-              >
-                7+ Farms
-              </p>
-              Support our farm partners by ordering here and stay updated with
-              new, seasonal produce.
-            </div>
-          </Box>
-        </Box>
-      </Box>
-
-      {/* END: Info Section */}
-
       {/* </Box> */}
       <div>
-        <Box
-          className={classes.testimonial}
-          style={{
-            backgroundColor: '#F1F4F4',
-            // height: '20em',
-            width: '100%',
-            border: '0px solid black',
-          }}
-        >
-          <Box
-            className={classes.title}
-            style={{
-              marginLeft: '50px',
-              paddingBottom: 'px',
-              textAlign: 'left',
-              backgroundColor: '#F1F4F4',
-            }}
-          >
-            <u>Testimonials</u>
-          </Box>
-          <Testimonial></Testimonial>
-        </Box>
         <Box style={{ marginBottom: '20px' }}>
           <Order
             isLoginShown={isLoginShown}
