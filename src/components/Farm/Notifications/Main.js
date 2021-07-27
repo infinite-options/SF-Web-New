@@ -172,19 +172,32 @@ function NotificationMain({
                         },
                         { title: 'Email', field: 'customer_email' },
                         { title: 'Phone', field: 'customer_phone_num' },
-                        { title: 'Address', field: 'address' },
+                        {
+                            title: 'Address',
+                            field: 'customer_first_name',
+                            render: (rowData) => {
+                                return (
+                                    rowData.customer_address +
+                                    ' ' +
+                                    rowData.customer_unit
+                                );
+                            },
+                        },
+                        
                         { title: 'City', field: 'customer_city' },
                         { title: 'Zip', field: 'customer_zip' },
-                        { title: 'Business', field: 'business_name' },
+                        // { title: 'Business', field: 'business_name' },
                         { title: '# Orders', field: 'number_of_orders' },
-                        { title: 'Last Order', field: 'latest_order_date' },
+                        { title: 'Last Order', field: 'latest_order_date_in' },
+                        { title: 'Has_Guid', field: 'has_guid' },
                     ]}
                     data={customerList}
+
                     options={{
                         // selection: true,
-                        pageSize: 10,
-                        pageSizeOptions: [10],
-                        rowStyle: { height: 10 },
+                        pageSize: 40,
+                        pageSizeOptions: [40],
+                        rowStyle: { height: 40 },
                         search: true,
                     }}
                 >
