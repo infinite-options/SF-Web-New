@@ -962,8 +962,14 @@ function Customers() {
             {historyView.map((history) => (
               <Box className={classes.card}>
                 <Box className={classes.delivered}>
-                  <img src={Delivered} alt="user pic" />
-                  &nbsp; Order Delivered
+                  {'TRUE' === history.delivery_status ? (
+                    <div>
+                      <img src={Delivered} alt="user pic" />
+                      &nbsp; Order Delivered
+                    </div>
+                  ) : (
+                    <div>Expected Delivery</div>
+                  )}
                 </Box>
                 <Box className={classes.date}>
                   {moment(history.start_delivery_date).format('LL')} at{' '}
@@ -1199,8 +1205,14 @@ function Customers() {
                   {historyView.map((history) => (
                     <Box className={classes.card} style={{ padding: '10px' }}>
                       <Box className={classes.delivered}>
-                        <img src={Delivered} alt="user pic" />
-                        &nbsp; Order Delivered
+                        {'TRUE' === history.delivery_status ? (
+                          <div>
+                            <img src={Delivered} alt="user pic" />
+                            &nbsp; Order Delivered
+                          </div>
+                        ) : (
+                          <div>Expected Delivery</div>
+                        )}
                       </Box>
                       <Box className={classes.date}>
                         {moment(history.start_delivery_date).format('LL')} at{' '}
