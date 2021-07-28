@@ -222,9 +222,12 @@ const Store = ({ ...props }) => {
 
   localStorage.setItem('currentStorePage', storePage);
   //const { cartTotal, setCartTotal } = useContext(AuthContext);
+  localStorage.setItem('cartItems', '{}');
+  localStorage.setItem('cartTotal', '0');
   const [cartTotal, setCartTotal] = useState(
     parseInt(localStorage.getItem('cartTotal') || '0')
   );
+
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem('cartItems') || '{}')
   );

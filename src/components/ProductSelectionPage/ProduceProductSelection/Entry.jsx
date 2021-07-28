@@ -127,16 +127,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Entry(props) {
-  console.log('entry');
   const [hearted, setHearted] = useState(false);
   const [isShown, setIsShown] = useState(false);
   const [isInDay, setIsInDay] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
 
   const store = useContext(storeContext);
+  const currCartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
+  const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
 
   const stylesProps = {
-    id: props.id in store.cartItems ? store.cartItems[props.id]['count'] : 0,
+    id: props.id in currCartItems ? currCartItems[props.id]['count'] : 0,
     hearted: hearted,
     isInDay: isInDay,
   };
@@ -144,6 +145,7 @@ function Entry(props) {
   const classes = useStyles(stylesProps);
 
   const productSelect = useContext(ProduceSelectContext);
+  const [inCart, setInCart] = React.useState(false);
 
   //const [isShown, setIsShown] = useState(false);
 
@@ -177,47 +179,47 @@ function Entry(props) {
     store.dayClicked,
     productSelect.farmsClicked,
     productSelect.categoriesClicked,
-  //  store.cartItems,
-  //  store.products
-
   ]);
 
   function decrease() {
-    if (props.id in store.cartItems) {
-      const itemCount = store.cartItems[props.id]['count'];
+    if (props.id in currCartItems) {
+      const itemCount = currCartItems[props.id]['count'];
+
       if (itemCount > 0) {
         if (itemCount == 1) {
-          let clone = Object.assign({}, store.cartItems);
+          let clone = Object.assign({}, currCartItems);
           delete clone[props.id];
-          store.setCartItems(clone);
+          localStorage.setItem('cartItems', JSON.stringify(clone));
         } else {
           const item = {
             ...props,
-            count: store.cartItems[props.id]['count'] - 1,
+            count: currCartItems[props.id]['count'] - 1,
           };
-          store.setCartItems({
-            ...store.cartItems,
+          localStorage.setItem('cartItems', JSON.stringify({
+            ...currCartItems,
             [props.id]: item,
-          });
+          }));
         }
-        store.setCartTotal(store.cartTotal - 1);
+        localStorage.setItem('cartTotal', currCartTotal - 1);
+        setInCart(!inCart);
       }
     }
   }
 
   function increase() {
     const item =
-      props.id in store.cartItems
-        ? { ...props, count: store.cartItems[props.id]['count'] + 1 }
+      props.id in currCartItems
+        ? { ...props, count: currCartItems[props.id]['count'] + 1 }
         : { ...props, count: 1 };
-
-    store.setCartItems({
-      ...store.cartItems,
+    
+    const newCartItems = {
+      ... currCartItems,
       [props.id]: item,
-    });
-    store.setCartTotal(store.cartTotal + 1);
+    };
 
-    // console.warn(store.cartItems);
+    localStorage.setItem('cartItems', JSON.stringify(newCartItems));
+    localStorage.setItem('cartTotal', props.cartTotal + 1);
+    setInCart(!inCart);
   }
 
   const toggleHearted = () => {
@@ -354,8 +356,8 @@ function Entry(props) {
             </IconButton>
 
             <Typography className={classes.itemCountTypog}>
-              {props.id in store.cartItems
-                ? store.cartItems[props.id]['count']
+              {props.id in currCartItems ?
+                currCartItems[props.id]['count']
                 : 0}
             </Typography>
 

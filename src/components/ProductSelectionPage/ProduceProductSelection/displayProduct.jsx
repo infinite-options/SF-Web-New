@@ -191,6 +191,8 @@ function createProduct2(product) {
       id={product.item_uid}
       key={product.item_uid}
       info={product.item_info}
+      cartItems= {JSON.parse(localStorage.getItem('cartItems') || '{}')}
+      cartTotal = {parseInt(localStorage.getItem('cartTotal') || '0')}
     />
   );
 }
