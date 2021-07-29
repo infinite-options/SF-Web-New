@@ -584,7 +584,7 @@ function FarmOrders() {
               <div
                 style={{
                   float: 'right',
-                  marginRight: '5rem',
+                  marginRight: '7rem',
                   color: '#1C6D74',
                 }}
               >
@@ -650,7 +650,7 @@ function FarmOrders() {
                   color: '#1C6D74',
                 }}
               >
-                <h5>Total Distinct Items</h5>
+                <h5>Distinct Items</h5>
                 <p
                   style={{
                     color: 'black',
