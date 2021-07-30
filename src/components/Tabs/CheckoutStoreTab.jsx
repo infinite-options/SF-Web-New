@@ -150,7 +150,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-function listItem(item) {
+function listItem(item, store, productSelect) {
   return (
     <>
       <CartItem
@@ -163,6 +163,15 @@ function listItem(item) {
         business_uid={item.business_uid}
         id={item.id}
         key={item.item_uid}
+        products = {store.products}
+        cartItems = {store.cartItems}
+        setCartItems = {store.setCartItems}
+        cartTotal = {store.cartTotal}
+        setCartTotal = {store.setCartTotal}
+        farmDaytimeDict = {store.farmDaytimeDict}
+        dayClicked = {store.dayClicked}
+        farmsClicked = {productSelect.farmsClicked}
+        categoriesClicked = {productSelect.categoriesClicked}
       />
     </>
   );
@@ -894,7 +903,7 @@ useMemo(()=> {
           </Box>
         )} */}
         <Box my={1} px={1}>
-          {getItemsCart().map(listItem)}
+          {getItemsCart().map((item) => listItem(item, store, productSelect))}
         </Box>
 
         <Box display="flex" paddingTop="2rem">

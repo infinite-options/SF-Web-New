@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import storeContext from '../Store/storeContext';
+// import storeContext from '../Store/storeContext';
 import { Box, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import appColors from '../../styles/AppColors';
-import ProductSelectContext from '../ProductSelectionPage/ProdSelectContext';
+// import ProductSelectContext from '../ProductSelectionPage/ProdSelectContext';
 import { ContactsOutlined } from '@material-ui/icons';
 
 function useForceUpdate() {
@@ -12,11 +12,11 @@ function useForceUpdate() {
   return () => setDummy(dummy => dummy + 1); // updating dummy variable to force a re-render.
 }
 
-function CartItem(props) {
+const CartItem = (props) => {
   console.log('CartItems');
-  const store = useContext(storeContext);
-  const products = store.products;
-  const productSelect = useContext(ProductSelectContext);
+  // const store = useContext(storeContext);
+  const products = props.products;
+  // const productSelect = useContext(ProductSelectContext);
   var itemPrice = parseFloat(props.price);
   var totalPrice = itemPrice * props.count;
   const currCartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
@@ -81,17 +81,17 @@ function CartItem(props) {
   //   });
   // }, []);
 
-  useEffect(() => {
-    console.log('props id', props.id);
-  }, [store.cartItems[props.id]['count']]);
+  // useEffect(() => {
+  //   console.log('props id', props.id);
+  // }, [store.cartItems[props.id]['count']]);
 
   useEffect(() => {
     let  isInDay = false;
 
     // for (const farm in props.itm_business_uid) {
-    if (store.farmDaytimeDict[props.business_uid] != undefined) {
-      store.farmDaytimeDict[props.business_uid].forEach((daytime) => {
-        if (store.dayClicked === daytime) isInDay = true;
+    if (props.farmDaytimeDict[props.business_uid] != undefined) {
+      props.farmDaytimeDict[props.business_uid].forEach((daytime) => {
+        if (props.dayClicked === daytime) isInDay = true;
       });
     }
     // }
@@ -99,11 +99,11 @@ function CartItem(props) {
     setIsInDay(isInDay);
     console.log('props name', props.name, isInDay);
   }, [
-    store.dayClicked,
-    productSelect.farmsClicked,
-    productSelect.categoriesClicked,
-   // store.cartItems,
-    store.products,
+    props.dayClicked,
+    props.farmsClicked,
+    props.categoriesClicked,
+   // props.cartItems,
+    props.products,
    // store.cartTotal
   ]);
 
@@ -262,4 +262,11 @@ function CartItem(props) {
   );
 }
 
-export default CartItem;
+export default React.memo(CartItem, (prevProps, nextProps) => {
+  if (prevProps.count != nextProps.count) {
+    return false;
+  }
+
+  return true;
+  }
+);
