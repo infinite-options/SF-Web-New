@@ -243,7 +243,7 @@ function Entry(props) {
     // store.cartItems[props.id] = item;
     props.setCartItems(newCartItems);
     props.setCartTotal(currCartTotal + 1);
-    forceUpdate();
+    // forceUpdate();
   }
 
   const toggleHearted = () => {

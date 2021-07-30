@@ -176,6 +176,7 @@ const useStyles = makeStyles((theme) => ({
 // DONE: add unit, each is as is, anything else is '/' or 'per'
 function createProduct2(product, setCartTotal, cartItems, setCartItems, products, dayClicked, farmDaytimeDict, categoriesClicked) {
   //  console.warn(product);
+
   const cartItems2 = JSON.parse(localStorage.getItem('cartItems') || '{}');
   return (
     <Entry
@@ -227,11 +228,13 @@ function DisplayProduct() {
   const [windowHeight, setWindowHeight] = React.useState(window.innerHeight);
 
   useEffect(() => {
+    console.log('useEffect2 in DP');
     window.addEventListener('resize', updateWindowHeight);
     return () => window.removeEventListener('resize', updateWindowHeight);
   });
 
   const updateWindowHeight = () => {
+    console.log('setting window height');
     setWindowHeight(window.innerHeight);
   };
 
@@ -242,6 +245,7 @@ function DisplayProduct() {
   // DONE: add date to expected delivery
   // DONE: clear out expected delivery if unclicked
   useEffect(() => {
+    console.log('useEffect1 in DP');
     let message = '';
     if (store.dayClicked === '') {
       message = 'Start by selecting a delivery date and time.';
