@@ -3,6 +3,7 @@ import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 // import { Visible, Hidden } from 'react-grid-system';
 import {
+  Box,
   // Box,
   Button,
   InputAdornment,
@@ -14,7 +15,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import appColors from '../../styles/AppColors';
 import CssTextField from '../../utils/CssTextField';
 // import FindLongLatWithAddr from '../utils/FindLongLatWithAddr';
-import { AuthContext } from '../../auth/AuthContext';
+
 // import { TrendingUpRounded } from '@material-ui/icons';
 import PlacesAutocomplete, {
   geocodeByAddress,
@@ -22,7 +23,7 @@ import PlacesAutocomplete, {
   getLatLng,
 } from 'react-places-autocomplete';
 import BusiApiReqs from '../../utils/BusiApiReqs';
-
+import { AuthContext } from '../../auth/AuthContext';
 import Mymodal from '../Modal/Modal';
 import SuccessModal from '../Modal/SuccessModal';
 // import TextField from '@material-ui/core/TextField';
@@ -35,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
   authModal: {
     position: 'absolute',
     width: '500px',
+    zIndex: '10040',
+    height: 'auto',
   },
   infoSection: {
     width: '33.33%',
@@ -56,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 //   state: '',
 //   zip: '',
 // }
-const DeliveryLocationSearch = ({...props}) => {
+const DeliveryLocationSearch = ({ ...props }) => {
   const [address, setAddress] = React.useState('');
   // const [coordinates, setCoordinates] = React.useState({
   //   lat: null,
@@ -236,12 +239,20 @@ const DeliveryLocationSearch = ({...props}) => {
     //        };
     // localStorage.setItem('guestProfile', JSON.stringify(guestProfile));
     // auth.setIsGuest(true);
-    history.push('/store');
+    if (auth.isAuth) {
+      history.push('/store');
+    } else {
+      alert('Please type in your address');
+    }
     //  localStorage.setItem('guestProfile', JSON.stringify(guestProfile));
     //   auth.setIsGuest(true);
     //   history.push('/store');
     console.log(guestProfile);
   };
+  const modalLogin = async () => {
+    history.push('/store');
+  };
+
   const google = window.google;
   const searchOptions = {
     location: new google.maps.LatLng(37.2366, -121.887),
@@ -256,15 +267,13 @@ const DeliveryLocationSearch = ({...props}) => {
 
   const signUpClicked = () => {
     props.setIsLoginShown(false);
+    setModalSuccessMessage(null);
     props.setIsSignUpShown(!props.isSignUpShown);
     window.scrollTo({
       top: 0,
-      behavior: "smooth"
+      behavior: 'smooth',
     });
   };
-
-
-
 
   // const options = {
   //   location: google1.LatLng(-34, 151),
@@ -273,14 +282,7 @@ const DeliveryLocationSearch = ({...props}) => {
 
   // }
   return (
-    <div
-      style={{
-        height: 'auto',
-        zIndex: '100',
-        position: 'absolute',
-        width: '100%',
-      }}
-    >
+    <Box display="flex" flexDirection="column" alignItems="center">
       {modalError && (
         <Mymodal
           title={modalError.title}
@@ -292,20 +294,13 @@ const DeliveryLocationSearch = ({...props}) => {
         <SuccessModal
           title={modalSuccess.title}
           body={modalSuccess.body}
-          onConfirm={login}
+          onConfirm={modalLogin}
           onSign={signUpClicked}
           modalClear={errorHandleModal}
         ></SuccessModal>
       )}
-      <div style={{ width: '50%', float: 'left' }}>
-        <div
-          style={{
-            width: '300px',
-            textTransform: 'none',
-            float: 'right',
-            marginRight: '50px',
-          }}
-        >
+      <Box>
+        <div>
           <PlacesAutocomplete
             value={address}
             onChange={setAddress}
@@ -340,7 +335,7 @@ const DeliveryLocationSearch = ({...props}) => {
                   }}
                   {...getInputProps({ placeholder: 'Search for your address' })}
                   style={{
-                    width: '300px',
+                    width: '500px',
                     border: '2px solid' + appColors.secondary,
                     borderRadius: '5px',
                   }}
@@ -379,25 +374,30 @@ const DeliveryLocationSearch = ({...props}) => {
             )}
           </PlacesAutocomplete>
         </div>
-      </div>
-      <div style={{ width: '49%', float: 'left' }}>
+      </Box>
+      <Box>
         <Button
           value={address}
           size="large"
           variant="contained"
-          color="secondary"
-          onClick={handleSelect}
+          color="primary"
+          onClick={login}
           style={{
             width: '300px',
             textTransform: 'none',
-            float: 'left',
+            borderRadius: '20px',
+            marginTop: '20px',
+            textAlign: 'center',
+            font: ' normal normal medium 32px/26px SF Pro Display',
+            letterSpacing: '0.51px',
+            color: '#FFFFFF',
+            opacity: 1,
           }}
         >
-          Find Local Produce
+          Shop local produce near me
         </Button>
-      </div>
-      <div></div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 export default DeliveryLocationSearch;

@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import { AdminFarmContext } from '../../Admin/AdminFarmContext';
 
 function WeeklyHourRange(props) {
   const dayTime = 'start';

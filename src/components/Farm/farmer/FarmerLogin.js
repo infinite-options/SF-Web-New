@@ -1,9 +1,7 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Grid, Paper, Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
-import { sizing } from '@material-ui/system';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Link } from 'react-router-dom';
 
 const paperStyle = {
   height: '500px',

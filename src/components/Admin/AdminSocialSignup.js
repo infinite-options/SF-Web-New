@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { withRouter } from 'react-router';
-import TextField from '@material-ui/core/TextField';
 import { Box } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-// import Background from '../welcome-bg.png'
 import Button from '@material-ui/core/Button';
 import Cookies from 'js-cookie';
 import CssTextField from '../../utils/CssTextField';

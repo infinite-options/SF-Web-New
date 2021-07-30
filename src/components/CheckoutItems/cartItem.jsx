@@ -140,7 +140,7 @@ const CartItem = (props) => {
         }}
       />
       <Box display="flex" flexGrow={1} py={4.5}>
-      {/* <p>{store.dayClicked}</p>
+        {/* <p>{store.dayClicked}</p>
         <p>{isInDay.toString()}</p> */}
         {props.isCountChangeable ? (
           <Box
@@ -157,10 +157,7 @@ const CartItem = (props) => {
               textDecorationStyle: 'solid',
             }}
           >
-
-            <Box>
-              
-              {props.name} </Box>
+            <Box>{props.name} </Box>
 
             {props.unit !== undefined && props.unit !== ''
               ? '($' +
@@ -258,7 +255,6 @@ const CartItem = (props) => {
                 }}
                 hidden={isInDay}
               >
-                {' '}
                 Item not avaliable on this day
               </Box>
             </Box>

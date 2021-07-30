@@ -14,6 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Axios from 'axios';
 // import {BrowserRouter as Router,Switch,Route,Link} from "react-router-dom";
+import './OptionBar.css';
 
 const theme = createMuiTheme({
   palette: {
@@ -32,9 +33,9 @@ const theme = createMuiTheme({
   },
 });
 const useStyles = makeStyles(theme => ({
-  button: {
+  /*button: {
     marginRight: theme.spacing(1),
-  },
+  },*/
   rightButtons: {
     position: 'absolute',
     right: '10px',
@@ -85,129 +86,134 @@ function OptionBar({ notification, setNotification, ...props }) {
   }, []);
   const classes = useStyles();
   return (
-    <div className={classes.root}>
-      <ThemeProvider theme={theme}>
-        <AppBar color="primary" position="static">
-          <Toolbar>
+    <div className="round-box1">
+
+        <div className="vertical-center">
+            {/*<ThemeProvider style={{backgroundColor: 'white'}}>*/}
+            {/*<AppBar color="primary" position="static">
+            <Toolbar>*/}
             <Select
-              defaultValue={'Notifications'}
-              className={classes.selectType}
-              onChange={handleNotificationChange}
+                defaultValue={'Notifications'}
+                className="hButton"
+                onChange={handleNotificationChange}
             >
-              <MenuItem value={'Notifications'}>Notifications</MenuItem>
-              <MenuItem value={'SMS'}>SMS</MenuItem>
+                <MenuItem value={'Notifications'}>Notifications</MenuItem>
+                <MenuItem value={'SMS'}>SMS</MenuItem>
             </Select>
             <Button
-              size={'small'}
-              className={classes.button}
-              onClick={() => {
-                setOpenHistory(true);
-              }}
+                size={'small'}
+                className="hButton"
+                onClick={() => {
+                    setOpenHistory(true);
+                }}
             >
-              History
+                History
             </Button>
             <Button
-              size={'small'}
-              className={classes.button}
-              onClick={() => {
-                setOpenGroup(true);
-              }}
+                size={'small'}
+                className="hButton"
+                onClick={() => {
+                    setOpenGroup(true);
+                }}
             >
-              Saved Groups
+                Saved Groups
             </Button>
             <Button
-              size={'small'}
-              className={classes.button}
-              onClick={() => {
-                setOpenMessage(true);
-              }}
+                size={'small'}
+                className="hButton"
+                onClick={() => {
+                    setOpenMessage(true);
+                }}
             >
-              Saved Messages
+                Saved Messages
             </Button>
-          </Toolbar>
-        </AppBar>
-      </ThemeProvider>
-      <Modal
-        open={openHistory}
-        onClose={() => {
-          setOpenHistory(false);
-        }}
-        aria-labelledby="Message History"
-        aria-describedby="Look at previously sent messages"
-      >
-        <div className={classes.modalContainer}>Test History Modal</div>
-      </Modal>
-      <Modal
-        open={openGroup}
-        onClose={() => {
-          setOpenGroup(false);
-        }}
-        aria-labelledby="Customer Groups"
-        aria-describedby="Look at customer groups and select"
-      >
-        <div className={classes.modalContainer}>
-          {savedGroups.map((item, idx) => (
-            <div key={idx} style={{ overflow: 'auto' }}>
-              <p>
-                <span style={{ fontWeight: 'bold' }}>Group ID:</span>{' '}
-                {item.group_id.S}
-              </p>
-              <p>
-                <span style={{ fontWeight: 'bold' }}>Created Date:</span>{' '}
-                {item.created_date.S}
-              </p>
-              <p>
-                <span style={{ fontWeight: 'bold' }}>Message Name:</span>{' '}
-                {item.group_name.S}
-              </p>
-              <p>
-                <span style={{ fontWeight: 'bold' }}>Customers:</span>{' '}
-                {item.customers.L.map((cus, idx) => (
-                  <p key={idx}>
-                    {' '}
-                    &emsp;
-                    <span style={{ fontWeight: '500' }}> - Customer ID:</span>
-                    {cus.S}
-                  </p>
-                ))}
-              </p>
-              {idx + 1 !== savedMessages.length && <hr />}
-            </div>
-          ))}
+
+            {/*</Toolbar>
+          </AppBar>*/}
+            {/*</ThemeProvider>*/}
+            <Modal
+                open={openHistory}
+                onClose={() => {
+                    setOpenHistory(false);
+                }}
+                aria-labelledby="Message History"
+                aria-describedby="Look at previously sent messages"
+            >
+                <div className={classes.modalContainer}>Test History Modal</div>
+            </Modal>
+            <Modal
+                open={openGroup}
+                onClose={() => {
+                    setOpenGroup(false);
+                }}
+                aria-labelledby="Customer Groups"
+                aria-describedby="Look at customer groups and select"
+            >
+                <div className={classes.modalContainer}>
+                    {savedGroups.map((item, idx) => (
+                        <div key={idx} style={{ overflow: 'auto' }}>
+                            <p>
+                                <span style={{ fontWeight: 'bold' }}>Group ID:</span>{' '}
+                                {item.group_id.S}
+                            </p>
+                            <p>
+                                <span style={{ fontWeight: 'bold' }}>Created Date:</span>{' '}
+                                {item.created_date.S}
+                            </p>
+                            <p>
+                                <span style={{ fontWeight: 'bold' }}>Message Name:</span>{' '}
+                                {item.group_name.S}
+                            </p>
+                            <p>
+                                <span style={{ fontWeight: 'bold' }}>Customers:</span>{' '}
+                                {item.customers.L.map((cus, idx) => (
+                                    <p key={idx}>
+                                        {' '}
+                                        &emsp;
+                                        <span style={{ fontWeight: '500' }}> - Customer ID:</span>
+                                        {cus.S}
+                                    </p>
+                                ))}
+                            </p>
+                            {idx + 1 !== savedMessages.length && <hr />}
+                        </div>
+                    ))}
+                </div>
+            </Modal>
+            <Modal
+                open={openMessage}
+                onClose={() => {
+                    setOpenMessage(false);
+                }}
+                aria-labelledby="Saved Messages"
+                aria-describedby="Choose previously saved message"
+            >
+                <div className={classes.modalContainer}>
+                    {savedMessages.map((item, idx) => (
+                        <div key={idx} style={{ overflow: 'auto' }}>
+                            <p>
+                                <span style={{ fontWeight: 'bold' }}>Message ID:</span>{' '}
+                                {item.message_id.S}
+                            </p>
+                            <p>
+                                <span style={{ fontWeight: 'bold' }}>Created Date:</span>{' '}
+                                {item.created_date.S}
+                            </p>
+                            <p>
+                                <span style={{ fontWeight: 'bold' }}>Message Name:</span>{' '}
+                                {item.message_name.S}
+                            </p>
+                            <p>
+                                <span style={{ fontWeight: 'bold' }}>Message Payload:</span>{' '}
+                                {item.message_payload.S}
+                            </p>
+                            {idx + 1 !== savedMessages.length && <hr />}
+                        </div>
+                    ))}
+                </div>
+            </Modal>
         </div>
-      </Modal>
-      <Modal
-        open={openMessage}
-        onClose={() => {
-          setOpenMessage(false);
-        }}
-        aria-labelledby="Saved Messages"
-        aria-describedby="Choose previously saved message"
-      >
-        <div className={classes.modalContainer}>
-          {savedMessages.map((item, idx) => (
-            <div key={idx} style={{ overflow: 'auto' }}>
-              <p>
-                <span style={{ fontWeight: 'bold' }}>Message ID:</span>{' '}
-                {item.message_id.S}
-              </p>
-              <p>
-                <span style={{ fontWeight: 'bold' }}>Created Date:</span>{' '}
-                {item.created_date.S}
-              </p>
-              <p>
-                <span style={{ fontWeight: 'bold' }}>Message Name:</span>{' '}
-                {item.message_name.S}
-              </p>
-              <p>
-                <span style={{ fontWeight: 'bold' }}>Message Payload:</span>{' '}
-                {item.message_payload.S}
-              </p>
-              {idx + 1 !== savedMessages.length && <hr />}
-            </div>
-          ))}
-        </div>
-      </Modal>
+
     </div>
   );
 }

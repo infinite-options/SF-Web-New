@@ -1,0 +1,39 @@
+.modalSuccess {
+  position: fixed;
+  top: 70px;
+  left: 38%;
+  width: auto;
+  height: auto;
+  z-index: 10000;
+  overflow-y: auto;
+  background: #e1e7e7;
+  border: 1px solid black;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+.modalConfirmation {
+  position: fixed;
+  top: 70px;
+  left: 30%;
+  width: auto;
+  height: auto;
+  z-index: 10000;
+  overflow-y: auto;
+  background: #e1e7e7;
+  border: 1px solid black;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+.modalHooray {
+  position: fixed;
+  top: 70px;
+  left: 32%;
+  width: auto;
+  height: auto;
+  z-index: 10000;
+  overflow-y: auto;
+  background: #e1e7e7;
+  border: 1px solid black;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}

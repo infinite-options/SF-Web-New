@@ -1,24 +1,12 @@
-import Modal from 'react-bootstrap/Modal';
-// import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import classes from './ErrorModal.module.css';
-import { Button } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
-import Signup from '../SignUp/Signup';
-import { Paper } from '@material-ui/core';
-import AuthUtils from '../../utils/AuthUtils';
 import { AuthContext } from '../../auth/AuthContext';
 
 const SuccessModal = (props) => {
-  const AuthMethods = new AuthUtils();
   const auth = useContext(AuthContext);
-  let [modalSignup, modalSignupMessage] = useState('');
-  const modalSign = () => {
-    modalSignupMessage('true');
-    console.log(modalSignupMessage, modalSignup);
-    // props.modalClear();
-  };
+
   return (
     <>
       <Card
@@ -34,6 +22,7 @@ const SuccessModal = (props) => {
           <img
             src={cross}
             onClick={props.modalClear}
+            alt={''}
             style={{
               float: 'right',
               height: '25px',
@@ -41,6 +30,7 @@ const SuccessModal = (props) => {
               color: 'black',
               marginTop: '3px',
               marginRight: '3px',
+              cursor: 'pointer',
             }}
           ></img>
         </div>
@@ -88,7 +78,6 @@ const SuccessModal = (props) => {
         </div>
         <div hidden={auth.isAuth}>
           <button
-          
             onClick={props.onSign}
             style={{
               width: '300px',
@@ -122,8 +111,6 @@ const SuccessModal = (props) => {
           </button>
           </div> */}
         </div>
-
-        
       </Card>
     </>
   );

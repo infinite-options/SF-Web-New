@@ -176,7 +176,8 @@ const useStyles = makeStyles((theme) => ({
 // DONE: add unit, each is as is, anything else is '/' or 'per'
 function createProduct2(product, setCartTotal, cartItems, setCartItems, products, dayClicked, farmDaytimeDict, categoriesClicked) {
   //  console.warn(product);
-
+  
+  console.log('creating product ', product);
   const cartItems2 = JSON.parse(localStorage.getItem('cartItems') || '{}');
   return (
     <Entry

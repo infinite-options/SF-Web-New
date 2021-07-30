@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Item from './Item';
-import AddItemModel from './AddItemModel';
 import CheckItem from './CheckItem';
 import NumberFormat from 'react-number-format';
-// import IconButton from '@material-ui/core/IconButton';
-// import Fab from '@material-ui/core/Fab';
-// import Select from '@material-ui/core/Select';
-// import MenuItem from '@material-ui/core/MenuItem';
-// import InputLabel from '@material-ui/core/InputLabel';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import FormControl from '@material-ui/core/FormControl';
-// import Switch from '@material-ui/core/Switch';
-// import {AdminFarmContext} from '../AdminFarmContext'
-// import {Grid, Paper, ButtonBase, Button, Typography, Card, CardActions, CardMedia, CardContent, Modal, TextField, CircularProgress, Divider} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ButtonBase, Divider, Grid, Modal } from '@material-ui/core';
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -47,7 +36,7 @@ export default function FarmerHome({ farmID, farmName, ...props }) {
     //get data from farm
     console.log('get farm data..');
     if (farmID !== '') getBusinessItems(API_BASE_URL + farmID, setFarmData);
-    console.log('Farm data is',farmData)
+    console.log('Farm data is', farmData);
   }, [farmID]);
 
   const getBusinessItems = (urlAPI, setData) => {
@@ -62,6 +51,7 @@ export default function FarmerHome({ farmID, farmName, ...props }) {
           return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
         setData(response.data.result.result);
+        console.log(response.data.result.result);
       })
       .catch((err) => {
         console.log(err);
@@ -113,12 +103,12 @@ export default function FarmerHome({ farmID, farmName, ...props }) {
     </div>
     */
     <div>
-    <CheckItem
-      farmID={farmID}
-      handleClose={handleCloseModel}
-      setData={setFarmData}
-    />
-  </div>
+      <CheckItem
+        farmID={farmID}
+        handleClose={handleCloseModel}
+        setData={setFarmData}
+      />
+    </div>
   );
 
   return (
@@ -185,7 +175,7 @@ export default function FarmerHome({ farmID, farmName, ...props }) {
           farmData &&
             farmData.map((itemData, idx) => {
               // display 'past' status items AND items with no status tag
-              console.log('individual items data', itemData)
+              console.log('individual items data', itemData);
               if (
                 !itemData.item_status ||
                 itemData.item_status.toLowerCase() === 'past'

@@ -1,26 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import axios from 'axios';
-
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import { AuthContext } from '../../auth/AuthContext';
 import { AdminFarmContext } from './AdminFarmContext';
 import appColors from 'styles/AppColors';
-
+import { AuthContext } from '../../auth/AuthContext';
+import Button from '@material-ui/core/Button';
 const theme = createMuiTheme({
   palette: {
     primary: {

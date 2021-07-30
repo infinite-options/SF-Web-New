@@ -1,28 +1,17 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Container, Row, Col } from 'react-grid-system';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Visible, Hidden } from 'react-grid-system';
-import {
-  Box,
-  Button,
-  InputAdornment,
-  FormHelperText,
-  Collapse,
-} from '@material-ui/core';
+import { Button, InputAdornment } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import appColors from '../../styles/AppColors';
 import CssTextField from '../../utils/CssTextField';
-import FindLongLatWithAddr from '../../utils/FindLongLatWithAddr';
 import { AuthContext } from '../../auth/AuthContext';
-import { TrendingUpRounded } from '@material-ui/icons';
 import PlacesAutocomplete, {
   geocodeByAddress,
   geocodeByPlaceId,
   getLatLng,
 } from 'react-places-autocomplete';
 import BusiApiReqs from '../../utils/BusiApiReqs';
-import ProductDisplay from '../ProductDisplay/ProductDisplay';
 import Mymodal from '../Modal/Modal';
 import SuccessModal from '../Modal/SuccessModal';
 let modalProp = true;
@@ -45,12 +34,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Order = ({...props}) => {
+const Order = ({ ...props }) => {
   const [address, setAddress] = React.useState('');
-  const [coordinates, setCoordinates] = React.useState({
-    lat: null,
-    lng: null,
-  });
   const [modalError, setModalErrorMessage] = useState('');
   const [modalSuccess, setModalSuccessMessage] = useState('');
   var guestProfile = {};
@@ -60,13 +45,8 @@ const Order = ({...props}) => {
 
   // // For Guest Procedure
   // const [deliverylocation, setDeliverylocation] = useState('');
-  const [errorValue, setError] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const classes = useStyles();
-  function createError(message) {
-    setError('Invalid Input');
-    setErrorMessage(message);
-  }
+
   // const onFieldChange = (event) => {
   //   const { value } = event.target;
   //   setDeliverylocation(value);
@@ -140,7 +120,7 @@ const Order = ({...props}) => {
       address: addr[0],
       city: addr[1],
       state: addr[2],
-      zip: zipCode1.length == 5 ? zipCode1.long_name : zipCode2.long_name,
+      zip: zipCode1.length === 5 ? zipCode1.long_name : zipCode2.long_name,
     };
     console.log(latLng);
     const res = await BusiMethods.getLocationBusinessIds(
@@ -170,7 +150,6 @@ const Order = ({...props}) => {
       console.log(guestProfile);
     }
   };
-
 
   // const searchAddress= async (res)=>{
   //   // console.log(value);
@@ -228,20 +207,18 @@ const Order = ({...props}) => {
     types: ['address'],
   };
 
-
-
   const errorHandleModal = () => {
     setModalErrorMessage(null);
     setModalSuccessMessage(null);
   };
 
-
   const signUpClicked = () => {
     props.setIsLoginShown(false);
+    setModalSuccessMessage(null);
     props.setIsSignUpShown(!props.isSignUpShown);
     window.scrollTo({
       top: 0,
-      behavior: "smooth"
+      behavior: 'smooth',
     });
   };
   return (
@@ -260,7 +237,6 @@ const Order = ({...props}) => {
           onConfirm={login}
           onSign={signUpClicked}
           modalClear={errorHandleModal}
-          style={{ zIndex: '100000' }}
         ></SuccessModal>
       )}
 
@@ -283,7 +259,7 @@ const Order = ({...props}) => {
             fontWeight: 'bold',
           }}
         >
-          Ready to Order
+          Ready to Order?
         </h1>
       </div>
       <div style={{ marginRight: 'auto', marginLeft: 'auto' }}>
@@ -343,7 +319,7 @@ const Order = ({...props}) => {
                 }}
                 {...getInputProps({ placeholder: 'Search for your address' })}
                 style={{
-                  width: '300px',
+                  width: '500px',
                   border: '2px solid' + appColors.secondary,
                   borderRadius: '5px',
                   left: '0%',
@@ -382,15 +358,17 @@ const Order = ({...props}) => {
       <Button
         size="large"
         variant="contained"
-        color="secondary"
+        color="primary"
         onClick={handleSelect}
         style={{
           width: '300px',
           textTransform: 'none',
           float: 'center',
+          color: 'white',
+          borderRadius: '15px',
         }}
       >
-        Find Local Produce
+        Shop local produce near me
       </Button>
       <div
         style={{

@@ -1,0 +1,60 @@
+.round-box1 {
+  border-radius: 25px;
+  padding: 20px;
+  margin: 20px 20px;
+  background-color: white;
+}
+
+.testUL ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.testUL li {
+  margin: auto;
+}
+
+.AllOrdersButtons {
+  background-color: #136d74;
+  color: white;
+  margin-left: 10px;
+}
+
+.ReportButtons {
+  background-color: #136d74;
+  color: white;
+  margin-left: 10px;
+  float: right;
+}
+
+.allorders {
+  color: orange;
+  text-align: left;
+  margin-left: 30px;
+}
+
+.allordersButton {
+  text-decoration: none;
+
+  float: left;
+}
+
+.driverRouter {
+  text-decoration: none;
+
+  margin-left: 20px;
+  float: left;
+}
+
+.DeliveryDates ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.DeliveryDates li {
+  margin: auto;
+}

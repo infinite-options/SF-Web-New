@@ -238,11 +238,11 @@ export default function Farmers() {
               fontSize: '16px',
             }}
           >
-            City:{x.business_city}
+            {x.business_city}
           </div>
           <div
             style={{
-              marginRight: '30%',
+              marginRight: '20%',
               float: 'right',
               padding: '2px',
               width: '20px',

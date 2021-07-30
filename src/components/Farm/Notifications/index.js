@@ -21,7 +21,7 @@ function Notifications({ farmID, farmName, ...props }) {
 
   useEffect(() => {
     axios
-      .get(API_URL + 'customer_info')
+      .get(API_URL + 'customer_info_business')
       .then((res) => {
         console.log(res);
         setCustomerList(res.data.result);
@@ -42,7 +42,7 @@ function Notifications({ farmID, farmName, ...props }) {
         setSelectedCustomers={setSelectedCustomers}
         setMessage={setMessage}
       />
-      <Paper style={paperStyle} elevation={0}>
+      {/*<Paper style={paperStyle} elevation={0}>*/}
         <Main
           notification={notification}
           customerList={customerList}
@@ -51,7 +51,7 @@ function Notifications({ farmID, farmName, ...props }) {
           message={message}
           setMessage={setMessage}
         />
-      </Paper>
+      {/*</Paper>*/}
     </div>
   );
 }

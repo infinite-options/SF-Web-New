@@ -1,23 +1,15 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
 import Cookies from 'universal-cookie';
 import StoreNavBar from './StoreNavBar';
 import { AuthContext } from '../../auth/AuthContext';
 import storeContext from './storeContext';
 import { Box } from '@material-ui/core';
-
-import CheckoutPage from '../CheckoutPage';
 import ProductSelectionPage from '../ProductSelectionPage';
 import AuthUtils from '../../utils/AuthUtils';
 import BusiApiReqs from '../../utils/BusiApiReqs';
-import LandingNavBar from '../LandingNavBar/LandingNavBar';
-import AdminLogin from '../LogIn/AdminLogin';
-import Signup from '../SignUp/Signup';
 import { makeStyles } from '@material-ui/core/styles';
-
-import { set } from 'js-cookie';
 
 const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 const cookies = new Cookies();
@@ -150,6 +142,7 @@ const Store = ({ ...props }) => {
   const [productsFruit, setProductsFruit] = useState([]);
   const [productsVegetable, setProductsVegetable] = useState([]);
   const [productsDessert, setProductsDessert] = useState([]);
+  const [productsGiftCard, setProductsGiftCard] = useState([]);
 
   const [productsLoading, setProductsLoading] = useState(true);
 
@@ -447,9 +440,9 @@ const Store = ({ ...props }) => {
     setFarmDaytimeDict(_farmDaytimeDict);
     setAcceptDayHour(_acceptDayHour);
     if (_farmList.length > 0 && updatedProfile.zone !== profile.zone) {
-     // localStorage.removeItem('selectedDay');
-    //  localStorage.removeItem('cartTotal');
-    //  localStorage.removeItem('cartItems');
+      // localStorage.removeItem('selectedDay');
+      //  localStorage.removeItem('cartTotal');
+      //  localStorage.removeItem('cartItems');
       setProfile(updatedProfile);
     }
 
@@ -463,6 +456,7 @@ const Store = ({ ...props }) => {
       const _vegetable = [];
       const _fruit = [];
       const _dessert = [];
+      const _giftCard = [];
       const itemDict = {};
       if (itemRes !== undefined) {
         for (const item of itemRes) {
@@ -521,20 +515,14 @@ const Store = ({ ...props }) => {
                 _products.push(item);
 
                 if (item.item_type.toString() === 'vegetable') {
-                  //_products.push(item);
                   _vegetable.push(item);
                 } else if (item.item_type.toString() === 'fruit') {
                   _fruit.push(item);
-                }
-                //else if (item.item_type.toString() === 'dessert') {
-
-                //   _dessert.push(item);
-
-                // }
-                else {
+                } else if (item.item_type.toString() === 'giftcard') {
+                   _giftCard.push(item);
+                } else {
                   _dessert.push(item);
                 }
-                // _products.push(item);
               }
             }
           } catch (error) {
@@ -555,11 +543,6 @@ const Store = ({ ...props }) => {
               )
                 _products[i].favorite = 'TRUE';
             }
-            // if (products[i].item_name == item.favorite_produce){
-            //       products[i].favorite = "TRUE"
-            //     console.log("Favorite get", item.favorite_produce)
-            //    }
-            // }
           }
         }
       });
@@ -569,7 +552,7 @@ const Store = ({ ...props }) => {
       setProductsFruit(_fruit.sort());
       setProductsVegetable(_vegetable.sort());
       setProductsDessert(_dessert.sort());
-      //    console.log('productsssssss----',_products)
+      setProductsGiftCard(_giftCard.sort());
       setProductsLoading(false);
     });
   }
@@ -596,6 +579,7 @@ const Store = ({ ...props }) => {
           productsFruit,
           productsVegetable,
           productsDessert,
+          productsGiftCard,
           productsLoading,
           storePage,
           setStorePage,

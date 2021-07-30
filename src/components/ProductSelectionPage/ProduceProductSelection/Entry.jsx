@@ -11,10 +11,6 @@ import {
   SvgIcon,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import InfoIcon from '@material-ui/icons/Info';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import axios from 'axios';
 import appColors from '../../../styles/AppColors';
 // import ProduceSelectContext from '../ProdSelectContext';
 
@@ -111,7 +107,7 @@ const useStyles = makeStyles((theme) => ({
     height: '78px',
     display: 'flex',
     flexDirection: 'column',
-    background: (props) => (props.id != 0 ? '#F4860933' : 'white'),
+    background: (props) => (props.id !== 0 ? '#F4860933' : 'white'),
   },
 
   itemInfo: {
@@ -187,9 +183,16 @@ function Entry(props) {
     );
     setIsInDay(isInDay);
   }, [
-    // store.dayClicked,
-    // props.farmsClicked,
-    // props.categoriesClicked,
+    props.dayClicked,
+    props.farmsClicked,
+    props.categoriesClicked,
+    props.business_uids,
+    props.favorite,
+    props.type,
+    props.farmDaytimeDict,
+  //  store.cartItems,
+  //  store.products
+
   ]);
 
   function decrease() {
@@ -198,7 +201,7 @@ function Entry(props) {
       // const itemCount = store.cartItems[props.id]['count'];
 
       if (itemCount > 0) {
-        if (itemCount == 1) {
+        if (itemCount === 1) {
           let clone = Object.assign({}, currCartItems);
           delete clone[props.id];
           localStorage.setItem('cartItems', JSON.stringify(clone));
@@ -291,7 +294,7 @@ function Entry(props) {
                 onClick={toggleHearted}
                 disabled={!isInDay}
               >
-                <img src={hearted ? FavoriteSrc : FavoriteBorderedSrc} />
+                <img src={hearted ? FavoriteSrc : FavoriteBorderedSrc} alt = {''} />
               </Button>
             </Box>
 
@@ -306,7 +309,7 @@ function Entry(props) {
                 onClick={flipped}
                 disabled={!isInDay}
               >
-                <img src={InfoSrc} />
+                <img src={InfoSrc} alt = {''} />
               </Button>
             </Box>
           </Box>
@@ -330,7 +333,7 @@ function Entry(props) {
               }}
             >
               <Button onClick={toggleHearted} disabled={!isInDay}>
-                <img src={hearted ? FavoriteSrc : FavoriteBorderedSrc} />
+                <img src={hearted ? FavoriteSrc : FavoriteBorderedSrc} alt = {''} />
               </Button>
             </Box>
             <Box
@@ -344,7 +347,7 @@ function Entry(props) {
                 onClick={notFlipped}
                 disabled={!isInDay}
               >
-                <img src={InfoSrc} />
+                <img src={InfoSrc} alt = {''} />
               </Button>
             </Box>
           </Box>
@@ -399,6 +402,7 @@ function Entry(props) {
               props.unit === 'each' ? '(' + props.unit + ')' : '/ ' + props.unit
             }`}
           </Typography>
+         
         </Box>
       </Card>
     </Grid>
