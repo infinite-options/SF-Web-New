@@ -67,6 +67,29 @@ function App() {
   });
   console.log('app started');
 
+  // useEffect(() => {
+  //   // function checkUserData() {
+  //   //   const cartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
+  //   //   console.log('binky2');
+  
+  //   //   if (cartItems[props.id]['count'] !== currCartItems[props.id]['count']) {
+  //   //     console.log('binky');
+  //   //     setDummy(!dummy);
+  //   //   }
+  //   // }
+
+  //   console.log('binky2');
+  //   window.addEventListener('storage', () => {
+  //     // When local storage changes, dump the list to
+  //     // the console.
+  //      console.log('binky');
+  //   });
+  // }, []);
+
+  const cartDiff = () => {
+    
+  };
+
   let uid =
     cookies.get('customer_uid') == null ? '' : cookies.get('customer_uid');
 

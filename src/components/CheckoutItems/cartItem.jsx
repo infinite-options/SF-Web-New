@@ -5,51 +5,66 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import appColors from '../../styles/AppColors';
 import ProductSelectContext from '../ProductSelectionPage/ProdSelectContext';
+import { ContactsOutlined } from '@material-ui/icons';
+
+function useForceUpdate() {
+  const [dummy, setDummy] = useState(0);
+  return () => setDummy(dummy => dummy + 1); // updating dummy variable to force a re-render.
+}
 
 function CartItem(props) {
+  console.log('CartItems');
   const store = useContext(storeContext);
   const products = store.products;
   const productSelect = useContext(ProductSelectContext);
   var itemPrice = parseFloat(props.price);
   var totalPrice = itemPrice * props.count;
+  const currCartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
+  const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
+  const [dummy, setDummy] = useState(false);
+
+  const forceUpdate = useForceUpdate();
 
   function decrease() {
-    if (props.id in store.cartItems) {
-      const itemCount = store.cartItems[props.id]['count'];
+    if (props.id in currCartItems) {
+      const itemCount = currCartItems[props.id]['count'];
+
       if (itemCount > 0) {
         if (itemCount == 1) {
-          let clone = Object.assign({}, store.cartItems);
+          let clone = Object.assign({}, currCartItems);
           delete clone[props.id];
-          store.setCartItems(clone);
+          localStorage.setItem('cartItems', JSON.stringify(clone));
         } else {
           const item = {
             ...props,
-            count: store.cartItems[props.id]['count'] - 1,
+            count: currCartItems[props.id]['count'] - 1,
           };
-          store.setCartItems({
-            ...store.cartItems,
+          localStorage.setItem('cartItems', JSON.stringify({
+            ...currCartItems,
             [props.id]: item,
-          });
+          }));
         }
-        store.setCartTotal(store.cartTotal - 1);
+        localStorage.setItem('cartTotal', `${currCartTotal - 1}`);
+        forceUpdate();
       }
     }
   }
 
   function increase() {
-    console.log('props', props);
-    console.log('products', products);
-
     const item =
-      props.id in store.cartItems
-        ? { ...props, count: store.cartItems[props.id]['count'] + 1 }
+      props.id in currCartItems
+        ? { ...props, count: currCartItems[props.id]['count'] + 1 }
         : { ...props, count: 1 };
-
-    store.setCartItems({
-      ...store.cartItems,
+    
+    const newCartItems = {
+      ... currCartItems,
       [props.id]: item,
-    });
-    store.setCartTotal(store.cartTotal + 1);
+    };
+
+    localStorage.setItem('cartItems', JSON.stringify(newCartItems));
+    localStorage.setItem('cartTotal', `${currCartTotal + 1}`);
+    // store.setCartTotal(currCartTotal + 1);
+    forceUpdate();
   }
 
   // const {
@@ -57,10 +72,21 @@ function CartItem(props) {
   //  } = useContext(storeContext);
 
   const [isInDay, setIsInDay] = useState(true);
+  // const [dummy, setDummy] = useState(false);
+
+  // useEffect(() => {
+  
+  //   window.addEventListener('storage', () => {
+  //     console.log('In cart item with id: ', props.id);
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    console.log('props id', props.id);
+  }, [store.cartItems[props.id]['count']]);
 
   useEffect(() => {
     let  isInDay = false;
-    console.log('props name day', props.business_uid);
 
     // for (const farm in props.itm_business_uid) {
     if (store.farmDaytimeDict[props.business_uid] != undefined) {
@@ -177,7 +203,7 @@ function CartItem(props) {
             </Box>
           )}
           <Box mx={1} color="#000000" fontWeight="500" fontSize="14px">
-            {isInDay ? props.count : ' '}
+            {isInDay ? currCartItems[props.id]['count'] : ' '}
           </Box>
           {props.isCountChangeable && (
             <Box>

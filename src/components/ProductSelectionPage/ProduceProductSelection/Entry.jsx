@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
-import storeContext from '../../Store/storeContext';
+import React, { useState, useEffect } from 'react';
+// import storeContext from '../../Store/storeContext';
 import {
   Box,
   Button,
@@ -16,7 +16,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import axios from 'axios';
 import appColors from '../../../styles/AppColors';
-import ProduceSelectContext from '../ProdSelectContext';
+// import ProduceSelectContext from '../ProdSelectContext';
 
 import { ReactComponent as AddIcon } from '../../../sf-svg-icons/sfcolored-plus.svg';
 import { ReactComponent as RemoveIcon } from '../../../sf-svg-icons/sfcolored-minus.svg';
@@ -126,15 +126,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// Defining our own hook to force a re-render
+function useForceUpdate() {
+  const [dummy, setDummy] = useState(0);
+  return () => setDummy(dummy => dummy + 1);
+}
+
 function Entry(props) {
+  console.log('entry')
   const [hearted, setHearted] = useState(false);
   const [isShown, setIsShown] = useState(false);
   const [isInDay, setIsInDay] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
+  const forceUpdate = useForceUpdate();
 
-  const store = useContext(storeContext);
+  // const store = useContext(storeContext);
   const currCartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
   const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
+
+  // const stylesProps = {
+  //   id: props.id in store.cartItems ? store.cartItems[props.id]['count'] : 0,
+  //   hearted: hearted,
+  //   isInDay: isInDay,
+  // };
 
   const stylesProps = {
     id: props.id in currCartItems ? currCartItems[props.id]['count'] : 0,
@@ -144,9 +158,6 @@ function Entry(props) {
 
   const classes = useStyles(stylesProps);
 
-  const productSelect = useContext(ProduceSelectContext);
-  const [inCart, setInCart] = React.useState(false);
-
   //const [isShown, setIsShown] = useState(false);
 
   useEffect(() => {
@@ -154,7 +165,7 @@ function Entry(props) {
     let isInCategory = false;
 
     const isFavoritedAndInFavorites =
-      productSelect.categoriesClicked.has('favorite') &&
+      props.categoriesClicked.has('favorite') &&
       props.favorite == 'TRUE';
 
     if (props.favorite === 'TRUE') {
@@ -162,34 +173,36 @@ function Entry(props) {
     }
 
     for (const farm in props.business_uids) {
-      store.farmDaytimeDict[farm].forEach((daytime) => {
-        if (store.dayClicked === daytime) isInDay = true;
+      props.farmDaytimeDict[farm].forEach((daytime) => {
+        if (props.dayClicked === daytime) isInDay = true;
       });
     }
 
-    if (productSelect.categoriesClicked.has(props.type)) isInCategory = true;
+    if (props.categoriesClicked.has(props.type)) isInCategory = true;
 
     setIsShown(
-      productSelect.categoriesClicked.size == 0 ||
+      props.categoriesClicked.size == 0 ||
         isInCategory ||
         isFavoritedAndInFavorites
     );
     setIsInDay(isInDay);
   }, [
-    store.dayClicked,
-    productSelect.farmsClicked,
-    productSelect.categoriesClicked,
+    // store.dayClicked,
+    // props.farmsClicked,
+    // props.categoriesClicked,
   ]);
 
   function decrease() {
     if (props.id in currCartItems) {
       const itemCount = currCartItems[props.id]['count'];
+      // const itemCount = store.cartItems[props.id]['count'];
 
       if (itemCount > 0) {
         if (itemCount == 1) {
           let clone = Object.assign({}, currCartItems);
           delete clone[props.id];
           localStorage.setItem('cartItems', JSON.stringify(clone));
+          // delete store.cartItems[props.id];
         } else {
           const item = {
             ...props,
@@ -199,33 +212,44 @@ function Entry(props) {
             ...currCartItems,
             [props.id]: item,
           }));
+
+          props.setCartItems({
+            ...currCartItems,
+            [props.id]: item,
+          });
+
+          // store.cartItems[props.id] = item;
         }
         localStorage.setItem('cartTotal', currCartTotal - 1);
-        setInCart(!inCart);
+        props.setCartTotal(props.cartTotal - 1); 
+        forceUpdate();
       }
     }
   }
 
   function increase() {
     const item =
-      props.id in currCartItems
-        ? { ...props, count: currCartItems[props.id]['count'] + 1 }
+      props.id in props.cartItems
+        ? { ...props, count: props.cartItems[props.id]['count'] + 1 }
         : { ...props, count: 1 };
     
     const newCartItems = {
-      ... currCartItems,
+      ... props.cartItems,
       [props.id]: item,
     };
 
     localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-    localStorage.setItem('cartTotal', props.cartTotal + 1);
-    setInCart(!inCart);
+    localStorage.setItem('cartTotal', `${currCartTotal + 1}`);
+    // store.cartItems[props.id] = item;
+    props.setCartItems(newCartItems);
+    props.setCartTotal(currCartTotal + 1);
+    forceUpdate();
   }
 
   const toggleHearted = () => {
-    for (let i = 0; i < store.products.length; i++) {
-      if (store.products[i].item_uid == props.id) {
-        store.products[i].favorite =
+    for (let i = 0; i < props.products.length; i++) {
+      if (props.products[i].item_uid == props.id) {
+        props.products[i].favorite =
           props.favorite == 'FALSE' ? 'TRUE' : 'FALSE';
       }
     }
@@ -288,10 +312,10 @@ function Entry(props) {
           </Box>
           <Box style={{ flexGrow: '1' }}>
             <Typography hidden={isInDay} style={{ fontWeight: 'bold' }}>
-              {store.dayClicked
+              {props.dayClicked
                 ? `Product unavailable on
-             ${store.dayClicked.split('&')[0]}
-            ${store.dayClicked.split('&')[1]}`
+             ${props.dayClicked.split('&')[0]}
+            ${props.dayClicked.split('&')[1]}`
                 : `Date not selected`}
             </Typography>
           </Box>
@@ -383,4 +407,11 @@ function Entry(props) {
   );
 }
 
-export default Entry;
+export default React.memo(Entry, (prevProps, nextProps) => {
+  if (prevProps.itemCount != nextProps.itemCount) {
+    return false;
+  }
+
+  return true;
+}
+);

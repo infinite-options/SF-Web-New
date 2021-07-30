@@ -185,9 +185,10 @@ export default function CheckoutTab(props) {
 
   const [isInDay, setIsInDay] = useState(false);
   const [map, setMap] = React.useState(null);
+  const cartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
 
   // cartItems is a dictonary, need to convert it into an array
-  const [cartItems, setCartItems] = useState(getItemsCart());
+  // const [cartItems, setCartItems] = useState(getItemsCart());
   // Retrieve items from store context
   const [userInfo, setUserInfo] = useState(store.profile);
 
@@ -342,15 +343,16 @@ export default function CheckoutTab(props) {
     setErrorMessage('');
   }
 
+  // const cartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
   useEffect(() => {
     if (store.profile !== {}) {
       setUserInfo(store.profile);
     }
   }, [store.profile]);
 
-  useEffect(() => {
-    setCartItems(getItemsCart());
-  }, [store.cartItems]);
+  // useEffect(() => {
+  //   setCartItems(getItemsCart());
+  // }, [store.cartItems]);
 
   //console.log("this is lat and long", userInfo.latitude, userInfo.longitude)
   var days = [
@@ -402,8 +404,8 @@ export default function CheckoutTab(props) {
   function getItemsCart() {
     //var result = [store.cartItems['310-000481']];
     var result = [];
-    for (const itemId in store.cartItems) {
-      result.push(store.cartItems[itemId]);
+    for (const itemId in cartItems) {
+      result.push(cartItems[itemId]);
     }
     return result;
   }
@@ -415,7 +417,7 @@ export default function CheckoutTab(props) {
   // DONE: Add Delivery tip
   // DONE: apply promo to subtotal
   // DONE: make taxes not applied to the delivery fee
-  const [subtotal, setSubtotal] = useState(calculateSubTotal(cartItems));
+  const [subtotal, setSubtotal] = useState(calculateSubTotal(getItemsCart()));
   const [promoApplied, setPromoApplied] = useState(0);
   const [ambassadorDiscount, setAmbassadorDiscount] = useState(0);
   const [deliveryFee, setDeliveryFee] = useState(
@@ -464,7 +466,7 @@ export default function CheckoutTab(props) {
   }, [total]);
 
   useEffect(() => {
-    setSubtotal(calculateSubTotal(cartItems));
+    setSubtotal(calculateSubTotal(getItemsCart()));
   }, [cartItems, store.dayClicked, store.products ]);
 
   useEffect(() => {
@@ -506,7 +508,7 @@ export default function CheckoutTab(props) {
 
   function onAddItemsClicked() {
     store.setStorePage(0);
-    const items = Object.values(store.cartItems).map((item) => {
+    const items = Object.values(cartItems).map((item) => {
       return {
         qty: item.count,
         name: item.name,
@@ -515,7 +517,6 @@ export default function CheckoutTab(props) {
         itm_business_uid: item.business_uid,
       };
     });
-    console.log('items: ', items);
   }
 
   function handleChangeAddress() {
@@ -893,7 +894,7 @@ useMemo(()=> {
           </Box>
         )} */}
         <Box my={1} px={1}>
-          {cartItems.map(listItem)}
+          {getItemsCart().map(listItem)}
         </Box>
 
         <Box display="flex" paddingTop="2rem">

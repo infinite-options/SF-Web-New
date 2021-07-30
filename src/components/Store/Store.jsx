@@ -133,6 +133,7 @@ function useOutsideAlerter(ref) {
 const weekdayDatesDict = findWeekdayDates();
 
 const Store = ({ ...props }) => {
+  console.log('store');
   const Auth = useContext(AuthContext);
   const location = useLocation();
   const history = useHistory();
@@ -222,8 +223,6 @@ const Store = ({ ...props }) => {
 
   localStorage.setItem('currentStorePage', storePage);
   //const { cartTotal, setCartTotal } = useContext(AuthContext);
-  localStorage.setItem('cartItems', '{}');
-  localStorage.setItem('cartTotal', '0');
   const [cartTotal, setCartTotal] = useState(
     parseInt(localStorage.getItem('cartTotal') || '0')
   );
@@ -234,7 +233,7 @@ const Store = ({ ...props }) => {
 
   useEffect(() => {
     console.log('cartTotal: ', cartTotal);
-    localStorage.setItem('cartTotal', cartTotal);
+    localStorage.setItem('cartTotal', `${cartTotal}`);
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartTotal, cartItems]);
 
@@ -564,6 +563,7 @@ const Store = ({ ...props }) => {
         }
       });
 
+      // localStorage.setItem('products', JSON.stringify(_products.sort()));
       setProducts(_products.sort());
       setProductsFruit(_fruit.sort());
       setProductsVegetable(_vegetable.sort());
@@ -572,6 +572,8 @@ const Store = ({ ...props }) => {
       setProductsLoading(false);
     });
   }
+
+  const [dummy1, setDummy1] = useState(0);
 
   return (
     <div hidden={props.hidden}>
@@ -619,6 +621,7 @@ const Store = ({ ...props }) => {
           setIsCheckoutLogin,
           isCheckoutSignUp,
           setIsCheckoutSignUp,
+          setDummy1,
         }}
       >
         <Box>

@@ -17,6 +17,7 @@ import ItemCategory from '../../FilterProductSelection/ItemCategory';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import GridList from '@material-ui/core/GridList';
+import { propTypes } from 'react-bootstrap/esm/Image';
 
 const theme2 = createMuiTheme({
   breakpoints: {
@@ -173,8 +174,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // DONE: add unit, each is as is, anything else is '/' or 'per'
-function createProduct2(product) {
+function createProduct2(product, setCartTotal, cartItems, setCartItems, products, dayClicked, farmDaytimeDict, categoriesClicked) {
   //  console.warn(product);
+  const cartItems2 = JSON.parse(localStorage.getItem('cartItems') || '{}');
   return (
     <Entry
       favorite={product.favorite}
@@ -191,8 +193,18 @@ function createProduct2(product) {
       id={product.item_uid}
       key={product.item_uid}
       info={product.item_info}
-      cartItems= {JSON.parse(localStorage.getItem('cartItems') || '{}')}
+      cartItems= {cartItems}
+      setCartItems= {setCartItems}
       cartTotal = {parseInt(localStorage.getItem('cartTotal') || '0')}
+      setCartTotal = {setCartTotal}
+      itemCount = {
+        product.item_uid in cartItems ?
+        cartItems[product.item_uid]['count'] : 0
+      }
+      products = {products}
+      dayClicked = {dayClicked}
+      farmDaytimeDict = {farmDaytimeDict}
+      categoriesClicked = {categoriesClicked}
     />
   );
 }
@@ -202,6 +214,7 @@ function createProduct2(product) {
 // If Identical still then we should select the one with the earliest created_at date
 
 function DisplayProduct() {
+  console.log('display product');
   const classes = useStyles();
 
   const productSelect = useContext(ProdSelectContext);
@@ -349,7 +362,7 @@ function DisplayProduct() {
                   // spacing={5}
                   // spacing={2}
                 >
-                  {store.productsVegetable.map(createProduct2)}
+                  {store.productsVegetable.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
               </Box>
             </Paper>
@@ -423,7 +436,7 @@ function DisplayProduct() {
             >
               <Box width="97%" justifyContent="center">
                 <Box className={classes.entryContainer}>
-                  {store.productsFruit.map(createProduct2)}
+                  {store.productsFruit.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
               </Box>
             </Paper>
@@ -497,7 +510,7 @@ function DisplayProduct() {
             >
               <Box width="97%" justifyContent="center">
                 <Box className={classes.entryContainer}>
-                  {store.productsDessert.map(createProduct2)}
+                  {store.productsDessert.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
               </Box>
             </Paper>
