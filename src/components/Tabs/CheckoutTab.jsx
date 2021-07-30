@@ -72,6 +72,7 @@ function calculateSubTotal(items) {
 }
 
 function listItem(item) {
+  console.log("CartItems calling from checkout tab")
   return (
     <>
       <CartItem

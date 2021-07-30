@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function listItem(item) {
+  console.log("CartItems calling from history tab")
   return (
     <>
       <CartItem

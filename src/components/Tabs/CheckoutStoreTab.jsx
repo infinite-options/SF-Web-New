@@ -151,17 +151,18 @@ const CssTextField = withStyles({
 })(TextField);
 
 function listItem(item, store, productSelect) {
+  console.log("CartItems calling from checkout Store tab",item)
   return (
     <>
       <CartItem
-        name={item.name}
-        unit={item.unit}
-        price={item.price}
+        name={item.item_name}
+        unit={item.item_unit}
+        price={item.item_price}
         count={item.count}
-        img={item.img}
+        img={item.item_photo}
         isCountChangeable={true}
-        business_uid={item.business_uid}
-        id={item.id}
+        business_uid={item.itm_business_uid}
+        id={item.item_uid}
         key={item.item_uid}
         products = {store.products}
         cartItems = {store.cartItems}
@@ -411,10 +412,19 @@ export default function CheckoutTab(props) {
   }, [store.profile.zone, store.expectedDelivery]);
 
   function getItemsCart() {
-    //var result = [store.cartItems['310-000481']];
-    var result = [];
-    for (const itemId in cartItems) {
-      result.push(cartItems[itemId]);
+    var result = []
+    const result1 = store.productsFruit.concat(store.productsDessert)
+    const result2 = result1.concat(store.productsVegetable)
+    for (const [key, value] of Object.entries(cartItems)) {
+      for (const val in result2){
+        if(result2[val]['item_uid']===key){
+          console.log("got it inside",key)
+          result2[val]['count'] = value['count']
+          result.push(result2[val])
+        }
+      }
+      
+      
     }
     return result;
   }

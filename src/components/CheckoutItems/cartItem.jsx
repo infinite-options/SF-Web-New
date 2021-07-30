@@ -13,7 +13,7 @@ function useForceUpdate() {
 }
 
 const CartItem = (props) => {
-  console.log('CartItems');
+  console.log('CartItems props',props);
   // const store = useContext(storeContext);
   const products = props.products;
   // const productSelect = useContext(ProductSelectContext);
@@ -22,60 +22,68 @@ const CartItem = (props) => {
   const currCartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
   const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
   const [dummy, setDummy] = useState(false);
-
+  console.log('CartItems c',currCartItems);
   const forceUpdate = useForceUpdate();
 
+ 
   function decrease() {
-    if (props.id in currCartItems) {
-      const itemCount = currCartItems[props.id]['count'];
-      // const itemCount = store.cartItems[props.id]['count'];
+    const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
+    const currCartTotal2 = parseInt(localStorage.getItem('cartTotal')|| '0')
+    if (props.id in currCartItems2) {
 
+      const itemCount = currCartItems2[props.id]['count'];
+      // const itemCount = store.cartItems[props.id]['count'];
+      console.log("@456qw In decrease 1 ",itemCount)
       if (itemCount > 0) {
-        if (itemCount == 1) {
-          let clone = Object.assign({}, currCartItems);
+        if (itemCount === 1) {
+          let clone = Object.assign({}, currCartItems2);
           delete clone[props.id];
           localStorage.setItem('cartItems', JSON.stringify(clone));
-          // delete store.cartItems[props.id];
+          console.log("@456qw In decrease 2 --- deleted")
+          delete props.cartItems[props.id];
         } else {
           const item = {
-            ...props,
-            count: currCartItems[props.id]['count'] - 1,
+            
+            count: currCartItems2[props.id]['count'] - 1,
           };
           localStorage.setItem('cartItems', JSON.stringify({
-            ...currCartItems,
+            ...currCartItems2,
             [props.id]: item,
           }));
 
           props.setCartItems({
-            ...currCartItems,
+            ...currCartItems2,
             [props.id]: item,
           });
 
           // store.cartItems[props.id] = item;
         }
-        localStorage.setItem('cartTotal', currCartTotal - 1);
+        localStorage.setItem('cartTotal', currCartTotal2 - 1);
         props.setCartTotal(props.cartTotal - 1); 
         forceUpdate();
       }
     }
   }
-
+  
   function increase() {
+    const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
+    const currCartTotal2 = parseInt(localStorage.getItem('cartTotal')|| '0')
+    
     const item =
-      props.id in props.cartItems
-        ? { ...props, count: props.cartItems[props.id]['count'] + 1 }
-        : { ...props, count: 1 };
+      props.id in currCartItems2
+        ? { count: currCartItems2[props.id]['count'] + 1 }
+        : {  count: 1 };
     
     const newCartItems = {
-      ... props.cartItems,
+      ... currCartItems2,
       [props.id]: item,
     };
 
     localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-    localStorage.setItem('cartTotal', `${currCartTotal + 1}`);
+    localStorage.setItem('cartTotal', `${currCartTotal2 + 1}`);
     // store.cartItems[props.id] = item;
     props.setCartItems(newCartItems);
-    props.setCartTotal(currCartTotal + 1);
+    props.setCartTotal(currCartTotal2 + 1);
   }
 
   // const {
@@ -211,7 +219,7 @@ const CartItem = (props) => {
             </Box>
           )}
           <Box mx={1} color="#000000" fontWeight="500" fontSize="14px">
-            {isInDay ? currCartItems[props.id]['count'] : ' '}
+            {isInDay && props.id in currCartItems ? currCartItems[props.id]['count'] : ' '}
           </Box>
           {props.isCountChangeable && (
             <Box>

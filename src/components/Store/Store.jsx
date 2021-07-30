@@ -227,8 +227,8 @@ const Store = ({ ...props }) => {
 
   useEffect(() => {
     console.log('cartTotal: ', cartTotal);
-    localStorage.setItem('cartTotal', `${cartTotal}`);
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    // localStorage.setItem('cartTotal', `${cartTotal}`);
+    // localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartTotal, cartItems]);
 
   props.hidden = props.hidden !== null ? props.hidden : false;

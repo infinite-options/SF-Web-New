@@ -177,7 +177,8 @@ const useStyles = makeStyles((theme) => ({
 function createProduct2(product, setCartTotal, cartItems, setCartItems, products, dayClicked, farmDaytimeDict, categoriesClicked) {
   //  console.warn(product);
   
-  console.log('creating product ', product);
+  // console.log('creating product ', product);
+  console.log("in createProduct2")
   const cartItems2 = JSON.parse(localStorage.getItem('cartItems') || '{}');
   return (
     <Entry
@@ -227,7 +228,7 @@ function DisplayProduct() {
   const [VegetableDisplayType, setVegetableDisplayType] = useState(true);
 
   const [windowHeight, setWindowHeight] = React.useState(window.innerHeight);
-
+  console.log("@456qw in displayProduct ",store.cartItems)
   useEffect(() => {
     console.log('useEffect2 in DP');
     window.addEventListener('resize', updateWindowHeight);
