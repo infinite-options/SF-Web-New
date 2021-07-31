@@ -223,9 +223,9 @@ function DisplayProduct() {
   const productSelect = useContext(ProdSelectContext);
   const store = useContext(storeContext);
 
-  const [FruitDisplayType, setFruitDisplayType] = useState(true);
-  const [OtherDisplayType, setOtherDisplayType] = useState(true);
-  const [VegetableDisplayType, setVegetableDisplayType] = useState(true);
+  const [FruitDisplayType, setFruitDisplayType] = useState(false);
+  const [OtherDisplayType, setOtherDisplayType] = useState(false);
+  const [VegetableDisplayType, setVegetableDisplayType] = useState(false);
 
   const [windowHeight, setWindowHeight] = React.useState(window.innerHeight);
   console.log("@456qw in displayProduct ",store.cartItems)
@@ -307,14 +307,14 @@ function DisplayProduct() {
               Vegetables
             </h1>
             <div style={{ display: 'flex' }}>
-              {/* <Button
+              <Button
                 varient="text"
                 style={{ color: '#ff8500' }}
                 onClick={handleClickVegetable}
               >
                 See all Vegetables
-              </Button> */}
-              {/* <Box
+              </Button>
+              <Box
                 style={{
                   width: '1rem',
                   height: '1rem',
@@ -324,22 +324,22 @@ function DisplayProduct() {
                     ? `url(${'./store_img/seeAllUp.png'})`
                     : `url(${'./store_img/seeAllDown.png'})`,
                 }}
-              ></Box> */}
+              ></Box>
             </div>
           </div>
-          {/* <Box hidden={VegetableDisplayType}>
+          <Box hidden={VegetableDisplayType}>
             <Carousel
-              // itemClass={classes.imageItem}
-              // centerMode={true}
+              itemClass={classes.imageItem}
+              centerMode={true}
               responsive={responsive}
             >
-              {store.productsVegetable.map(createProduct2)}
+              {store.productsVegetable.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
             </Carousel>
-          </Box> */}
+          </Box>
           <Box
             className="responsive-display-produce"
             // width="100%"
-            hidden={!FruitDisplayType}
+            hidden={!VegetableDisplayType}
             height={windowHeight - 165}
             // ml={2}
             // p={3}
@@ -375,7 +375,7 @@ function DisplayProduct() {
           </Box>
         </Box>
 
-        <Box style={{ backgroundColor: appColors.componentBg }}>
+        <Box marginLeft = '1rem' marginRight = '.2rem' style={{ backgroundColor: appColors.componentBg }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h1
               style={{
@@ -389,31 +389,29 @@ function DisplayProduct() {
               Fruits{' '}
             </h1>
             <div style={{ display: 'flex' }}>
-              {/* <Button style={{color:"#ff8500"}}  onClick = {handleClickFruit}> See all Fruits </Button>
- <Box  style={{
-            width: '1rem',
-            height: '1rem',
-            marginTop:'2rem',
-            backgroundSize:'1rem',
-            backgroundImage: FruitDisplayType? `url(${
-              './store_img/seeAllUp.png' })` : `url(${
-                './store_img/seeAllDown.png'
-            })`,}}>
-
-</Box> */}
+              <Button style={{color:"#ff8500"}}  onClick = {handleClickFruit}> See all Fruits </Button>
+              <Box  style={{
+                width: '1rem',
+                height: '1rem',
+                marginTop:'2rem',
+                backgroundSize:'1rem',
+                backgroundImage: FruitDisplayType? `url(${
+                  './store_img/seeAllUp.png' })` : `url(${
+                    './store_img/seeAllDown.png'
+                })`,}}
+              >
+              </Box>
             </div>
           </div>
-          {/* <Box hidden={ FruitDisplayType  }>
-
-<Carousel
-    itemClass={classes.imageItem}
-    centerMode={true} 
-    responsive={responsive}>
-  
-  {store.productsFruit.map(createProduct2)}
-    
-  </Carousel> 
-  </Box>  */}
+          <Box hidden={FruitDisplayType}>
+            <Carousel
+              itemClass={classes.imageItem}
+              centerMode={true}
+              responsive={responsive}
+            >
+              {store.productsFruit.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
+            </Carousel> 
+          </Box> 
           <Box
             className="responsive-display-produce"
             // width="100%"
@@ -449,7 +447,7 @@ function DisplayProduct() {
           </Box>
         </Box>
 
-        <Box style={{ backgroundColor: appColors.componentBg }}>
+        <Box marginLeft = '1rem' marginRight = '.2rem' style={{ backgroundColor: appColors.componentBg }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h1
               style={{
@@ -463,31 +461,30 @@ function DisplayProduct() {
               Others{' '}
             </h1>
             <div style={{ display: 'flex' }}>
-              {/* <Button style={{color:"#ff8500"}}  onClick = {handleClickOther}> See all Others </Button>
- <Box  style={{
-            width: '1rem',
-            height: '1rem',
-            marginTop:'2rem',
-            backgroundSize:'1rem',
-            backgroundImage: OtherDisplayType? `url(${
-              './store_img/seeAllUp.png' })` : `url(${
-                './store_img/seeAllDown.png'
-            })`,}}>
+              <Button style={{color:"#ff8500"}}  onClick = {handleClickOther}> See all Others </Button>
+              <Box  style={{
+                width: '1rem',
+                height: '1rem',
+                marginTop:'2rem',
+                backgroundSize:'1rem',
+                backgroundImage: OtherDisplayType? `url(${
+                  './store_img/seeAllUp.png' })` : `url(${
+                    './store_img/seeAllDown.png'
+                })`,}}>
 
-</Box> */}
+              </Box>
             </div>
           </div>
-          {/* <Box hidden={ OtherDisplayType  }>
+          <Box hidden={ OtherDisplayType  }>
 
-<Carousel
-    itemClass={classes.imageItem}
-    centerMode={true} 
-    responsive={responsive}>
-  
-  {store.products.map(createProduct2)}
-    
-  </Carousel> 
-  </Box>  */}
+            <Carousel
+              itemClass={classes.imageItem}
+              centerMode={true} 
+              responsive={responsive}
+            >
+              {store.productsDessert.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
+            </Carousel> 
+          </Box> 
           <Box
             className="responsive-display-produce"
             // width="100%"
