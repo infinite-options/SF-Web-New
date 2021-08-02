@@ -40,6 +40,7 @@
       <change beforePath="$PROJECT_DIR$/src/Nav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Nav.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Farm/Notifications/Main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Farm/Notifications/Main.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Farm/Notifications/Main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Farm/Notifications/Main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Home/Landing.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Home/Landing.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,6 +114,8 @@
       <workItem from="1626976739691" duration="629000" />
       <workItem from="1627026729533" duration="727000" />
       <workItem from="1627056084346" duration="8651000" />
+      <workItem from="1627070543067" duration="98000" />
+      <workItem from="1627071162391" duration="70000" />
     </task>
     <servers />
   </component>
@@ -132,26 +135,18 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom" timestamp="1626287617801">
-      <screen x="1920" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1626287617801" />
-    <state width="1899" height="282" key="GridCell.Tab.0.center" timestamp="1626287617801">
-      <screen x="1920" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1626287617801" />
-    <state width="1899" height="282" key="GridCell.Tab.0.left" timestamp="1626287617801">
-      <screen x="1920" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1626287617801" />
-    <state width="1899" height="282" key="GridCell.Tab.0.right" timestamp="1626287617801">
-      <screen x="1920" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1626287617801" />
-    <state x="667" y="253" width="585" height="534" key="find.popup" timestamp="1627062083552">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1627070639639">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="667" y="253" width="585" height="534" key="find.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1627062083552" />
-    <state x="2587" y="253" width="585" height="534" key="find.popup/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1626949413258" />
+    <state x="740" y="275" key="FileChooserDialogImpl/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1627070639639" />
+    <state x="719" y="281" key="RollbackChangesDialog" timestamp="1627071215801">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="719" y="281" key="RollbackChangesDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1627071215801" />
+    <state x="2587" y="253" width="585" height="534" key="find.popup" timestamp="1627071176532">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="667" y="253" width="585" height="534" key="find.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625041885636" />
+    <state x="2587" y="253" width="585" height="534" key="find.popup/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1627071176532" />
   </component>
 </project>
