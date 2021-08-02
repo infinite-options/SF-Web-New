@@ -222,13 +222,13 @@ function FarmProfiles() {
   // const [image,setImage]=useState({});
   const [imageUpload, setImageUpload] = useState({
     file: null,
-    path: settings ? settings.business_image : settings.business_image,
+    path: settings ? settings.business_image : '',
   });
   // Regular Hours for Business
   const [regularHours, setRegularHours] = useState([]);
   const [acceptTime, setAcceptTime] = useState(context.timeChange);
   const [deliveryTime, setDeliveryTime] = useState(context.deliveryTime);
-  const [farmerID, setFarmerID] = useState([]);
+  const [farmerID, setFarmerID] = useState('');
 
   const handleImgChange = (e) => {
     if (e.target.files > 0)
@@ -263,7 +263,9 @@ function FarmProfiles() {
       .post(
         'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_farmer_item_admin/' +
           action,
-        selectedProduct
+        {
+          "supply_uid": id,
+        }
       )
       .then((response) => {
         setDialogOpen(true);
@@ -280,6 +282,7 @@ function FarmProfiles() {
 
   //get items for each farm
   const fetchProducts = (id) => {
+    if(id !== '' ) {
     setProducts([]);
     axios
       .get(
@@ -297,6 +300,7 @@ function FarmProfiles() {
         );
         setProduceDict(temp_dict);
       });
+    };
   };
 
   async function update() {
@@ -819,8 +823,15 @@ function FarmProfiles() {
     setOpenModel(true)
   };
 
-  const closeModel = () => {setOpenModel(false); 
-    setOpenDiag(true)}
+  const closeModel = () => {
+    setOpenModel(false); 
+    setOpenDiag(true);
+  }
+
+  const closeDiag = () => {
+    setOpenDiag(false);
+    fetchProducts(farmerID);
+  }
 
   const modelBody = (
     <div>
@@ -1039,7 +1050,7 @@ function FarmProfiles() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {farmsSort().map((info, index) => (
+                    {farmsSort().map((info) => (
                       <TableRow
                         key={info.business_uid}
                         className={classes.tr}
@@ -1095,13 +1106,13 @@ function FarmProfiles() {
                           <img
                             style={{ width: '18px', marginRight: '5px', cursor: 'pointer' }}
                             src={save}
-                            onClick={() => handleSave(index, 'update')}
+                            onClick={() => handleSave(info.supply_uid, 'update')}
                             id="update"
                           ></img>
                           <img
                             style={{ width: '15px', cursor: 'pointer' }}
                             src={del}
-                            onClick={() => handleSave(index, 'delete')}
+                            onClick={() => handleSave(info.supply_uid, 'delete')}
                             id="delete"
                           ></img>
                         </TableCell>
@@ -1481,7 +1492,7 @@ function FarmProfiles() {
       </Grid>
 
       <div>
-            <Dialog open={openDiag} onClose={()=>setOpenDiag(false)}>
+            <Dialog open={openDiag} onClose={closeDiag}>
               <DialogTitle>{"Successful!!"}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
@@ -1490,7 +1501,7 @@ function FarmProfiles() {
               </DialogContent>
               <DialogActions>
                 <Button 
-                onClick={()=>setOpenDiag(false)}
+                onClick={closeDiag}
                         
                         color="primary" autoFocus>
                   Okay
