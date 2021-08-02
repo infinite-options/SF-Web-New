@@ -231,11 +231,12 @@ function FarmProfiles() {
   const [farmerID, setFarmerID] = useState([]);
 
   const handleImgChange = (e) => {
-    if (e.target.files > 0)
-      setImageUpload({
-        file: e.target.files[0],
-        path: URL.createObjectURL(e.target.files[0]),
-      });
+    console.log("in image upload0",e.target.files)
+    
+    setImageUpload({
+      file: e.target.files[0],
+      path: URL.createObjectURL(e.target.files[0]),
+    });
   };
 
   //item price and status change

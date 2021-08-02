@@ -59,7 +59,7 @@ const CartItem = (props) => {
           // store.cartItems[props.id] = item;
         }
         localStorage.setItem('cartTotal', currCartTotal2 - 1);
-        props.setCartTotal(props.cartTotal - 1); 
+        props.setCartTotal(currCartTotal2 - 1); 
         forceUpdate();
       }
     }
@@ -108,11 +108,15 @@ const CartItem = (props) => {
     let  isInDay = false;
 
     // for (const farm in props.itm_business_uid) {
-    if (props.farmDaytimeDict[props.business_uid] != undefined) {
-      props.farmDaytimeDict[props.business_uid].forEach((daytime) => {
-        if (props.dayClicked === daytime) isInDay = true;
-      });
+    console.log("storeitems",props)
+    if(props.business_uid){
+      if (props.farmDaytimeDict[props.business_uid] != undefined) {
+        props.farmDaytimeDict[props.business_uid].forEach((daytime) => {
+          if (props.dayClicked === daytime) isInDay = true;
+        });
+      }
     }
+    
     // }
 
     setIsInDay(isInDay);

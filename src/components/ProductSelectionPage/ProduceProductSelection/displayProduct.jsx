@@ -222,13 +222,14 @@ function DisplayProduct() {
 
   const productSelect = useContext(ProdSelectContext);
   const store = useContext(storeContext);
-
+  
   const [FruitDisplayType, setFruitDisplayType] = useState(false);
   const [OtherDisplayType, setOtherDisplayType] = useState(false);
   const [VegetableDisplayType, setVegetableDisplayType] = useState(false);
+  const [giftDisplayType, setGiftDisplayType] = useState(false);
 
   const [windowHeight, setWindowHeight] = React.useState(window.innerHeight);
-  console.log("@456qw in displayProduct ",store.cartItems)
+  console.log("@456qw in displayProduct ",store)
   useEffect(() => {
     console.log('useEffect2 in DP');
     window.addEventListener('resize', updateWindowHeight);
@@ -281,6 +282,10 @@ function DisplayProduct() {
 
   function handleClickVegetable() {
     setVegetableDisplayType(!VegetableDisplayType);
+  }
+
+  function handleClickGift() {
+    setGiftDisplayType(!giftDisplayType);
   }
 
   if (!store.productsLoading && !productSelect.itemError) {
@@ -519,6 +524,96 @@ function DisplayProduct() {
             </Paper>
           </Box>
         </Box>
+      
+        <Box marginLeft="1rem" marginRight="0.2rem">
+          <Box fontSize={22} color={appColors.paragraphText}>
+            {displayMessage}
+          </Box>
+
+          {/* <Box style={{ backgroundColor: appColors.componentBg }}>
+            <p> Grid Test </p>
+          </Box> */}
+
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h1
+              style={{
+                textDecoration: 'underline',
+                color: appColors.secondary,
+                paddingLeft: '2rem',
+                paddingRight: '2rem',
+              }}
+            >
+              Gift Cards
+            </h1>
+            <div style={{ display: 'flex' }}>
+              <Button
+                varient="text"
+                style={{ color: '#ff8500' }}
+                onClick={handleClickGift}
+              >
+                See all Gift Cards
+              </Button>
+              <Box
+                style={{
+                  width: '1rem',
+                  height: '1rem',
+                  marginTop: '2rem',
+                  backgroundSize: '1rem',
+                  backgroundImage: giftDisplayType
+                    ? `url(${'./store_img/seeAllUp.png'})`
+                    : `url(${'./store_img/seeAllDown.png'})`,
+                }}
+              ></Box>
+            </div>
+          </div>
+          <Box hidden={giftDisplayType}>
+            <Carousel
+              itemClass={classes.imageItem}
+              centerMode={true}
+              responsive={responsive}
+            >
+              {store.productsGiftCard.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+            </Carousel>
+          </Box>
+          <Box
+            className="responsive-display-produce"
+            // width="100%"
+            hidden={!giftDisplayType}
+            height={windowHeight - 165}
+            // ml={2}
+            // p={3}
+            // pb={5}
+            mb={2}
+            style={{
+              backgroundColor: appColors.componentBg,
+              borderRadius: 10,
+              paddingBottom: '95px',
+            }}
+          >
+            <Box mt={2} />
+
+            <Paper
+              elevation={0}
+              style={{
+                backgroundColor: appColors.componentBg,
+                maxHeight: '100%',
+                width: '100%',
+                overflow: 'auto',
+              }}
+            >
+              <Box width="97%" justifyContent="center">
+                <Box
+                  className={classes.entryContainer}
+                  // spacing={5}
+                  // spacing={2}
+                >
+                  {store.productsGiftCard.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+                </Box>
+              </Box>
+            </Paper>
+          </Box>
+        </Box>
+
       </>
       //       <Box
       //         className = {classes.itemDisplayContainer}

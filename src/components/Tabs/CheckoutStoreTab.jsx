@@ -151,7 +151,7 @@ const CssTextField = withStyles({
 })(TextField);
 
 function listItem(item, store, productSelect) {
-  console.log("CartItems calling from checkout Store tab",item)
+  // console.log("CartItems calling from checkout Store tab",item)
   return (
     <>
       <CartItem
@@ -182,6 +182,7 @@ function listItem(item, store, productSelect) {
 // TODO: Get Delivery and service fee from zone
 // TODO: Add button to get to tab 4 of left side
 export default function CheckoutTab(props) {
+  console.log("IN checkoutStoreTab")
   const history = useHistory();
   const classes = useStyles();
 
@@ -235,16 +236,25 @@ export default function CheckoutTab(props) {
   } = checkout;
 
   function calculateSubTotal(items) {
+    
     var result = 0;
     for (const item of items) {
       let isInDay = false;
-      if (store.farmDaytimeDict[item.business_uid] != undefined) {
-        store.farmDaytimeDict[item.business_uid].forEach((daytime) => {
-          if (store.dayClicked === daytime) isInDay = true;
+      
+      if (store.farmDaytimeDict[item['itm_business_uid']] != undefined) {
+        
+        store.farmDaytimeDict[item['itm_business_uid']].forEach((daytime) => {
+         
+          if (store.dayClicked === daytime) {
+            
+            isInDay = true;
+          }
+          
         });
       }
-      isInDay ? (result += item.count * item.price) : (result = result);
+      isInDay ? (result += item.count * item.item_price) : (result = result);
     }
+    
     return result;
   }
 
@@ -254,7 +264,7 @@ export default function CheckoutTab(props) {
   }
 
   const onCheckAddressClicked = () => {
-    console.log('Verifying longitude and latitude from Delivery Info');
+    // console.log('Verifying longitude and latitude from Delivery Info');
     FindLongLatWithAddr(
       userInfo.address,
       userInfo.city,
@@ -413,17 +423,19 @@ export default function CheckoutTab(props) {
 
   function getItemsCart() {
     var result = []
-    const result1 = store.productsFruit.concat(store.productsDessert)
-    const result2 = result1.concat(store.productsVegetable)
+    // const result1 = store.productsFruit.concat(store.productsDessert)
+    // const result2 = result1.concat(store.productsVegetable)
     for (const [key, value] of Object.entries(cartItems)) {
-      for (const val in result2){
-        if(result2[val]['item_uid']===key){
-          console.log("got it inside",key)
-          result2[val]['count'] = value['count']
-          result.push(result2[val])
-        }
-      }
-      
+      // for (const val in result2){
+      //   if(result2[val]['item_uid']===key){
+          
+      //     result2[val]['count'] = value['count']
+      //     result.push(result2[val])
+      //   }
+      // }
+      var tempRes = store.productDict[key]
+      tempRes['count'] = value['count']
+      result.push(tempRes)      
       
     }
     return result;
@@ -635,10 +647,10 @@ useMemo(()=> {
   };
 
   const postAmbassadorRequest = async() => {
-    console.log("ambassador", reqBodyAmbassadorPost)
+    // console.log("ambassador", reqBodyAmbassadorPost)
     try{
     const response = await axios.post(BASE_URL + 'brandAmbassador/discount_checker', reqBodyAmbassadorPost )
-    console.log("ambassador",response)
+    // console.log("ambassador",response)
   //  console.log("ambassador",response.data.sub.discount_amount)
     setAmbassadorDiscount(response.data.sub.discount_amount)
 

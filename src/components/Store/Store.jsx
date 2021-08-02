@@ -125,7 +125,7 @@ function useOutsideAlerter(ref) {
 const weekdayDatesDict = findWeekdayDates();
 
 const Store = ({ ...props }) => {
-  console.log('store');
+  console.log('IN store');
   const Auth = useContext(AuthContext);
   const location = useLocation();
   const history = useHistory();
@@ -147,7 +147,7 @@ const Store = ({ ...props }) => {
   const [productsLoading, setProductsLoading] = useState(true);
 
   const [isInDay, setIsInDay] = useState(false);
-
+  const [productDict,setProductDict] = useState({})
   const [farmsList, setFarmsList] = useState([]);
   const [dayTimeDict, setDayTimeDict] = useState({});
   const [numDeliveryTimes, setNumDeliveryTimes] = useState(0);
@@ -188,7 +188,7 @@ const Store = ({ ...props }) => {
   }, [dayClicked]);
 
   useEffect(() => {
-    console.log('profile updated: ', profile.latitude);
+    // console.log('profile updated: ', profile.latitude);
     getBusinesses(profile.longitude, profile.latitude, { ...profile });
   }, [profile.latitude]);
 
@@ -548,12 +548,20 @@ const Store = ({ ...props }) => {
       });
 
       // localStorage.setItem('products', JSON.stringify(_products.sort()));
+      var dictProductTemp = {}
+      for (const vals in _products){
+        dictProductTemp[_products[vals]['item_uid']]=_products[vals]
+      }
+      console.log("testing store before",productDict)
+      setProductDict(dictProductTemp)
+      console.log("testing store after",productDict)
       setProducts(_products.sort());
       setProductsFruit(_fruit.sort());
       setProductsVegetable(_vegetable.sort());
       setProductsDessert(_dessert.sort());
       setProductsGiftCard(_giftCard.sort());
       setProductsLoading(false);
+      
     });
   }
 
@@ -607,6 +615,7 @@ const Store = ({ ...props }) => {
           isCheckoutSignUp,
           setIsCheckoutSignUp,
           setDummy1,
+          productDict,  
         }}
       >
         <Box>

@@ -21,19 +21,30 @@ const PayPal = ({ value, deliveryInstructions }) => {
   //[{"qty": "3", "name": "Opo Gourd", "price": "0.5", "item_uid": "310-000087", "itm_business_uid": "200-000005"}]
 
   // DONE: Add unit (bunch), desc (cOrganic)
-  const items = Object.values(cartItems).map((item) => {
+  const items = localStorage.getItem('cartItems') ? Object.entries(JSON.parse(localStorage.getItem('cartItems'))).map(([key,vals]) => {
+    var itemVals = {}
+    for (const valsInProduct in store.products){
+      
+      if(store.products[valsInProduct]['item_uid']===key){
+        
+        itemVals = store.products[valsInProduct]
+        itemVals['count'] = vals['count']
+      }
+    } 
     return {
-      qty: item.count,
-      name: item.name,
-      unit: item.unit,
-      price: item.price,
-      business_price: item.businessPrice,
-      item_uid: item.id,
-      itm_business_uid: item.business_uid,
-      description: item.desc,
-      img: item.img,
+      qty: itemVals.count,
+      name: itemVals.item_name,
+      unit: itemVals.item_unit,
+      price: itemVals.item_price,
+      business_price: itemVals.business_price,
+      item_uid: itemVals.item_uid,
+      itm_business_uid: itemVals.itm_business_uid,
+      description: itemVals.item_desc,
+      img: itemVals.item_photo,
     };
-  });
+  })
+  :
+  {}
 
   const CLIENT = {
     sandbox: process.env.REACT_APP_PAYPAL_CLIENT_ID_TESTING,

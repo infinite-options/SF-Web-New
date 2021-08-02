@@ -229,7 +229,7 @@ function Entry(props) {
           // store.cartItems[props.id] = item;
         }
         localStorage.setItem('cartTotal', currCartTotal2 - 1);
-        props.setCartTotal(props.cartTotal - 1); 
+        props.setCartTotal(currCartTotal2 - 1); 
         forceUpdate();
       }
     }
