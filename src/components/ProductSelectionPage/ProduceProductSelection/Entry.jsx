@@ -188,8 +188,8 @@ function Entry(props) {
           let clone = Object.assign({}, currCartItems2);
           delete clone[props.id];
           localStorage.setItem('cartItems', JSON.stringify(clone));
+          props.setCartItems(clone);
           console.log("@456qw In decrease 2 --- deleted")
-          delete props.cartItems[props.id];
         } else {
           const item = {
             
@@ -406,6 +406,16 @@ const set_equality = (set1, set2) => {
 };
 
 export default React.memo(Entry, (prevProps, nextProps) => {
+  if (prevProps.name === 'Beets - Golden')
+  {
+    console.log(
+      '----------------------\nEntry\n',
+      `food.name == ${prevProps.name}`,
+      `PrevProps info: count = ${prevProps.itemCount}, dayclicked =${prevProps.dayClicked}, catClicked = `, prevProps.categoriesClicked,
+      `nextProps info: count = ${nextProps.itemCount}, dayclicked =${nextProps.dayClicked}, catClicked = `, nextProps.categoriesClicked
+    );
+  }
+
   if (prevProps.itemCount != nextProps.itemCount ||
     !set_equality(prevProps.categoriesClicked, nextProps.categoriesClicked) ||
     prevProps.dayClicked !== nextProps.dayClicked

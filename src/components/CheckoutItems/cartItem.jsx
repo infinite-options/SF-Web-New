@@ -39,8 +39,8 @@ const CartItem = (props) => {
           let clone = Object.assign({}, currCartItems2);
           delete clone[props.id];
           localStorage.setItem('cartItems', JSON.stringify(clone));
+          props.setCartItems(clone);
           console.log("@456qw In decrease 2 --- deleted")
-          delete props.cartItems[props.id];
         } else {
           const item = {
             
@@ -55,12 +55,9 @@ const CartItem = (props) => {
             ...currCartItems2,
             [props.id]: item,
           });
-
-          // store.cartItems[props.id] = item;
         }
         localStorage.setItem('cartTotal', currCartTotal2 - 1);
-        props.setCartTotal(currCartTotal2 - 1); 
-        forceUpdate();
+        props.setCartTotal(currCartTotal2 - 1);
       }
     }
   }
@@ -282,6 +279,15 @@ const CartItem = (props) => {
 }
 
 export default React.memo(CartItem, (prevProps, nextProps) => {
+  if (prevProps.name === 'Beets - Golden')
+  {
+    console.log(
+      '----------------------\nCartItem\n',
+      `PrevProps info: count = ${prevProps.count}`,
+      ` nextProps info: count = ${nextProps.count}`
+    );
+  }
+
   if (prevProps.count != nextProps.count) {
     return false;
   }
