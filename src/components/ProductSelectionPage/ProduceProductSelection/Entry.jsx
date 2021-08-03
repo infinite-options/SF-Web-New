@@ -406,7 +406,10 @@ const set_equality = (set1, set2) => {
 };
 
 export default React.memo(Entry, (prevProps, nextProps) => {
-  if (prevProps.itemCount != nextProps.itemCount || !set_equality(prevProps.categoriesClicked, nextProps.categoriesClicked)) {
+  if (prevProps.itemCount != nextProps.itemCount ||
+    !set_equality(prevProps.categoriesClicked, nextProps.categoriesClicked) ||
+    prevProps.dayClicked !== nextProps.dayClicked
+  ){
     return false;
   }
 
