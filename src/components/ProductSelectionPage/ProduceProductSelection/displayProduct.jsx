@@ -174,12 +174,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // DONE: add unit, each is as is, anything else is '/' or 'per'
-function createProduct2(product, setCartTotal, cartItems, setCartItems, products, dayClicked, farmDaytimeDict, categoriesClicked) {
-  //  console.warn(product);
-  
-  // console.log('creating product ', product);
-  console.log("in createProduct2")
-  const cartItems2 = JSON.parse(localStorage.getItem('cartItems') || '{}');
+function createProduct2(product, index, setCartTotal, cartItems, setCartItems, products, dayClicked, farmDaytimeDict, categoriesClicked) {
   return (
     <Entry
       favorite={product.favorite}
@@ -208,6 +203,7 @@ function createProduct2(product, setCartTotal, cartItems, setCartItems, products
       dayClicked = {dayClicked}
       farmDaytimeDict = {farmDaytimeDict}
       categoriesClicked = {categoriesClicked}
+      index = {index}
     />
   );
 }
@@ -217,7 +213,6 @@ function createProduct2(product, setCartTotal, cartItems, setCartItems, products
 // If Identical still then we should select the one with the earliest created_at date
 
 function DisplayProduct() {
-  console.log('display product');
   const classes = useStyles();
 
   const productSelect = useContext(ProdSelectContext);
@@ -229,7 +224,7 @@ function DisplayProduct() {
   const [giftDisplayType, setGiftDisplayType] = useState(false);
 
   const [windowHeight, setWindowHeight] = React.useState(window.innerHeight);
-  console.log("@456qw in displayProduct ",store)
+  // console.log("@456qw in displayProduct ",store)
   useEffect(() => {
     console.log('useEffect2 in DP');
     window.addEventListener('resize', updateWindowHeight);
@@ -288,6 +283,10 @@ function DisplayProduct() {
     setGiftDisplayType(!giftDisplayType);
   }
 
+  useEffect(() => {console.log('CategoryClicked change: ', productSelect.categoriesClicked)}, [productSelect.categoriesClicked]);
+
+  console.log('Binky!');
+
   if (!store.productsLoading && !productSelect.itemError) {
     return (
       <>
@@ -338,7 +337,7 @@ function DisplayProduct() {
               centerMode={true}
               responsive={responsive}
             >
-              {store.productsVegetable.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+              {store.productsVegetable.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsVegetable, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
             </Carousel>
           </Box>
           <Box
@@ -373,7 +372,7 @@ function DisplayProduct() {
                   // spacing={5}
                   // spacing={2}
                 >
-                  {store.productsVegetable.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+                  {store.productsVegetable.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsVegetable, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
               </Box>
             </Paper>
@@ -414,7 +413,7 @@ function DisplayProduct() {
               centerMode={true}
               responsive={responsive}
             >
-              {store.productsFruit.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
+              {store.productsFruit.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsFruit, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
             </Carousel> 
           </Box> 
           <Box
@@ -445,7 +444,7 @@ function DisplayProduct() {
             >
               <Box width="97%" justifyContent="center">
                 <Box className={classes.entryContainer}>
-                  {store.productsFruit.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+                  {store.productsFruit.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsFruit, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
               </Box>
             </Paper>
@@ -487,7 +486,7 @@ function DisplayProduct() {
               centerMode={true} 
               responsive={responsive}
             >
-              {store.productsDessert.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
+              {store.productsDessert.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsDessert, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
             </Carousel> 
           </Box> 
           <Box
@@ -518,7 +517,7 @@ function DisplayProduct() {
             >
               <Box width="97%" justifyContent="center">
                 <Box className={classes.entryContainer}>
-                  {store.productsDessert.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+                  {store.productsDessert.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsDessert, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
               </Box>
             </Paper>
@@ -572,7 +571,7 @@ function DisplayProduct() {
               centerMode={true}
               responsive={responsive}
             >
-              {store.productsGiftCard.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+              {store.productsGiftCard.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsGiftCard, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
             </Carousel>
           </Box>
           <Box
@@ -607,7 +606,7 @@ function DisplayProduct() {
                   // spacing={5}
                   // spacing={2}
                 >
-                  {store.productsGiftCard.map((product) => createProduct2(product, store.setCartTotal, store.cartItems, store.setCartItems, store.products, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+                  {store.productsGiftCard.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsGiftCard, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
               </Box>
             </Paper>

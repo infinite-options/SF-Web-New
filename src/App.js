@@ -178,6 +178,7 @@ function App() {
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
   }, []);
+  console.log('profile in store = ', profile);
   return (
     <Router>
       <ThemeProvider theme={theme}>

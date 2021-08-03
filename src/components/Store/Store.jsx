@@ -214,6 +214,8 @@ const Store = ({ ...props }) => {
     localStorage.setItem('currentStorePage', storePage);
   }, [storePage]);
 
+  console.log('profile = ', profile, ' prof long = ', profile.longitude, ' profile.lat = ', profile.latitude);
+
   localStorage.setItem('currentStorePage', storePage);
   //const { cartTotal, setCartTotal } = useContext(AuthContext);
 
@@ -320,6 +322,7 @@ const Store = ({ ...props }) => {
   };
 
   function loadBusinesses(busiRes, updatedProfile) {
+    console.log('Dict');
     console.log('busiRes: ', busiRes);
     const businessesRes = busiRes.result;
     const businessUids = new Set();
@@ -554,7 +557,6 @@ const Store = ({ ...props }) => {
       }
       console.log("testing store before",productDict)
       setProductDict(dictProductTemp)
-      console.log("testing store after",productDict)
       setProducts(_products.sort());
       setProductsFruit(_fruit.sort());
       setProductsVegetable(_vegetable.sort());
