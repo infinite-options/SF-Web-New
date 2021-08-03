@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
-// import storeContext from '../../Store/storeContext';
 import {
   Box,
   Button,
   Card,
   Grid,
-  Icon,
   IconButton,
   Typography,
   SvgIcon,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import appColors from '../../../styles/AppColors';
-// import ProduceSelectContext from '../ProdSelectContext';
 
 import { ReactComponent as AddIcon } from '../../../sf-svg-icons/sfcolored-plus.svg';
 import { ReactComponent as RemoveIcon } from '../../../sf-svg-icons/sfcolored-minus.svg';
@@ -121,31 +118,17 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
   },
 }));
-// console.log("in entry")
-// Defining our own hook to force a re-render
-function useForceUpdate() {
-  const [dummy, setDummy] = useState(0);
-  return () => setDummy(dummy => dummy + 1);
-}
 
 function Entry(props) {
-  // console.log('entry')
+  console.log('entry')
   const [hearted, setHearted] = useState(false);
   const [isShown, setIsShown] = useState(false);
   const [isInDay, setIsInDay] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-  const forceUpdate = useForceUpdate();
-
-  // const store = useContext(storeContext);
   const currCartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
   const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
-  // console.log("@456qw In entry 1",currCartItems)
-  // console.log("@456qw In entry 2",currCartTotal)
-  // const stylesProps = {
-  //   id: props.id in store.cartItems ? store.cartItems[props.id]['count'] : 0,
-  //   hearted: hearted,
-  //   isInDay: isInDay,
-  // };
+  console.log("@456qw In entry 1",currCartItems)
+  console.log("@456qw In entry 2",currCartTotal)
 
   const stylesProps = {
     id: props.id in currCartItems ? currCartItems[props.id]['count'] : 0,
@@ -154,8 +137,6 @@ function Entry(props) {
   };
 
   const classes = useStyles(stylesProps);
-
-  //const [isShown, setIsShown] = useState(false);
 
   useEffect(() => {
     let isInDay = false;
@@ -200,16 +181,14 @@ function Entry(props) {
     const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
     const currCartTotal2 = parseInt(localStorage.getItem('cartTotal')|| '0')
     if (props.id in currCartItems2) {
-
       const itemCount = currCartItems2[props.id]['count'];
-      // const itemCount = store.cartItems[props.id]['count'];
-      // console.log("@456qw In decrease 1 ",itemCount)
+      console.log("@456qw In decrease 1 ",itemCount)
       if (itemCount > 0) {
         if (itemCount === 1) {
           let clone = Object.assign({}, currCartItems2);
           delete clone[props.id];
           localStorage.setItem('cartItems', JSON.stringify(clone));
-          // console.log("@456qw In decrease 2 --- deleted")
+          console.log("@456qw In decrease 2 --- deleted")
           delete props.cartItems[props.id];
         } else {
           const item = {
@@ -225,12 +204,9 @@ function Entry(props) {
             ...currCartItems2,
             [props.id]: item,
           });
-
-          // store.cartItems[props.id] = item;
         }
         localStorage.setItem('cartTotal', currCartTotal2 - 1);
-        props.setCartTotal(currCartTotal2 - 1); 
-        forceUpdate();
+        props.setCartTotal(currCartTotal2 - 1);
       }
     }
   }
@@ -238,32 +214,27 @@ function Entry(props) {
   function increase() {
     const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
     const currCartTotal2 = parseInt(localStorage.getItem('cartTotal')|| '0')
-    // console.log("@456qw in increase 0 ",currCartItems2)
+    console.log("@456qw in increase 0 ",currCartItems2)
     const item =
       props.id in currCartItems2
         ? {  count: currCartItems2[props.id]['count'] + 1 }
         : {  count: 1 };
     
-    // console.log("@456qw in increase 1 ",item)
-    // console.log("@123 before updating ",localStorage.getItem('cartItems'))
+    console.log("@456qw in increase 1 ",item)
+    console.log("@123 before updating ",localStorage.getItem('cartItems'))
     const newCartItems = {
       ... currCartItems2,
       [props.id]: item,
     };
-    // console.log("@123 after updating ",localStorage.getItem('cartItems'))
-    // console.log("@456qw in increase 2 ",newCartItems)
+    console.log("@123 after updating ",localStorage.getItem('cartItems'))
+    console.log("@456qw in increase 2 ",newCartItems)
     localStorage.setItem('cartItems', JSON.stringify(newCartItems));
     localStorage.setItem('cartTotal', `${currCartTotal2 + 1}`);
-    // store.cartItems[props.id] = item;
     props.setCartItems(newCartItems);
     props.setCartTotal(currCartTotal2 + 1);
-    // forceUpdate();
   }
 
   const toggleHearted = () => {
-    console.log('Heart');
-    if (props.name == 'Beets - Golden')
-      console.log('props.item_index = ', props.item_index);
     props.products[props.index].favorite =
           props.favorite == 'FALSE' ? 'TRUE' : 'FALSE';
     setHearted(!hearted);

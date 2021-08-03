@@ -150,7 +150,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-function listItem(item, store, productSelect) {
+function listItem(item, index, store, productSelect) {
   // console.log("CartItems calling from checkout Store tab",item)
   return (
     <>

@@ -5,19 +5,13 @@ import storeContext from '../../Store/storeContext';
 import {
   Box,
   Button,
-  ButtonBase,
-  Grid,
   Paper,
   Typography,
 } from '@material-ui/core';
 import appColors from '../../../styles/AppColors';
-import { set } from 'js-cookie';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
-import ItemCategory from '../../FilterProductSelection/ItemCategory';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import GridList from '@material-ui/core/GridList';
-import { propTypes } from 'react-bootstrap/esm/Image';
 
 const theme2 = createMuiTheme({
   breakpoints: {
@@ -48,33 +42,8 @@ const theme2 = createMuiTheme({
   },
 });
 
-console.log('Theme2 = ', theme2.breakpoints);
-
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     display: 'flex',
-//     flexWrap: 'wrap',
-//     justifyContent: 'space-around',
-//     overflow: 'hidden',
-//     backgroundColor: theme.palette.background.paper,
-//   },
-//   gridList: {
-//     flexWrap: 'nowrap',
-//     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-//     transform: 'translateZ(0)',
-//   },
-//   title: {
-//     color: theme.palette.primary.light,
-//   },
-//   titleBar: {
-//     background:
-//       'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-//   },
-// }));
-
 var responsive = {
   superLargeDesktop: {
-    // the naming can be any, depends on you.
     breakpoint: { max: 40, min: 3000 },
     items: 5,
   },
@@ -91,23 +60,6 @@ var responsive = {
     items: 1,
   },
 };
-
-// const responsive = {
-//   desktop: {
-//     breakpoint: { max: 3000, min: 1024 },
-//     items: 3,
-
-//   },
-//   tablet: {
-//     breakpoint: { max: 1024, min: 464 },
-//     items: 2,
-
-//   },
-//   mobile: {
-//     breakpoint: { max: 464, min: 0 },
-//     items: 1,
-//   }
-// };
 
 const useStyles = makeStyles((theme) => ({
   itemDisplayContainer: {
@@ -131,7 +83,6 @@ const useStyles = makeStyles((theme) => ({
 
   entryContainer: {
     display: 'grid',
-    // gridTemplateColumns: '1fr 1fr 1fr',
     justifyItems: 'center',
 
     [theme2.breakpoints.up('xs')]: {
@@ -224,7 +175,7 @@ function DisplayProduct() {
   const [giftDisplayType, setGiftDisplayType] = useState(false);
 
   const [windowHeight, setWindowHeight] = React.useState(window.innerHeight);
-  // console.log("@456qw in displayProduct ",store)
+  console.log("@456qw in displayProduct ",store)
   useEffect(() => {
     console.log('useEffect2 in DP');
     window.addEventListener('resize', updateWindowHeight);
@@ -237,8 +188,6 @@ function DisplayProduct() {
   };
 
   const [displayMessage, setDisplayMessage] = useState('');
-
-  // console.warn(store);
 
   // DONE: add date to expected delivery
   // DONE: clear out expected delivery if unclicked
@@ -254,7 +203,6 @@ function DisplayProduct() {
     } else {
       message = 'Produce available for delivery on ' + store.expectedDelivery;
     }
-    //   console.log("store length",store.products.length)
     if (store.products.length === 0 && !store.productsLoading) {
       message =
         'Sorry, we could not find any produce that can be delivered to your provided address';
@@ -294,10 +242,6 @@ function DisplayProduct() {
           <Box fontSize={22} color={appColors.paragraphText}>
             {displayMessage}
           </Box>
-
-          {/* <Box style={{ backgroundColor: appColors.componentBg }}>
-            <p> Grid Test </p>
-          </Box> */}
 
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h1
@@ -342,12 +286,8 @@ function DisplayProduct() {
           </Box>
           <Box
             className="responsive-display-produce"
-            // width="100%"
             hidden={!VegetableDisplayType}
             height={windowHeight - 165}
-            // ml={2}
-            // p={3}
-            // pb={5}
             mb={2}
             style={{
               backgroundColor: appColors.componentBg,
@@ -369,8 +309,6 @@ function DisplayProduct() {
               <Box width="97%" justifyContent="center">
                 <Box
                   className={classes.entryContainer}
-                  // spacing={5}
-                  // spacing={2}
                 >
                   {store.productsVegetable.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsVegetable, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
@@ -418,12 +356,8 @@ function DisplayProduct() {
           </Box> 
           <Box
             className="responsive-display-produce"
-            // width="100%"
             hidden={!FruitDisplayType}
             height={windowHeight - 165}
-            // ml={2}
-            // p={3}
-            // pb={5}
             mb={2}
             style={{
               backgroundColor: appColors.componentBg,
@@ -491,12 +425,8 @@ function DisplayProduct() {
           </Box> 
           <Box
             className="responsive-display-produce"
-            // width="100%"
             hidden={!OtherDisplayType}
             height={windowHeight - 165}
-            // ml={2}
-            // p={3}
-            // pb={5}
             mb={2}
             style={{
               backgroundColor: appColors.componentBg,
@@ -528,10 +458,6 @@ function DisplayProduct() {
           <Box fontSize={22} color={appColors.paragraphText}>
             {displayMessage}
           </Box>
-
-          {/* <Box style={{ backgroundColor: appColors.componentBg }}>
-            <p> Grid Test </p>
-          </Box> */}
 
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h1
@@ -576,12 +502,8 @@ function DisplayProduct() {
           </Box>
           <Box
             className="responsive-display-produce"
-            // width="100%"
             hidden={!giftDisplayType}
             height={windowHeight - 165}
-            // ml={2}
-            // p={3}
-            // pb={5}
             mb={2}
             style={{
               backgroundColor: appColors.componentBg,
@@ -603,8 +525,6 @@ function DisplayProduct() {
               <Box width="97%" justifyContent="center">
                 <Box
                   className={classes.entryContainer}
-                  // spacing={5}
-                  // spacing={2}
                 >
                   {store.productsGiftCard.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsGiftCard, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
@@ -614,79 +534,6 @@ function DisplayProduct() {
         </Box>
 
       </>
-      //       <Box
-      //         className = {classes.itemDisplayContainer}
-      //       >
-
-      // <Simple/>
-      //         {/* <Paper
-      //           elevation={0}
-      //           className = {classes.productsPaperContainer}
-      //         >
-      //           <Box justifyContent="center">
-      //             <Grid container direction="row" justify="flex-start"
-      //               // spacing={5}
-      //             >
-      //               {store.productsFruit.map(createProduct2)}
-      //             </Grid>
-      //           </Box>
-      //         </Paper> */}
-      // <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Vegetables </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //     <Carousel
-      //             itemClass={classes.imageItem}
-      //             centerMode={true}
-      //             responsive={responsive}>
-
-      //            {store.productsVegetable.map(createProduct2)}
-
-      //           </Carousel>
-
-      //           <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Fruits </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //          <Carousel
-      //         itemClass={classes.imageItem}
-      //         centerMode={true}
-      //         responsive={responsive}>
-
-      //         {store.productsFruit.map(createProduct2)}
-      //         </Carousel>
-
-      //           <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Desserts </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //            <Carousel
-      //             itemClass={classes.imageItem}
-      //             centerMode={true}
-      //             responsive={responsive}>
-
-      //            {store.productsDessert.map(createProduct2)}
-
-      //           </Carousel>
-
-      //           <div style = {{display:'flex',justifyContent:"space-between"}}>
-      //     <h1 > Other </h1>
-      //     <Button style={{color:"#ff8500"}}  onClick = {handleClick}> See all Fruits </Button>
-      //     </div>
-
-      //            <Carousel
-      //             itemClass={classes.imageItem}
-      //             centerMode={true}
-      //             responsive={responsive}>
-
-      //             {store.products.map(createProduct2)}
-
-      //           </Carousel>
-
-      //       </Box>
     );
   } else {
     return (
