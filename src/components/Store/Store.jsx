@@ -562,12 +562,15 @@ const Store = ({ ...props }) => {
       console.log('_products = ', _products, ' dictProductTemp = ', dictProductTemp);
       console.log("testing store before",productDict)
       setProductDict(dictProductTemp)
+      const start = new Date();
+      setProductsLoading(false);
+      const end = new Date();
+      console.log(`setProductsLoading took ${end.getTime() - start.getTime()} milliseconds`);
       setProducts(_products.sort());
       setProductsFruit(_fruit.sort());
       setProductsVegetable(_vegetable.sort());
       setProductsDessert(_dessert.sort());
       setProductsGiftCard(_giftCard.sort());
-      setProductsLoading(false);
       
     });
   }

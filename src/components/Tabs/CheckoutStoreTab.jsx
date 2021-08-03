@@ -433,17 +433,8 @@ export default function CheckoutTab(props) {
     if (isEmpty)
       return [];
 
-    var result = []
-    // const result1 = store.productsFruit.concat(store.productsDessert)
-    // const result2 = result1.concat(store.productsVegetable)
+    var result = [];
     for (const [key, value] of Object.entries(cartItems)) {
-      // for (const val in result2){
-      //   if(result2[val]['item_uid']===key){
-          
-      //     result2[val]['count'] = value['count']
-      //     result.push(result2[val])
-      //   }
-      // }
       var tempRes = store.productDict[key]
       tempRes['count'] = value['count']
       result.push(tempRes)      
