@@ -324,6 +324,7 @@ const Store = ({ ...props }) => {
   function loadBusinesses(busiRes, updatedProfile) {
     console.log('Dict');
     console.log('busiRes: ', busiRes);
+    console.log('profile = ', profile);
     const businessesRes = busiRes.result;
     const businessUids = new Set();
     const dateDict = {};
@@ -449,8 +450,11 @@ const Store = ({ ...props }) => {
       setProfile(updatedProfile);
     }
 
+
+
     BusiMethods.getProduceByLocation(
       profile.longitude,
+      
       profile.latitude
       // ['fruit', 'dessert', 'vegetable', 'other'],
       // Array.from(businessUids)
@@ -555,6 +559,7 @@ const Store = ({ ...props }) => {
       for (const vals in _products){
         dictProductTemp[_products[vals]['item_uid']]=_products[vals]
       }
+      console.log('_products = ', _products, ' dictProductTemp = ', dictProductTemp);
       console.log("testing store before",productDict)
       setProductDict(dictProductTemp)
       setProducts(_products.sort());

@@ -422,20 +422,24 @@ export default function CheckoutTab(props) {
   }, [store.profile.zone, store.expectedDelivery]);
 
   function getItemsCart() {
+    if (store.productDict == {})
+      return [];
+
+    console.log('store.productDict = ', store.productDict);
     var result = []
-    // const result1 = store.productsFruit.concat(store.productsDessert)
-    // const result2 = result1.concat(store.productsVegetable)
+    const result1 = store.productsFruit.concat(store.productsDessert)
+    const result2 = result1.concat(store.productsVegetable)
     for (const [key, value] of Object.entries(cartItems)) {
-      // for (const val in result2){
-      //   if(result2[val]['item_uid']===key){
+      for (const val in result2){
+        if(result2[val]['item_uid']===key){
           
-      //     result2[val]['count'] = value['count']
-      //     result.push(result2[val])
-      //   }
-      // }
-      var tempRes = store.productDict[key]
-      tempRes['count'] = value['count']
-      result.push(tempRes)      
+          result2[val]['count'] = value['count']
+          result.push(result2[val])
+        }
+      }
+      // var tempRes = store.productDict[key]
+      // tempRes['count'] = value['count']
+      // result.push(tempRes)      
       
     }
     return result;
