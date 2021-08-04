@@ -12,6 +12,7 @@ import appColors from '../../../styles/AppColors';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import { ContactsOutlined } from '@material-ui/icons';
 
 const theme2 = createMuiTheme({
   breakpoints: {
@@ -168,6 +169,7 @@ function DisplayProduct() {
 
   const productSelect = useContext(ProdSelectContext);
   const store = useContext(storeContext);
+  console.log('productCategoriesDict = ', store.productCategoriesDict);
   
   const [FruitDisplayType, setFruitDisplayType] = useState(false);
   const [OtherDisplayType, setOtherDisplayType] = useState(false);
@@ -208,11 +210,13 @@ function DisplayProduct() {
         'Sorry, we could not find any produce that can be delivered to your provided address';
     }
     setDisplayMessage(message);
+    console.log('in use effect: prodCatDict = ', store.productCategoriesDict);
   }, [
     store.dayClicked,
     store.products,
     store.productsLoading,
     store.cartTotal,
+    store.productCategoriesDict
   ]);
 
   function handleClickOther() {
@@ -233,9 +237,7 @@ function DisplayProduct() {
 
   useEffect(() => {console.log('CategoryClicked change: ', productSelect.categoriesClicked)}, [productSelect.categoriesClicked]);
 
-  console.log('Binky!');
-
-  if (!store.productsLoading && !productSelect.itemError) {
+  if (store.productCategoriesDict && !store.productsLoading && !productSelect.itemError) {
     return (
       <>
         <Box marginLeft="1rem" marginRight="0.2rem">
@@ -281,7 +283,7 @@ function DisplayProduct() {
               centerMode={true}
               responsive={responsive}
             >
-              {store.productsVegetable.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsVegetable, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+              {store.productCategoriesDict['vegetable'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['vegetable'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
             </Carousel>
           </Box>
           <Box
@@ -310,7 +312,7 @@ function DisplayProduct() {
                 <Box
                   className={classes.entryContainer}
                 >
-                  {store.productsVegetable.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsVegetable, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+                  {store.productCategoriesDict['vegetable'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['vegetable'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
               </Box>
             </Paper>
@@ -351,7 +353,7 @@ function DisplayProduct() {
               centerMode={true}
               responsive={responsive}
             >
-              {store.productsFruit.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsFruit, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
+              {store.productCategoriesDict['fruit'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['fruit'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
             </Carousel> 
           </Box> 
           <Box
@@ -378,7 +380,7 @@ function DisplayProduct() {
             >
               <Box width="97%" justifyContent="center">
                 <Box className={classes.entryContainer}>
-                  {store.productsFruit.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsFruit, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+                  {store.productCategoriesDict['fruit'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['fruit'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
               </Box>
             </Paper>
@@ -420,7 +422,7 @@ function DisplayProduct() {
               centerMode={true} 
               responsive={responsive}
             >
-              {store.productsDessert.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsDessert, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
+              {store.productCategoriesDict['dessert'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['dessert'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
             </Carousel> 
           </Box> 
           <Box
@@ -447,7 +449,7 @@ function DisplayProduct() {
             >
               <Box width="97%" justifyContent="center">
                 <Box className={classes.entryContainer}>
-                  {store.productsDessert.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsDessert, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+                  {store.productCategoriesDict['dessert'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['dessert'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
               </Box>
             </Paper>
@@ -497,7 +499,7 @@ function DisplayProduct() {
               centerMode={true}
               responsive={responsive}
             >
-              {store.productsGiftCard.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsGiftCard, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+              {store.productCategoriesDict['gift-card'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['gift-card'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
             </Carousel>
           </Box>
           <Box
@@ -526,7 +528,7 @@ function DisplayProduct() {
                 <Box
                   className={classes.entryContainer}
                 >
-                  {store.productsGiftCard.map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productsGiftCard, store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
+                  {store.productCategoriesDict['gift-card'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['gift-card'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
                 </Box>
               </Box>
             </Paper>

@@ -127,8 +127,8 @@ function Entry(props) {
   const [isFlipped, setIsFlipped] = useState(false);
   const currCartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
   const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
-  console.log("@456qw In entry 1",currCartItems)
-  console.log("@456qw In entry 2",currCartTotal)
+  // console.log("@456qw In entry 1",currCartItems)
+  // console.log("@456qw In entry 2",currCartTotal)
 
   const stylesProps = {
     id: props.id in currCartItems ? currCartItems[props.id]['count'] : 0,
@@ -406,16 +406,6 @@ const set_equality = (set1, set2) => {
 };
 
 export default React.memo(Entry, (prevProps, nextProps) => {
-  if (prevProps.name === 'Beets - Golden')
-  {
-    console.log(
-      '----------------------\nEntry\n',
-      `food.name == ${prevProps.name}`,
-      `PrevProps info: count = ${prevProps.itemCount}, dayclicked =${prevProps.dayClicked}, catClicked = `, prevProps.categoriesClicked,
-      `nextProps info: count = ${nextProps.itemCount}, dayclicked =${nextProps.dayClicked}, catClicked = `, nextProps.categoriesClicked
-    );
-  }
-
   if (prevProps.itemCount != nextProps.itemCount ||
     !set_equality(prevProps.categoriesClicked, nextProps.categoriesClicked) ||
     prevProps.dayClicked !== nextProps.dayClicked

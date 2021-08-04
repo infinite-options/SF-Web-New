@@ -169,6 +169,7 @@ const Store = ({ ...props }) => {
   const [isSignUpShown, setIsSignUpShown] = useState(false);
   const [isCheckoutLogin, setIsCheckoutLogin] = useState(false);
   const [isCheckoutSignUp, setIsCheckoutSignUp] = useState(false);
+  const [productCategoriesDict, setProductCategoriesDict] = useState({});
 
   const loginWrapperRef = useRef(null);
   useOutsideAlerter(loginWrapperRef, setIsLoginShown);
@@ -559,23 +560,18 @@ const Store = ({ ...props }) => {
       for (const vals in _products){
         dictProductTemp[_products[vals]['item_uid']]=_products[vals]
       }
-      console.log('_products = ', _products, ' dictProductTemp = ', dictProductTemp);
-      console.log("testing store before",productDict)
       setProductDict(dictProductTemp)
-      const start = new Date();
-      setProductsLoading(false);
-      const end = new Date();
-      console.log(`setProductsLoading took ${end.getTime() - start.getTime()} milliseconds`);
       setProducts(_products.sort());
-      setProductsFruit(_fruit.sort());
-      setProductsVegetable(_vegetable.sort());
-      setProductsDessert(_dessert.sort());
-      setProductsGiftCard(_giftCard.sort());
-      
+      const productCategoriesDict = {};
+      productCategoriesDict['vegetable'] = _vegetable.sort();
+      productCategoriesDict['fruit'] = _fruit.sort();
+      productCategoriesDict['dessert'] = _dessert.sort();
+      productCategoriesDict['gift-card'] = _giftCard.sort();
+      setProductCategoriesDict(productCategoriesDict);
+      setProductsLoading(false);
     });
   }
 
-  const [dummy1, setDummy1] = useState(0);
 
   return (
     <div hidden={props.hidden}>
@@ -594,10 +590,7 @@ const Store = ({ ...props }) => {
           profile,
           setProfile,
           products,
-          productsFruit,
-          productsVegetable,
-          productsDessert,
-          productsGiftCard,
+          productCategoriesDict,
           productsLoading,
           storePage,
           setStorePage,
@@ -624,7 +617,6 @@ const Store = ({ ...props }) => {
           setIsCheckoutLogin,
           isCheckoutSignUp,
           setIsCheckoutSignUp,
-          setDummy1,
           productDict,  
         }}
       >
