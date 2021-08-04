@@ -20,19 +20,19 @@ ReactGA.initialize(GA_TRCKING_CODE);
 const cookies = new Cookies();
 
 //this function calculate the number of items in the cart and set it to global hook context
-function calTotal() {
-  var amount = 0,
-    keys = Object.keys(localStorage),
-    index = keys.length;
-  for (var i = 0; i < index; i++) {
-    if (keys[i].length > 30) {
-      var quantity = window.localStorage.getItem(keys[i]);
-      amount += parseInt(quantity);
-      // arr.push(JSON.parse(keys[i]));
-    }
-  }
-  return amount;
-}
+// function calTotal() {
+//   var amount = 0,
+//     keys = Object.keys(localStorage),
+//     index = keys.length;
+//   for (var i = 0; i < index; i++) {
+//     if (keys[i].length > 30) {
+//       var quantity = window.localStorage.getItem(keys[i]);
+//       amount += parseInt(quantity);
+//       // arr.push(JSON.parse(keys[i]));
+//     }
+//   }
+//   return amount;
+// }
 
 /* TODO: 
 1. Service Fee and Delivery Fee from Zones endpoint
@@ -89,9 +89,9 @@ function App() {
   //   });
   // }, []);
 
-  const cartDiff = () => {
+  // const cartDiff = () => {
     
-  };
+  // };
 
   let uid =
     cookies.get('customer_uid') == null ? '' : cookies.get('customer_uid');
@@ -104,7 +104,7 @@ function App() {
   const [isGuest, setIsGuest] = useState(guesProfile === '' ? false : true); // checks if user is logged in
   const [isAuth, setIsAuth] = useState(uid === '' ? false : true); // checks if user is logged in
   const [accountType, setAccountType] = useState();
-  const [isUserLoaded, setIsUserLoaded] = useState(false);
+  // const [isUserLoaded, setIsUserLoaded] = useState(false);
   const [sweepstakeActive, setSweepstakeActive] = useState(false);
   const [profile, setProfile] = useState({
     email: '',
