@@ -28,7 +28,7 @@ function SocialLogin(props) {
     let urlParams = new URLSearchParams(queryString);
     // Clear Query parameters
     window.history.pushState({}, document.title, window.location.pathname);
-    console.log(props, urlParams);
+    // console.log(props, urlParams);
     // Successful Log in with Apple, set cookies, context, redirect
     if (urlParams.has('id')) {
       let customerId = urlParams.get('id');
@@ -39,35 +39,34 @@ function SocialLogin(props) {
     }
     // Log which media platform user should have signed in with instead of Apple
     // May eventually implement to display the message for which platform to Login
-    else if (urlParams.has('media')) {
-      console.log(urlParams.get('media'));
-    }
+    // else if (urlParams.has('media')) {
+    //   console.log(urlParams.get('media'));
+    // }
   }, [Auth, props]);
 
   const responseGoogle = (response) => {
-    console.log(response);
+    // console.log(response);
     if (response.profileObj) {
-      console.log('Google login successful');
+      // console.log('Google login successful');
       let email = response.profileObj.email;
       let accessToken = response.accessToken;
       let socialId = response.googleId;
       _socialLoginAttempt(email, accessToken, socialId, 'GOOGLE');
-    } else {
-      console.log('Google login unsuccessful');
     }
   };
 
   const responseFacebook = (response) => {
-    console.log(response);
+    // console.log(response);
     if (response.email) {
-      console.log('Facebook login successful');
+      // console.log('Facebook login successful');
       let email = response.email;
       let accessToken = response.accessToken;
       let socialId = response.id;
       _socialLoginAttempt(email, accessToken, socialId, 'FACEBOOK');
-    } else {
-      console.log('Facebook login unsuccessful');
     }
+    // else {
+    //   console.log('Facebook login unsuccessful');
+    // }
   };
 
   const _socialLoginAttempt = (email, accessToken, socialId, platform) => {

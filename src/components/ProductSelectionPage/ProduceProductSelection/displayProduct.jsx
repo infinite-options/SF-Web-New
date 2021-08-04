@@ -169,7 +169,7 @@ function DisplayProduct() {
 
   const productSelect = useContext(ProdSelectContext);
   const store = useContext(storeContext);
-  console.log('productCategoriesDict = ', store.productCategoriesDict);
+  // console.log('productCategoriesDict = ', store.productCategoriesDict);
   
   const [FruitDisplayType, setFruitDisplayType] = useState(false);
   const [OtherDisplayType, setOtherDisplayType] = useState(false);
@@ -177,15 +177,15 @@ function DisplayProduct() {
   const [giftDisplayType, setGiftDisplayType] = useState(false);
 
   const [windowHeight, setWindowHeight] = React.useState(window.innerHeight);
-  console.log("@456qw in displayProduct ",store)
+  // console.log("@456qw in displayProduct ",store)
   useEffect(() => {
-    console.log('useEffect2 in DP');
+    // console.log('useEffect2 in DP');
     window.addEventListener('resize', updateWindowHeight);
     return () => window.removeEventListener('resize', updateWindowHeight);
   });
 
   const updateWindowHeight = () => {
-    console.log('setting window height');
+    // console.log('setting window height');
     setWindowHeight(window.innerHeight);
   };
 
@@ -194,7 +194,7 @@ function DisplayProduct() {
   // DONE: add date to expected delivery
   // DONE: clear out expected delivery if unclicked
   useEffect(() => {
-    console.log('useEffect1 in DP');
+    // console.log('useEffect1 in DP');
     let message = '';
     if (store.dayClicked === '') {
       message = 'Start by selecting a delivery date and time.';
@@ -210,7 +210,7 @@ function DisplayProduct() {
         'Sorry, we could not find any produce that can be delivered to your provided address';
     }
     setDisplayMessage(message);
-    console.log('in use effect: prodCatDict = ', store.productCategoriesDict);
+    // console.log('in use effect: prodCatDict = ', store.productCategoriesDict);
   }, [
     store.dayClicked,
     store.products,
@@ -234,8 +234,6 @@ function DisplayProduct() {
   function handleClickGift() {
     setGiftDisplayType(!giftDisplayType);
   }
-
-  useEffect(() => {console.log('CategoryClicked change: ', productSelect.categoriesClicked)}, [productSelect.categoriesClicked]);
 
   if (store.productCategoriesDict && !store.productsLoading && !productSelect.itemError) {
     return (

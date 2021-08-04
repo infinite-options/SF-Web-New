@@ -125,7 +125,7 @@ function useOutsideAlerter(ref) {
 const weekdayDatesDict = findWeekdayDates();
 
 const Store = ({ ...props }) => {
-  console.log('IN store');
+  // console.log('IN store');
   const Auth = useContext(AuthContext);
   const location = useLocation();
   const history = useHistory();
@@ -215,7 +215,7 @@ const Store = ({ ...props }) => {
     localStorage.setItem('currentStorePage', storePage);
   }, [storePage]);
 
-  console.log('profile = ', profile, ' prof long = ', profile.longitude, ' profile.lat = ', profile.latitude);
+  // console.log('profile = ', profile, ' prof long = ', profile.longitude, ' profile.lat = ', profile.latitude);
 
   localStorage.setItem('currentStorePage', storePage);
   //const { cartTotal, setCartTotal } = useContext(AuthContext);
@@ -228,11 +228,11 @@ const Store = ({ ...props }) => {
     JSON.parse(localStorage.getItem('cartItems') || '{}')
   );
 
-  useEffect(() => {
-    console.log('cartTotal: ', cartTotal);
-    // localStorage.setItem('cartTotal', `${cartTotal}`);
-    // localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartTotal, cartItems]);
+  // useEffect(() => {
+  //   console.log('cartTotal: ', cartTotal);
+  //   // localStorage.setItem('cartTotal', `${cartTotal}`);
+  //   // localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  // }, [cartTotal, cartItems]);
 
   props.hidden = props.hidden !== null ? props.hidden : false;
 
@@ -241,8 +241,8 @@ const Store = ({ ...props }) => {
       setProductsLoading(true);
       const AuthMethods = new AuthUtils();
       AuthMethods.getProfile().then((authRes) => {
-        console.log('User profile and store items were retrieved');
-        console.log('authRes: ', authRes);
+        // console.log('User profile and store items were retrieved');
+        // console.log('authRes: ', authRes);
         const updatedProfile = {
           email: authRes.customer_email,
           firstName: authRes.customer_first_name,
@@ -323,9 +323,9 @@ const Store = ({ ...props }) => {
   // };
 
   function loadBusinesses(busiRes, updatedProfile) {
-    console.log('Dict');
-    console.log('busiRes: ', busiRes);
-    console.log('profile = ', profile);
+    // console.log('Dict');
+    // console.log('busiRes: ', busiRes);
+    // console.log('profile = ', profile);
     const businessesRes = busiRes.result;
     const businessUids = new Set();
     const dateDict = {};
@@ -373,7 +373,7 @@ const Store = ({ ...props }) => {
       } else if (acceptDate > deliveryDate) {
         deliveryDate.setDate(originalDeliveryDate.getDate() + 7);
       }
-      console.log(deliveryDate);
+      // console.log(deliveryDate);
 
       if (!businessUids.has(business.z_biz_id))
         businessUids.add(business.z_biz_id);
@@ -486,11 +486,11 @@ const Store = ({ ...props }) => {
 
                 // checks for if the current iterated business has a lower price than the one previously seen
                 if (bPrice < _products[itemIdx].lowest_price) {
-                  console.log(
-                    'in comparing*********',
-                    _products[itemIdx].item_uid,
-                    item.item_uid
-                  );
+                  // console.log(
+                  //   'in comparing*********',
+                  //   _products[itemIdx].item_uid,
+                  //   item.item_uid
+                  // );
                   _products[itemIdx].lowest_price = bPrice;
                   _products[itemIdx].lowest_price_business_uid =
                     item.itm_business_uid;
@@ -542,7 +542,7 @@ const Store = ({ ...props }) => {
       BusiMethods.getFavorite(cookies.get('customer_uid')).then((itemRes) => {
         if (itemRes !== undefined) {
           for (const item of itemRes) {
-            console.log('Favorite get', item);
+            // console.log('Favorite get', item);
 
             for (let i = 0; i < _products.length; i++) {
               if (

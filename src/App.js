@@ -68,7 +68,7 @@ function App() {
       },
     },
   });
-  console.log('app started');
+  // console.log('app started');
 
   // useEffect(() => {
   //   // function checkUserData() {
@@ -149,13 +149,13 @@ function App() {
     axios
       .get(BASE_URL + 'Profile/' + cookies.get('customer_uid'))
       .then((response) => {
-        console.log('Account:', response);
+        // console.log('Account:', response);
         let newAccountType = response.data.result[0].role.toLowerCase();
         if (isMounted)
           setAccountType(response.data.result[0].role ? newAccountType : '');
         // Farmer is now string of businessId
         let newAuthLevel = (() => {
-          console.log(newAccountType);
+          // console.log(newAccountType);
           switch (newAccountType) {
             case 'customer':
               return 0;
@@ -165,7 +165,7 @@ function App() {
               return 1;
           }
         })();
-        console.log(newAuthLevel);
+        // console.log(newAuthLevel);
         if (isMounted) setAuthLevel(newAuthLevel);
       })
       .catch((err) => {
@@ -178,7 +178,7 @@ function App() {
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
   }, []);
-  console.log('profile in store = ', profile);
+  // console.log('profile in store = ', profile);
   return (
     <Router>
       <ThemeProvider theme={theme}>

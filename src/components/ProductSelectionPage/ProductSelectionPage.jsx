@@ -21,7 +21,7 @@ import { AuthContext } from 'auth/AuthContext';
 import Signup from '../SignUp/Signup';
 
 const ProductSelectionPage = (props) => {
-  console.log('ProductSelectionPage');
+  // console.log('ProductSelectionPage');
   const store = useContext(storeContext);
   const auth = useContext(AuthContext);
 

@@ -120,13 +120,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Entry(props) {
-  console.log('entry')
+  // console.log('entry')
   const [hearted, setHearted] = useState(props.products[props.index].favorite === 'TRUE');
   const [isShown, setIsShown] = useState(false);
   const [isInDay, setIsInDay] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
   const currCartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
-  const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
+  // const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
   // console.log("@456qw In entry 1",currCartItems)
   // console.log("@456qw In entry 2",currCartTotal)
 
@@ -182,14 +182,14 @@ function Entry(props) {
     const currCartTotal2 = parseInt(localStorage.getItem('cartTotal')|| '0')
     if (props.id in currCartItems2) {
       const itemCount = currCartItems2[props.id]['count'];
-      console.log("@456qw In decrease 1 ",itemCount)
+      // console.log("@456qw In decrease 1 ",itemCount)
       if (itemCount > 0) {
         if (itemCount === 1) {
           let clone = Object.assign({}, currCartItems2);
           delete clone[props.id];
           localStorage.setItem('cartItems', JSON.stringify(clone));
           props.setCartItems(clone);
-          console.log("@456qw In decrease 2 --- deleted")
+          // console.log("@456qw In decrease 2 --- deleted")
         } else {
           const item = {
             
@@ -214,20 +214,20 @@ function Entry(props) {
   function increase() {
     const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
     const currCartTotal2 = parseInt(localStorage.getItem('cartTotal')|| '0')
-    console.log("@456qw in increase 0 ",currCartItems2)
+    // console.log("@456qw in increase 0 ",currCartItems2)
     const item =
       props.id in currCartItems2
         ? {  count: currCartItems2[props.id]['count'] + 1 }
         : {  count: 1 };
     
-    console.log("@456qw in increase 1 ",item)
-    console.log("@123 before updating ",localStorage.getItem('cartItems'))
+    // console.log("@456qw in increase 1 ",item)
+    // console.log("@123 before updating ",localStorage.getItem('cartItems'))
     const newCartItems = {
       ... currCartItems2,
       [props.id]: item,
     };
-    console.log("@123 after updating ",localStorage.getItem('cartItems'))
-    console.log("@456qw in increase 2 ",newCartItems)
+    // console.log("@123 after updating ",localStorage.getItem('cartItems'))
+    // console.log("@456qw in increase 2 ",newCartItems)
     localStorage.setItem('cartItems', JSON.stringify(newCartItems));
     localStorage.setItem('cartTotal', `${currCartTotal2 + 1}`);
     props.setCartItems(newCartItems);

@@ -57,7 +57,7 @@ export default function Coupons(props) {
 
   useMemo(() => {
     const allCoupons = avaiCouponData.concat(unavaiCouponData);
-    console.log('allCoupons: ', allCoupons);
+    // console.log('allCoupons: ', allCoupons);
     const availableCoupons = [];
     const unavailableCoupons = [];
 
@@ -109,7 +109,7 @@ export default function Coupons(props) {
   }, [props.subtotal]);
 
   const loadCoupons = () => {
-    console.log('coupons fetched');
+    // console.log('coupons fetched');
     const url =
       process.env.REACT_APP_SERVER_BASE_URI +
       'available_Coupons/' +
@@ -120,7 +120,7 @@ export default function Coupons(props) {
         const availableCoupons = [];
         const unavailableCoupons = [];
         const couponsRes = res.data.result;
-        console.log('coupons got:', res.data.result);
+        // console.log('coupons got:', res.data.result);
         // notes: title
         // discount_amount: apply first if applicable
         // discount_percent: apply to subtotal - discount_amount
@@ -391,7 +391,7 @@ export default function Coupons(props) {
     return arr; // for testing
   }
 
-  console.log('currDims.width = ', currDims.width);
+  // console.log('currDims.width = ', currDims.width);
 
   return (
     // if the Carousel view is acting up in localhost, replace this componant with: <></>, save the file,

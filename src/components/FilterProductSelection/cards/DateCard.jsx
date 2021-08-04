@@ -158,7 +158,7 @@ const DateCard = (props) => {
 
   useEffect(() => {
     if (props.unq == 0) {
-      console.log('---On mount once', props);
+      // console.log('---On mount once', props);
       cardClicked();
     }
   }, []);

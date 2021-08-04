@@ -14,7 +14,7 @@ import appColors from '../../styles/AppColors';
 // }
 
 const CartItem = (props) => {
-  console.log('CartItems props',props);
+  // console.log('CartItems props',props);
   // const store = useContext(storeContext);
   // const products = props.products;
   // const productSelect = useContext(ProductSelectContext);
@@ -23,7 +23,7 @@ const CartItem = (props) => {
   const currCartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
   // const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
   // const [dummy, setDummy] = useState(false);
-  console.log('CartItems c',currCartItems);
+  // console.log('CartItems c',currCartItems);
   // const forceUpdate = useForceUpdate();
 
  
@@ -34,14 +34,14 @@ const CartItem = (props) => {
 
       const itemCount = currCartItems2[props.id]['count'];
       // const itemCount = store.cartItems[props.id]['count'];
-      console.log("@456qw In decrease 1 ",itemCount)
+      // console.log("@456qw In decrease 1 ",itemCount)
       if (itemCount > 0) {
         if (itemCount === 1) {
           let clone = Object.assign({}, currCartItems2);
           delete clone[props.id];
           localStorage.setItem('cartItems', JSON.stringify(clone));
           props.setCartItems(clone);
-          console.log("@456qw In decrease 2 --- deleted")
+          // console.log("@456qw In decrease 2 --- deleted")
         } else {
           const item = {
             
@@ -106,7 +106,7 @@ const CartItem = (props) => {
     let  isInDay = false;
 
     // for (const farm in props.itm_business_uid) {
-    console.log("storeitems",props)
+    // console.log("storeitems",props)
     if(props.business_uid){
       if (props.farmDaytimeDict[props.business_uid] != undefined) {
         props.farmDaytimeDict[props.business_uid].forEach((daytime) => {
@@ -118,7 +118,7 @@ const CartItem = (props) => {
     // }
 
     setIsInDay(isInDay);
-    console.log('props name', props.name, isInDay);
+    // console.log('props name', props.name, isInDay);
   }, [
     props.dayClicked,
     props.farmsClicked,
@@ -280,19 +280,10 @@ const CartItem = (props) => {
 }
 
 export default React.memo(CartItem, (prevProps, nextProps) => {
-  if (prevProps.name === 'Beets - Golden')
-  {
-    console.log(
-      '----------------------\nCartItem\n',
-      `PrevProps info: count = ${prevProps.count}`,
-      ` nextProps info: count = ${nextProps.count}`
-    );
-  }
+    if (prevProps.count != nextProps.count) {
+      return false;
+    }
 
-  if (prevProps.count != nextProps.count) {
-    return false;
-  }
-
-  return true;
+    return true;
   }
 );

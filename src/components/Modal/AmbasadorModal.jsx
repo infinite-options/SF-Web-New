@@ -13,7 +13,7 @@ const AmbasadorModal = (props) => {
   const BusiMethods = new BusiApiReqs();
   const AuthMethods = new AuthUtils();
   AuthMethods.getProfile().then((response) => {
-    console.log(response.customer_first_name);
+    // console.log(response.customer_first_name);
     setCustomerName(response.customer_first_name);
   });
 

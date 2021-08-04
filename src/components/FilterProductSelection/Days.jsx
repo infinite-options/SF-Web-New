@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import storeContext from '../Store/storeContext';
 // import ProdSelectContext from '../ProductSelectionPage/ProdSelectContext';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 // import daysInWeek from "../daysInWeek";
 import DateCard from './cards/DateCard';
 import FilterContext from './FilterContext';
@@ -30,7 +30,7 @@ const DaysCategory = () => {
   }
 
   const createDateCard = (props) => {
-    console.log('showndays', filter.shownDays);
+    // console.log('showndays', filter.shownDays);
     let acceptingString = '';
     if (store.acceptDayHour[props.weekDayFullUpper]) {
       acceptingString = store.acceptDayHour[props.weekDayFullUpper];

@@ -182,7 +182,7 @@ function listItem(item, store, productSelect) {
 // TODO: Get Delivery and service fee from zone
 // TODO: Add button to get to tab 4 of left side
 export default function CheckoutTab(props) {
-  console.log("IN checkoutStoreTab")
+  // console.log("IN checkoutStoreTab")
   const history = useHistory();
   const classes = useStyles();
 
@@ -321,7 +321,7 @@ export default function CheckoutTab(props) {
     setLocErrorMessage('');
     if (isZoneUpdated) {
       localStorage.setItem('isProfileUpdated', store.profile.zone);
-      console.log('Zone should be updated');
+      // console.log('Zone should be updated');
       store.setFarmsClicked(new Set());
       store.setDayClicked('');
       localStorage.removeItem('selectedDay');
