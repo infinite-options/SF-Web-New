@@ -1,29 +1,30 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 // import storeContext from '../Store/storeContext';
-import { Box, IconButton } from '@material-ui/core';
+// import { Box, IconButton } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import appColors from '../../styles/AppColors';
 // import ProductSelectContext from '../ProductSelectionPage/ProdSelectContext';
-import { ContactsOutlined } from '@material-ui/icons';
+// import { ContactsOutlined } from '@material-ui/icons';
 
-function useForceUpdate() {
-  const [dummy, setDummy] = useState(0);
-  return () => setDummy(dummy => dummy + 1); // updating dummy variable to force a re-render.
-}
+// function useForceUpdate() {
+//   const [dummy, setDummy] = useState(0);
+//   return () => setDummy(dummy => dummy + 1); // updating dummy variable to force a re-render.
+// }
 
 const CartItem = (props) => {
   console.log('CartItems props',props);
   // const store = useContext(storeContext);
-  const products = props.products;
+  // const products = props.products;
   // const productSelect = useContext(ProductSelectContext);
   var itemPrice = parseFloat(props.price);
   var totalPrice = itemPrice * props.count;
   const currCartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
-  const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
-  const [dummy, setDummy] = useState(false);
+  // const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
+  // const [dummy, setDummy] = useState(false);
   console.log('CartItems c',currCartItems);
-  const forceUpdate = useForceUpdate();
+  // const forceUpdate = useForceUpdate();
 
  
   function decrease() {

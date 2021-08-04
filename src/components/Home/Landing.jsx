@@ -18,7 +18,7 @@ import Order from '../Order/Order';
 import Footer from '../Footer/Footer';
 import bg from '../../icon/bg.svg';
 import ConfirmatioModal from 'components/SignUp/ConfirmationModal';
-import { AdminFarmContext } from '../Admin/AdminFarmContext';
+// import { AdminFarmContext } from '../Admin/AdminFarmContext';
 import { AuthContext } from '../../auth/AuthContext';
 const useStyles = makeStyles((theme) => ({
   authModal: {
@@ -135,7 +135,7 @@ function useOutsideAlerter(ref) {
 const Landing = ({ ...props }) => {
   const classes = useStyles();
   const history = useHistory();
-  const adminFarm = useContext(AdminFarmContext);
+  // const adminFarm = useContext(AdminFarmContext);
   const auth = useContext(AuthContext);
   // Toggles for the login and signup box to be passed in as props to the Landing Nav Bar
   const [isLoginShown, setIsLoginShown] = useState(false); // checks if user is logged in
@@ -147,11 +147,11 @@ const Landing = ({ ...props }) => {
   const signupWrapperRef = useRef(null);
   useOutsideAlerter(signupWrapperRef, setIsSignUpShown);
 
-  const handleClose = () => {
-    console.log('close');
-    setIsLoginShown(false);
-    setIsSignUpShown(false);
-  };
+  // const handleClose = () => {
+  //   console.log('close');
+  //   setIsLoginShown(false);
+  //   setIsSignUpShown(false);
+  // };
 
   return (
     <div className="contentWrap">

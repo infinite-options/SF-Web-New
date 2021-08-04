@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import StorefrontIcon from '@material-ui/icons/Storefront';
+// import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+// import StorefrontIcon from '@material-ui/icons/Storefront';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Box, Button, IconButton, Badge } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 
 import appColors from 'styles/AppColors';
 import MenuNavButton from '../../utils/MenuNavButton';
@@ -33,10 +33,10 @@ export default function LandingNavBar({ ...props }) {
   const classes = useStyles();
   const auth = useContext(AuthContext);
   const history = useHistory();
-  const { profile } = useContext(AuthContext);
+  // const { profile } = useContext(AuthContext);
 
   let [customerName, setCustomerName] = useState('');
-  const BusiMethods = new BusiApiReqs();
+  // const BusiMethods = new BusiApiReqs();
   const AuthMethods = new AuthUtils();
   AuthMethods.getProfile().then((response) => {
     console.log(response.customer_first_name);
@@ -56,14 +56,14 @@ export default function LandingNavBar({ ...props }) {
     props.setIsSignUpShown(!props.isSignUpShown);
   };
 
-  function handleStoreClick() {
-    localStorage.setItem('currentStorePage', 1);
-    history.push('/store');
-  }
-  function handleCartClick() {
-    localStorage.setItem('currentStorePage', 0);
-    history.push('/store');
-  }
+  // function handleStoreClick() {
+  //   localStorage.setItem('currentStorePage', 1);
+  //   history.push('/store');
+  // }
+  // function handleCartClick() {
+  //   localStorage.setItem('currentStorePage', 0);
+  //   history.push('/store');
+  // }
   const handleClickLogOut = () => {
     localStorage.removeItem('currentStorePage');
     localStorage.removeItem('cartTotal');

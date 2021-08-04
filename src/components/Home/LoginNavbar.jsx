@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import StorefrontIcon from '@material-ui/icons/Storefront';
+// import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+// import StorefrontIcon from '@material-ui/icons/Storefront';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Box, Button, IconButton, Badge } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 
 import appColors from 'styles/AppColors';
 import MenuNavButton from '../../utils/MenuNavButton';

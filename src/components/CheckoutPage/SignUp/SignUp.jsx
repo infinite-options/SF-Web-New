@@ -16,7 +16,7 @@ import {
   loginAttempt,
 } from "./Landing/loginActions";
 import {connect} from "react-redux";
-import { Route , withRouter} from 'react-router-dom';
+import { withRouter} from 'react-router-dom';
 
 export class SignUp extends Component {
 

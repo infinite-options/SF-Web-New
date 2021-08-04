@@ -23,9 +23,9 @@ export default function FarmerHome({ farmID, farmName, ...props }) {
   // If this empty object was required, an alternative fix would be to add a useEffect with data prop dependency to Item.js.
   const [farmData, setFarmData] = useState([]);
   const [open, setOpen] = useState(false);
-  const [file, setFile] = useState('');
-  const [mealName, setMealName] = useState('');
-  const [item, setItem] = useState({ name: '', quantity: '', price: '' });
+  // const [file, setFile] = useState('');
+  // const [mealName, setMealName] = useState('');
+  // const [item, setItem] = useState({ name: '', quantity: '', price: '' });
   const classes = useStyles();
 
   // let farmName;

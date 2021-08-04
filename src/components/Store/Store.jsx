@@ -9,20 +9,20 @@ import { Box } from '@material-ui/core';
 import ProductSelectionPage from '../ProductSelectionPage';
 import AuthUtils from '../../utils/AuthUtils';
 import BusiApiReqs from '../../utils/BusiApiReqs';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 
-const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
+// const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 const cookies = new Cookies();
 
 const testDate = new Date();
 const BusiMethods = new BusiApiReqs();
 
-const useStyles = makeStyles((theme) => ({
-  authModal: {
-    position: 'absolute',
-    width: '500px',
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   authModal: {
+//     position: 'absolute',
+//     width: '500px',
+//   },
+// }));
 
 const fullDaysUpper = [
   'SUNDAY',
@@ -129,7 +129,7 @@ const Store = ({ ...props }) => {
   const Auth = useContext(AuthContext);
   const location = useLocation();
   const history = useHistory();
-  const classes = useStyles();
+  // const classes = useStyles();
   const [orderConfirmation, setOrderConfirmation] = useState(false);
   // const currenttime = setInterval(checkIfAccepting, 60000);
 
@@ -139,10 +139,10 @@ const Store = ({ ...props }) => {
 
   const { profile, setProfile } = useContext(AuthContext);
   const [products, setProducts] = useState([]);
-  const [productsFruit, setProductsFruit] = useState([]);
-  const [productsVegetable, setProductsVegetable] = useState([]);
-  const [productsDessert, setProductsDessert] = useState([]);
-  const [productsGiftCard, setProductsGiftCard] = useState([]);
+  // const [productsFruit, setProductsFruit] = useState([]);
+  // const [productsVegetable, setProductsVegetable] = useState([]);
+  // const [productsDessert, setProductsDessert] = useState([]);
+  // const [productsGiftCard, setProductsGiftCard] = useState([]);
 
   const [productsLoading, setProductsLoading] = useState(true);
 
@@ -309,18 +309,18 @@ const Store = ({ ...props }) => {
     }
   }
 
-  const checkIfAccepting = () => {
-    const today = new Date();
-    const dayString =
-      months[today.getMonth()] +
-      '&' +
-      today.getDate() +
-      '&' +
-      months[today.getDay()] +
-      '&';
-    if (today) {
-    }
-  };
+  // const checkIfAccepting = () => {
+  //   const today = new Date();
+  //   const dayString =
+  //     months[today.getMonth()] +
+  //     '&' +
+  //     today.getDate() +
+  //     '&' +
+  //     months[today.getDay()] +
+  //     '&';
+  //   if (today) {
+  //   }
+  // };
 
   function loadBusinesses(busiRes, updatedProfile) {
     console.log('Dict');

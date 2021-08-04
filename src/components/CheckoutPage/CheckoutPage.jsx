@@ -1,13 +1,13 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoadingOverlay from 'react-loading-overlay';
 
 import { Box } from '@material-ui/core';
 import CheckoutLeft from './CheckoutLeft';
 import CheckoutRight from './CheckoutRight';
 import CheckoutContext from './CheckoutContext';
-import { Elements, CardElement, useStripe } from '@stripe/react-stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import ProdSelectContext from '../ProductSelectionPage/ProdSelectContext';
+// import ProdSelectContext from '../ProductSelectionPage/ProdSelectContext';
 import storeContext from '../Store/storeContext';
 // import storeContext from "customer/storeContext";
 // import axios from "axios";
@@ -21,7 +21,7 @@ const stripePromise = loadStripe(
 );
 
 export default function CheckoutPage() {
-  const { test } = React.useContext(storeContext);
+  // const { test } = React.useContext(storeContext);
 
   const [paymentDetails, setPaymentDetails] = useState({
     amountPaid: 0,

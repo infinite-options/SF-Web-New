@@ -12,7 +12,7 @@ import CartItem from '../CheckoutItems/cartItem';
 import storeContext from '../Store/storeContext';
 import checkoutContext from '../CheckoutPage/CheckoutContext';
 import PaymentTab from './PaymentTab';
-import PlaceOrder from '../CheckoutPage/PlaceOrder';
+// import PlaceOrder from '../CheckoutPage/PlaceOrder';
 import Coupons from '../CheckoutItems/Coupons';
 import MapComponent from '../MapComponent/MapComponent';
 import { AuthContext } from '../../auth/AuthContext';
@@ -20,8 +20,8 @@ import FindLongLatWithAddr from '../../utils/FindLongLatWithAddr';
 import BusiApiReqs from '../../utils/BusiApiReqs';
 import { useConfirmation } from '../../services/ConfirmationService';
 import ProductSelectContext from '../ProductSelectionPage/ProdSelectContext';
-import AdminLogin from '../LogIn/AdminLogin';
-import Signup from '../SignUp/Signup';
+// import AdminLogin from '../LogIn/AdminLogin';
+// import Signup from '../SignUp/Signup';
 import AmbasadorModal from  '../Modal/AmbasadorModal';
 
 
@@ -33,13 +33,13 @@ import FormControl from '@material-ui/core/FormControl';
 import PayPal from '../PaymentDetails/Paypal';
 import StripeElement from '../PaymentDetails/StripeElement';
 
-import TermsAndConditions from './TermsAndConditions';
+// import TermsAndConditions from './TermsAndConditions';
 import Cookies from 'js-cookie';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
-import DeliveryInfoTab from './DeliveryInfoTab';
-import LocationSearchInput from '../../utils/LocationSearchInput';
-import { MyLocation, SettingsOverscanOutlined, StreetviewTwoTone } from '@material-ui/icons';
+// import DeliveryInfoTab from './DeliveryInfoTab';
+// import LocationSearchInput from '../../utils/LocationSearchInput';
+// import { MyLocation, SettingsOverscanOutlined, StreetviewTwoTone } from '@material-ui/icons';
 
 const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 

@@ -1,18 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import storeContext from '../Store/storeContext';
-import ProdSelectContext from '../ProductSelectionPage/ProdSelectContext';
+// import ProdSelectContext from '../ProductSelectionPage/ProdSelectContext';
 import { makeStyles } from '@material-ui/core/styles';
 // import daysInWeek from "../daysInWeek";
 import DateCard from './cards/DateCard';
 import FilterContext from './FilterContext';
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    fontSize: 10,
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   paper: {
+//     padding: theme.spacing(1),
+//     textAlign: 'center',
+//     fontSize: 10,
+//   },
+// }));
 
 // DONE: Add extra days for multiple times
 // TEST: If date is unselected, clear the cart and give warning

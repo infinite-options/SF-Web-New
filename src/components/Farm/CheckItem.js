@@ -35,15 +35,15 @@ const CheckItem = forwardRef(({ farmID, ...props }, ref) => {
     item_photo: { obj: undefined, url: '' },
     exp_date: '',
   });
-  const handleChange = (event) => {
-    const { name, value, checked } = event.target;
+  // const handleChange = (event) => {
+  //   const { name, value, checked } = event.target;
 
-    let newValue = value;
-    if (booleanVals.has(name)) newValue = checked ? 'TRUE' : 'FALSE';
-    if (name === 'item_status') newValue = checked ? 'Active' : 'Past';
-    console.log('setEditData(props.data): ', name, newValue);
-    setItemProps({ ...itemProps, [name]: newValue });
-  };
+  //   let newValue = value;
+  //   if (booleanVals.has(name)) newValue = checked ? 'TRUE' : 'FALSE';
+  //   if (name === 'item_status') newValue = checked ? 'Active' : 'Past';
+  //   console.log('setEditData(props.data): ', name, newValue);
+  //   setItemProps({ ...itemProps, [name]: newValue });
+  // };
 
   const onFileChange = (event) => {
     setFile({

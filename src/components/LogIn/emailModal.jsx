@@ -1,14 +1,14 @@
-import Modal from 'react-bootstrap/Modal';
-import React, { useState, useContext } from 'react';
+// import Modal from 'react-bootstrap/Modal';
+import React, { useState } from 'react';
 import classes from './modal.module.css';
 import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
-import AuthUtils from '../../utils/AuthUtils';
-import { AuthContext } from '../../auth/AuthContext';
+// import AuthUtils from '../../utils/AuthUtils';
+// import { AuthContext } from '../../auth/AuthContext';
 
 const EmailModal = (props) => {
-  const AuthMethods = new AuthUtils();
-  const auth = useContext(AuthContext);
+  // const AuthMethods = new AuthUtils();
+  // const auth = useContext(AuthContext);
   let [modalSignup, modalSignupMessage] = useState('');
 
   const onClear = () => {

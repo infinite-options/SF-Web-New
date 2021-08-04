@@ -1,14 +1,14 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import classes from './modal.module.css';
 import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
-import AuthUtils from '../../utils/AuthUtils';
-import { AuthContext } from '../../auth/AuthContext';
+// import AuthUtils from '../../utils/AuthUtils';
+// import { AuthContext } from '../../auth/AuthContext';
 
 const Hooray = (props) => {
-  const AuthMethods = new AuthUtils();
-  const auth = useContext(AuthContext);
-  let [modalSignup, modalSignupMessage] = useState('');
+  // const AuthMethods = new AuthUtils();
+  // const auth = useContext(AuthContext);
+  // let [modalSignup, modalSignupMessage] = useState('');
 
   const modalClick = () => {
     // modalSignupMessage('true');

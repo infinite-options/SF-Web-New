@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { Box, Button } from '@material-ui/core';
-import { withRouter } from 'react-router';
-import Paper from '@material-ui/core/Paper';
+import React from 'react';
+// import axios from 'axios';
+import { Box } from '@material-ui/core';
+// import { withRouter } from 'react-router';
+// import Paper from '@material-ui/core/Paper';
 import CssTextField from '../../utils/CssTextField';
-import appColors from '../../styles/AppColors';
-import SocialLogin from '../LogIn/SocialLogin';
-import { useHistory } from 'react-router-dom';
-import { useState } from 'react';
+// import appColors from '../../styles/AppColors';
+// import SocialLogin from '../LogIn/SocialLogin';
+// import { useHistory } from 'react-router-dom';
+// import { useState } from 'react';
 
 
 const Signupmodal=()=>{

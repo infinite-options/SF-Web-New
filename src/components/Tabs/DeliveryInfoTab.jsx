@@ -1,13 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+// import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import { makeStyles } from '@material-ui/core/styles';
 import {
-  Paper,
   Box,
-  TextField,
-  Switch,
-  Button,
   FormHelperText,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
@@ -16,7 +12,7 @@ import FindLongLatWithAddr from '../../utils/FindLongLatWithAddr';
 import AuthUtils from '../../utils/AuthUtils';
 import BusiApiReqs from '../../utils/BusiApiReqs';
 import appColors from '../../styles/AppColors';
-import Signup from '../SignUp/Signup';
+// import Signup from '../SignUp/Signup';
 import { AuthContext } from '../../auth/AuthContext';
 import StoreContext from '../Store/storeContext';
 import checkoutContext from '../CheckoutPage/CheckoutContext';

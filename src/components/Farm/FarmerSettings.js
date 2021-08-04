@@ -14,7 +14,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 // import UploadPreview from 'material-ui-upload/UploadPreview';
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import ImageUploading from 'react-images-uploading';
+// import ImageUploading from 'react-images-uploading';
 import blankImg from '../../images/blank_img.svg';
 
 const BUSINESS_DETAILS_URL =
@@ -162,7 +162,7 @@ export default function FarmerSettings({ farmID, farmName, ...props }) {
 
   useEffect(() => {}, [acceptTime]);
 
-  const maxNumImg = 1;
+  // const maxNumImg = 1;
 
   const handleImgChange = (e) => {
     if (e.target.files > 0)

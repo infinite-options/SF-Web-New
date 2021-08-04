@@ -31,8 +31,6 @@ import {
 
 import Cookies from 'js-cookie';
 
-// Donovan_0521 empty commit
-
 const useStyles = makeStyles((theme) => ({
   profileInfoContainer: {
     display: 'flex',

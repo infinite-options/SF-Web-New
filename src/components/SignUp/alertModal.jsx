@@ -1,19 +1,19 @@
-import Modal from 'react-bootstrap/Modal';
+// import Modal from 'react-bootstrap/Modal';
 // import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import classes from './modal.module.css';
-import { Button } from 'react-bootstrap';
+// import { Button } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import cross from '../../icon/cross.svg';
-import Signup from '../SignUp/Signup';
-import { Paper } from '@material-ui/core';
-import AuthUtils from '../../utils/AuthUtils';
-import { AuthContext } from '../../auth/AuthContext';
-import appColors from '../../styles/AppColors';
+// import Signup from '../SignUp/Signup';
+// import { Paper } from '@material-ui/core';
+// import AuthUtils from '../../utils/AuthUtils';
+// import { AuthContext } from '../../auth/AuthContext';
+// import appColors from '../../styles/AppColors';
 
 const AlertModal = (props) => {
-  const AuthMethods = new AuthUtils();
-  const auth = useContext(AuthContext);
+  // const AuthMethods = new AuthUtils();
+  // const auth = useContext(AuthContext);
   let [modalSignup, modalSignupMessage] = useState('');
 
   const modalClick = () => {

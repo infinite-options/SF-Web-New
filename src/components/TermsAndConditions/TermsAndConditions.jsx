@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import TermsAndConditionsNavBar from './TermsAndConditionsNavBar';
 import appColors from '../../styles/AppColors';
-import Background from '../../icon/Rectangle.svg';
+// import Background from '../../icon/Rectangle.svg';
 
 import { AuthContext } from 'auth/AuthContext';
 

@@ -1,22 +1,22 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React from 'react';
 import LandingNavBar from '../LandingNavBar/LandingNavBar';
-import AdminLogin from '../LogIn/AdminLogin';
+// import AdminLogin from '../LogIn/AdminLogin';
 import Footer from "../Footer/Footer";
 import './Sweeptakes.css';
-import Card from '@material-ui/core/Card';
+// import Card from '@material-ui/core/Card';
 import Box from "@material-ui/core/Box";
-import {ButtonGroup, Container} from "@material-ui/core";
-import bg from '../../icon/bg.svg';
+// import {ButtonGroup, Container} from "@material-ui/core";
+// import bg from '../../icon/bg.svg';
 import Apple from '../../images/Mask Group 1.png'
 import Google from '../../images/en_badge_web_generic.png'
 import { useHistory } from 'react-router-dom';
 
-function beforeClick1() {
-    console.log("Hello WOrld!")
-    return(
-        <div>Hello World</div>
-    )
-}
+// function beforeClick1() {
+//     console.log("Hello WOrld!")
+//     return(
+//         <div>Hello World</div>
+//     )
+// }
 
 
 const Sweeptakes2 = () => {

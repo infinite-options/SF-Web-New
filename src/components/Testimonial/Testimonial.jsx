@@ -5,8 +5,8 @@ import React from 'react';
 
 //import './styles.css';
 
-import Slider from 'react-slick';
-import Card from "react-bootstrap/Card";
+// import Slider from 'react-slick';
+// import Card from "react-bootstrap/Card";
 import Carousel from 'react-multi-carousel';
 
 

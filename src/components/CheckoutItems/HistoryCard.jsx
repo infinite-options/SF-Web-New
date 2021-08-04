@@ -59,7 +59,7 @@ function listItem(item) {
 }
 
 const HistoryCard = (props) => {
-  const { profile } = useContext(storeContext);
+  // const { profile } = useContext(storeContext);
   const classes = useStyles();
 
   return (

@@ -17,7 +17,7 @@ const PayPal = ({ value, deliveryInstructions }) => {
   const history = useHistory();
 
   const { paymentDetails, chosenCoupon } = useContext(checkoutContext);
-  const { profile, startDeliveryDate, cartItems } = useContext(storeContext);
+  const { profile, startDeliveryDate } = useContext(storeContext);
   //[{"qty": "3", "name": "Opo Gourd", "price": "0.5", "item_uid": "310-000087", "itm_business_uid": "200-000005"}]
 
   // DONE: Add unit (bunch), desc (cOrganic)

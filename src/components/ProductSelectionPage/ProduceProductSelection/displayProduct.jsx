@@ -12,7 +12,7 @@ import appColors from '../../../styles/AppColors';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { ContactsOutlined } from '@material-ui/icons';
+// import { ContactsOutlined } from '@material-ui/icons';
 
 const theme2 = createMuiTheme({
   breakpoints: {
