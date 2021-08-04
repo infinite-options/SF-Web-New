@@ -121,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Entry(props) {
   console.log('entry')
-  const [hearted, setHearted] = useState(false);
+  const [hearted, setHearted] = useState(props.products[props.index].favorite === 'TRUE');
   const [isShown, setIsShown] = useState(false);
   const [isInDay, setIsInDay] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -408,7 +408,8 @@ const set_equality = (set1, set2) => {
 export default React.memo(Entry, (prevProps, nextProps) => {
   if (prevProps.itemCount != nextProps.itemCount ||
     !set_equality(prevProps.categoriesClicked, nextProps.categoriesClicked) ||
-    prevProps.dayClicked !== nextProps.dayClicked
+    prevProps.dayClicked !== nextProps.dayClicked ||
+    prevProps.favorite !== nextProps.favorite
   ){
     return false;
   }
