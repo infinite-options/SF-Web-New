@@ -142,7 +142,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function updateSweepstakes(setSweepstakeActive, nextSweepStatus) {
+function updateSweepstakes(nextSweepStatus) {
   const endpoint = `https://3o9ul2w8a1.execute-api.us-west-1.amazonaws.com/dev/api/v2/promotions`;
   fetch(
     `${endpoint}`,
@@ -250,7 +250,7 @@ function AdminDashboard() {
     auth.setSweepstakeActive(nextSweepsActive);
     console.log('Sweepstake after toggle:', nextSweepsActive);
     setOpen(true);
-    updateSweepstakes(auth.setSweepstakeActive, nextSweepsActive ? 'ACTIVE' : 'INACTIVE');
+    updateSweepstakes(nextSweepsActive ? 'ACTIVE' : 'INACTIVE');
   };
 
   return (

@@ -20,21 +20,6 @@ const GA_TRCKING_CODE = process.env.REACT_APP_GA_TRACKING_CODE;
 ReactGA.initialize(GA_TRCKING_CODE);
 const cookies = new Cookies();
 
-//this function calculate the number of items in the cart and set it to global hook context
-function calTotal() {
-  var amount = 0,
-    keys = Object.keys(localStorage),
-    index = keys.length;
-  for (var i = 0; i < index; i++) {
-    if (keys[i].length > 30) {
-      var quantity = window.localStorage.getItem(keys[i]);
-      amount += parseInt(quantity);
-      // arr.push(JSON.parse(keys[i]));
-    }
-  }
-  return amount;
-}
-
 function fetchSweepstakes(setSweepstakeActive) {
   const endpoint = `https://3o9ul2w8a1.execute-api.us-west-1.amazonaws.com/dev/api/v2/promotions`;
   fetch(
@@ -51,15 +36,11 @@ function fetchSweepstakes(setSweepstakeActive) {
       if (!response.ok) {
         throw response;
       }
-      console.log('sweeps1')
       return response.json();
     })
     .then((json) => {
       const sweeps = json;
       setSweepstakeActive(sweeps === 'ACTIVE');
-
-      // console.warn('FoodsComp');
-      // console.log(foodsComps);
     })
     .catch((error) => {
       console.log('sweeps is an error');
