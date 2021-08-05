@@ -92,6 +92,9 @@ const Footer = ({ ...props }) => {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignItems: 'center',
               }}
             >
               <Button
@@ -130,7 +133,11 @@ const Footer = ({ ...props }) => {
                 paddingLeft: '60px',
                 fontWeight: '500',
                 marginTop: '35px',
-                textAlign: 'left',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignItems: 'center',
               }}
             >
               <p>
