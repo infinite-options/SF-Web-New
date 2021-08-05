@@ -357,6 +357,7 @@ function DisplayProduct() {
               autoPlay = {true}
               autoPlaySpeed = {2000}
               infinite = {true}
+              slidesToSlide = {2}
             >
               {store.productCategoriesDict['fruit'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['fruit'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
             </Carousel> 
@@ -429,6 +430,7 @@ function DisplayProduct() {
               autoPlay = {true}
               autoPlaySpeed = {2000}
               infinite = {true}
+              slidesToSlide = {2}
             >
               {store.productCategoriesDict['dessert'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['dessert'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))} 
             </Carousel> 
@@ -509,6 +511,7 @@ function DisplayProduct() {
               autoPlay = {true}
               autoPlaySpeed = {2000}
               infinite = {true}
+              slidesToSlide = {2}
             >
               {store.productCategoriesDict['gift-card'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['gift-card'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
             </Carousel>
