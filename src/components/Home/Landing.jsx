@@ -99,6 +99,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function fetchSweepstakes(setSweepstakeActive) {
+  const endpoint = `https://3o9ul2w8a1.execute-api.us-west-1.amazonaws.com/dev/api/v2/promotions`;
+  fetch(
+    `${endpoint}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({name: 'SF'}),
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+      console.log('sweeps1')
+      return response.json();
+    })
+    .then((json) => {
+      const sweeps = json;
+      setSweepstakeActive(sweeps === 'ACTIVE');
+
+      // console.warn('FoodsComp');
+      // console.log(foodsComps);
+    })
+    .catch((error) => {
+      console.log('sweeps is an error');
+      console.error(error);
+    });
+}
+
 /**
  * Hook that alerts clicks outside of the passed ref
  */
@@ -146,6 +178,7 @@ const Landing = ({ ...props }) => {
   useOutsideAlerter(loginWrapperRef, setIsLoginShown);
   const signupWrapperRef = useRef(null);
   useOutsideAlerter(signupWrapperRef, setIsSignUpShown);
+  useEffect(() => fetchSweepstakes(auth.setSweepstakeActive), []);
 
   const handleClose = () => {
     console.log('close');
