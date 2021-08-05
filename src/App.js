@@ -12,6 +12,7 @@ import ReactGA from 'react-ga';
 import { AuthContext } from './auth/AuthContext';
 import axios from 'axios';
 import appColors from './styles/AppColors';
+import { SnoozeOutlined } from '@material-ui/icons';
 
 const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 const GA_TRCKING_CODE = process.env.REACT_APP_GA_TRACKING_CODE;
@@ -32,6 +33,38 @@ function calTotal() {
     }
   }
   return amount;
+}
+
+function fetchSweepstakes(setSweepstakeActive) {
+  const endpoint = `https://3o9ul2w8a1.execute-api.us-west-1.amazonaws.com/dev/api/v2/promotions`;
+  fetch(
+    `${endpoint}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({name: 'SF'}),
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+      console.log('sweeps1')
+      return response.json();
+    })
+    .then((json) => {
+      const sweeps = json;
+      setSweepstakeActive(sweeps === 'ACTIVE');
+
+      // console.warn('FoodsComp');
+      // console.log(foodsComps);
+    })
+    .catch((error) => {
+      console.log('sweeps is an error');
+      console.error(error);
+    });
 }
 
 /* TODO: 
@@ -152,9 +185,12 @@ function App() {
       isMounted = false;
     };
   }, [isAuth]);
+
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
+    fetchSweepstakes(setSweepstakeActive);
   }, []);
+
   return (
     <Router>
       <ThemeProvider theme={theme}>
