@@ -126,11 +126,9 @@
   height: auto;
   width: 100%;
   padding-bottom: 20px;
-}
-.containerFooter {
-  display: inline-block;
-  min-width: 90%;
-  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  align-content: center;
 }
 .container {
   display: inline-block;

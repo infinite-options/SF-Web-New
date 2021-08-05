@@ -16,9 +16,6 @@ import TermsAndConditions from './components/TermsAndConditions/TermsAndConditio
 import MobilePaypalCheckout from './mobile/MobilePaypalCheckout';
 import ReactGA from 'react-ga';
 import Sweepstakes from './components/Sweepstakes/Sweepstakes';
-import Sweepstakes2 from './components/Sweepstakes/Sweepstakes2';
-import Sweepstakes3 from './components/Sweepstakes/Sweepstakes3';
-import Sweepstakes4 from './components/Sweepstakes/Sweepstakes4';
 
 // Nav here will take all the adress from children page to this and give
 // it to the switch route
@@ -44,14 +41,6 @@ function Nav(authLevel, isAuth) {
         component={TermsAndConditions}
       />
       <Route exact path="/sweepstakes" component={Sweepstakes} />
-      <Route exact path="/sweepstakes2" component={Sweepstakes2} />
-      <Route exact path="/sweepstakes3" component={Sweepstakes3} />
-      <Route exact path="/sweepstakes4" component={Sweepstakes4} />
-
-      <Route exact path="/sweepstakes" component={Sweepstakes} />
-      <Route exact path="/sweepstakes2" component={Sweepstakes2} />
-      <Route exact path="/sweepstakes3" component={Sweepstakes3} />
-      <Route exact path="/sweepstakes4" component={Sweepstakes4} />
 
       <Route path="/payment/paypal:props" component={MobilePaypalCheckout} />
       <AuthAdminRoute

@@ -3,8 +3,8 @@
 }
 
 .Card1 {
-  height: 250px;
-  width: 370px;
+  height: 235px;
+  width: 294px;
   background-color: #ff8500;
   border: none;
   border-radius: 20px 20px 0px 0px;
@@ -14,10 +14,8 @@
 }
 
 .Card2 {
-  top: 392px;
-  left: 536px;
-  width: 350px;
-  height: 500px;
+  width: 294px;
+  height: 437px;
   background: #2b6d74 0% 0% no-repeat padding-box;
   border-radius: 20px 20px 0px 0px;
   opacity: 1;
@@ -29,7 +27,7 @@
 }
 
 .text {
-  font-size: 38px;
+  font-size: 30px;
   color: #ffffff;
   margin-left: 30px;
   margin-right: 30px;
@@ -38,7 +36,7 @@
 
 .Card3 {
   height: 350px;
-  width: 370px;
+  width: 294px;
   background-color: #ff8500;
   border: none;
   border-radius: 20px 20px 0px 0px;
@@ -50,34 +48,36 @@
   top: 1796px;
   left: 511px;
   width: 343px;
-  height: 108px;
+  height: 98px;
   background: #2b6d74 0% 0% no-repeat padding-box;
   opacity: 1;
   text-align: center;
-  font-size: 32px;
+  font-size: 30px;
   color: #ffffff;
   font-weight: bold;
   margin-top: 50px;
   border-radius: 70px;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
+  cursor: pointer;
 }
 
 .button5 {
   border-radius: 50%;
+  cursor: pointer;
 }
 
 .value {
   color: #ffd800;
   letter-spacing: 0px;
   font-weight: bold;
-  font-size: 54px;
+  font-size: 40px;
 }
 
 .value1 {
   color: #2b6d74;
   letter-spacing: 0px;
   font-weight: bold;
-  font-size: 54px;
+  font-size: 40px;
 }
 
 .container {
@@ -86,28 +86,26 @@
 }
 
 .FreeFF {
-  font-size: 50px;
+  font-size: 40px;
   font-weight: bold;
   color: #ffffff;
 }
 
 .Enter {
-  font-size: 42px;
+  font-size: 25px;
   font-weight: bold;
   color: #ffffff;
 }
 
 .input {
-  top: 993px;
-  left: 299px;
-  width: 768px;
-  height: 100px;
+  width: 568px;
+  height: 60px;
   background: #ffffff 0% 0% no-repeat padding-box;
   border: 7px solid #2b6d74;
   border-radius: 69px;
   opacity: 1;
   margin-bottom: 10px;
-  font-size: 39px;
+  font-size: 22px;
   text-align: center;
   font-weight: bold;
   color: #2b6d74;
@@ -125,19 +123,13 @@ input:focus::placeholder {
 }
 
 .Box2 {
-  width: 950px;
-  height: 323px;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  background: transparent linear-gradient(180deg, #2b6d74 0%, #ff8500 100%) 0%
-    0% no-repeat padding-box;
+  margin-bottom: 2rem;
+  width: 850px;
   border-radius: 25px;
-  opacity: 0.75;
-  margin-left: 480px;
 }
 
 .column {
+  float: left;
   width: 50%;
 }
 
@@ -158,13 +150,13 @@ input:focus::placeholder {
 }
 
 .SW2Text {
-  font-size: 42px;
+  font-size: 35px;
 
   color: #ffffff;
 }
 
 .downloadText {
-  font-size: 32px;
+  font-size: 30px;
   font-weight: bold;
   color: #ffffff;
 }
@@ -172,13 +164,22 @@ input:focus::placeholder {
 .OrVisitText {
   font-size: 32px;
   font-weight: bold;
-  color: #ffffff;
-  margin-top: 100px;
+  color: #2b6d74;
+  margin-top: 70px;
+  background: var(--unnamed-color-ffffff) 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 5px solid #f8851b;
+  border-radius: 15px;
+  opacity: 1;
+  text-decoration: none;
+  margin-right: 1rem;
+  justify-content: center;
+  width: 347px;
+  height: 120px;
+  text-align: center;
 }
 
 .referButton {
-  top: 1796px;
-  left: 511px;
   width: 343px;
   height: 108px;
   background: none;
@@ -187,13 +188,105 @@ input:focus::placeholder {
   font-size: 32px;
   color: #ffffff;
   font-weight: bold;
-
+  cursor: pointer;
   border-radius: 70px;
   border: 5px solid #ffffff;
 
-  margin-bottom: 200px;
+  margin-bottom: 50px;
 }
 
 .Apple {
   background-image: url("../../images/Mask Group 1.png");
+}
+.img {
+  width: 200px;
+}
+@media screen and (max-width: 1000px) {
+  .Card1,
+  .Card2,
+  .Card3 {
+    width: 30%; /* The width is 100%, when the viewport is 800px or smaller */
+  }
+  .text {
+    font-size: 25px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .input {
+    width: 70%;
+  }
+  .button {
+    width: 50%;
+    font-size: 25px;
+  }
+  .referButton {
+    width: 50%;
+    font-size: 25px;
+  }
+  .SW2Text {
+    font-size: 25px;
+  }
+  .Box2 {
+    width: 80%;
+  }
+  .column {
+    width: 50%;
+  }
+  .OrVisitText {
+    width: 70%;
+    height: 70%;
+    font-size: 20px;
+  }
+  .downloadText {
+    font-size: 20px;
+  }
+  .img {
+    width: 70%;
+  }
+}
+@media only screen and (max-width: 620px) {
+  /* For mobile phones: */
+  .Card1,
+  .Card2,
+  .Card3 {
+    width: 30%;
+  }
+
+  .text {
+    font-size: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .input {
+    width: 70%;
+  }
+  .button {
+    width: 50%;
+    font-size: 25px;
+  }
+  .referButton {
+    width: 50%;
+    font-size: 25px;
+  }
+  .SW2Text {
+    font-size: 25px;
+  }
+  .Box2 {
+    width: 80%;
+  }
+  .column {
+    width: 50%;
+  }
+  .OrVisitText {
+    width: 70%;
+    height: 70%;
+    font-size: 20px;
+  }
+  .downloadText {
+    font-size: 20px;
+  }
+  .img {
+    width: 70%;
+  }
 }

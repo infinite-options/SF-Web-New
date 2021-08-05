@@ -5,7 +5,7 @@ import Footer from '../Footer/Footer';
 import './Sweepstakes.css';
 import Box from '@material-ui/core/Box';
 import { Container } from '@material-ui/core';
-
+import { Grid, Paper, Typography, Avatar, Button } from '@material-ui/core';
 import Apple from '../../images/Mask Group 1.png';
 import Google from '../../images/en_badge_web_generic.png';
 import { useHistory } from 'react-router-dom';
@@ -131,23 +131,20 @@ const Sweepstakes = () => {
           </div>
           <Container className="container">
             <button className="Card1">
-              {' '}
               <p className="text">
-                Customizable box of fresh produce worth{' '}
+                Customizable box of fresh produce worth
                 <div className="value1">$20</div>
               </p>
             </button>
             <button className="Card2">
-              {' '}
               <p className="text">
-                Customizable box of fresh produce <div>worth</div>{' '}
+                Customizable box of fresh produce <div>worth</div>
                 <div className="value">$50</div>
               </p>
             </button>
             <button className="Card3">
-              {' '}
               <p className="text">
-                Customizable box of fresh produce worth{' '}
+                Customizable box of fresh produce worth
                 <div className="value1">$30</div>
               </p>
             </button>
@@ -162,6 +159,7 @@ const Sweepstakes = () => {
                 placeholder="Enter Name"
                 onChange={(e) => handle(e)}
                 value={sweepstakeEntry.sweep_name}
+                required
               />
               <br />
               <input
@@ -171,6 +169,7 @@ const Sweepstakes = () => {
                 placeholder="Email Address"
                 onChange={(e) => handle(e)}
                 value={sweepstakeEntry.sweep_address}
+                required
               />
               <br />
               <input
@@ -180,13 +179,14 @@ const Sweepstakes = () => {
                 placeholder="Zip Code"
                 onChange={(e) => handle(e)}
                 value={sweepstakeEntry.sweep_zipcode}
+                required
               />
               <br />
               <input
                 className="input"
                 id="sweep_phone_number"
                 type="text"
-                placeholder="Phone (optional)"
+                placeholder="Phone"
                 onChange={(e) => handle(e)}
                 value={sweepstakeEntry.sweep_phone_number}
               />
@@ -259,7 +259,6 @@ const Sweepstakes = () => {
           >
             Refer a friend+
           </button>
-
           <div>
             <p className="FreeFF">Until then...</p>
             <p className="SW2Text">
@@ -268,33 +267,54 @@ const Sweepstakes = () => {
               <div>orders above $30</div>
             </p>
           </div>
-
-          <Box className="Box2">
-            <div className="row">
-              <div className="column">
-                <p className="downloadText">Download the app</p>
-                <a
-                  href="https://apps.apple.com/us/app/serving-fresh/id1488267727"
-                  target="_blank"
-                >
-                  <img src={Apple} />
-                </a>
-
-                <div>
+          <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Box
+              className="Box2"
+              style={{
+                backgroundImage: `url(${'sweestakebg.svg'})`,
+              }}
+            >
+              <div className="row">
+                <div className="column">
+                  <p className="downloadText">Download the app</p>
                   <a
-                    href="https://play.google.com/store/apps/details?id=com.servingfresh"
+                    href="https://apps.apple.com/us/app/serving-fresh/id1488267727"
                     target="_blank"
                   >
-                    <img src={Google} />
+                    <img className="img" src={Apple} />
                   </a>
+
+                  <div>
+                    <a
+                      href="https://play.google.com/store/apps/details?id=com.servingfresh"
+                      target="_blank"
+                    >
+                      <img className="img" src={Google} />
+                    </a>
+                  </div>
+                </div>
+                <div className="column">
+                  <p className="OrVisitText" style={{ padding: '1rem' }}>
+                    Or visit us on
+                    <br />
+                    <a
+                      href="https://servingfresh.me/"
+                      style={{
+                        textDecoration: 'none',
+                        color: '#2b6d74',
+                      }}
+                    >
+                      ServingFresh.me
+                    </a>
+                  </p>
                 </div>
               </div>
-              <div className="column">
-                <p className="OrVisitText">
-                  Or visit us on <div className="FreeFF">ServingFresh.me</div>
-                </p>
-              </div>
-            </div>
+            </Box>
           </Box>
         </Box>
         <div className="footer">
