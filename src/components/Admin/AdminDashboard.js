@@ -142,30 +142,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function fetchSweepstakes(setSweepstakesActive) {
-  const endpoint = `binky`;
+function updateSweepstakes(setSweepstakeActive, nextSweepStatus) {
+  const endpoint = `https://3o9ul2w8a1.execute-api.us-west-1.amazonaws.com/dev/api/v2/promotions`;
   fetch(
     `${endpoint}`,
     {
       method: 'PUT',
-    }
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'SF',
+        status: nextSweepStatus,
+      }),
+    },
   )
     .then((response) => {
       if (!response.ok) {
         throw response;
       }
       return response.json();
-    })
-    .then((json) => {
-      const sweeps = json.result;
-
-      // console.warn('FoodsComp');
-      // console.log(foodsComps);
-
-      for (const sweep of sweeps) {
-        setSweepstakesActive(sweep);
-        break;
-      }
     })
     .catch((error) => {
       console.error(error);
@@ -250,10 +246,11 @@ function AdminDashboard() {
   }, []);
   const sweepstakeToggle = () => {
     console.log('Sweepstake in Toggle function:', auth.sweepstakeActive);
-    auth.sweepstakeActive = !auth.sweepstakeActive;
-    auth.setSweepstakeActive(auth.sweepstakeActive);
-    console.log('Sweepstake after toggle:', auth.sweepstakeActive);
+    const nextSweepsActive = !auth.sweepstakeActive;
+    auth.setSweepstakeActive(nextSweepsActive);
+    console.log('Sweepstake after toggle:', nextSweepsActive);
     setOpen(true);
+    updateSweepstakes(auth.setSweepstakeActive, nextSweepsActive ? 'ACTIVE' : 'INACTIVE');
   };
 
   return (
