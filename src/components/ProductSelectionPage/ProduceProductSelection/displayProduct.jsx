@@ -283,6 +283,7 @@ function DisplayProduct() {
               autoPlay = {true}
               autoPlaySpeed = {2000}
               infinite = {true}
+              slidesToSlide = {2}
             >
               {store.productCategoriesDict['vegetable'].map((product, index) => createProduct2(product, index, store.setCartTotal, store.cartItems, store.setCartItems, store.productCategoriesDict['vegetable'], store.dayClicked, store.farmDaytimeDict, productSelect.categoriesClicked))}
             </Carousel>
