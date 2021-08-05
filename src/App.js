@@ -34,6 +34,36 @@ function calTotal() {
   return amount;
 }
 
+function fetchSweepstakes(setSweepstakesActive) {
+  const endpoint = `binky`;
+  fetch(
+    `${endpoint}`,
+    {
+      method: 'GET',
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json();
+    })
+    .then((json) => {
+      const sweeps = json.result;
+
+      // console.warn('FoodsComp');
+      // console.log(foodsComps);
+
+      for (const sweep of sweeps) {
+        setSweepstakesActive(sweep);
+        break;
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
 /* TODO: 
 1. Service Fee and Delivery Fee from Zones endpoint
 2. checking accepting hours for dates showing in filter
@@ -152,9 +182,12 @@ function App() {
       isMounted = false;
     };
   }, [isAuth]);
+
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
+    fetchSweepstakes(setSweepstakeActive);
   }, []);
+
   return (
     <Router>
       <ThemeProvider theme={theme}>

@@ -142,6 +142,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function fetchSweepstakes(setSweepstakesActive) {
+  const endpoint = `binky`;
+  fetch(
+    `${endpoint}`,
+    {
+      method: 'PUT',
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json();
+    })
+    .then((json) => {
+      const sweeps = json.result;
+
+      // console.warn('FoodsComp');
+      // console.log(foodsComps);
+
+      for (const sweep of sweeps) {
+        setSweepstakesActive(sweep);
+        break;
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
 function AdminDashboard() {
   const classes = useStyles();
   const auth = useContext(AuthContext);
