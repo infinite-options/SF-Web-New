@@ -76,7 +76,7 @@ function NotificationMain({
 
   let numCustomersSelected = selectedCustomers.length;
   let numCustomers = customerList.length;
-
+    console.log("in messages ",customerList)
   // Function to handle select all customers
   const handleSelectAllCustomersClick = (event) => {
     if (event.target.checked) {
