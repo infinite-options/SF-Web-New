@@ -15,7 +15,6 @@ import ProfileInfo from './components/Profile-Info/ProfileInfo';
 import TermsAndConditions from './components/TermsAndConditions/TermsAndConditions';
 import MobilePaypalCheckout from './mobile/MobilePaypalCheckout';
 import ReactGA from 'react-ga';
-import AdminDashboard from './components/Admin/AdminDashboard';
 import Sweeptakes from "./components/Sweeptakes/Sweeptakes";
 import Sweeptakes2 from "./components/Sweeptakes/Sweeptakes2";
 import Sweeptakes3 from "./components/Sweeptakes/Sweeptakes3";
@@ -45,6 +44,27 @@ function Nav(authLevel, isAuth) {
         component={TermsAndConditions}
       />
         <Route
+            exact
+            path="/sweeptakes"
+            component={Sweeptakes}
+        />
+        <Route
+            exact
+            path="/sweeptakes2"
+            component={Sweeptakes2}
+        />
+        <Route
+            exact
+            path="/sweeptakes3"
+            component={Sweeptakes3}
+        />
+        <Route
+            exact
+            path="/sweeptakes4"
+            component={Sweeptakes4}
+        />
+
+      <Route
             exact
             path="/sweeptakes"
             component={Sweeptakes}
