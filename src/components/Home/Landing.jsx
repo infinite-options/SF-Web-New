@@ -115,18 +115,13 @@ function fetchSweepstakes(setSweepstakeActive) {
       if (!response.ok) {
         throw response;
       }
-      console.log('sweeps1')
       return response.json();
     })
     .then((json) => {
       const sweeps = json;
       setSweepstakeActive(sweeps === 'ACTIVE');
-
-      // console.warn('FoodsComp');
-      // console.log(foodsComps);
     })
     .catch((error) => {
-      console.log('sweeps is an error');
       console.error(error);
     });
 }
