@@ -86,31 +86,46 @@
 
 .addrSearchContainer {
   display: inline-flex;
+  /* border: 1px solid yellow; */
+  width: 100%;
+  max-width: 900px;
 }
 
 .addrSearchLeft {
   /* border: solid cyan; */
-  width: 50%;
+  width: 40%;
   /* float: center; */
 }
 
 .addrSearchRight {
   /* border: solid red; */
-  width: 50%;
+  width: 60%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .homeHeader {
-  display: inline-flex;
+  /* display: inline-flex; */
   /* border: dashed; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+}
+
+.homeHeaderContainer {
+  /* border: 1px solid blue; */
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1250px;
+  /* height: 100%; */
 }
 
 .homeHeaderLeft {
   /* border: red solid; */
-  min-width: 400px;
+  min-width: 350px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,7 +133,8 @@
 
 .homeHeaderRight {
   /* display: inline-flex; */
-  /* border: purple solid; */
+  height: 100%;
+  /* border: 1px purple solid; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -126,8 +142,14 @@
 }
 
 @media only screen and (max-width: 768px) {
+  /* .addrSearchContainer {
+    display: inline-block;
+  } */
   .addrSearchContainer {
     display: inline-block;
+    /* border: 1px solid yellow; */
+    width: 100%;
+    /* max-width: 600px; */
   }
 
   .addrSearchLeft {
@@ -145,9 +167,15 @@
     justify-content: center;
   }
 
-  .homeHeader {
+  /* .homeHeader {
     display: inline-block;
-    /* border: dashed; */
+    border: dashed;
+  } */
+
+  .homeHeaderContainer {
+    /* border: lime solid; */
+    display: inline-block;
+    width: 100%;
   }
 
   .homeHeaderLeft {

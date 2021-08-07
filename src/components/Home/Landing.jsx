@@ -279,55 +279,59 @@ const Landing = ({ ...props }) => {
               }}
             >
               <div
-                // style={{
-                //   border: 'solid red'
-                // }}
-                className="homeHeaderLeft"
+                className="homeHeaderContainer"
               >
-                <span
-                  style={{
-                    textAlign: 'center',
-                    fontSize: ' 40px ',
-                    fontWeight: '600',
-                    color: '#FFFFFF',
-                    opacity: 1,
-                    // paddingRight: '30px',
-                    // marginTop: '20px',
-                    // border: 'solid lime'
-                  }}
+                <div
+                  // style={{
+                  //   border: 'solid red'
+                  // }}
+                  className="homeHeaderLeft"
                 >
-                  Free Fresh Food!
-                </span>
-              </div>
-              <div
-                // style={{
-                //   border: 'solid purple'
-                // }}
-                className="homeHeaderRight"
-              >
-                <span
-                  style={{
-                    textAlign: 'center',
-                    fontSize: ' 20px ',
-                    fontWeight: '600',
-                    color: '#FFFFFF',
-                    opacity: 1,
-                    // border: 'solid cyan',
-                    width: '100%'
-                    // marginBottom: '10px'
-                  }}
-                >
-                  Click here to enter now to &nbsp;
                   <span
                     style={{
+                      textAlign: 'center',
+                      fontSize: ' 40px ',
                       fontWeight: '600',
-                      color: '#2B6D74',
+                      color: '#FFFFFF',
+                      opacity: 1,
+                      // paddingRight: '30px',
+                      // marginTop: '20px',
+                      // border: 'solid lime'
                     }}
                   >
-                    win $50 worth &nbsp;
+                    Free Fresh Food!
                   </span>
-                  of fresh produce, delivered free of charge to your door
-                </span>
+                </div>
+                <div
+                  // style={{
+                  //   border: 'solid purple'
+                  // }}
+                  className="homeHeaderRight"
+                >
+                  <span
+                    style={{
+                      textAlign: 'center',
+                      fontSize: ' 20px ',
+                      fontWeight: '600',
+                      color: '#FFFFFF',
+                      opacity: 1,
+                      // border: '1px solid cyan',
+                      width: '100%'
+                      // marginBottom: '10px'
+                    }}
+                  >
+                    Click here to enter now to &nbsp;
+                    <span
+                      style={{
+                        fontWeight: '600',
+                        color: '#2B6D74',
+                      }}
+                    >
+                      win $50 worth &nbsp;
+                    </span>
+                    of fresh produce, delivered free of charge to your door
+                  </span>
+                </div>
               </div>
             </Box>
           </div>
@@ -580,7 +584,7 @@ const Landing = ({ ...props }) => {
         // display="flex"
         // flexDirection="row"
         // alignItems="center"
-        className="addrSearchContainer"
+        // className="addrSearchContainer"
         style={{
           // display: 'flex',
           backgroundColor: '#2F787F',
@@ -593,42 +597,52 @@ const Landing = ({ ...props }) => {
         }}
       >
         {/* <ZipcodeSearch/> */}
-        <Box 
-          className="addrSearchLeft"
-          // style={{ 
-          //   width: '50%',
-          //   minWidth: '300px',
-          //   border: 'solid cyan'
+        <div
+          className="addrSearchContainer"
+          // style={{
+          //   border: '1px solid yellow',
+          //   width: 
           // }}
         >
-          <p
-            style={{
-              color: appColors.buttonText,
-              fontSize: '45px',
-              textAlign: 'left',
-              fontWeight: '700',
-              marginLeft: '20px',
-              letterSpacing: '0.95px',
+          <Box 
+            className="addrSearchLeft"
+            style={{ 
+              // width: '50%',
+              // minWidth: '300px',
+              // border: '1px solid cyan'
             }}
           >
-            Local produce delivered <br />
-            to your doorstep
-          </p>
-        </Box>
-        <Box 
-          className="addrSearchRight"
-          // style={{ 
-          //   width: '50%',
-          //   border: 'solid red'
-          // }}
-        >
-          <DeliveryLocationSearch
-            isLoginShown={isLoginShown}
-            setIsLoginShown={setIsLoginShown}
-            isSignUpShown={isSignUpShown}
-            setIsSignUpShown={setIsSignUpShown}
-          />
-        </Box>
+            <p
+              style={{
+                color: appColors.buttonText,
+                fontSize: '45px',
+                textAlign: 'left',
+                fontWeight: '700',
+                marginLeft: '20px',
+                letterSpacing: '0.95px',
+              }}
+            >
+              {/* Local produce delivered <br />
+              to your doorstep */}
+              Local produce delivered
+              to your doorstep
+            </p>
+          </Box>
+          <Box 
+            className="addrSearchRight"
+            style={{ 
+              // width: '50%',
+              // border: '1px solid red'
+            }}
+          >
+            <DeliveryLocationSearch
+              isLoginShown={isLoginShown}
+              setIsLoginShown={setIsLoginShown}
+              isSignUpShown={isSignUpShown}
+              setIsSignUpShown={setIsSignUpShown}
+            />
+          </Box>
+        </div>
       </Box>
       <Box
         className={classes.title}
