@@ -38,13 +38,21 @@ export default function LandingNavBar({ ...props }) {
   const { profile } = useContext(AuthContext);
 
   let [customerName, setCustomerName] = useState('');
+  let [loggedIn, setLoggedIn] = useState(false);
+
   const BusiMethods = new BusiApiReqs();
   const AuthMethods = new AuthUtils();
   AuthMethods.getProfile().then((response) => {
     console.log("(LNB) response: ", response);
-    if(response && response.customer_first_name) {
-      console.log(response.customer_first_name);
-      setCustomerName(response.customer_first_name);
+    // if(response && response.customer_first_name) {
+    //   console.log(response.customer_first_name);
+    //   setCustomerName(response.customer_first_name);
+    // }
+    console.log(response.customer_first_name);
+    setCustomerName(response.customer_first_name);
+    console.log("(LNB) customer_uid: ", response.customer_uid)
+    if(response.customer_uid){
+      setLoggedIn(true);
     }
   });
 
@@ -148,7 +156,7 @@ export default function LandingNavBar({ ...props }) {
           }}
         >
         
-          <Button
+          {/* <Button
             className={classes.authButton}
             variant="contained"
             size="small"
@@ -173,7 +181,38 @@ export default function LandingNavBar({ ...props }) {
             }}
           >
             Login
-          </Button>
+          </Button> */}
+
+          {loggedIn === false ? (<>
+            <Button
+              className={classes.authButton}
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={signUpClicked}
+              style={{
+                position: 'absolute',
+                right: '0'
+              }}
+            >
+              Sign Up
+            </Button>
+            <Button
+              className={classes.authButton}
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={loginClicked}
+              style={{
+                position: 'absolute',
+                right: '87px'
+              }}
+            >
+              Login
+            </Button>
+          </>) : (
+            null
+          )}
           
         </Box>
 
