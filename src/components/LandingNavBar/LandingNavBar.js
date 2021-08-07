@@ -39,8 +39,11 @@ export default function LandingNavBar({ ...props }) {
   const BusiMethods = new BusiApiReqs();
   const AuthMethods = new AuthUtils();
   AuthMethods.getProfile().then((response) => {
-    console.log(response.customer_first_name);
-    setCustomerName(response.customer_first_name);
+    console.log("(LNB) response: ", response);
+    if(response && response.customer_first_name) {
+      console.log(response.customer_first_name);
+      setCustomerName(response.customer_first_name);
+    }
   });
 
   const badgeContent = parseInt(localStorage.getItem('cartTotal') || '0');
@@ -77,30 +80,66 @@ export default function LandingNavBar({ ...props }) {
   };
 
   return (
-    <div className={classes.root} style={{backgroundColor:'#2F787F'}}>
+    <div 
+      className={classes.root} 
+      style={{
+        backgroundColor:'#2F787F',
+        // border: 'red solid'
+      }}
+    >
     <AppBar
      
       position="static"
       elevation={0}
       style={{
         borderBottom: '1px solid ' + appColors.secondary,
+        // border: 'solid red'
       }}
     >
       
 
-      <Toolbar style={{backgroundColor:'#2F787F'}}>
+      <Toolbar 
+        style={{
+          backgroundColor:'#2F787F',
+          // border: 'dashed'
+        }}
+      >
       
-        <MenuNavButton style={{color:'white'}}/>
+        <MenuNavButton 
+          style={{
+            color:'white',
+            // border: 'solid lime'
+          }}
+        />
         
         <Box flexGrow={1} >
-          <div style={{marginRight:'50px',marginLeft:'150px'}}>
+          <div 
+            style={{
+              // marginRight:'50px',
+              // marginLeft:'150px'
+              // border: 'solid lime'
+            }}
+          >
           
-          <img style={{marginRight:'50px',marginLeft:'150px'}} src={sf}></img>
+            <img 
+              style={{
+                // marginRight:'50px',
+                // marginLeft:'150px'
+              }} 
+              src={sf}
+            />
           
           </div>
-          </Box>
+        </Box>
         
-        <Box hidden={auth.isAuth} style={{width:'18%'}}>
+        <Box 
+          hidden={auth.isAuth} 
+          style={{
+            width: '18%',
+            height: '100%',
+            // border: 'solid cyan'
+          }}
+        >
         
           <Button
             className={classes.authButton}
@@ -122,39 +161,45 @@ export default function LandingNavBar({ ...props }) {
           </Button>
           
         </Box>
-        <Box hidden={!auth.isAuth} style={{width:'18%'}}>
 
-        <div style={{width:'50%',float:'left'}} hidden={(window.width < 1024) ? true : false}>
-        <p style={{color:'white'}}>{customerName}</p>
-        </div>
+        <Box 
+          hidden={!auth.isAuth} 
+          style={{
+            width:'18%'
+          }}
+        >
+
+          <div style={{width:'50%',float:'left'}} hidden={(window.width < 1024) ? true : false}>
+          <p style={{color:'white'}}>{customerName}</p>
+          </div>
           
           <div style={{width:'50%',float:'right'}}>  
-          {/* <Button
-                className={classes.authButton}
-                variant="contained"
-                size="small"
-                color="primary"
-                style={{
-                  marginLeft: '2rem',
-                  height: '2rem',
-                  marginTop: '0.5rem',
-                  
-                }}
-                onClick={handleClickLogOut}
-              >
-                Log Out
-              </Button> */}
-              <Button
-            className={classes.authButton}
-            variant="contained"
-            size="small"
-            color="primary"
-            onClick={handleClickLogOut}
-            style={{marginTop:'.5rem'}}
-          >
-            Logout
-          </Button>
-              </div>
+            {/* <Button
+              className={classes.authButton}
+              variant="contained"
+              size="small"
+              color="primary"
+              style={{
+                marginLeft: '2rem',
+                height: '2rem',
+                marginTop: '0.5rem',
+                
+              }}
+              onClick={handleClickLogOut}
+            >
+              Log Out
+            </Button> */}
+            <Button
+              className={classes.authButton}
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={handleClickLogOut}
+              style={{marginTop:'.5rem'}}
+            >
+              Logout
+            </Button>
+          </div>
           
         </Box>
 

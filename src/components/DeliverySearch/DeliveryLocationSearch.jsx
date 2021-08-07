@@ -282,7 +282,15 @@ const DeliveryLocationSearch = ({ ...props }) => {
 
   // }
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
+    <Box 
+      display="flex" 
+      flexDirection="column" 
+      alignItems="center"
+      style={{
+        // border: 'solid lime',
+        maxWidth: '96%'
+      }}
+    >
       {modalError && (
         <Mymodal
           title={modalError.title}
@@ -299,13 +307,26 @@ const DeliveryLocationSearch = ({ ...props }) => {
           modalClear={errorHandleModal}
         ></SuccessModal>
       )}
-      <Box>
-        <div>
+      <Box
+        style={{
+          // border: 'solid cyan'
+          width: '100%'
+        }}
+      >
+        <div
+          style={{
+            // border: 'solid orange',
+            width: '100%'
+          }}
+        >
           <PlacesAutocomplete
             value={address}
             onChange={setAddress}
             onSelect={handleSelect}
-            style={{}}
+            style={{
+              border: 'solid violet',
+              width: '100%'
+            }}
             // options={options}
             searchOptions={searchOptions}
           >
@@ -315,7 +336,12 @@ const DeliveryLocationSearch = ({ ...props }) => {
               getSuggestionItemProps,
               loading,
             }) => (
-              <div>
+              <div
+                style={{
+                  // border: 'dashed',
+                  width: '100%'
+                }}
+              >
                 <CssTextField
                   className={classes.margin}
                   id="input-with-icon-textfield_top"
@@ -336,6 +362,7 @@ const DeliveryLocationSearch = ({ ...props }) => {
                   {...getInputProps({ placeholder: 'Search for your address' })}
                   style={{
                     width: '500px',
+                    maxWidth: '90%',
                     border: '2px solid' + appColors.secondary,
                     borderRadius: '5px',
                   }}

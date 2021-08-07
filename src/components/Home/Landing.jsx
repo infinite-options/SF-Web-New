@@ -182,7 +182,12 @@ const Landing = ({ ...props }) => {
   };
 
   return (
-    <div className="contentWrap">
+    <div 
+      className="contentWrap"
+      style={{
+        // border: 'blue solid'
+      }}
+    >
       {/* <Box
           style={{
             backgroundSize: 'cover',
@@ -266,7 +271,8 @@ const Landing = ({ ...props }) => {
               style={{
                 background: '#F8851B 0% 0% no-repeat padding-box',
                 opacity: 1,
-                height: '60px',
+                // height: '60px',
+                minHeight: '60px',
                 paddingTop: '10px',
                 cursor: 'pointer',
               }}
@@ -291,6 +297,7 @@ const Landing = ({ ...props }) => {
                   fontWeight: '600',
                   color: '#FFFFFF',
                   opacity: 1,
+                  // marginBottom: '10px'
                 }}
               >
                 Click here to enter now to &nbsp;
@@ -551,19 +558,31 @@ const Landing = ({ ...props }) => {
       </Container>
       {/* END: Landing Page Logo */}
       <Box
-        className="hero-right"
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
+        // className="hero-right"
+        // display="flex"
+        // flexDirection="row"
+        // alignItems="center"
+        className="addrSearchContainer"
         style={{
+          // display: 'flex',
           backgroundColor: '#2F787F',
           minHeight: '200px',
-          maxHeight: '300px',
-          width: 'auto',
+          // maxHeight: '300px',
+          // width: 'auto',
+          width: '100%',
+          maxWidth: '100%',
+          // border: 'dashed'
         }}
       >
         {/* <ZipcodeSearch/> */}
-        <Box style={{ width: '50%' }}>
+        <Box 
+          className="addrSearchLeft"
+          // style={{ 
+          //   width: '50%',
+          //   minWidth: '300px',
+          //   border: 'solid cyan'
+          // }}
+        >
           <p
             style={{
               color: appColors.buttonText,
@@ -578,7 +597,13 @@ const Landing = ({ ...props }) => {
             to your doorstep
           </p>
         </Box>
-        <Box style={{ width: '50%' }}>
+        <Box 
+          className="addrSearchRight"
+          // style={{ 
+          //   width: '50%',
+          //   border: 'solid red'
+          // }}
+        >
           <DeliveryLocationSearch
             isLoginShown={isLoginShown}
             setIsLoginShown={setIsLoginShown}

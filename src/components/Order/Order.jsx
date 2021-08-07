@@ -318,11 +318,17 @@ const Order = ({ ...props }) => {
                   ),
                 }}
                 {...getInputProps({ placeholder: 'Search for your address' })}
+                // style={{
+                //   width: '500px',
+                //   border: '2px solid' + appColors.secondary,
+                //   borderRadius: '5px',
+                //   left: '0%',
+                // }}
                 style={{
                   width: '500px',
+                  maxWidth: '90%',
                   border: '2px solid' + appColors.secondary,
                   borderRadius: '5px',
-                  left: '0%',
                 }}
               />
 

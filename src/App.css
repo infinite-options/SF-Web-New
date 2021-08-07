@@ -84,7 +84,44 @@
   color: #881798;
 }
 
+.addrSearchContainer {
+  display: inline-flex;
+}
+
+.addrSearchLeft {
+  /* border: solid cyan; */
+  width: 50%;
+  /* float: center; */
+}
+
+.addrSearchRight {
+  /* border: solid red; */
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media only screen and (max-width: 768px) {
+  .addrSearchContainer {
+    display: inline-block;
+  }
+
+  .addrSearchLeft {
+    /* border: solid cyan; */
+    width: 100%;
+    /* text-align: center; */
+  }
+
+  .addrSearchRight {
+    /* border: solid red; */
+    width: 100%;
+    height: 150px;
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+  }
+
   .hero-container {
     display: block;
     width: 100%;

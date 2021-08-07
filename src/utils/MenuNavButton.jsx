@@ -154,7 +154,13 @@ function MenuListComposition(props) {
 
   // TEST: Configure Menu buttons
   return (
-    <div className={classes.root}>
+    <div 
+      className={classes.root}
+      style={{
+        // border: 'solid violet',
+        width: '18%'
+      }}
+    >
       <div>
         <IconButton
           ref={anchorRef}
