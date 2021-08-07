@@ -218,11 +218,18 @@ const Sweepstakes = () => {
         <Box hidden={!showSubmission}>
           <div>
             <p className="FreeFF">Submission Successful!</p>
-            <p className="SW2Text">Winners on August 31, 2021</p>
+            <p className="SW2Text">Winners announced August 31, 2021</p>
           </div>
-          <p className="SW2Text">
+          <p 
+            className="SW2Text"
+            style={{
+              margin: '0 30px 30px 30px'
+            }}
+          >
+            {/* You can also refer a friend and be eligible for an
+            <div>additional $10 prize.</div> */}
             You can also refer a friend and be eligible for an
-            <div>additional $10 prize.</div>
+            additional $10 prize.
           </p>
           <Box hidden={!entryShow}>
             {' '}
@@ -256,15 +263,44 @@ const Sweepstakes = () => {
             className="referButton"
             type="button"
             onClick={() => setEntryShow(!entryShow)}
+            style={{
+              width: '280px'
+            }}
           >
             Refer a friend+
           </button>
+          {/* <div
+            style={{
+              border: '1px solid red',
+              maxWidth: '100%',
+              display: 'inline-block',
+
+            }}
+          >
+            <div className="FreeFF">Until then...</div>
+            <div 
+              className="SW2Text"
+              style={{
+                border: '1px solid blue',
+                maxWidth: '96%'
+              }}
+            >
+              New customers are eligible for free delivery and
+              existing customers always get free deliveries on all
+              orders above $30
+            </div>
+          </div> */}
           <div>
             <p className="FreeFF">Until then...</p>
-            <p className="SW2Text">
+            <p 
+              className="SW2Text"
+              style={{
+                margin: '0 30px 50px 30px'
+              }}
+            >
               New customers are eligible for free delivery and
-              <div>existing customers always get free deliveries on all </div>
-              <div>orders above $30</div>
+              existing customers always get free deliveries on all
+              orders above $30
             </p>
           </div>
           <Box
@@ -277,16 +313,32 @@ const Sweepstakes = () => {
               className="Box2"
               style={{
                 backgroundImage: `url(${'sweestakebg.svg'})`,
+                // border: 'dashed'
               }}
             >
-              <div className="row">
-                <div className="column">
+              <div 
+                className="row"
+                // style={{
+                //   border: 'dashed'
+                // }}
+              >
+                <div 
+                  className="column"
+                  // style={{
+                  //   border: '1px solid lime'
+                  // }}
+                >
                   <p className="downloadText">Download the app</p>
                   <a
                     href="https://apps.apple.com/us/app/serving-fresh/id1488267727"
                     target="_blank"
                   >
-                    <img className="img" src={Apple} />
+                    <img 
+                      className="img" src={Apple} 
+                      style={{
+                        width: '177px'
+                      }}
+                    />
                   </a>
 
                   <div>
@@ -294,12 +346,24 @@ const Sweepstakes = () => {
                       href="https://play.google.com/store/apps/details?id=com.servingfresh"
                       target="_blank"
                     >
-                      <img className="img" src={Google} />
+                      <img className="img" src={Google} 
+                        style={{
+                          width: '200px'
+                        }}
+                      />
                     </a>
                   </div>
                 </div>
-                <div className="column">
-                  <p className="OrVisitText" style={{ padding: '1rem' }}>
+                <div 
+                  className="column"
+                >
+                  {/* <p 
+                    className="OrVisitText" 
+                    style={{ 
+                      padding: '1rem',
+                      // border: '1px solid red'
+                    }}
+                  >
                     Or visit us on
                     <br />
                     <a
@@ -307,6 +371,64 @@ const Sweepstakes = () => {
                       style={{
                         textDecoration: 'none',
                         color: '#2b6d74',
+                        // border: '1px solid red',
+                        // padding: '1rem'
+                      }}
+                    >
+                      ServingFresh.me
+                    </a>
+                  </p> */}
+                  {/* <div
+                    className="OrVisitText" 
+                    // style={{
+                    //   border: 'dashed'
+                    // }}
+                  >
+                    <div
+                      // className="OrVisitText" 
+                      style={{ 
+                        padding: '1rem',
+                        border: '1px solid red'
+                      }}
+                    >
+                      Or visit us on
+                    </div>
+                    <div
+                      style={{ 
+                        padding: '1rem',
+                        border: '1px solid cyan',
+                        color: '#2b6d74',
+                      }}
+                    >
+                      <a
+                        href="https://servingfresh.me/"
+                        style={{
+                          textDecoration: 'none',
+                          color: '#2b6d74',
+                          // border: '1px solid cyan',
+                          // padding: '1rem'
+                        }}
+                      >
+                      ServingFresh.me
+                      </a>
+                    </div>
+                  </div> */}
+                  <p 
+                    className="OrVisitText" 
+                    style={{ 
+                      // padding: '50px 1rem 1rem 1rem',
+                      // border: '1px solid red'
+                    }}
+                  >
+                    Or visit us on
+                    <br />
+                    <a
+                      href="https://servingfresh.me/"
+                      style={{
+                        textDecoration: 'none',
+                        color: '#2b6d74',
+                        // border: '1px solid red',
+                        // padding: '1rem'
                       }}
                     >
                       ServingFresh.me

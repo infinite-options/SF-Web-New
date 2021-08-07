@@ -543,7 +543,7 @@ const Landing = ({ ...props }) => {
               id="headingGroup"
               className="text-white text-center d-none d-lg-block mt-5"
             >
-              <h1
+              {/* <h1
                 id="text"
                 style={{
                   color: appColors.buttonText,
@@ -557,6 +557,25 @@ const Landing = ({ ...props }) => {
               >
                 Fresh, Organic <br></br>
                 Produce <br></br>Delivered
+              </h1> */}
+              <h1
+                id="text"
+                style={{
+                  color: appColors.buttonText,
+                  fontSize: '80px',
+                  textAlign: 'left',
+                  fontWeight: '700',
+                  marginLeft: '175px',
+                  marginTop: '150px',
+                  marginBottom: '150px',
+                  // border: 'dashed'
+                }}
+              >
+                Fresh, Organic
+                <br />
+                Produce 
+                <br />
+                Delivered
               </h1>
             </div>
           </Col>

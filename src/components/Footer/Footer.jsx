@@ -102,6 +102,12 @@ const Footer = ({ ...props }) => {
                 variant="contained"
                 color="secondary"
                 //onClick={onFindProduceClicked}
+                onClick={() => {
+                  history.push({
+                    pathname: '/store',
+                    // state: { leftTabChosen: 4 },
+                  });
+                }}
                 style={{
                   width: '250px',
                   marginTop: '50px',
