@@ -267,50 +267,68 @@ const Landing = ({ ...props }) => {
         {auth.sweepstakeActive ? (
           <div>
             <Box
+              className="homeHeader"
               onClick={() => history.push('/sweepstakes')}
               style={{
                 background: '#F8851B 0% 0% no-repeat padding-box',
                 opacity: 1,
                 // height: '60px',
                 minHeight: '60px',
-                paddingTop: '10px',
+                // paddingTop: '10px',
                 cursor: 'pointer',
               }}
             >
-              <span
-                style={{
-                  textAlign: 'center',
-                  fontSize: ' 40px ',
-                  fontWeight: '600',
-                  color: '#FFFFFF',
-                  opacity: 1,
-                  paddingRight: '30px',
-                  marginTop: '20px',
-                }}
+              <div
+                // style={{
+                //   border: 'solid red'
+                // }}
+                className="homeHeaderLeft"
               >
-                Free Fresh Food!
-              </span>
-              <span
-                style={{
-                  textAlign: 'center',
-                  fontSize: ' 20px ',
-                  fontWeight: '600',
-                  color: '#FFFFFF',
-                  opacity: 1,
-                  // marginBottom: '10px'
-                }}
-              >
-                Click here to enter now to &nbsp;
                 <span
                   style={{
+                    textAlign: 'center',
+                    fontSize: ' 40px ',
                     fontWeight: '600',
-                    color: '#2B6D74',
+                    color: '#FFFFFF',
+                    opacity: 1,
+                    // paddingRight: '30px',
+                    // marginTop: '20px',
+                    // border: 'solid lime'
                   }}
                 >
-                  win $50 worth &nbsp;
+                  Free Fresh Food!
                 </span>
-                of fresh produce, delivered free of charge to your door
-              </span>
+              </div>
+              <div
+                // style={{
+                //   border: 'solid purple'
+                // }}
+                className="homeHeaderRight"
+              >
+                <span
+                  style={{
+                    textAlign: 'center',
+                    fontSize: ' 20px ',
+                    fontWeight: '600',
+                    color: '#FFFFFF',
+                    opacity: 1,
+                    // border: 'solid cyan',
+                    width: '100%'
+                    // marginBottom: '10px'
+                  }}
+                >
+                  Click here to enter now to &nbsp;
+                  <span
+                    style={{
+                      fontWeight: '600',
+                      color: '#2B6D74',
+                    }}
+                  >
+                    win $50 worth &nbsp;
+                  </span>
+                  of fresh produce, delivered free of charge to your door
+                </span>
+              </div>
             </Box>
           </div>
         ) : null}

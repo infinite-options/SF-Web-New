@@ -22,10 +22,12 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: '#2F787F',
     marginBottom: '0px',
+    height: '80px'
   },
   authButton: {
     color: 'white',
-    marginRight: '10px',
+    width: '77px'
+    // marginRight: '10px',
   },
 }));
 
@@ -93,7 +95,8 @@ export default function LandingNavBar({ ...props }) {
       elevation={0}
       style={{
         borderBottom: '1px solid ' + appColors.secondary,
-        // border: 'solid red'
+        // border: 'solid red',
+        height: '100%'
       }}
     >
       
@@ -101,6 +104,7 @@ export default function LandingNavBar({ ...props }) {
       <Toolbar 
         style={{
           backgroundColor:'#2F787F',
+          height: '100%',
           // border: 'dashed'
         }}
       >
@@ -137,7 +141,10 @@ export default function LandingNavBar({ ...props }) {
           style={{
             width: '18%',
             height: '100%',
-            // border: 'solid cyan'
+            // border: 'solid cyan',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center'
           }}
         >
         
@@ -147,6 +154,10 @@ export default function LandingNavBar({ ...props }) {
             size="small"
             color="primary"
             onClick={signUpClicked}
+            style={{
+              position: 'absolute',
+              right: '0'
+            }}
           >
             Sign Up
           </Button>
@@ -156,6 +167,10 @@ export default function LandingNavBar({ ...props }) {
             size="small"
             color="primary"
             onClick={loginClicked}
+            style={{
+              position: 'absolute',
+              right: '87px'
+            }}
           >
             Login
           </Button>

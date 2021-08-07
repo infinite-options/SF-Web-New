@@ -102,6 +102,29 @@
   justify-content: center;
 }
 
+.homeHeader {
+  display: inline-flex;
+  /* border: dashed; */
+  width: 100%;
+}
+
+.homeHeaderLeft {
+  /* border: red solid; */
+  min-width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.homeHeaderRight {
+  /* display: inline-flex; */
+  /* border: purple solid; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 @media only screen and (max-width: 768px) {
   .addrSearchContainer {
     display: inline-block;
@@ -120,6 +143,21 @@
     display: flex;
     /* align-items: center; */
     justify-content: center;
+  }
+
+  .homeHeader {
+    display: inline-block;
+    /* border: dashed; */
+  }
+
+  .homeHeaderLeft {
+    /* display: inline-flex; */
+    width: 100%;
+  }
+  
+  .homeHeaderRight {
+    /* display: inline-flex; */
+    width: 100%;
   }
 
   .hero-container {
