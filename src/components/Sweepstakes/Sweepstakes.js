@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import AdminLogin from '../LogIn/AdminLogin';
 import LandingNavBar from '../LandingNavBar/LandingNavBar';
 import Footer from '../Footer/Footer';
 import './Sweepstakes.css';
@@ -9,6 +10,114 @@ import { Grid, Paper, Typography, Avatar, Button } from '@material-ui/core';
 import Apple from '../../images/Mask Group 1.png';
 import Google from '../../images/en_badge_web_generic.png';
 import { useHistory } from 'react-router-dom';
+import appColors from '../../styles/AppColors';
+import { makeStyles } from '@material-ui/core/styles';
+import Signup from '../SignUp/newSignUp';
+import ConfirmatioModal from 'components/SignUp/ConfirmationModal';
+
+const useStyles = makeStyles((theme) => ({
+  authModal: {
+    position: 'absolute',
+    // width: '500px',
+    top: '50px',
+    zIndex: '10040',
+    height: 'auto',
+  },
+  infoSection: {
+    width: '33.33%',
+    justifyContent: 'center',
+    fontSize: '20px',
+  },
+  infoImg: {
+    //: 'flex-end',
+    alignItems: 'center',
+    height: '150px',
+  },
+  infoTitle: {
+    color: appColors.primary,
+    // marginBottom: '10px',
+    fontWeight: 'bold',
+    fontSize: '32px',
+    marginBottom: '5px',
+  },
+  infoDesc: {
+    paddingLeft: '20%',
+    paddingRight: '20%',
+    textAlign: 'center',
+    color: '#000000',
+  },
+  title: {
+    color: appColors.secondary,
+    fontSize: '40px',
+    fontWeight: '700',
+  },
+  bar: {
+    borderBottom: '4px solid ' + appColors.secondary,
+    marginBottom: '50px',
+    width: '410px',
+  },
+  root: {
+    backgroundColor: appColors.buttonText,
+    width: '100%',
+    height: 'auto',
+    //paddingTop: '5px',
+    paddingBottom: '30px',
+  },
+
+  farmTitle: {
+    color: appColors.primary,
+    marginBottom: '10px',
+    fontSize: '30px',
+    fontWeight: '700',
+    textAlign: 'left',
+  },
+  farmDesc: {
+    color: 'black',
+    textAlign: 'left',
+    fontSize: '20px',
+    fontWeight: '500',
+  },
+
+  testimonial: {
+    //backgroundColor: appColors.componentBg,
+    width: '100%',
+
+    paddingTop: '30px',
+    paddingBottom: '30px',
+  },
+
+  farmer: {
+    backgroundColor: 'white',
+    width: '100%',
+    height: 'auto',
+    paddingTop: '30px',
+    paddingBottom: '30px',
+  },
+}));
+
+function useOutsideAlerter(ref) {
+  useEffect(() => {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event) {
+      if (
+        ref.current &&
+        !ref.current.contains(event.target) &&
+        !ref.current.hidden
+      ) {
+        ref.current.hidden = true;
+      }
+    }
+
+    // Bind the event listener
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [ref]);
+}
 
 function beforeClick1() {
   console.log('Hello WOrld!');
@@ -17,10 +126,21 @@ function beforeClick1() {
 
 const Sweepstakes = () => {
   const history = useHistory();
+  const classes = useStyles();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [zipcode, setZipcode] = useState('');
   const [phone, setPhone] = useState('');
+
+  const [isLoginShown, setIsLoginShown] = useState(false); // checks if user is logged in
+  const [isSignUpShown, setIsSignUpShown] = useState(false);
+  const [confirmEmailstate, setConfirmEmail] = useState(false);
+
+  const loginWrapperRef = useRef(null);
+  useOutsideAlerter(loginWrapperRef, setIsLoginShown);
+  const signupWrapperRef = useRef(null);
+  useOutsideAlerter(signupWrapperRef, setIsSignUpShown);
 
   const [showSubmission, setShowSubmission] = useState(false);
   const [entryShow, setEntryShow] = useState(false);
@@ -120,7 +240,109 @@ const Sweepstakes = () => {
       }}
     >
       <div className="contentWrap">
-        <LandingNavBar />
+        {/* <LandingNavBar /> */}
+        <LandingNavBar
+          isLoginShown={isLoginShown}
+          setIsLoginShown={setIsLoginShown}
+          isSignUpShown={isSignUpShown}
+          setIsSignUpShown={setIsSignUpShown}
+        />
+
+        {/* START: Login/SignUp Modal */}
+      <Box 
+        display="flex" justifyContent="flex-end"
+        style={{
+          // border: 'solid red'
+        }}
+      >
+        {/* Login Modal */}
+        <Box
+          position="absolute"
+          // width="50%"
+          width="100%"
+          display="flex"
+          justifyContent="center"
+          zIndex={40}
+          style={{
+            // border: 'solid blue'
+          }}
+        >
+          <Box
+            ref={loginWrapperRef}
+            className={classes.authModal}
+            hidden={!isLoginShown}
+            // width="100%"
+            style={{
+              // border: 'solid green',
+              // width: '100%'
+              // padding: '0',
+              // margin: '0'
+            }}
+          >
+            <AdminLogin
+              // ref={loginWrapperRef}
+              // hidden={!isLoginShown}
+              isLoginShown={isLoginShown}
+              setIsLoginShown={setIsLoginShown}
+              isSignUpShown={isSignUpShown}
+              setIsSignUpShown={setIsSignUpShown}
+            />
+          </Box>
+        </Box>
+
+        {/* Sign Up Modal */}
+        <Box 
+          display="flex" justifyContent="flex-end"
+          width="100%"
+          style={{
+            // border: 'solid red'
+          }}
+          position="absolute"
+        >
+          <Box
+            // position="absolute"
+            // width="50%"
+            display="flex"
+            width="100%"
+            justifyContent="center"
+            zIndex={4000}
+            style={{
+              // border: 'solid blue'
+            }}
+          >
+            <Box
+              ref={signupWrapperRef}
+              className={classes.authModal}
+              hidden={!isSignUpShown}
+              // width="100%"
+              style={{
+                // border: 'solid green',
+                // width: '100%'
+              }}
+            >
+              <Signup
+                isLoginShown={isLoginShown}
+                setIsLoginShown={setIsLoginShown}
+                isSignUpShown={isSignUpShown}
+                setIsSignUpShown={setIsSignUpShown}
+                isconfirmEmailstate={confirmEmailstate}
+                setConfirmEmail={setConfirmEmail}
+              />
+            </Box>
+          </Box>
+        </Box>
+        {confirmEmailstate && (
+          <ConfirmatioModal
+            isLoginShown={isLoginShown}
+            setIsLoginShown={setIsLoginShown}
+            isSignUpShown={isSignUpShown}
+            setIsSignUpShown={setIsSignUpShown}
+            isconfirmEmailstate={confirmEmailstate}
+            setConfirmEmail={setConfirmEmail}
+          />
+        )}
+      </Box>
+
         <Box hidden={showSubmission}>
           <div>
             <p className="FreeFF">Free Fresh Food!</p>
@@ -131,22 +353,22 @@ const Sweepstakes = () => {
           </div>
           <Container className="container">
             <button className="Card1">
-              <p className="text">
+              <div className="text">
                 Customizable box of fresh produce worth
                 <div className="value1">$20</div>
-              </p>
+              </div>
             </button>
             <button className="Card2">
-              <p className="text">
+              <div className="text">
                 Customizable box of fresh produce <div>worth</div>
                 <div className="value">$50</div>
-              </p>
+              </div>
             </button>
             <button className="Card3">
-              <p className="text">
+              <div className="text">
                 Customizable box of fresh produce worth
                 <div className="value1">$30</div>
-              </p>
+              </div>
             </button>
           </Container>
           <div>

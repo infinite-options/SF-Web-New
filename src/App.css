@@ -141,10 +141,51 @@
   width: 100%;
 }
 
+.freshOrganic {
+  /* border: dashed; */
+  font-size: 80px;
+  text-align: left;
+  font-weight: 700;
+  margin-left: 175px;
+  margin-top: 150px;
+  margin-bottom: 150px;
+}
+
+.homeLogo {
+  margin-top: 160px;
+}
+
+.footerContainer {
+  display: inline-flex;
+  height: 150px;
+  background-color: #ff8500;
+  /* padding-top: 20px; */
+  /* position: relative;
+  bottom: 0; */
+  /* height: auto; */
+  width: 100%;
+  /* padding-bottom: 20px; */
+  /* display: flex; */
+}
+
+.footerLeft {
+  width: 100%;
+  height: 100%;
+}
+
+.footerRight {
+  width: 100%;
+  height: 100%;
+}
+
 @media only screen and (max-width: 768px) {
   /* .addrSearchContainer {
     display: inline-block;
   } */
+  /* .testStyle {
+    border: inset;
+  } */
+
   .addrSearchContainer {
     display: inline-block;
     /* border: 1px solid yellow; */
@@ -221,7 +262,7 @@
 .contentWrap {
   flex: 1;
 }
-.containerFooter {
+/* .containerFooter {
   background-color: #ff8500;
   padding-top: 20px;
   position: relative;
@@ -232,6 +273,18 @@
   display: flex;
   justify-content: space-around;
   align-content: center;
+} */
+.containerFooter {
+  background-color: #ff8500;
+  /* padding-top: 20px; */
+  /* position: relative;
+  bottom: 0; */
+  /* height: auto; */
+  width: 100%;
+  /* padding-bottom: 20px; */
+  display: flex;
+  /* justify-content: space-around; */
+  /* align-content: center; */
 }
 .container {
   display: inline-block;
@@ -274,6 +327,45 @@
 }
 
 @media only screen and (max-width: 992px) {
+  .footerContainer {
+    display: inline-block;
+    height: 300px;
+    background-color: #ff8500;
+    /* padding-top: 20px; */
+    /* position: relative;
+    bottom: 0; */
+    /* height: auto; */
+    width: 100%;
+    /* padding-bottom: 20px; */
+    /* display: flex; */
+  }
+
+  .footerLeft {
+    width: 100%;
+    height: 50%;
+  }
+
+  .footerRight {
+    width: 100%;
+    height: 50%;
+  }
+
+  .freshOrganic {
+    /* border: inset; */
+    font-size: 80px;
+    text-align: left;
+    font-weight: 700;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 150px;
+    margin-bottom: 80px;
+  }
+
+  .homeLogo {
+    margin-top: 0px;
+    margin-bottom: 120px;
+  }
+
   .checkout-container {
     display: block;
   }

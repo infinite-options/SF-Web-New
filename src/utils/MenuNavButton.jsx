@@ -407,7 +407,7 @@ function MenuListComposition(props) {
                       </MenuItem>
                     )}
                     <MenuItem
-                      disabled={isDisabled}
+                      // disabled={isDisabled}
                       onClick={(e) => {
                         handleMenuItem(e, 'Home');
                       }}

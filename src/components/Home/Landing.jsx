@@ -20,10 +20,19 @@ import bg from '../../icon/bg.svg';
 import ConfirmatioModal from 'components/SignUp/ConfirmationModal';
 import { AdminFarmContext } from '../Admin/AdminFarmContext';
 import { AuthContext } from '../../auth/AuthContext';
+
 const useStyles = makeStyles((theme) => ({
   authModal: {
     position: 'absolute',
-    width: '500px',
+    // width: '500px',
+    top: '50px',
+    zIndex: '10040',
+    height: 'auto',
+  },
+  authModal2: {
+    position: 'absolute',
+    // width: '500px',
+    top: '130px',
     zIndex: '10040',
     height: 'auto',
   },
@@ -136,6 +145,9 @@ function useOutsideAlerter(ref) {
      * Alert if clicked on outside of element
      */
     function handleClickOutside(event) {
+      console.log("(UOA) ref.current: ", ref.current)
+      console.log("(UOA) event: ", event)
+
       if (
         ref.current &&
         !ref.current.contains(event.target) &&
@@ -144,6 +156,8 @@ function useOutsideAlerter(ref) {
         ref.current.hidden = true;
       }
     }
+
+    console.log("(UOA) ref: ", ref)
 
     // Bind the event listener
     document.addEventListener('mousedown', handleClickOutside);
@@ -175,6 +189,14 @@ const Landing = ({ ...props }) => {
   useOutsideAlerter(signupWrapperRef, setIsSignUpShown);
   useEffect(() => fetchSweepstakes(auth.setSweepstakeActive), []);
 
+  useEffect(() => {
+    console.log("(UE) isLoginShown? ", isLoginShown);
+  }, [isLoginShown])
+
+  useEffect(() => {
+    console.log("(UE) logginWrapperRef ", loginWrapperRef);
+  }, [loginWrapperRef])
+
   const handleClose = () => {
     console.log('close');
     setIsLoginShown(false);
@@ -204,21 +226,39 @@ const Landing = ({ ...props }) => {
         setIsSignUpShown={setIsSignUpShown}
       />
       {/* START: Login/SignUp Modal */}
-      <Box display="flex" justifyContent="flex-end">
+      <Box 
+        display="flex" justifyContent="flex-end"
+        style={{
+          // border: 'solid red'
+        }}
+      >
         {/* Login Modal */}
         <Box
           position="absolute"
-          width="50%"
+          // width="50%"
+          width="100%"
           display="flex"
           justifyContent="center"
           zIndex={40}
+          style={{
+            // border: 'solid blue'
+          }}
         >
           <Box
             ref={loginWrapperRef}
             className={classes.authModal}
             hidden={!isLoginShown}
+            // width="100%"
+            style={{
+              // border: 'solid green',
+              // width: '100%'
+              // padding: '0',
+              // margin: '0'
+            }}
           >
             <AdminLogin
+              // ref={loginWrapperRef}
+              // hidden={!isLoginShown}
               isLoginShown={isLoginShown}
               setIsLoginShown={setIsLoginShown}
               isSignUpShown={isSignUpShown}
@@ -228,18 +268,34 @@ const Landing = ({ ...props }) => {
         </Box>
 
         {/* Sign Up Modal */}
-        <Box display="flex" justifyContent="flex-end">
+        <Box 
+          display="flex" justifyContent="flex-end"
+          width="100%"
+          style={{
+            // border: 'solid red'
+          }}
+          position="absolute"
+        >
           <Box
-            position="absolute"
-            width="50%"
+            // position="absolute"
+            // width="50%"
             display="flex"
+            width="100%"
             justifyContent="center"
             zIndex={4000}
+            style={{
+              // border: 'solid blue'
+            }}
           >
             <Box
               ref={signupWrapperRef}
               className={classes.authModal}
               hidden={!isSignUpShown}
+              // width="100%"
+              style={{
+                // border: 'solid green',
+                // width: '100%'
+              }}
             >
               <Signup
                 isLoginShown={isLoginShown}
@@ -559,15 +615,16 @@ const Landing = ({ ...props }) => {
                 Produce <br></br>Delivered
               </h1> */}
               <h1
+                className="freshOrganic"
                 id="text"
                 style={{
                   color: appColors.buttonText,
-                  fontSize: '80px',
-                  textAlign: 'left',
-                  fontWeight: '700',
-                  marginLeft: '175px',
-                  marginTop: '150px',
-                  marginBottom: '150px',
+                  // fontSize: '80px',
+                  // textAlign: 'left',
+                  // fontWeight: '700',
+                  // marginLeft: '175px',
+                  // marginTop: '150px',
+                  // marginBottom: '150px',
                   // border: 'dashed'
                 }}
               >
@@ -582,15 +639,19 @@ const Landing = ({ ...props }) => {
           <Col
             lg={6}
             // md={{ size: 6, order: 1, offset: 1 }}
+            // style={{
+            //   border: 'dashed'
+            // }}
           >
             <img
-              className="img-fluid"
+              className='homeLogo'
+              // className="img-fluid"
               src="./logos/SF.png"
               style={{
-                marginTop: '30px',
+                // marginTop: '30px',
                 width: '306px',
                 height: '306px',
-                marginTop: '160px',
+                // marginTop: '160px',
                 //marginLeft: '800px',
               }}
             />

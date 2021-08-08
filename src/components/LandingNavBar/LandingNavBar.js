@@ -38,7 +38,10 @@ export default function LandingNavBar({ ...props }) {
   const { profile } = useContext(AuthContext);
 
   let [customerName, setCustomerName] = useState('');
-  let [loggedIn, setLoggedIn] = useState(false);
+  let [loggedIn, setLoggedIn] = useState(null);
+
+  // const [isLoginShown, setIsLoginShown] = useState(false); // checks if user is logged in
+  // const [isSignUpShown, setIsSignUpShown] = useState(false);
 
   const BusiMethods = new BusiApiReqs();
   const AuthMethods = new AuthUtils();
@@ -53,6 +56,8 @@ export default function LandingNavBar({ ...props }) {
     console.log("(LNB) customer_uid: ", response.customer_uid)
     if(response.customer_uid){
       setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
     }
   });
 
@@ -62,11 +67,15 @@ export default function LandingNavBar({ ...props }) {
   const loginClicked = () => {
     props.setIsSignUpShown(false);
     props.setIsLoginShown(!props.isLoginShown);
+    // setIsSignUpShown(false);
+    // setIsLoginShown(!props.isLoginShown);
   };
 
   const signUpClicked = () => {
     props.setIsLoginShown(false);
     props.setIsSignUpShown(!props.isSignUpShown);
+    // setIsLoginShown(false);
+    // setIsSignUpShown(!props.isSignUpShown);
   };
 
   function handleStoreClick() {
@@ -134,9 +143,11 @@ export default function LandingNavBar({ ...props }) {
           >
           
             <img 
+              onClick={() => history.push('/')}
               style={{
                 // marginRight:'50px',
                 // marginLeft:'150px'
+                cursor: 'pointer'
               }} 
               src={sf}
             />
@@ -144,6 +155,7 @@ export default function LandingNavBar({ ...props }) {
           </div>
         </Box>
         
+        {loggedIn === false ? (
         <Box 
           hidden={auth.isAuth} 
           style={{
@@ -183,7 +195,7 @@ export default function LandingNavBar({ ...props }) {
             Login
           </Button> */}
 
-          {loggedIn === false ? (<>
+          {/* {loggedIn === false ? (<> */}
             <Button
               className={classes.authButton}
               variant="contained"
@@ -210,24 +222,75 @@ export default function LandingNavBar({ ...props }) {
             >
               Login
             </Button>
-          </>) : (
+          {/* </>) : (
             null
-          )}
+          )} */}
           
         </Box>
+        ) : (
+          null
+        )}
 
+        {loggedIn === null ? (
+          <div 
+            style={{
+              // border: '1px solid lime',
+              width: '18%'
+            }}
+          />
+        ) : (
+          null
+        )}
+
+        {loggedIn === true ? (
         <Box 
-          hidden={!auth.isAuth} 
+          // hidden={!auth.isAuth} 
           style={{
-            width:'18%'
+            width: '18%',
+            // border: '1px solid violet',
+            display: 'flex',
+            height: '100%',
+            position: 'relative'
           }}
         >
 
-          <div style={{width:'50%',float:'left'}} hidden={(window.width < 1024) ? true : false}>
-          <p style={{color:'white'}}>{customerName}</p>
+          <div 
+            style={{
+              // width:'50%',
+              // float:'left',
+              // border: '1px dashed',
+              position: 'absolute',
+              right: '93px',
+              height: '100%',
+              color:'white',
+              display: 'flex',
+              alignItems: 'center'
+            }} 
+            hidden={(window.width < 1024) ? true : false}
+          >
+            {/* <p 
+              style={{
+                color:'white'
+              }}
+            >
+              {customerName}
+            </p> */}
+            {customerName}
           </div>
           
-          <div style={{width:'50%',float:'right'}}>  
+          <div 
+            style={{
+              // width: '50%',
+              width: '87px',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              position: 'absolute',
+              right: '0',
+              // float: 'right',
+              // border: '1px dashed'
+            }}
+          >  
             {/* <Button
               className={classes.authButton}
               variant="contained"
@@ -249,13 +312,20 @@ export default function LandingNavBar({ ...props }) {
               size="small"
               color="primary"
               onClick={handleClickLogOut}
-              style={{marginTop:'.5rem'}}
+              style={{
+                // marginTop:'.5rem'
+                position: 'absolute',
+                right: '0'
+              }}
             >
               Logout
             </Button>
           </div>
-          
+
         </Box>
+        ) : (
+          null
+        )}
 
         <Box hidden={!(auth.isAuth || auth.isGuest)}>
           {/* <IconButton edge="end" className="link">
