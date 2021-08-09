@@ -122,6 +122,59 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const newFarmBusiSelect = {
+  business_uid: "",
+  business_created_at: "",
+  business_name: "New Farm",
+  business_type: "",
+  business_desc: "",
+  business_association: "[]",
+  business_contact_first_name: "",
+  business_contact_last_name: "",
+  business_phone_num: "",
+  business_phone_num2: "",
+  business_email: "",
+  business_hours: "{\"Friday\": [\"08:00\", \"17:00\"], \"Monday\": [\"08:00\", \"17:00\"], \"Sunday\": [\"08:00\", \"17:00\"], \"Tuesday\": [\"08:00\", \"17:00\"], \"Saturday\": [\"08:00\", \"17:00\"], \"Thursday\": [\"08:00\", \"17:00\"], \"Wednesday\": [\"08:00\", \"17:00\"]}",
+  business_accepting_hours: "{\"Friday\": [\"00:00:00\", \"23:59\"], \"Monday\": [\"00:00:00\", \"23:59\"], \"Sunday\": [\"08:00:00\", \"23:59\"], \"Tuesday\": [\"00:00:00\", \"13:00\"], \"Saturday\": [\"00:00:00\", \"13:00\"], \"Thursday\": [\"00:00:00\", \"23:59\"], \"Wednesday\": [\"00:00\", \"23:59\"]}",
+  business_delivery_hours: "{\"Friday\": [\"00:00:00\", \"00:00:00\"], \"Monday\": [\"00:00:00\", \"00:00:00\"], \"Sunday\": [\"10:00:00\", \"12:59:00\"], \"Tuesday\": [\"00:00:00\", \"00:00:00\"], \"Saturday\": [\"00:00:00\", \"00:00:00\"], \"Thursday\": [\"00:00:00\", \"00:00:00\"], \"Wednesday\": [\"10:00:00\", \"12:59:00\"]}",
+  business_address: "",
+  business_unit: "",
+  business_city: "",
+  business_state: "",
+  business_zip: "",
+  business_longitude: "",
+  business_latitude: "",
+  business_EIN: "",
+  business_WAUBI: "",
+  business_license: "",
+  business_USDOT: "",
+  bus_notification_approval: "",
+  can_cancel: 1,
+  delivery: 1,
+  reusable: 1,
+  business_image: "https://s3-us-west-1.amazonaws.com/servingnow/kitchen_imgs/472d893494184904a5281e39fe918053",
+  business_password: "",
+  bus_guid_device_id_notification: "null",
+  platform_fee: 0,
+  transaction_fee: 0,
+  revenue_sharing: 0,
+  profit_sharing: 0,
+  business_links: "{\"other\": \"\", \"website\": \"\", \"facebook\": \"\", \"instagram\": \"\"}",
+  business_status: "ACTIVE"
+};
+
+const newFarmDetail = {
+  business_name:"New Farm",
+  description:"",
+  firstName:"",
+  zip:"",
+  state:"",
+  city:"",
+  street:"",
+  phone:"",
+  lastName:""
+};
+
 function fetchBusinessInfo(setselectedBusiness, id, setProfit1) {
   fetch(
     `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/farmer_order_summary_page/2021-06-20,` +
@@ -209,7 +262,7 @@ function FarmProfiles() {
 
   let [selectedProduct, setSelectedProduct] = useState({});
   const [confirmPass, setConfirmPass] = useState('');
-  const [saltPack, setSaltPack] = useState({});
+  // const [saltPack, setSaltPack] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [produceDict, setProduceDict] = useState({});
@@ -222,19 +275,23 @@ function FarmProfiles() {
   // const [image,setImage]=useState({});
   const [imageUpload, setImageUpload] = useState({
     file: null,
-    path: settings ? settings.business_image : settings.business_image,
+    path: settings ? settings.business_image : '',
   });
   // Regular Hours for Business
   const [regularHours, setRegularHours] = useState([]);
   const [acceptTime, setAcceptTime] = useState(context.timeChange);
   const [deliveryTime, setDeliveryTime] = useState(context.deliveryTime);
-  const [farmerID, setFarmerID] = useState([]);
+  const [farmerID, setFarmerID] = useState('');
+
+  // To determine if editing farm or creating new farm
+  const [newFarm, setNewFarm] = useState(false);
 
   const handleImgChange = (e) => {
-    if (e.target.files > 0)
+    const files = e.target.files;
+    if (files.length > 0)
       setImageUpload({
-        file: e.target.files[0],
-        path: URL.createObjectURL(e.target.files[0]),
+        file: files[0],
+        path: URL.createObjectURL(files[0]),
       });
   };
 
@@ -263,7 +320,9 @@ function FarmProfiles() {
       .post(
         'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_farmer_item_admin/' +
           action,
-        selectedProduct
+        {
+          "supply_uid": id,
+        }
       )
       .then((response) => {
         setDialogOpen(true);
@@ -274,12 +333,13 @@ function FarmProfiles() {
       setOpenDiag(true)
   };
 
-  useEffect(() => {
-    console.log(imageUpload);
-  }, [imageUpload]);
+  // useEffect(() => {
+  //   console.log(imageUpload);
+  // }, [imageUpload]);
 
   //get items for each farm
   const fetchProducts = (id) => {
+    if(id !== '' ) {
     setProducts([]);
     axios
       .get(
@@ -297,93 +357,215 @@ function FarmProfiles() {
         );
         setProduceDict(temp_dict);
       });
+    };
   };
 
-  async function update() {
-    var tempoData = { ...settings };
-
-    tempoData.business_name = businessAndFarmDetail.business_name;
-    tempoData.business_desc = businessAndFarmDetail.description;
-
-    tempoData.business_contact_first_name = businessAndFarmDetail.firstName;
-    tempoData.business_contact_last_name = businessAndFarmDetail.lastName;
-    tempoData.business_phone_num = businessAndFarmDetail.phone;
-    tempoData.business_address = businessAndFarmDetail.street;
-    tempoData.business_city = businessAndFarmDetail.city;
-    tempoData.business_state = businessAndFarmDetail.state;
-    tempoData.business_zip = businessAndFarmDetail.zip;
-    tempoData.business_hours = regularHours;
-    tempoData.business_accepting_hours = acceptTime;
-    tempoData.business_delivery_hours = deliveryTime;
-    tempoData.business_license = businessAndFarmDetail.businessLicense;
-    tempoData.business_USDOT = businessAndFarmDetail.businessUsdot;
-    tempoData.business_EIN = businessAndFarmDetail.businessEin;
-    tempoData.business_WAUBI = businessAndFarmDetail.businessWaubi;
-    tempoData.platform_fee = businessAndFarmDetail.platformFee.toString();
-    tempoData.transaction_fee = businessAndFarmDetail.transactionFee.toString();
-    tempoData.profit_sharing = businessAndFarmDetail.profitSharing.toString();
-    tempoData.revenue_sharing = businessAndFarmDetail.revenueSharing.toString();
-    // console.log(typeof tempoData.business_hours);
-
-    if (typeof tempoData.business_hours === 'string') {
-      tempoData.business_hours = JSON.parse(tempoData.business_hours);
-    }
-
-    if (typeof tempoData.business_accepting_hours === 'string') {
-      tempoData.business_accepting_hours = JSON.parse(
-        tempoData.business_accepting_hours
-      );
-    }
-
-    if (typeof tempoData.business_delivery_hours === 'string') {
-      tempoData.business_delivery_hours = JSON.parse(
-        tempoData.business_delivery_hours
-      );
-    }
-
-    if (typeof tempoData.business_association === 'string') {
-      tempoData.business_association = JSON.parse(
-        tempoData.business_association
-      );
-    }
-
-    //third column
-    if (deliverStrategy.pickupStatus === true) {
-      tempoData.delivery = '0';
-    } else {
-      tempoData.delivery = '1';
-    }
-
-    if (storage.reusable === true) {
-      tempoData.reusable = '1';
-    } else {
-      tempoData.reusable = '0';
-    }
-    if (cancellation.allowCancel === true) {
-      tempoData.can_cancel = '1';
-    } else {
-      tempoData.can_cancel = '0';
-    }
-    if (status.ACTIVE === true) {
-      tempoData.business_status = 'ACTIVE';
-    } else {
-      tempoData.business_status = 'INACTIVE';
-    }
-
-    console.log(JSON.stringify(tempoData));
-
+  const createFarm = (imageUrl) => {
     axios
-      .post(
-        'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_details_update/Post',
-        tempoData
-      )
-      .then((res) => {
-        console.log('success posting check password: ', res);
-        setSaveDialogOpen(true);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    .get('https://dev.virtualearth.net/REST/v1/Locations/', {
+      params: {
+        CountryRegion: 'US',
+        adminDistrict: businessAndFarmDetail.state,
+        locality: businessAndFarmDetail.city,
+        postalCode: businessAndFarmDetail.zip,
+        addressLine: businessAndFarmDetail.street,
+        key: process.env.REACT_APP_BING_LOCATION_KEY,
+      },
+    })
+    // Successfully got long and lat
+    .then((res) => {
+      let locationApiResult = res.data;
+      if (locationApiResult.statusCode === 200) {
+        let locations = locationApiResult.resourceSets[0].resources;
+        /* Possible improvement: choose better location in case first one not desired
+         */
+        let location = locations[0];
+        let lat = location.geocodePoints[0].coordinates[0];
+        let long = location.geocodePoints[0].coordinates[1];
+        if (location.geocodePoints.length === 2) {
+          lat = location.geocodePoints[1].coordinates[0];
+          long = location.geocodePoints[1].coordinates[1];
+          var tempoData = {};
+          tempoData.business_name = businessAndFarmDetail.business_name;
+          tempoData.business_type = '';
+          tempoData.business_desc = businessAndFarmDetail.description;
+          tempoData.business_contact_first_name = businessAndFarmDetail.firstName;
+          tempoData.business_contact_last_name = businessAndFarmDetail.lastName;
+          tempoData.business_phone_num = businessAndFarmDetail.phone;
+          tempoData.business_phone_num2 = '';
+          tempoData.business_email = '';
+          tempoData.business_address = businessAndFarmDetail.street;
+          tempoData.business_unit = '';
+          tempoData.business_city = businessAndFarmDetail.city;
+          tempoData.business_state = businessAndFarmDetail.state;
+          tempoData.business_zip = businessAndFarmDetail.zip;
+          tempoData.business_longitude = long.toString();
+          tempoData.business_latitude = lat.toString();
+          tempoData.business_EIN = '';
+          tempoData.business_WAUBI = '';
+          tempoData.business_license = '';
+          tempoData.business_USDOT = '';
+          tempoData.bus_notification_approval = '';
+          if (cancellation.allowCancel === true) {
+            tempoData.can_cancel = '1';
+          } else {
+            tempoData.can_cancel = '0';
+          }
+          if (deliverStrategy.pickupStatus === true) {
+            tempoData.delivery = '0';
+          } else {
+            tempoData.delivery = '1';
+          }
+          if (storage.reusable === true) {
+            tempoData.reusable = '1';
+          } else {
+            tempoData.reusable = '0';
+          }
+          tempoData.business_image = imageUrl;
+          tempoData.business_password = 'pbkdf2:sha256:150000$zMHfn0jt$29cef351d84456b5f6b665bc2bbab8ae3c6e42bd0e4a4e896xxxxxxxxxxx';
+          tempoData.platform_fee = '0';
+          tempoData.transaction_fee = '0';
+          tempoData.revenue_sharing = '0';
+          tempoData.profit_sharing = '0';
+          if (status.ACTIVE === true) {
+            tempoData.business_status = 'ACTIVE';
+          } else {
+            tempoData.business_status = 'INACTIVE';
+          }
+          console.log('create business object', tempoData)
+          axios
+            .post(
+              'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_details_update/Create',
+              tempoData
+            )
+            .then((res) => {
+              console.log(res)
+              farmerObj();
+            })
+            .catch((err) => {
+              console.log(err);
+            })
+        }
+      }
+    })
+    // Error for getting long and lat
+    .catch((err) => {
+      console.log(err);
+      if (err.response) {
+        console.log(err.response);
+      }
+    })
+  }
+
+  async function update() {
+    if (!newFarm) {
+      // Update current farm
+      var tempoData = { ...settings };
+
+      tempoData.business_name = businessAndFarmDetail.business_name;
+      tempoData.business_desc = businessAndFarmDetail.description;
+
+      tempoData.business_contact_first_name = businessAndFarmDetail.firstName;
+      tempoData.business_contact_last_name = businessAndFarmDetail.lastName;
+      tempoData.business_phone_num = businessAndFarmDetail.phone;
+      tempoData.business_address = businessAndFarmDetail.street;
+      tempoData.business_city = businessAndFarmDetail.city;
+      tempoData.business_state = businessAndFarmDetail.state;
+      tempoData.business_zip = businessAndFarmDetail.zip;
+      tempoData.business_hours = regularHours;
+      tempoData.business_accepting_hours = acceptTime;
+      tempoData.business_delivery_hours = deliveryTime;
+      tempoData.business_license = businessAndFarmDetail.businessLicense;
+      tempoData.business_USDOT = businessAndFarmDetail.businessUsdot;
+      tempoData.business_EIN = businessAndFarmDetail.businessEin;
+      tempoData.business_WAUBI = businessAndFarmDetail.businessWaubi;
+      tempoData.platform_fee = businessAndFarmDetail.platformFee.toString();
+      tempoData.transaction_fee = businessAndFarmDetail.transactionFee.toString();
+      tempoData.profit_sharing = businessAndFarmDetail.profitSharing.toString();
+      tempoData.revenue_sharing = businessAndFarmDetail.revenueSharing.toString();
+      // console.log(typeof tempoData.business_hours);
+
+      if (typeof tempoData.business_hours === 'string') {
+        tempoData.business_hours = JSON.parse(tempoData.business_hours);
+      }
+
+      if (typeof tempoData.business_accepting_hours === 'string') {
+        tempoData.business_accepting_hours = JSON.parse(
+          tempoData.business_accepting_hours
+        );
+      }
+
+      if (typeof tempoData.business_delivery_hours === 'string') {
+        tempoData.business_delivery_hours = JSON.parse(
+          tempoData.business_delivery_hours
+        );
+      }
+
+      if (typeof tempoData.business_association === 'string') {
+        tempoData.business_association = JSON.parse(
+          tempoData.business_association
+        );
+      }
+
+      //third column
+      if (deliverStrategy.pickupStatus === true) {
+        tempoData.delivery = '0';
+      } else {
+        tempoData.delivery = '1';
+      }
+
+      if (storage.reusable === true) {
+        tempoData.reusable = '1';
+      } else {
+        tempoData.reusable = '0';
+      }
+      if (cancellation.allowCancel === true) {
+        tempoData.can_cancel = '1';
+      } else {
+        tempoData.can_cancel = '0';
+      }
+      if (status.ACTIVE === true) {
+        tempoData.business_status = 'ACTIVE';
+      } else {
+        tempoData.business_status = 'INACTIVE';
+      }
+
+      console.log(JSON.stringify(tempoData));
+
+      axios
+        .post(
+          'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_details_update/Post',
+          tempoData
+        )
+        .then((res) => {
+          console.log('success posting check password: ', res);
+          setSaveDialogOpen(true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      // Create new farm
+      if(imageUpload.file) {
+        const formData = new FormData();
+        formData.append('bus_photo', imageUpload.file);
+        axios
+          .post('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/new_business_image_upload', formData)
+          .then((res) => {
+            console.log(res)
+            const image_url = res.data;
+            createFarm(image_url);
+          })
+          .catch((err) => {
+            if(err.response) {
+              console.log(err.response);
+            }
+            console.log(err);
+          })
+      } else {
+        createFarm(imageUpload.path);
+      }
+    }
   }
 
   const handleChange = (event) => {
@@ -492,63 +674,63 @@ function FarmProfiles() {
     setDeliveryStrategy(newDeliveryObj);
     console.log(newDeliveryObj);
   };
-  useEffect(() => {
-    getFarmSettings();
-    // getSaltPassword();
-  }, [farmerID]);
+  // useEffect(() => {
+  //   getFarmSettings();
+  //   // getSaltPassword();
+  // }, [farmerID]);
 
-  useEffect(() => {
-    if (settings) {
-      setImageUpload({
-        file: null,
-        path: settings.business_image,
-      });
-      console.log('test log the email: ', settings.business_email);
-      if (settings.business_email === undefined) {
-        console.log('true undifined');
-      }
-      var objEmail = {
-        email: settings.business_email,
-      };
-      objEmail = JSON.stringify(objEmail);
-      axios.post(API_URL + 'AccountSalt', objEmail).then((response) => {
-        if (response.data.code === 280) {
-          let hashAlg = response.data.result[0].password_algorithm;
-          let salt = response.data.result[0].password_salt;
-          if (hashAlg !== null && salt !== null) {
-            if (hashAlg !== '' && salt !== '') {
-              switch (hashAlg) {
-                case 'SHA512':
-                  hashAlg = 'SHA-512';
-                  break;
-                default:
-                  console.log('display default falling into');
-                  break;
-              }
-              let newObj = {
-                hashAlg: hashAlg,
-                salt: salt,
-              };
-              setSaltPack(newObj);
-            }
-          }
-        }
-      });
-    }
-  }, [settings]);
+  // useEffect(() => {
+  //   if (settings) {
+  //     setImageUpload({
+  //       file: null,
+  //       path: settings.business_image,
+  //     });
+  //     console.log('test log the email: ', settings.business_email);
+  //     if (settings.business_email === undefined) {
+  //       console.log('true undifined');
+  //     }
+  //     var objEmail = {
+  //       email: settings.business_email,
+  //     };
+  //     objEmail = JSON.stringify(objEmail);
+  //     axios.post(API_URL + 'AccountSalt', objEmail).then((response) => {
+  //       if (response.data.code === 280) {
+  //         let hashAlg = response.data.result[0].password_algorithm;
+  //         let salt = response.data.result[0].password_salt;
+  //         if (hashAlg !== null && salt !== null) {
+  //           if (hashAlg !== '' && salt !== '') {
+  //             switch (hashAlg) {
+  //               case 'SHA512':
+  //                 hashAlg = 'SHA-512';
+  //                 break;
+  //               default:
+  //                 console.log('display default falling into');
+  //                 break;
+  //             }
+  //             let newObj = {
+  //               hashAlg: hashAlg,
+  //               salt: salt,
+  //             };
+  //             setSaltPack(newObj);
+  //           }
+  //         }
+  //       }
+  //     });
+  //   }
+  // }, [settings]);
 
-  const getFarmSettings = () => {
+  const getFarmSettings = (business_uid) => {
     axios
-      .post(BUSINESS_DETAILS_URL + 'Get', { business_uid: farmerID })
+      .post(BUSINESS_DETAILS_URL + 'Get', { business_uid: business_uid })
       .then((response) => {
         console.log('Settings:', response.data.result[0]);
         setSettings(response.data.result[0]);
-        context.setTimeChange(
-          JSON.parse(response.data.result[0].business_accepting_hours)
-        );
-        context.setDeliveryTime(
-          JSON.parse(response.data.result[0].business_delivery_hours)
-        );
+        // context.setTimeChange(
+        //   JSON.parse(response.data.result[0].business_accepting_hours)
+        // );
+        // context.setDeliveryTime(
+        //   JSON.parse(response.data.result[0].business_delivery_hours)
+        // );
         setRegularHours(JSON.parse(response.data.result[0].business_hours));
         var holdData = response.data.result[0];
         // Convert null values to empty string
@@ -618,9 +800,18 @@ function FarmProfiles() {
             disposable: false,
           });
         }
-
+        setImageUpload({
+          file: null,
+          path: holdData.business_image,
+        });
         setBusFarm(BusAndFarmObj);
         setLoaded(true);
+        context.setTimeChange(
+          JSON.parse(response.data.result[0].business_accepting_hours)
+        );
+        context.setDeliveryTime(
+          JSON.parse(response.data.result[0].business_delivery_hours)
+        );
       })
       .catch((err) => {
         console.log(err.response || err);
@@ -637,6 +828,7 @@ function FarmProfiles() {
         setfarmerInfo(response.data.result.result)
         setFarmerID(response.data.result.result[0].business_uid);
         setBusiSelect(response.data.result.result[0]);
+        setNewFarm(false);
         fetchBusinessInfo(
           setselectedBusiness,
           response.data.result.result[0].business_uid,
@@ -688,6 +880,7 @@ function FarmProfiles() {
                       setDeliveryDetails,
                       profile.business_uid
                     );
+                    setNewFarm(false);
                     handleClose();
                   }}
                 >
@@ -819,8 +1012,15 @@ function FarmProfiles() {
     setOpenModel(true)
   };
 
-  const closeModel = () => {setOpenModel(false); 
-    setOpenDiag(true)}
+  const closeModel = () => {
+    setOpenModel(false); 
+    setOpenDiag(true);
+  }
+
+  const closeDiag = () => {
+    setOpenDiag(false);
+    fetchProducts(farmerID);
+  }
 
   const modelBody = (
     <div>
@@ -828,7 +1028,7 @@ function FarmProfiles() {
     </div>
   );
 
-  console.log("selected business ",busiSelect)
+  // console.log("selected business ",busiSelect)
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -894,6 +1094,24 @@ function FarmProfiles() {
                 style={{
                   float: 'right',
                   marginRight: '20px',
+                  color: '#F5841F',
+                  paddingTop: '25px',
+                }}
+                onClick={() => {
+                  setNewFarm(true);
+                  setBusiSelect(newFarmBusiSelect);
+                  setProducts([]);
+                  setBusFarm(newFarmDetail)
+                }}
+              >
+                <h3>
+                  Add Farm +
+                </h3>
+              </div>
+              <div
+                style={{
+                  float: 'right',
+                  marginRight: '20px',
                   color: '#1C6D74',
                 }}
               >
@@ -905,7 +1123,7 @@ function FarmProfiles() {
                     fontSize: '25px',
                   }}
                 >
-                  $ {profit1.profit}
+                  {newFarm ? '-' : `$ ${profit1.profit}`}
                 </p>
               </div>
               <div
@@ -923,7 +1141,7 @@ function FarmProfiles() {
                     fontSize: '25px',
                   }}
                 >
-                  {profit1.num}
+                  {newFarm ? '-' : `$ ${profit1.num}`}
                 </p>
               </div>
 
@@ -942,7 +1160,7 @@ function FarmProfiles() {
                     fontSize: '25px',
                   }}
                 >
-                  {profit1.quantity}
+                  {newFarm ? '-' : `$ ${profit1.quantity}`}
                 </p>
               </div>
             </Box>
@@ -1039,7 +1257,7 @@ function FarmProfiles() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {farmsSort().map((info, index) => (
+                    {farmsSort().map((info) => (
                       <TableRow
                         key={info.business_uid}
                         className={classes.tr}
@@ -1095,13 +1313,13 @@ function FarmProfiles() {
                           <img
                             style={{ width: '18px', marginRight: '5px', cursor: 'pointer' }}
                             src={save}
-                            onClick={() => handleSave(index, 'update')}
+                            onClick={() => handleSave(info.supply_uid, 'update')}
                             id="update"
                           ></img>
                           <img
                             style={{ width: '15px', cursor: 'pointer' }}
                             src={del}
-                            onClick={() => handleSave(index, 'delete')}
+                            onClick={() => handleSave(info.supply_uid, 'delete')}
                             id="delete"
                           ></img>
                         </TableCell>
@@ -1481,7 +1699,7 @@ function FarmProfiles() {
       </Grid>
 
       <div>
-            <Dialog open={openDiag} onClose={()=>setOpenDiag(false)}>
+            <Dialog open={openDiag} onClose={closeDiag}>
               <DialogTitle>{"Successful!!"}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
@@ -1490,7 +1708,7 @@ function FarmProfiles() {
               </DialogContent>
               <DialogActions>
                 <Button 
-                onClick={()=>setOpenDiag(false)}
+                onClick={closeDiag}
                         
                         color="primary" autoFocus>
                   Okay
