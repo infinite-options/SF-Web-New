@@ -1,5 +1,5 @@
 // import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import classes from './ErrorModal.module.css';
 // import {Button} from 'react-bootstrap'
 import Card from 'react-bootstrap/Card';
@@ -7,22 +7,51 @@ import cross from '../../icon/cross.svg';
 import BusiApiReqs from '../../utils/BusiApiReqs';
 import Draggable from 'react-draggable';
 import AuthUtils from '../../utils/AuthUtils';
+import axios from 'axios';
+import { AuthContext } from '../../auth/AuthContext';
 
 const AmbasadorModal = (props) => {
+  const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
   let [customerName, setCustomerName] = useState('');
   const BusiMethods = new BusiApiReqs();
   const AuthMethods = new AuthUtils();
+  const context = useContext(AuthContext);
+  console.log("in con",context.profile)
   AuthMethods.getProfile().then((response) => {
     console.log(response.customer_first_name);
     setCustomerName(response.customer_first_name);
   });
 
   let createAmbassador = async () => {
-    let ambassadorEmail = document.getElementById('ambassadorEmail').value;
-    await BusiMethods.create_ambassador(ambassadorEmail);
-    var alert_uid = '701-000029';
-    await BusiMethods.getAlert(alert_uid);
+    if(!context.profile.email){
+      alert("Please Login or SignUp")
+      
+    }
+    else{
+    await axios
+      .post(BASE_URL + 'brandAmbassador/create_ambassador', {code:context.profile.email})
+      .then((response) => {
+        console.log('response', response.data);
+        if(response.data.message===undefined){
+          alert("This email id is already an Ambassador")
+        }
+        else{
+          var txt = "Congratulations!! Now you are an Ambassador. Use "+context.profile.email+" to refer a friend"
+          alert(txt)
+        }
+        
+        // alert(response)
+        //alert('Congrats you are a ambassador');
+      })
+      .catch((err) => {
+        alert("There is some difficulty. Please try again.")
+        console.log(err.response || err);
+      });
+    }
+    
   };
+
+  
 
   //     await BusiMethods.create_ambassador(ambassadorEmail)
   //     .then((response)=>
@@ -108,25 +137,11 @@ const AmbasadorModal = (props) => {
         </div>
         <div>
           <p style={{ float: 'left', color: '#136D74', marginLeft: '50px' }}>
-            Ambassador Name:
+            Ambassador Email:
           </p>
-          <p style={{ float: 'left', marginLeft: '50px' }}>{customerName}</p>
+          <p style={{ float: 'left', marginLeft: '50px' }}>{context.profile.email}</p>
         </div>
-        <div>
-          <input
-            placeholder="Enter your email"
-            id="ambassadorEmail"
-            style={{
-              width: '300px',
-              height: '30px',
-              marginBottom: '15px',
-              marginTop: '0px',
-              borderRadius: '15px',
-              border: '2px solid #136D74',
-            }}
-          ></input>
-          <div id="sucess" style={{ fontSize: '20px', color: 'red' }}></div>
-        </div>
+        
         <div>
           <div style={{ marginLeft: '20%', marginRight: '10%' }}>
             <p style={{ float: 'left', color: '#136D74' }}>

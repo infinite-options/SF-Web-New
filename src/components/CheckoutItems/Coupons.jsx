@@ -134,7 +134,7 @@ export default function Coupons(props) {
           // Check if coupon is expired
           const today = new Date();
           const expDate = new Date(couponsRes[i].expire_date);
-          if (today <= expDate) {
+          if (today <= expDate && couponsRes[i].coupon_id!=='SFReferral'&&couponsRes[i].coupon_id!=='SFAmbassador' ) {
             const couponData = {
               id: couponsRes[i].coupon_uid,
               index: i,

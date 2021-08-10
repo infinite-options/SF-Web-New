@@ -1063,7 +1063,7 @@ function Customers() {
                 >
                   Ambassador Code
                   <Box flexGrow={1} />
-                  -${history.ambassador_code}
+                  -${Number(history.ambassador_code).toFixed(2)}
                 </Box>
                 <Box
                   className={clsx(
