@@ -373,9 +373,14 @@ function AdminLogin({ ...props }) {
   return (
     <div
       style={{
-        position: 'absolute',
-        right: '350px',
+        // position: 'absolute',
+        // right: '0',
+        // right: '350px',
+        // width: '100vw',
+        width: '100%',
+        // width: '600px',
         zIndex: 10040,
+        // border: '1px dashed'
       }}
     >
       <Paper style={paperStyle}>
@@ -535,7 +540,7 @@ const paperStyle = {
   textAlign: 'center',
   display: 'inline-block',
   padding: '20px',
-  marginTop: '50px',
+  // marginTop: '50px',
   backgroundColor: '#E0E6E6F2',
 };
 

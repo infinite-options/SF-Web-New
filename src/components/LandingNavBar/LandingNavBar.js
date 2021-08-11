@@ -22,10 +22,12 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: '#2F787F',
     marginBottom: '0px',
+    height: '80px'
   },
   authButton: {
     color: 'white',
-    marginRight: '10px',
+    width: '77px'
+    // marginRight: '10px',
   },
 }));
 
@@ -36,11 +38,27 @@ export default function LandingNavBar({ ...props }) {
   const { profile } = useContext(AuthContext);
 
   let [customerName, setCustomerName] = useState('');
+  let [loggedIn, setLoggedIn] = useState(null);
+
+  // const [isLoginShown, setIsLoginShown] = useState(false); // checks if user is logged in
+  // const [isSignUpShown, setIsSignUpShown] = useState(false);
+
   const BusiMethods = new BusiApiReqs();
   const AuthMethods = new AuthUtils();
   AuthMethods.getProfile().then((response) => {
+    console.log("(LNB) response: ", response);
+    // if(response && response.customer_first_name) {
+    //   console.log(response.customer_first_name);
+    //   setCustomerName(response.customer_first_name);
+    // }
     console.log(response.customer_first_name);
     setCustomerName(response.customer_first_name);
+    console.log("(LNB) customer_uid: ", response.customer_uid)
+    if(response.customer_uid){
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
   });
 
   const badgeContent = parseInt(localStorage.getItem('cartTotal') || '0');
@@ -49,11 +67,15 @@ export default function LandingNavBar({ ...props }) {
   const loginClicked = () => {
     props.setIsSignUpShown(false);
     props.setIsLoginShown(!props.isLoginShown);
+    // setIsSignUpShown(false);
+    // setIsLoginShown(!props.isLoginShown);
   };
 
   const signUpClicked = () => {
     props.setIsLoginShown(false);
     props.setIsSignUpShown(!props.isSignUpShown);
+    // setIsLoginShown(false);
+    // setIsSignUpShown(!props.isSignUpShown);
   };
 
   function handleStoreClick() {
@@ -77,37 +99,85 @@ export default function LandingNavBar({ ...props }) {
   };
 
   return (
-    <div className={classes.root} style={{backgroundColor:'#2F787F'}}>
+    <div 
+      className={classes.root} 
+      style={{
+        backgroundColor:'#2F787F',
+        // border: 'red solid'
+      }}
+    >
     <AppBar
      
       position="static"
       elevation={0}
       style={{
         borderBottom: '1px solid ' + appColors.secondary,
+        // border: 'solid red',
+        height: '100%'
       }}
     >
       
 
-      <Toolbar style={{backgroundColor:'#2F787F'}}>
+      <Toolbar 
+        style={{
+          backgroundColor:'#2F787F',
+          height: '100%',
+          // border: 'dashed'
+        }}
+      >
       
-        <MenuNavButton style={{color:'white'}}/>
+        <MenuNavButton 
+          style={{
+            color:'white',
+            // border: 'solid lime'
+          }}
+        />
         
         <Box flexGrow={1} >
-          <div style={{marginRight:'50px',marginLeft:'150px'}}>
+          <div 
+            style={{
+              // marginRight:'50px',
+              // marginLeft:'150px'
+              // border: 'solid lime'
+            }}
+          >
           
-          <img style={{marginRight:'50px',marginLeft:'150px'}} src={sf}></img>
+            <img 
+              onClick={() => history.push('/')}
+              style={{
+                // marginRight:'50px',
+                // marginLeft:'150px'
+                cursor: 'pointer'
+              }} 
+              src={sf}
+            />
           
           </div>
-          </Box>
+        </Box>
         
-        <Box hidden={auth.isAuth} style={{width:'18%'}}>
+        {loggedIn === false ? (
+        <Box 
+          hidden={auth.isAuth} 
+          style={{
+            width: '18%',
+            height: '100%',
+            // border: 'solid cyan',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
         
-          <Button
+          {/* <Button
             className={classes.authButton}
             variant="contained"
             size="small"
             color="primary"
             onClick={signUpClicked}
+            style={{
+              position: 'absolute',
+              right: '0'
+            }}
           >
             Sign Up
           </Button>
@@ -117,46 +187,145 @@ export default function LandingNavBar({ ...props }) {
             size="small"
             color="primary"
             onClick={loginClicked}
+            style={{
+              position: 'absolute',
+              right: '87px'
+            }}
           >
             Login
-          </Button>
-          
-        </Box>
-        <Box hidden={!auth.isAuth} style={{width:'18%'}}>
+          </Button> */}
 
-        <div style={{width:'50%',float:'left'}} hidden={(window.width < 1024) ? true : false}>
-        <p style={{color:'white'}}>{customerName}</p>
-        </div>
-          
-          <div style={{width:'50%',float:'right'}}>  
-          {/* <Button
-                className={classes.authButton}
-                variant="contained"
-                size="small"
-                color="primary"
-                style={{
-                  marginLeft: '2rem',
-                  height: '2rem',
-                  marginTop: '0.5rem',
-                  
-                }}
-                onClick={handleClickLogOut}
-              >
-                Log Out
-              </Button> */}
-              <Button
-            className={classes.authButton}
-            variant="contained"
-            size="small"
-            color="primary"
-            onClick={handleClickLogOut}
-            style={{marginTop:'.5rem'}}
-          >
-            Logout
-          </Button>
-              </div>
+          {/* {loggedIn === false ? (<> */}
+            <Button
+              className={classes.authButton}
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={signUpClicked}
+              style={{
+                position: 'absolute',
+                right: '0'
+              }}
+            >
+              Sign Up
+            </Button>
+            <Button
+              className={classes.authButton}
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={loginClicked}
+              style={{
+                position: 'absolute',
+                right: '87px'
+              }}
+            >
+              Login
+            </Button>
+          {/* </>) : (
+            null
+          )} */}
           
         </Box>
+        ) : (
+          null
+        )}
+
+        {loggedIn === null ? (
+          <div 
+            style={{
+              // border: '1px solid lime',
+              width: '18%'
+            }}
+          />
+        ) : (
+          null
+        )}
+
+        {loggedIn === true ? (
+        <Box 
+          // hidden={!auth.isAuth} 
+          style={{
+            width: '18%',
+            // border: '1px solid violet',
+            display: 'flex',
+            height: '100%',
+            position: 'relative'
+          }}
+        >
+
+          <div 
+            style={{
+              // width:'50%',
+              // float:'left',
+              // border: '1px dashed',
+              position: 'absolute',
+              right: '93px',
+              height: '100%',
+              color:'white',
+              display: 'flex',
+              alignItems: 'center'
+            }} 
+            hidden={(window.width < 1024) ? true : false}
+          >
+            {/* <p 
+              style={{
+                color:'white'
+              }}
+            >
+              {customerName}
+            </p> */}
+            {customerName}
+          </div>
+          
+          <div 
+            style={{
+              // width: '50%',
+              width: '87px',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              position: 'absolute',
+              right: '0',
+              // float: 'right',
+              // border: '1px dashed'
+            }}
+          >  
+            {/* <Button
+              className={classes.authButton}
+              variant="contained"
+              size="small"
+              color="primary"
+              style={{
+                marginLeft: '2rem',
+                height: '2rem',
+                marginTop: '0.5rem',
+                
+              }}
+              onClick={handleClickLogOut}
+            >
+              Log Out
+            </Button> */}
+            <Button
+              className={classes.authButton}
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={handleClickLogOut}
+              style={{
+                // marginTop:'.5rem'
+                position: 'absolute',
+                right: '0'
+              }}
+            >
+              Logout
+            </Button>
+          </div>
+
+        </Box>
+        ) : (
+          null
+        )}
 
         <Box hidden={!(auth.isAuth || auth.isGuest)}>
           {/* <IconButton edge="end" className="link">
