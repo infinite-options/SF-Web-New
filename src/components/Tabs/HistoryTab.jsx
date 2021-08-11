@@ -10,6 +10,7 @@ import HistoryCard from '../CheckoutItems/HistoryCard';
 
 const cookies = new Cookies();
 const CreateHistoryCard = (props) => {
+  console.log("props in createhistorycard ",props)
   return (
     <HistoryCard
       id={props.purchase_uid}
@@ -31,6 +32,7 @@ const CreateHistoryCard = (props) => {
       paymentMethod={props.payment_type}
       deliveryInstructions={props.delivery_instructions}
       key={props.purchase_uid}
+      amb_code={props.ambassador_code}
     />
   );
 };

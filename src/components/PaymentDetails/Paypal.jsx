@@ -16,7 +16,7 @@ const PayPal = ({ value, deliveryInstructions }) => {
   const auth = useContext(AuthContext);
   const history = useHistory();
 
-  const { paymentDetails, chosenCoupon } = useContext(checkoutContext);
+  const { paymentDetails, chosenCoupon, chosenCode, ambDis } = useContext(checkoutContext);
   const { profile, startDeliveryDate, cartItems } = useContext(storeContext);
   //[{"qty": "3", "name": "Opo Gourd", "price": "0.5", "item_uid": "310-000087", "itm_business_uid": "200-000005"}]
 
@@ -43,6 +43,24 @@ const PayPal = ({ value, deliveryInstructions }) => {
   const [CLIENT_ID, setCLIENT_ID] = useState(
     process.env.NODE_ENV === 'production' ? CLIENT.production : CLIENT.sandbox
   );
+
+  var couponIds = ''
+  
+  if(chosenCoupon==='' && chosenCode===''){
+    couponIds = ''
+  }
+  else if (chosenCoupon!='' && chosenCode!=''){
+    couponIds = chosenCoupon+','+chosenCode
+  }
+  else{
+    if(chosenCoupon==='' ){
+      couponIds = chosenCode
+    }
+    else{
+      couponIds = chosenCoupon
+    }
+  } 
+
 
   useEffect(() => {
     if (deliveryInstructions === 'SFTEST') {
@@ -86,7 +104,7 @@ const PayPal = ({ value, deliveryInstructions }) => {
             delivery_longitude: profile.longitude,
             purchase_notes: 'purchase_notes',
             start_delivery_date: startDeliveryDate,
-            pay_coupon_id: chosenCoupon || ' ',
+            pay_coupon_id: couponIds,
             amount_due: paymentDetails.amountDue.toString(),
             amount_discount: paymentDetails.discount.toString(),
             amount_paid: paymentDetails.amountDue.toString(),
@@ -97,11 +115,13 @@ const PayPal = ({ value, deliveryInstructions }) => {
             cc_zip: 'NULL',
             charge_id: 'NULL',
             payment_type: 'PAYPAL',
+            delivery_status: 'FALSE',
             subtotal: paymentDetails.subtotal.toString(),
             service_fee: paymentDetails.serviceFee.toString(),
             delivery_fee: paymentDetails.deliveryFee.toString(),
             driver_tip: paymentDetails.driverTip.toString(),
             taxes: paymentDetails.taxes.toString(),
+            ambassador_code:ambDis.toString(),
           };
           console.log('data sending: ', dataSending);
           axios

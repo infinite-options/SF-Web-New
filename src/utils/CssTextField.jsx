@@ -5,6 +5,9 @@ import appColors from '../styles/AppColors';
 const CssTextField = withStyles({
   root: {
     backgroundColor: '#fcfcfb',
+    // marginTop: '10px',
+    // display: 'flex',
+    // alignItems: 'center',
     '& label.Mui-focused': {
       border: '3px solid' + appColors.secondary,
       color: appColors.secondary,

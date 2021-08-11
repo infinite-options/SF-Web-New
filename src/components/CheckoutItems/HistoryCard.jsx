@@ -58,6 +58,7 @@ function listItem(item) {
 }
 
 const HistoryCard = (props) => {
+  console.log("in history ",props)
   const { profile } = useContext(storeContext);
   const classes = useStyles();
 
@@ -148,6 +149,14 @@ const HistoryCard = (props) => {
       >
         Taxes
         <Box flexGrow={1} />${props.taxes.toFixed(2)}
+      </Box>
+
+      <Box
+        className={clsx(classes.items, classes.savingDetails, classes.section)}
+        display="flex"
+      >
+        Ambassador Code
+        <Box flexGrow={1} />-${Number(props.amb_code).toFixed(2)}
       </Box>
 
       <Box
