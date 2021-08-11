@@ -13,6 +13,8 @@ import {
 } from '@material-ui/core';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import { AdminFarmContext } from './AdminFarmContext';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -98,6 +100,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     padding: '10px 11px',
   },
+  profileContainer: {
+    display: 'flex',
+  },
+  profileSection: {
+    flex: '1 1 auto',
+  },
+  profileSection1: {
+    width: '100%',
+  },
+  profileSection2: {
+    width: '50%',
+  },
   profileHeader: {
     textAlign: 'left',
     font: 'normal normal 600 16px SF Pro Text',
@@ -107,10 +121,10 @@ const useStyles = makeStyles((theme) => ({
     padding: '3px',
   },
   profileInput: {
-    width: '250px',
+    width: 'calc(100% - 20px)',
     background: '#FFFFFF 0% 0% no-repeat padding-box',
     border: '1px solid #747474',
-    padding: '3px',
+    margin: '3px',
   },
   profileData: {
     textAlign: 'left',
@@ -164,15 +178,19 @@ const newFarmBusiSelect = {
 };
 
 const newFarmDetail = {
-  business_name:"New Farm",
-  description:"",
-  firstName:"",
-  zip:"",
-  state:"",
-  city:"",
-  street:"",
-  phone:"",
-  lastName:""
+  business_name: 'New Farm',
+  business_type: '',
+  description: '',
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  phone2: '',
+  street: '',
+  unit: '',
+  city: '',
+  state: '',
+  zip: '',
 };
 
 function fetchBusinessInfo(setselectedBusiness, id, setProfit1) {
@@ -245,22 +263,17 @@ function FarmProfiles() {
   const [settings, setSettings] = useState({});
   const [error, setError] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  useEffect(() => {
-    farmerObj();
-  }, []);
-  useEffect(() => {
-    fetchProducts();
-  }, []);
 
-  let [farmerInfo, setfarmerInfo] = useState([]);
-  let [busiSelect, setBusiSelect] = useState([]);
+  const [farmerInfo, setfarmerInfo] = useState([]);
+  const [busiSelect, setBusiSelect] = useState([]);
   
-  let [SelectedBusiness, setselectedBusiness] = useState([]);
-  let [profit1, setProfit1] = useState([]);
-  let [products, setProducts] = useState([]);
-  let [deliveryDetails, setDeliveryDetails] = useState([]);
+  const [SelectedBusiness, setselectedBusiness] = useState([]);
+  const [profit1, setProfit1] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [deliveryDetails, setDeliveryDetails] = useState([]);
+  // const [allZones, setAllZones] = useState([]);
 
-  let [selectedProduct, setSelectedProduct] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState({});
   const [confirmPass, setConfirmPass] = useState('');
   // const [saltPack, setSaltPack] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -285,6 +298,28 @@ function FarmProfiles() {
 
   // To determine if editing farm or creating new farm
   const [newFarm, setNewFarm] = useState(false);
+
+  useEffect(() => {
+    farmerObj();
+  }, []);
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  // Get list of zones for adding busines
+  // useEffect(() => {
+  //   axios
+  //     .post('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_zones/get',{})
+  //     .then((res) => {
+  //       console.log(res.data.result);
+  //     })
+  //     .catch((err) => {
+  //       if(err.response) {
+  //         console.log(err.response);
+  //       }
+  //       console.log(err);
+  //     })
+  // },[])
 
   const handleImgChange = (e) => {
     const files = e.target.files;
@@ -387,15 +422,15 @@ function FarmProfiles() {
           long = location.geocodePoints[1].coordinates[1];
           var tempoData = {};
           tempoData.business_name = businessAndFarmDetail.business_name;
-          tempoData.business_type = '';
+          tempoData.business_type = businessAndFarmDetail.business_type;
           tempoData.business_desc = businessAndFarmDetail.description;
           tempoData.business_contact_first_name = businessAndFarmDetail.firstName;
           tempoData.business_contact_last_name = businessAndFarmDetail.lastName;
           tempoData.business_phone_num = businessAndFarmDetail.phone;
-          tempoData.business_phone_num2 = '';
-          tempoData.business_email = '';
+          tempoData.business_phone_num2 = businessAndFarmDetail.phone2;
+          tempoData.business_email = businessAndFarmDetail.email;
           tempoData.business_address = businessAndFarmDetail.street;
-          tempoData.business_unit = '';
+          tempoData.business_unit = businessAndFarmDetail.unit;
           tempoData.business_city = businessAndFarmDetail.city;
           tempoData.business_state = businessAndFarmDetail.state;
           tempoData.business_zip = businessAndFarmDetail.zip;
@@ -439,7 +474,6 @@ function FarmProfiles() {
               tempoData
             )
             .then((res) => {
-              console.log(res)
               farmerObj();
             })
             .catch((err) => {
@@ -463,12 +497,16 @@ function FarmProfiles() {
       var tempoData = { ...settings };
 
       tempoData.business_name = businessAndFarmDetail.business_name;
+      tempoData.business_type = businessAndFarmDetail.business_type;
       tempoData.business_desc = businessAndFarmDetail.description;
 
       tempoData.business_contact_first_name = businessAndFarmDetail.firstName;
       tempoData.business_contact_last_name = businessAndFarmDetail.lastName;
       tempoData.business_phone_num = businessAndFarmDetail.phone;
+      tempoData.business_phone_num2 = businessAndFarmDetail.phone2;
+      tempoData.business_email = businessAndFarmDetail.email;
       tempoData.business_address = businessAndFarmDetail.street;
+      tempoData.business_unit = businessAndFarmDetail.unit;
       tempoData.business_city = businessAndFarmDetail.city;
       tempoData.business_state = businessAndFarmDetail.state;
       tempoData.business_zip = businessAndFarmDetail.zip;
@@ -485,26 +523,28 @@ function FarmProfiles() {
       tempoData.revenue_sharing = businessAndFarmDetail.revenueSharing.toString();
       // console.log(typeof tempoData.business_hours);
 
-      if (typeof tempoData.business_hours === 'string') {
+      if (typeof tempoData.business_hours === 'string' && tempoData.business_hours !== '') {
         tempoData.business_hours = JSON.parse(tempoData.business_hours);
       }
 
-      if (typeof tempoData.business_accepting_hours === 'string') {
+      if (typeof tempoData.business_accepting_hours === 'string' && tempoData.business_accepting_hours !== '') {
         tempoData.business_accepting_hours = JSON.parse(
           tempoData.business_accepting_hours
         );
       }
 
-      if (typeof tempoData.business_delivery_hours === 'string') {
+      if (typeof tempoData.business_delivery_hours === 'string' && tempoData.business_delivery_hours !== '') {
         tempoData.business_delivery_hours = JSON.parse(
           tempoData.business_delivery_hours
         );
       }
 
-      if (typeof tempoData.business_association === 'string') {
+      if (typeof tempoData.business_association === 'string' && tempoData.business_association !== '') {
         tempoData.business_association = JSON.parse(
           tempoData.business_association
         );
+      } else {
+        tempoData.business_association = [];
       }
 
       //third column
@@ -580,7 +620,6 @@ function FarmProfiles() {
       setPass(event.target.value);
     } else if (event.target.name === 'passwordConfirm') {
       setConfirmPass(event.target.value);
-    } else if (event.target.name === 'email') {
     } else {
       setBusFarm({
         ...businessAndFarmDetail,
@@ -743,13 +782,16 @@ function FarmProfiles() {
         console.log(holdData);
         var BusAndFarmObj = {
           business_name: holdData.business_name,
+          business_type: holdData.business_type,
           description: holdData.business_desc,
           businessAssociation: holdData.business_association,
           firstName: holdData.business_contact_first_name,
           lastName: holdData.business_contact_last_name,
           phone: holdData.business_phone_num,
+          phone2: holdData.business_phone_num2,
           email: holdData.business_email,
           street: holdData.business_address,
+          unit: holdData.business_unit,
           city: holdData.business_city,
           state: holdData.business_state,
           zip: holdData.business_zip,
@@ -806,12 +848,16 @@ function FarmProfiles() {
         });
         setBusFarm(BusAndFarmObj);
         setLoaded(true);
+        if(response.data.result[0].business_accepting_hours !== '') {
         context.setTimeChange(
           JSON.parse(response.data.result[0].business_accepting_hours)
         );
+        }
+        if(response.data.result[0].business_delivery_hours !== '') {
         context.setDeliveryTime(
           JSON.parse(response.data.result[0].business_delivery_hours)
         );
+        }
       })
       .catch((err) => {
         console.log(err.response || err);
@@ -1094,24 +1140,6 @@ function FarmProfiles() {
                 style={{
                   float: 'right',
                   marginRight: '20px',
-                  color: '#F5841F',
-                  paddingTop: '25px',
-                }}
-                onClick={() => {
-                  setNewFarm(true);
-                  setBusiSelect(newFarmBusiSelect);
-                  setProducts([]);
-                  setBusFarm(newFarmDetail)
-                }}
-              >
-                <h3>
-                  Add Farm +
-                </h3>
-              </div>
-              <div
-                style={{
-                  float: 'right',
-                  marginRight: '20px',
                   color: '#1C6D74',
                 }}
               >
@@ -1162,6 +1190,31 @@ function FarmProfiles() {
                 >
                   {newFarm ? '-' : `$ ${profit1.quantity}`}
                 </p>
+              </div>
+              <div
+                style={{
+                  float: 'right',
+                  marginRight: '20px',
+                  paddingTop: '25px',
+                }}
+                onClick={() => {
+                  setNewFarm(true);
+                  setBusiSelect(newFarmBusiSelect);
+                  setProducts([]);
+                  setBusFarm(newFarmDetail)
+                }}
+              >
+                <button
+                  style={{
+                    backgroundColor: '#1C6D74',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '5px',
+                    padding: '5px 15px',
+                  }}
+                >
+                  Add New Farm +
+                </button>
               </div>
             </Box>
           </div>
@@ -1346,7 +1399,7 @@ function FarmProfiles() {
               overflowY: 'hidden',
             }}
           >
-            <Box style={{}}>
+            <Box>
               <h2
                 style={{
                   textAlign: 'left',
@@ -1363,96 +1416,174 @@ function FarmProfiles() {
                   float: 'left',
                 }}
               >
-                <div className={classes.profileHeader}>Business Name</div>
-                <TextField
-                  value={businessAndFarmDetail.business_name}
-                  className={classes.profileInput}
-                  InputProps={{ disableUnderline: true }}
-                  name="business_name"
-                  onChange={handleChange}
-                />
-                <div className={classes.profileHeader}>Description</div>
-                <TextField
-                  value={businessAndFarmDetail.description}
-                  className={classes.profileInput}
-                  name="description"
-                  multiline="true"
-                  InputProps={{ disableUnderline: true }}
-                  onChange={handleChange}
-                />
-                <div className={classes.profileHeader}>
-                  Business Rep First Name
+                <div className={classes.profileContainer}>
+                  <div className={`${classes.profileSection} ${classes.profileSection1}`}>
+                    <div className={classes.profileHeader}> Business Name </div>
+                    <TextField
+                      value={businessAndFarmDetail.business_name}
+                      className={classes.profileInput}
+                      InputProps={{ disableUnderline: true }}
+                      name="business_name"
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
-                <TextField
-                  value={businessAndFarmDetail.firstName}
-                  className={classes.profileInput}
-                  name="firstName"
-                  InputProps={{ disableUnderline: true }}
-                  onChange={handleChange}
-                />
-                <div className={classes.profileHeader}>
-                  Business Rep Last Name
+                <div className={classes.profileContainer}>
+                  <div className={`${classes.profileSection} ${classes.profileSection1}`}>
+                    <div className={classes.profileHeader}> Business Type </div>
+                    <Select
+                      value={businessAndFarmDetail.business_type}
+                      className={classes.profileInput}
+                      name="business_type"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={''} hidden>
+                        Choose Business Type
+                      </MenuItem>
+                      <MenuItem value={'Farm'}>
+                        Farm
+                      </MenuItem>
+                      <MenuItem value={'Farmers Market'}>
+                        Farmers Market
+                      </MenuItem>
+                      <MenuItem value={'Store'}>
+                        Store
+                      </MenuItem>
+                      <MenuItem value={'Gift Card'}>
+                        Gift Card
+                      </MenuItem>
+                    </Select>
+                  </div>
                 </div>
-                <TextField
-                  value={businessAndFarmDetail.lastName}
-                  className={classes.profileInput}
-                  name="lastName"
-                  InputProps={{ disableUnderline: true }}
-                  onChange={handleChange}
-                />
-                <div className={classes.profileHeader}>
-                  Business Rep Phone Number
+                <div className={classes.profileContainer}>
+                  <div className={`${classes.profileSection} ${classes.profileSection1}`}>
+                    <div className={classes.profileHeader}> Description </div>
+                    <TextField
+                      value={businessAndFarmDetail.description}
+                      className={classes.profileInput}
+                      name="description"
+                      multiline="true"
+                      InputProps={{ disableUnderline: true }}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
-                <TextField
-                  value={businessAndFarmDetail.phone}
-                  className={classes.profileInput}
-                  name="phone"
-                  InputProps={{ disableUnderline: true }}
-                  onChange={handleChange}
-                />
-
+                <div className={classes.profileContainer}>
+                  <div className={`${classes.profileSection} ${classes.profileSection2}`}>
+                    <div className={classes.profileHeader}> Business Rep First Name </div>
+                    <TextField
+                      value={businessAndFarmDetail.firstName}
+                      className={classes.profileInput}
+                      name="firstName"
+                      InputProps={{ disableUnderline: true }}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className={`${classes.profileSection} ${classes.profileSection2}`}>
+                    <div className={classes.profileHeader}> Business Rep Last Name </div>
+                    <TextField
+                      value={businessAndFarmDetail.lastName}
+                      className={classes.profileInput}
+                      name="lastName"
+                      InputProps={{ disableUnderline: true }}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className={classes.profileContainer}>
+                  <div className={`${classes.profileSection} ${classes.profileSection1}`}>
+                    <div className={classes.profileHeader}> Business Rep Phone Number </div>
+                    <TextField
+                      value={businessAndFarmDetail.phone}
+                      className={classes.profileInput}
+                      name="phone"
+                      InputProps={{ disableUnderline: true }}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className={classes.profileContainer}>
+                  <div className={`${classes.profileSection} ${classes.profileSection1}`}>
+                    <div className={classes.profileHeader}> Business Rep Mobile Number </div>
+                    <TextField
+                      value={businessAndFarmDetail.phone2}
+                      className={classes.profileInput}
+                      name="phone2"
+                      InputProps={{ disableUnderline: true }}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className={classes.profileContainer}>
+                  <div className={`${classes.profileSection} ${classes.profileSection1}`}>
+                    <div className={classes.profileHeader}> Business Email ID </div>
+                    <TextField
+                      value={businessAndFarmDetail.email}
+                      className={classes.profileInput}
+                      name="email"
+                      InputProps={{ disableUnderline: true }}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
                 <h3>Farm Details</h3>
                 <hr></hr>
-                <div className={classes.profileHeader}>Street</div>
-                <TextField
-                  value={businessAndFarmDetail.street}
-                  className={classes.profileInput}
-                  name="street"
-                  InputProps={{ disableUnderline: true }}
-                  onChange={handleChange}
-                />
-                <div className={classes.profileHeader}>Farm City</div>
-                <TextField
-                  value={businessAndFarmDetail.city}
-                  className={classes.profileInput}
-                  name="city"
-                  InputProps={{ disableUnderline: true }}
-                  onChange={handleChange}
-                />
-                <Box display="flex">
-                  <div className={classes.profileHeader}>
-                    State
+                <div className={classes.profileContainer}>
+                  <div className={`${classes.profileSection} ${classes.profileSection2}`}>
+                    <div className={classes.profileHeader}>Street</div>
+                    <TextField
+                      value={businessAndFarmDetail.street}
+                      className={classes.profileInput}
+                      name="street"
+                      InputProps={{ disableUnderline: true }}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className={`${classes.profileSection} ${classes.profileSection2}`}>  
+                    <div className={classes.profileHeader}> Unit </div>
+                    <TextField
+                      value={businessAndFarmDetail.unit}
+                      className={classes.profileInput}
+                      name="unit"
+                      InputProps={{ disableUnderline: true }}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className={classes.profileContainer}>
+                  <div className={`${classes.profileSection} ${classes.profileSection1}`}>
+                    <div className={classes.profileHeader}> Farm City </div>
+                    <TextField
+                      value={businessAndFarmDetail.city}
+                      className={classes.profileInput}
+                      name="city"
+                      InputProps={{ disableUnderline: true }}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className={classes.profileContainer}>
+                  <div className={`${classes.profileSection} ${classes.profileSection2}`}>
+                    <div className={classes.profileHeader}> State </div>
                     <TextField
                       value={businessAndFarmDetail.state}
                       className={classes.profileInput}
                       name="state"
                       InputProps={{ disableUnderline: true }}
                       onChange={handleChange}
-                      style={{ width: '115px' }}
                     />
                   </div>
-                  <div className={classes.profileHeader}>
-                    Zip
+                  <div className={`${classes.profileSection} ${classes.profileSection2}`}>
+                    <div className={classes.profileHeader}> Zip </div>
                     <TextField
                       value={businessAndFarmDetail.zip}
                       className={classes.profileInput}
                       name="zip"
                       InputProps={{ disableUnderline: true }}
-                      style={{ width: '115px', marginRight: '20px' }}
                       onChange={handleChange}
                     />
                   </div>
-                </Box>
+                </div>
               </Box>
               <Box
                 display="flex"
