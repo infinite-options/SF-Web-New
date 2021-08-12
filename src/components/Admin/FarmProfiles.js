@@ -233,29 +233,30 @@ function fetchBusinessInfo(setselectedBusiness, id, setProfit1) {
       console.error(error);
     });
 }
-function fetchDeliveryDetails(setDeliveryDetails, id) {
-  fetch(
-    `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_delivery_details/` +
-      id,
-    {
-      method: 'GET',
-    }
-  )
-    .then((response) => {
-      if (!response.ok) {
-        throw response;
-      }
-      return response.json();
-    })
-    .then((json) => {
-      const deliveryDetails = json.result;
-      setDeliveryDetails(deliveryDetails);
-      console.log('Delivery Details:', deliveryDetails);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
+// function fetchDeliveryDetails(setDeliveryDetails, id) {
+//   fetch(
+//     `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_delivery_details/` +
+//       id,
+//     {
+//       method: 'GET',
+//     }
+//   )
+//     .then((response) => {
+//       if (!response.ok) {
+//         throw response;
+//       }
+//       return response.json();
+//     })
+//     .then((json) => {
+//       const deliveryDetails = json.result;
+//       setDeliveryDetails(deliveryDetails);
+//       console.log('Delivery Details:', deliveryDetails);
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// }
+
 function FarmProfiles() {
   const classes = useStyles();
   const context = useContext(AdminFarmContext);
@@ -270,8 +271,9 @@ function FarmProfiles() {
   const [SelectedBusiness, setselectedBusiness] = useState([]);
   const [profit1, setProfit1] = useState([]);
   const [products, setProducts] = useState([]);
-  const [deliveryDetails, setDeliveryDetails] = useState([]);
-  // const [allZones, setAllZones] = useState([]);
+  // const [deliveryDetails, setDeliveryDetails] = useState([]);
+  const [allZones, setAllZones] = useState([]);
+  const [businessZones, setBusinessZones] = useState([]);
 
   const [selectedProduct, setSelectedProduct] = useState({});
   const [confirmPass, setConfirmPass] = useState('');
@@ -306,20 +308,21 @@ function FarmProfiles() {
     fetchProducts();
   }, []);
 
-  // Get list of zones for adding busines
-  // useEffect(() => {
-  //   axios
-  //     .post('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_zones/get',{})
-  //     .then((res) => {
-  //       console.log(res.data.result);
-  //     })
-  //     .catch((err) => {
-  //       if(err.response) {
-  //         console.log(err.response);
-  //       }
-  //       console.log(err);
-  //     })
-  // },[])
+  // Get list of zones for adding business
+  useEffect(() => {
+    axios
+      .post('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_zones/get',{})
+      .then((res) => {
+        // console.log('zones',res.data.result);
+        setAllZones(res.data.result);
+      })
+      .catch((err) => {
+        if(err.response) {
+          console.log(err.response);
+        }
+        console.log(err);
+      })
+  },[])
 
   const handleImgChange = (e) => {
     const files = e.target.files;
@@ -420,66 +423,234 @@ function FarmProfiles() {
         if (location.geocodePoints.length === 2) {
           lat = location.geocodePoints[1].coordinates[0];
           long = location.geocodePoints[1].coordinates[1];
-          var tempoData = {};
-          tempoData.business_name = businessAndFarmDetail.business_name;
-          tempoData.business_type = businessAndFarmDetail.business_type;
-          tempoData.business_desc = businessAndFarmDetail.description;
-          tempoData.business_contact_first_name = businessAndFarmDetail.firstName;
-          tempoData.business_contact_last_name = businessAndFarmDetail.lastName;
-          tempoData.business_phone_num = businessAndFarmDetail.phone;
-          tempoData.business_phone_num2 = businessAndFarmDetail.phone2;
-          tempoData.business_email = businessAndFarmDetail.email;
-          tempoData.business_address = businessAndFarmDetail.street;
-          tempoData.business_unit = businessAndFarmDetail.unit;
-          tempoData.business_city = businessAndFarmDetail.city;
-          tempoData.business_state = businessAndFarmDetail.state;
-          tempoData.business_zip = businessAndFarmDetail.zip;
-          tempoData.business_longitude = long.toString();
-          tempoData.business_latitude = lat.toString();
-          tempoData.business_EIN = '';
-          tempoData.business_WAUBI = '';
-          tempoData.business_license = '';
-          tempoData.business_USDOT = '';
-          tempoData.bus_notification_approval = '';
-          if (cancellation.allowCancel === true) {
-            tempoData.can_cancel = '1';
-          } else {
-            tempoData.can_cancel = '0';
-          }
-          if (deliverStrategy.pickupStatus === true) {
-            tempoData.delivery = '0';
-          } else {
-            tempoData.delivery = '1';
-          }
-          if (storage.reusable === true) {
-            tempoData.reusable = '1';
-          } else {
-            tempoData.reusable = '0';
-          }
-          tempoData.business_image = imageUrl;
-          tempoData.business_password = 'pbkdf2:sha256:150000$zMHfn0jt$29cef351d84456b5f6b665bc2bbab8ae3c6e42bd0e4a4e896xxxxxxxxxxx';
-          tempoData.platform_fee = '0';
-          tempoData.transaction_fee = '0';
-          tempoData.revenue_sharing = '0';
-          tempoData.profit_sharing = '0';
-          if (status.ACTIVE === true) {
-            tempoData.business_status = 'ACTIVE';
-          } else {
-            tempoData.business_status = 'INACTIVE';
-          }
-          console.log('create business object', tempoData)
-          axios
-            .post(
-              'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_details_update/Create',
-              tempoData
-            )
-            .then((res) => {
-              farmerObj();
-            })
-            .catch((err) => {
-              console.log(err);
-            })
         }
+        var tempoData = {};
+        tempoData.business_name = businessAndFarmDetail.business_name;
+        tempoData.business_type = businessAndFarmDetail.business_type;
+        tempoData.business_desc = businessAndFarmDetail.description;
+        tempoData.business_contact_first_name = businessAndFarmDetail.firstName;
+        tempoData.business_contact_last_name = businessAndFarmDetail.lastName;
+        tempoData.business_phone_num = businessAndFarmDetail.phone;
+        tempoData.business_phone_num2 = businessAndFarmDetail.phone2;
+        tempoData.business_email = businessAndFarmDetail.email;
+        tempoData.business_address = businessAndFarmDetail.street;
+        tempoData.business_unit = businessAndFarmDetail.unit;
+        tempoData.business_city = businessAndFarmDetail.city;
+        tempoData.business_state = businessAndFarmDetail.state;
+        tempoData.business_zip = businessAndFarmDetail.zip;
+        tempoData.business_longitude = long.toString();
+        tempoData.business_latitude = lat.toString();
+        tempoData.business_EIN = '';
+        tempoData.business_WAUBI = '';
+        tempoData.business_license = '';
+        tempoData.business_USDOT = '';
+        tempoData.bus_notification_approval = '';
+        if (cancellation.allowCancel === true) {
+          tempoData.can_cancel = '1';
+        } else {
+          tempoData.can_cancel = '0';
+        }
+        if (deliverStrategy.pickupStatus === true) {
+          tempoData.delivery = '0';
+        } else {
+          tempoData.delivery = '1';
+        }
+        if (storage.reusable === true) {
+          tempoData.reusable = '1';
+        } else {
+          tempoData.reusable = '0';
+        }
+        tempoData.business_image = imageUrl;
+        tempoData.business_password = 'pbkdf2:sha256:150000$zMHfn0jt$29cef351d84456b5f6b665bc2bbab8ae3c6e42bd0e4a4e896xxxxxxxxxxx';
+        tempoData.platform_fee = '0';
+        tempoData.transaction_fee = '0';
+        tempoData.revenue_sharing = '0';
+        tempoData.profit_sharing = '0';
+        if (status.ACTIVE === true) {
+          tempoData.business_status = 'ACTIVE';
+        } else {
+          tempoData.business_status = 'INACTIVE';
+        }
+        console.log('create business object', tempoData)
+        axios
+          .post(
+            'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_details_update/Create',
+            tempoData
+          )
+          .then((res) => {
+            const newId = res.data.uid;
+            const updateZoneObject = {
+              bus_uid: newId,
+              zone_uid: businessZones,
+            }
+            axios
+              .post('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/add_business_to_zone', updateZoneObject)
+              .then((res) => {
+                if(res.data.code === 200) {
+                  farmerObj();
+                }
+              })
+              .catch((err) => {
+                if(err.response) {
+                  console.log(err.response);
+                }
+                console.log(err);
+              })
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+    })
+    // Error for getting long and lat
+    .catch((err) => {
+      console.log(err);
+      if (err.response) {
+        console.log(err.response);
+      }
+    })
+  }
+
+  const updateFarm = (imageUrl) => {
+    axios
+    .get('https://dev.virtualearth.net/REST/v1/Locations/', {
+      params: {
+        CountryRegion: 'US',
+        adminDistrict: businessAndFarmDetail.state,
+        locality: businessAndFarmDetail.city,
+        postalCode: businessAndFarmDetail.zip,
+        addressLine: businessAndFarmDetail.street,
+        key: process.env.REACT_APP_BING_LOCATION_KEY,
+      },
+    })
+    // Successfully got long and lat
+    .then((res) => {
+      let locationApiResult = res.data;
+      if (locationApiResult.statusCode === 200) {
+        let locations = locationApiResult.resourceSets[0].resources;
+        /* Possible improvement: choose better location in case first one not desired
+         */
+        let location = locations[0];
+        let lat = location.geocodePoints[0].coordinates[0];
+        let long = location.geocodePoints[0].coordinates[1];
+        if (location.geocodePoints.length === 2) {
+          lat = location.geocodePoints[1].coordinates[0];
+          long = location.geocodePoints[1].coordinates[1];
+        }
+        // Update current farm
+        var tempoData = { ...settings };
+
+        tempoData.business_name = businessAndFarmDetail.business_name;
+        tempoData.business_type = businessAndFarmDetail.business_type;
+        tempoData.business_desc = businessAndFarmDetail.description;
+
+        tempoData.business_contact_first_name = businessAndFarmDetail.firstName;
+        tempoData.business_contact_last_name = businessAndFarmDetail.lastName;
+        tempoData.business_phone_num = businessAndFarmDetail.phone;
+        tempoData.business_phone_num2 = businessAndFarmDetail.phone2;
+        tempoData.business_email = businessAndFarmDetail.email;
+        tempoData.business_address = businessAndFarmDetail.street;
+        tempoData.business_unit = businessAndFarmDetail.unit;
+        tempoData.business_city = businessAndFarmDetail.city;
+        tempoData.business_state = businessAndFarmDetail.state;
+        tempoData.business_zip = businessAndFarmDetail.zip;
+        tempoData.business_longitude = long.toString();
+        tempoData.business_latitude = lat.toString();
+        tempoData.business_EIN = businessAndFarmDetail.businessEin;
+        tempoData.business_WAUBI = businessAndFarmDetail.businessWaubi;
+        tempoData.business_license = businessAndFarmDetail.businessLicense;
+        tempoData.business_USDOT = businessAndFarmDetail.businessUsdot;
+
+        tempoData.business_hours = regularHours;
+        tempoData.business_accepting_hours = acceptTime;
+        tempoData.business_delivery_hours = deliveryTime;
+        
+        
+        
+        
+        tempoData.platform_fee = businessAndFarmDetail.platformFee.toString();
+        tempoData.transaction_fee = businessAndFarmDetail.transactionFee.toString();
+        tempoData.profit_sharing = businessAndFarmDetail.profitSharing.toString();
+        tempoData.revenue_sharing = businessAndFarmDetail.revenueSharing.toString();
+        // console.log(typeof tempoData.business_hours);
+
+        if (typeof tempoData.business_hours === 'string' && tempoData.business_hours !== '') {
+          tempoData.business_hours = JSON.parse(tempoData.business_hours);
+        }
+
+        if (typeof tempoData.business_accepting_hours === 'string' && tempoData.business_accepting_hours !== '') {
+          tempoData.business_accepting_hours = JSON.parse(
+            tempoData.business_accepting_hours
+          );
+        }
+
+        if (typeof tempoData.business_delivery_hours === 'string' && tempoData.business_delivery_hours !== '') {
+          tempoData.business_delivery_hours = JSON.parse(
+            tempoData.business_delivery_hours
+          );
+        }
+
+        if (typeof tempoData.business_association === 'string' && tempoData.business_association !== '') {
+          tempoData.business_association = JSON.parse(
+            tempoData.business_association
+          );
+        } else {
+          tempoData.business_association = [];
+        }
+
+        //third column
+        if (deliverStrategy.pickupStatus === true) {
+          tempoData.delivery = '0';
+        } else {
+          tempoData.delivery = '1';
+        }
+
+        if (storage.reusable === true) {
+          tempoData.reusable = '1';
+        } else {
+          tempoData.reusable = '0';
+        }
+        if (cancellation.allowCancel === true) {
+          tempoData.can_cancel = '1';
+        } else {
+          tempoData.can_cancel = '0';
+        }
+        tempoData.business_image = imageUrl;
+        if (status.ACTIVE === true) {
+          tempoData.business_status = 'ACTIVE';
+        } else {
+          tempoData.business_status = 'INACTIVE';
+        }
+
+        console.log(JSON.stringify(tempoData));
+        axios
+          .post(
+            'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_details_update/Post',
+            tempoData
+          )
+          .then((res) => {
+            // console.log(res.data)
+            const updateZoneObject = {
+              bus_uid: farmerID,
+              zone_uid: businessZones,
+            }
+            axios
+              .post('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/add_business_to_zone', updateZoneObject)
+              .then((res) => {
+                if(res.data.code === 200) {
+                  farmerObj();
+                }
+              })
+              .catch((err) => {
+                if(err.response) {
+                  console.log(err.response);
+                }
+                console.log(err);
+              })
+          })
+          .catch((err) => {
+            console.log(err);
+          })
       }
     })
     // Error for getting long and lat
@@ -493,97 +664,25 @@ function FarmProfiles() {
 
   async function update() {
     if (!newFarm) {
-      // Update current farm
-      var tempoData = { ...settings };
-
-      tempoData.business_name = businessAndFarmDetail.business_name;
-      tempoData.business_type = businessAndFarmDetail.business_type;
-      tempoData.business_desc = businessAndFarmDetail.description;
-
-      tempoData.business_contact_first_name = businessAndFarmDetail.firstName;
-      tempoData.business_contact_last_name = businessAndFarmDetail.lastName;
-      tempoData.business_phone_num = businessAndFarmDetail.phone;
-      tempoData.business_phone_num2 = businessAndFarmDetail.phone2;
-      tempoData.business_email = businessAndFarmDetail.email;
-      tempoData.business_address = businessAndFarmDetail.street;
-      tempoData.business_unit = businessAndFarmDetail.unit;
-      tempoData.business_city = businessAndFarmDetail.city;
-      tempoData.business_state = businessAndFarmDetail.state;
-      tempoData.business_zip = businessAndFarmDetail.zip;
-      tempoData.business_hours = regularHours;
-      tempoData.business_accepting_hours = acceptTime;
-      tempoData.business_delivery_hours = deliveryTime;
-      tempoData.business_license = businessAndFarmDetail.businessLicense;
-      tempoData.business_USDOT = businessAndFarmDetail.businessUsdot;
-      tempoData.business_EIN = businessAndFarmDetail.businessEin;
-      tempoData.business_WAUBI = businessAndFarmDetail.businessWaubi;
-      tempoData.platform_fee = businessAndFarmDetail.platformFee.toString();
-      tempoData.transaction_fee = businessAndFarmDetail.transactionFee.toString();
-      tempoData.profit_sharing = businessAndFarmDetail.profitSharing.toString();
-      tempoData.revenue_sharing = businessAndFarmDetail.revenueSharing.toString();
-      // console.log(typeof tempoData.business_hours);
-
-      if (typeof tempoData.business_hours === 'string' && tempoData.business_hours !== '') {
-        tempoData.business_hours = JSON.parse(tempoData.business_hours);
-      }
-
-      if (typeof tempoData.business_accepting_hours === 'string' && tempoData.business_accepting_hours !== '') {
-        tempoData.business_accepting_hours = JSON.parse(
-          tempoData.business_accepting_hours
-        );
-      }
-
-      if (typeof tempoData.business_delivery_hours === 'string' && tempoData.business_delivery_hours !== '') {
-        tempoData.business_delivery_hours = JSON.parse(
-          tempoData.business_delivery_hours
-        );
-      }
-
-      if (typeof tempoData.business_association === 'string' && tempoData.business_association !== '') {
-        tempoData.business_association = JSON.parse(
-          tempoData.business_association
-        );
+      if(imageUpload.file) {
+        const formData = new FormData();
+        formData.append('bus_photo', imageUpload.file);
+        axios
+          .post('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/new_business_image_upload', formData)
+          .then((res) => {
+            console.log(res)
+            const image_url = res.data;
+            updateFarm(image_url);
+          })
+          .catch((err) => {
+            if(err.response) {
+              console.log(err.response);
+            }
+            console.log(err);
+          })
       } else {
-        tempoData.business_association = [];
+        updateFarm(imageUpload.path)
       }
-
-      //third column
-      if (deliverStrategy.pickupStatus === true) {
-        tempoData.delivery = '0';
-      } else {
-        tempoData.delivery = '1';
-      }
-
-      if (storage.reusable === true) {
-        tempoData.reusable = '1';
-      } else {
-        tempoData.reusable = '0';
-      }
-      if (cancellation.allowCancel === true) {
-        tempoData.can_cancel = '1';
-      } else {
-        tempoData.can_cancel = '0';
-      }
-      if (status.ACTIVE === true) {
-        tempoData.business_status = 'ACTIVE';
-      } else {
-        tempoData.business_status = 'INACTIVE';
-      }
-
-      console.log(JSON.stringify(tempoData));
-
-      axios
-        .post(
-          'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_details_update/Post',
-          tempoData
-        )
-        .then((res) => {
-          console.log('success posting check password: ', res);
-          setSaveDialogOpen(true);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     } else {
       // Create new farm
       if(imageUpload.file) {
@@ -779,7 +878,7 @@ function FarmProfiles() {
             holdData[key] = '';
           }
         }
-        console.log(holdData);
+        // console.log(holdData);
         var BusAndFarmObj = {
           business_name: holdData.business_name,
           business_type: holdData.business_type,
@@ -882,10 +981,11 @@ function FarmProfiles() {
         );
         getFarmSettings(response.data.result.result[0].business_uid);
         fetchProducts(response.data.result.result[0].business_uid);
-        fetchDeliveryDetails(
-          setDeliveryDetails,
-          response.data.result.result[0].business_uid
-        );
+        // fetchDeliveryDetails(
+        //   setDeliveryDetails,
+        //   response.data.result.result[0].business_uid
+        // );
+        fetchBusinessZones(response.data.result.result[0].business_uid);
       });
   };
 
@@ -922,10 +1022,11 @@ function FarmProfiles() {
                     );
                     getFarmSettings(profile.business_uid);
                     fetchProducts(profile.business_uid);
-                    fetchDeliveryDetails(
-                      setDeliveryDetails,
-                      profile.business_uid
-                    );
+                    // fetchDeliveryDetails(
+                    //   setDeliveryDetails,
+                    //   profile.business_uid
+                    // );
+                    fetchBusinessZones(profile.business_uid);
                     setNewFarm(false);
                     handleClose();
                   }}
@@ -1074,6 +1175,40 @@ function FarmProfiles() {
     </div>
   );
 
+  // Initialize zone selection when loading page or changing farms
+  const fetchBusinessZones = (business_uid) => {
+    axios
+      .get(`https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/business_delivery_details/${business_uid}`)
+      .then((res) => {
+        const newBusinessZones = res.data.result.map((elt) => elt.zone_uid);
+        // console.log('test1',newBusinessZones);
+        setBusinessZones(newBusinessZones)
+      })
+      .catch((err) => {
+        if(err.response) {
+          console.log(err.response);
+        }
+        console.log(err);
+      })
+  }
+
+  // Determine if a zone is checked
+  const zoneIsSelected = (zone_uid) => {
+    return businessZones.indexOf(zone_uid) !== -1
+  }
+
+  // To update when zone is added/deleted
+  const updateZoneSelection = (checked, zone_uid) => {
+    if(checked) {
+      const newBusinessZones = [...businessZones];
+      newBusinessZones.push(zone_uid);
+      setBusinessZones(newBusinessZones)
+    } else {
+      const newBusinessZones = businessZones.filter((elt) => elt !== zone_uid);
+      setBusinessZones(newBusinessZones)
+    }
+  }
+
   // console.log("selected business ",busiSelect)
   return (
     <div className={classes.root}>
@@ -1202,6 +1337,7 @@ function FarmProfiles() {
                   setBusiSelect(newFarmBusiSelect);
                   setProducts([]);
                   setBusFarm(newFarmDetail)
+                  setBusinessZones([]);
                 }}
               >
                 <button
@@ -1635,7 +1771,7 @@ function FarmProfiles() {
                     />
                   </Link>
                 </Box>
-                <Box>
+                {/* <Box>
                   <h3 className={classes.profileHeader}>Delivery Zones</h3>
                   <select
                     onChange={handleChangeZone}
@@ -1703,8 +1839,59 @@ function FarmProfiles() {
                       {item.z_delivery_day}( {item.z_delivery_time})
                     </p>
                   ) : null;
-                })}
-
+                })} */}
+                <Box>
+                  <div>
+                    <h3 className={classes.profileHeader}
+                      style={{
+                        display: 'inline-block',
+                      }}
+                    >
+                      Delivery Zones
+                    </h3>
+                    <button
+                      style={{
+                        display: 'inline-block',
+                        border: 'none',
+                        backgroundColor: 'inherit',
+                        float: 'right',
+                        margin: '16px 0',
+                        padding: '3px',
+                        fontWeight: 'bold',
+                        fontSize: '16px',
+                      }}
+                    >
+                      &#x025BE;
+                    </button>
+                  </div>
+                  <div>
+                    {allZones.map(elt => {
+                      let id = elt.zone_uid;
+                      let name = elt.zone_name.substring(
+                        elt.zone_name.lastIndexOf('-') + 1
+                      );
+                      let weekDay = elt.z_accepting_day.toLowerCase();
+                      let formattedWeekDay = weekDay.charAt(0).toUpperCase() + weekDay.slice(1);
+                      return (
+                        <div
+                          key={id}
+                        >
+                          <input
+                            type="checkbox"
+                            id={id}
+                            name="businessZones"
+                            value={id}
+                            checked={zoneIsSelected(id)}
+                            onChange={(e) => {
+                              updateZoneSelection(e.target.checked, id);
+                            }}
+                          />
+                          <label for={id}>{`${name}, ${formattedWeekDay}`}</label>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </Box>
                 <FormControl component="fieldset">
                   <p className={classes.profileHeader}>Delivery Strategy</p>
                   {/* <FormLabel component="legend">Delivery Strategy</FormLabel> */}
