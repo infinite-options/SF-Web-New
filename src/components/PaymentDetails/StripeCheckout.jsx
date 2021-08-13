@@ -55,8 +55,25 @@ const StripeCheckout = (props) => {
     startDeliveryDate,
   } = useContext(storeContext);
 
-  const { paymentDetails, setPaymentProcessing, chosenCoupon } =
+  const { paymentDetails, setPaymentProcessing, chosenCoupon, chosenCode, ambDis } =
     useContext(checkoutContext);
+  console.log("in stripe cst 1",ambDis)
+  var couponIds = ''
+  
+  if(chosenCoupon==='' && chosenCode===''){
+    couponIds = ''
+  }
+  else if (chosenCoupon!='' && chosenCode!=''){
+    couponIds = chosenCoupon+','+chosenCode
+  }
+  else{
+    if(chosenCoupon==='' ){
+      couponIds = chosenCode
+    }
+    else{
+      couponIds = chosenCoupon
+    }
+  } 
 
   const onPay = async (event) => {
     event.preventDefault();
@@ -149,6 +166,7 @@ const StripeCheckout = (props) => {
 
       // DONE: for Guest, put 'guest' in uid
       // TODO: Add Pay coupon ID
+      console.log("in stripe cst 2",ambDis)
       const data = {
         // pur_customer_uid: profile.customer_uid,
         pur_customer_uid: auth.isAuth ? cookies.get('customer_uid') : 'GUEST',
@@ -174,7 +192,7 @@ const StripeCheckout = (props) => {
           : profile.longitude.toString(),
         purchase_notes: 'purchase_notes',
         start_delivery_date: startDeliveryDate,
-        pay_coupon_id: chosenCoupon,
+        pay_coupon_id: couponIds,
         amount_due: paymentDetails.amountDue.toString(),
         amount_discount: paymentDetails.discount.toString(),
         amount_paid: paymentDetails.amountDue.toString(),
@@ -195,6 +213,7 @@ const StripeCheckout = (props) => {
         delivery_fee: paymentDetails.deliveryFee.toString(),
         driver_tip: paymentDetails.driverTip.toString(),
         taxes: paymentDetails.taxes.toString(),
+        ambassador_code:ambDis.toString(),
       };
 
       console.log('purchase_Data_SF data', data);
@@ -237,6 +256,7 @@ const StripeCheckout = (props) => {
       console.log('error happened while posting to Stripe_Intent api', err);
     }
   };
+  console.log("in stripe page",couponIds,ambDis)
   return (
     <>
       {/* <label className={props.classes.label}>

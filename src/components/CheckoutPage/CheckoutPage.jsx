@@ -40,6 +40,8 @@ export default function CheckoutPage() {
   );
   const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [chosenCoupon, setChosenCoupon] = useState('');
+  const [chosenCode, setChosenCode] = useState('');
+  const [ambDis,setAmbDis] = useState(0)
   const [leftTabChosen, setLeftTabChosen] = useState(4);
 
   useEffect(() => {
@@ -70,6 +72,10 @@ export default function CheckoutPage() {
           setPurchaseMade,
           chosenCoupon,
           setChosenCoupon,
+          chosenCode,
+          setChosenCode,
+          ambDis,
+          setAmbDis,
         }}
       >
         {/* <Elements stripe={stripePromise}>

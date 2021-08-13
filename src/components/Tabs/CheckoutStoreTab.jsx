@@ -453,6 +453,7 @@ export default function CheckoutTab(props) {
   const [subtotal, setSubtotal] = useState(calculateSubTotal(getItemsCart()));
   const [promoApplied, setPromoApplied] = useState(0);
   const [ambassadorDiscount, setAmbassadorDiscount] = useState(0);
+  const [discountMessage,setDiscountMessage] = useState('')
   const [deliveryFee, setDeliveryFee] = useState(
     cartItems.length > 0 ? origDeliveryFee : 0
   );
@@ -651,18 +652,72 @@ useMemo(()=> {
   const postAmbassadorRequest = async() => {
     // console.log("ambassador", reqBodyAmbassadorPost)
     try{
+      setTotal(subtotal -
+        promoApplied +
+        deliveryFee +
+        serviceFee +
+        parseFloat(driverTip !== '' ? driverTip : 0) +
+        tax)
     const response = await axios.post(BASE_URL + 'brandAmbassador/discount_checker', reqBodyAmbassadorPost )
-    // console.log("ambassador",response)
-  //  console.log("ambassador",response.data.sub.discount_amount)
-    setAmbassadorDiscount(response.data.sub.discount_amount)
+    
+    setAmbassadorDiscount(0)
+
+    if(response.data.code != 200){
+      setDiscountMessage(response.data.message)
+      setAmbassadorDiscount(0)
+      console.log("in ambassador",discountMessage)
+      throw 'no discount'
+    }
+    console.log("subtotal is ",subtotal,response.data.sub.threshold)
+    if(response.data.sub.coupon_id === 'SFGiftCard'){
+      setDiscountMessage('')
+      const disAmt = response.data.sub.discount_amount
+      console.log("in ambassador",total,disAmt,total-disAmt)
+      setAmbassadorDiscount(subtotal-disAmt<0?subtotal:disAmt)
+      if(response.data.uids.length>1){
+        checkout.setChosenCode(response.data.uids[1])
+      }
+      else{
+        checkout.setChosenCode(response.data.uids[0])
+      }
+      
+      checkout.setAmbDis(subtotal-disAmt<0?subtotal:disAmt)
+      console.log("in ambassador",checkout.chosenCode)
+
+    }
+    else{
+      if(response.data.sub.threshold>subtotal){
+        setDiscountMessage('Subtotal should be greater than $'+response.data.sub.threshold)
+      }
+      else{
+        setDiscountMessage('')
+        const disAmt = response.data.sub.discount_amount
+        console.log("in ambassador",total,disAmt,total-disAmt)
+        setAmbassadorDiscount(subtotal-disAmt<0?subtotal:disAmt)
+        if(response.data.uids.length>1){
+          checkout.setChosenCode(response.data.uids[1])
+        }
+        else{
+          checkout.setChosenCode(response.data.uids[0])
+        }
+        checkout.setAmbDis(subtotal-disAmt<0?subtotal:disAmt)
+        console.log("in ambassador",checkout.chosenCode)
+
+      }
+      console.log("in cst",checkout.ambDis)
+    }
+    
+
 
       }catch(err) {
+        checkout.setChosenCode('')
+        checkout.setAmbDis(0)
         console.log(err.response || err);
       }
     };
 
   postAmbassadorRequest();
-},[myValue])
+},[myValue,subtotal])
 
 
   
@@ -985,7 +1040,7 @@ useMemo(()=> {
             //  id="email"
             //  value={myValue}
               name="ambassador"
-              label={myValue !== '' ?"Thankyou" :"Enter Ambassador Code"}
+              label={discountMessage !== '' ?discountMessage :"Enter Ambassador Code"}
               variant="outlined"
               size="small"
               fullWidth

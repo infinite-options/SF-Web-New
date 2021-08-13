@@ -359,17 +359,31 @@ const Signup = ({ ...props }) => {
   return (
     <Paper
       style={{
-        width: 480,
+        // width: 480,
+        // marginTop: '50px',
+        // width
+        // maxWidth: '96vw',
         height: 'auto',
         padding: 20,
         backgroundColor: '#E0E6E6F2',
         textAlign: 'center',
         display: 'inline-block',
-        position: 'absolute',
-        top: '50px',
-        right: '300px',
+        // position: 'absolute',
+        // top: '50px',
+        // right: '300px',
         zIndex: 10040,
+        // border: '1px dashed'
       }}
+      // style={{
+      //   // position: 'absolute',
+      //   // right: '0',
+      //   // right: '350px',
+      //   // width: '100vw',
+      //   width: '100%',
+      //   // width: '600px',
+      //   zIndex: 10040,
+      //   // border: '1px dashed'
+      // }}
     >
       {/* <div >
           <img src={cross}  style={{float:'right',height:'25px',width:'25px',color:'black',marginTop:'3px',marginRight:'3px'}}></img>

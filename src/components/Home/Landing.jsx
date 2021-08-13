@@ -20,10 +20,19 @@ import bg from '../../icon/bg.svg';
 import ConfirmatioModal from 'components/SignUp/ConfirmationModal';
 // import { AdminFarmContext } from '../Admin/AdminFarmContext';
 import { AuthContext } from '../../auth/AuthContext';
+
 const useStyles = makeStyles((theme) => ({
   authModal: {
     position: 'absolute',
-    width: '500px',
+    // width: '500px',
+    top: '50px',
+    zIndex: '10040',
+    height: 'auto',
+  },
+  authModal2: {
+    position: 'absolute',
+    // width: '500px',
+    top: '130px',
     zIndex: '10040',
     height: 'auto',
   },
@@ -99,6 +108,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function fetchSweepstakes(setSweepstakeActive) {
+  const endpoint = `https://3o9ul2w8a1.execute-api.us-west-1.amazonaws.com/dev/api/v2/promotions`;
+  fetch(
+    `${endpoint}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({name: 'SF'}),
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json();
+    })
+    .then((json) => {
+      const sweeps = json;
+      setSweepstakeActive(sweeps === 'ACTIVE');
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
 /**
  * Hook that alerts clicks outside of the passed ref
  */
@@ -109,6 +145,9 @@ function useOutsideAlerter(ref) {
      * Alert if clicked on outside of element
      */
     function handleClickOutside(event) {
+      console.log("(UOA) ref.current: ", ref.current)
+      console.log("(UOA) event: ", event)
+
       if (
         ref.current &&
         !ref.current.contains(event.target) &&
@@ -117,6 +156,8 @@ function useOutsideAlerter(ref) {
         ref.current.hidden = true;
       }
     }
+
+    console.log("(UOA) ref: ", ref)
 
     // Bind the event listener
     document.addEventListener('mousedown', handleClickOutside);
@@ -146,6 +187,15 @@ const Landing = ({ ...props }) => {
   useOutsideAlerter(loginWrapperRef, setIsLoginShown);
   const signupWrapperRef = useRef(null);
   useOutsideAlerter(signupWrapperRef, setIsSignUpShown);
+  useEffect(() => fetchSweepstakes(auth.setSweepstakeActive), []);
+
+  useEffect(() => {
+    console.log("(UE) isLoginShown? ", isLoginShown);
+  }, [isLoginShown])
+
+  useEffect(() => {
+    console.log("(UE) logginWrapperRef ", loginWrapperRef);
+  }, [loginWrapperRef])
 
   // const handleClose = () => {
   //   console.log('close');
@@ -154,7 +204,12 @@ const Landing = ({ ...props }) => {
   // };
 
   return (
-    <div className="contentWrap">
+    <div 
+      className="contentWrap"
+      style={{
+        // border: 'blue solid'
+      }}
+    >
       {/* <Box
           style={{
             backgroundSize: 'cover',
@@ -171,21 +226,39 @@ const Landing = ({ ...props }) => {
         setIsSignUpShown={setIsSignUpShown}
       />
       {/* START: Login/SignUp Modal */}
-      <Box display="flex" justifyContent="flex-end">
+      <Box 
+        display="flex" justifyContent="flex-end"
+        style={{
+          // border: 'solid red'
+        }}
+      >
         {/* Login Modal */}
         <Box
           position="absolute"
-          width="50%"
+          // width="50%"
+          width="100%"
           display="flex"
           justifyContent="center"
           zIndex={40}
+          style={{
+            // border: 'solid blue'
+          }}
         >
           <Box
             ref={loginWrapperRef}
             className={classes.authModal}
             hidden={!isLoginShown}
+            // width="100%"
+            style={{
+              // border: 'solid green',
+              // width: '100%'
+              // padding: '0',
+              // margin: '0'
+            }}
           >
             <AdminLogin
+              // ref={loginWrapperRef}
+              // hidden={!isLoginShown}
               isLoginShown={isLoginShown}
               setIsLoginShown={setIsLoginShown}
               isSignUpShown={isSignUpShown}
@@ -195,18 +268,34 @@ const Landing = ({ ...props }) => {
         </Box>
 
         {/* Sign Up Modal */}
-        <Box display="flex" justifyContent="flex-end">
+        <Box 
+          display="flex" justifyContent="flex-end"
+          width="100%"
+          style={{
+            // border: 'solid red'
+          }}
+          position="absolute"
+        >
           <Box
-            position="absolute"
-            width="50%"
+            // position="absolute"
+            // width="50%"
             display="flex"
+            width="100%"
             justifyContent="center"
             zIndex={4000}
+            style={{
+              // border: 'solid blue'
+            }}
           >
             <Box
               ref={signupWrapperRef}
               className={classes.authModal}
               hidden={!isSignUpShown}
+              // width="100%"
+              style={{
+                // border: 'solid green',
+                // width: '100%'
+              }}
             >
               <Signup
                 isLoginShown={isLoginShown}
@@ -234,48 +323,72 @@ const Landing = ({ ...props }) => {
         {auth.sweepstakeActive ? (
           <div>
             <Box
-              onClick={() => history.push('/sweeptakes')}
+              className="homeHeader"
+              onClick={() => history.push('/sweepstakes')}
               style={{
                 background: '#F8851B 0% 0% no-repeat padding-box',
                 opacity: 1,
-                height: '60px',
-                paddingTop: '10px',
+                // height: '60px',
+                minHeight: '60px',
+                // paddingTop: '10px',
                 cursor: 'pointer',
               }}
             >
-              <span
-                style={{
-                  textAlign: 'center',
-                  fontSize: ' 40px ',
-                  fontWeight: '600',
-                  color: '#FFFFFF',
-                  opacity: 1,
-                  paddingRight: '30px',
-                  marginTop: '20px',
-                }}
+              <div
+                className="homeHeaderContainer"
               >
-                Free Fresh Food!
-              </span>
-              <span
-                style={{
-                  textAlign: 'center',
-                  fontSize: ' 20px ',
-                  fontWeight: '600',
-                  color: '#FFFFFF',
-                  opacity: 1,
-                }}
-              >
-                Click here to enter now to &nbsp;
-                <span
-                  style={{
-                    fontWeight: '600',
-                    color: '#2B6D74',
-                  }}
+                <div
+                  // style={{
+                  //   border: 'solid red'
+                  // }}
+                  className="homeHeaderLeft"
                 >
-                  win $50 worth &nbsp;
-                </span>
-                of fresh produce, delivered free of charge to your door
-              </span>
+                  <span
+                    style={{
+                      textAlign: 'center',
+                      fontSize: ' 40px ',
+                      fontWeight: '600',
+                      color: '#FFFFFF',
+                      opacity: 1,
+                      // paddingRight: '30px',
+                      // marginTop: '20px',
+                      // border: 'solid lime'
+                    }}
+                  >
+                    Free Fresh Food!
+                  </span>
+                </div>
+                <div
+                  // style={{
+                  //   border: 'solid purple'
+                  // }}
+                  className="homeHeaderRight"
+                >
+                  <span
+                    style={{
+                      textAlign: 'center',
+                      fontSize: ' 20px ',
+                      fontWeight: '600',
+                      color: '#FFFFFF',
+                      opacity: 1,
+                      // border: '1px solid cyan',
+                      width: '100%'
+                      // marginBottom: '10px'
+                    }}
+                  >
+                    Click here to enter now to &nbsp;
+                    <span
+                      style={{
+                        fontWeight: '600',
+                        color: '#2B6D74',
+                      }}
+                    >
+                      win $50 worth &nbsp;
+                    </span>
+                    of fresh produce, delivered free of charge to your door
+                  </span>
+                </div>
+              </div>
             </Box>
           </div>
         ) : null}
@@ -486,7 +599,7 @@ const Landing = ({ ...props }) => {
               id="headingGroup"
               className="text-white text-center d-none d-lg-block mt-5"
             >
-              <h1
+              {/* <h1
                 id="text"
                 style={{
                   color: appColors.buttonText,
@@ -500,21 +613,45 @@ const Landing = ({ ...props }) => {
               >
                 Fresh, Organic <br></br>
                 Produce <br></br>Delivered
+              </h1> */}
+              <h1
+                className="freshOrganic"
+                id="text"
+                style={{
+                  color: appColors.buttonText,
+                  // fontSize: '80px',
+                  // textAlign: 'left',
+                  // fontWeight: '700',
+                  // marginLeft: '175px',
+                  // marginTop: '150px',
+                  // marginBottom: '150px',
+                  // border: 'dashed'
+                }}
+              >
+                Fresh, Organic
+                <br />
+                Produce 
+                <br />
+                Delivered
               </h1>
             </div>
           </Col>
           <Col
             lg={6}
             // md={{ size: 6, order: 1, offset: 1 }}
+            // style={{
+            //   border: 'dashed'
+            // }}
           >
             <img
-              className="img-fluid"
+              className='homeLogo'
+              // className="img-fluid"
               src="./logos/SF.png"
               style={{
-                marginTop: '30px',
+                // marginTop: '30px',
                 width: '306px',
                 height: '306px',
-                marginTop: '160px',
+                // marginTop: '160px',
                 //marginLeft: '800px',
               }}
             />
@@ -523,41 +660,69 @@ const Landing = ({ ...props }) => {
       </Container>
       {/* END: Landing Page Logo */}
       <Box
-        className="hero-right"
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
+        // className="hero-right"
+        // display="flex"
+        // flexDirection="row"
+        // alignItems="center"
+        // className="addrSearchContainer"
         style={{
+          // display: 'flex',
           backgroundColor: '#2F787F',
           minHeight: '200px',
-          maxHeight: '300px',
-          width: 'auto',
+          // maxHeight: '300px',
+          // width: 'auto',
+          width: '100%',
+          maxWidth: '100%',
+          // border: 'dashed'
         }}
       >
         {/* <ZipcodeSearch/> */}
-        <Box style={{ width: '50%' }}>
-          <p
-            style={{
-              color: appColors.buttonText,
-              fontSize: '45px',
-              textAlign: 'left',
-              fontWeight: '700',
-              marginLeft: '20px',
-              letterSpacing: '0.95px',
+        <div
+          className="addrSearchContainer"
+          // style={{
+          //   border: '1px solid yellow',
+          //   width: 
+          // }}
+        >
+          <Box 
+            className="addrSearchLeft"
+            style={{ 
+              // width: '50%',
+              // minWidth: '300px',
+              // border: '1px solid cyan'
             }}
           >
-            Local produce delivered <br />
-            to your doorstep
-          </p>
-        </Box>
-        <Box style={{ width: '50%' }}>
-          <DeliveryLocationSearch
-            isLoginShown={isLoginShown}
-            setIsLoginShown={setIsLoginShown}
-            isSignUpShown={isSignUpShown}
-            setIsSignUpShown={setIsSignUpShown}
-          />
-        </Box>
+            <p
+              style={{
+                color: appColors.buttonText,
+                fontSize: '45px',
+                textAlign: 'left',
+                fontWeight: '700',
+                marginLeft: '20px',
+                letterSpacing: '0.95px',
+              }}
+            >
+              {/* Local produce delivered <br />
+              to your doorstep */}
+              Local produce delivered
+              to your doorstep
+            </p>
+          </Box>
+          <Box 
+            className="addrSearchRight"
+            style={{ 
+              // width: '50%',
+              // border: '1px solid red'
+            }}
+          >
+            <DeliveryLocationSearch
+              isLoginShown={isLoginShown}
+              setIsLoginShown={setIsLoginShown}
+              isSignUpShown={isSignUpShown}
+              setIsSignUpShown={setIsSignUpShown}
+            />
+          </Box>
+        </div>
       </Box>
       <Box
         className={classes.title}

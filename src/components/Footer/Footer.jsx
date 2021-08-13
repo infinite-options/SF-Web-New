@@ -53,8 +53,21 @@ const Footer = ({ ...props }) => {
   };
 
   return (
-    <div className="containerFooter" style={{ margin: 0 }}>
-      <div className="container">
+    <div 
+      className="footerContainer" 
+      style={{ 
+        // minHeight: '150px',
+        
+        // margin: 0,
+        // border: '2px dashed'
+      }}
+    >
+      {/* <div 
+        className="container"
+        style={{
+          border: 'dashed'
+        }}
+      >
         {ambasadorModal && <AmbasadorModal close={modalClose}></AmbasadorModal>}
         {loginambasadorModal && (
           <LoginAmbasador
@@ -92,6 +105,9 @@ const Footer = ({ ...props }) => {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignItems: 'center',
               }}
             >
               <Button
@@ -99,6 +115,12 @@ const Footer = ({ ...props }) => {
                 variant="contained"
                 color="secondary"
                 //onClick={onFindProduceClicked}
+                onClick={() => {
+                  history.push({
+                    pathname: '/store',
+                    // state: { leftTabChosen: 4 },
+                  });
+                }}
                 style={{
                   width: '250px',
                   marginTop: '50px',
@@ -130,7 +152,11 @@ const Footer = ({ ...props }) => {
                 paddingLeft: '60px',
                 fontWeight: '500',
                 marginTop: '35px',
-                textAlign: 'left',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignItems: 'center',
               }}
             >
               <p>
@@ -206,7 +232,391 @@ const Footer = ({ ...props }) => {
             </Col>
           </Row>
         </Container>
-      </div>
+      </div> */}
+
+        {ambasadorModal && <AmbasadorModal close={modalClose}></AmbasadorModal>}
+        {loginambasadorModal && (
+          <LoginAmbasador
+            showSignup={signUpClicked}
+            showLogin={loginClicked}
+            close={modalClose}
+          ></LoginAmbasador>
+        )}
+
+          <div
+            className="footerLeft"
+            style={{
+              // border: 'dashed',
+              display: 'flex'
+            }}
+          >
+            <div
+              style={{
+                // border: '2px solid blue',
+                width: '50%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <img
+                alt="logo.png"
+                // height="130px"
+                // width="130px"
+                // maxHeight="90%"
+                // maxWidth="90%"
+                src="./logos/SF.png"
+                onClick={() =>
+                  window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                  })
+                }
+                style={{
+                  // float: 'left',
+                  // marginTop: '35px',
+                  // cursor: 'pointer',
+                  // border: 'inset'
+                  height: "130px",
+                  width: "130px",
+                  maxHeight: "90%",
+                  maxWidth: "90%"
+                }}
+              />
+            </div>
+
+            {/* <Col
+              lg={3}
+              md={1}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Button
+                size="large"
+                variant="contained"
+                color="secondary"
+                //onClick={onFindProduceClicked}
+                onClick={() => {
+                  history.push({
+                    pathname: '/store',
+                    // state: { leftTabChosen: 4 },
+                  });
+                }}
+                style={{
+                  width: '250px',
+                  marginTop: '50px',
+                  textTransform: 'none',
+                }}
+              >
+                Buy a Gift Card
+              </Button>
+              <Button
+                size="large"
+                variant="contained"
+                color="secondary"
+                onClick={becomeAmbassador}
+                style={{
+                  width: '250px',
+                  marginTop: '10px',
+                  textTransform: 'none',
+                }}
+              >
+                Become an Ambassador
+              </Button>
+            </Col> */}
+
+          
+            <div
+              style={{
+                // border: '2px solid red',
+                width: '50%',
+                height: '100%',
+                display: 'inline-block',
+                // alignItems: 'center',
+                // justifyContent: 'center'
+              }}
+            >
+              <div
+                style={{
+                  // border: '2px inset',
+                  height: '50%',
+                  display: 'flex',
+                  // alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative'
+                }}
+              >
+                <Button
+                  size="large"
+                  variant="contained"
+                  color="secondary"
+                  //onClick={onFindProduceClicked}
+                  onClick={() => {
+                    history.push({
+                      pathname: '/store',
+                      // state: { leftTabChosen: 4 },
+                    });
+                  }}
+                  style={{
+                    width: '250px',
+                    maxWidth: '90%',
+                    height: '40px',
+                    // marginTop: '50px',
+                    // margin: '5px',
+                    textTransform: 'none',
+                    position: 'absolute',
+                    bottom: '10px'
+                  }}
+                >
+                  Buy a Gift Card
+                </Button>
+              </div>
+              <div
+                style={{
+                  // border: '2px inset',
+                  height: '50%',
+                  display: 'flex',
+                  // alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative'
+                }}
+              >
+                <Button
+                  size="large"
+                  variant="contained"
+                  color="secondary"
+                  onClick={becomeAmbassador}
+                  style={{
+                    width: '250px',
+                    maxWidth: '90%',
+                    height: '40px',
+                    // marginTop: '10px',
+                    // margin: '5px',
+                    textTransform: 'none',
+                    position: 'absolute',
+                    top: '10px'
+                  }}
+                >
+                  Become an Ambassador
+                </Button>
+              </div>
+            </div>
+          </div>
+
+            {/* <Col
+              lg={3}
+              md={1}
+              style={{
+                color: 'white',
+                fontSize: '18px',
+                paddingLeft: '60px',
+                fontWeight: '500',
+                marginTop: '35px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <p>
+                Get in touch: <br />
+                <a
+                  href="mailto:support@servingfresh.me"
+                  style={{ textDecoration: 'none', color: 'white' }}
+                >
+                  support@servingfresh.me
+                </a>
+              </p>
+              <p
+                onClick={() => history.push('/terms-and-conditions')}
+                style={{ cursor: 'pointer' }}
+              >
+                Terms and Condtions
+              </p>
+            </Col> */}
+
+          <div
+            className="footerRight"
+            style={{
+              // border: 'dashed',
+              display: 'flex'
+            }}
+          >
+            <div
+              style={{
+                color: 'white',
+                fontSize: '18px',
+                // paddingLeft: '60px',
+                // fontWeight: '500',
+                // marginTop: '35px',
+                // display: 'flex',
+                // flexDirection: 'column',
+                // justifyContent: 'center',
+                // alignContent: 'center',
+                // alignItems: 'center',
+                // border: '2px solid cyan',
+                width: '50%'
+              }}
+            >
+              <p
+                style={{
+                  // border: '1px solid lime'
+                }}
+              >
+                Get in touch: 
+                <br />
+                <a
+                  href="mailto:support@servingfresh.me"
+                  style={{ 
+                    textDecoration: 'none', 
+                    color: 'white',
+                    wordWrap: 'break-word'
+                  }}
+                >
+                  support@servingfresh.me
+                </a>
+              </p>
+              <p
+                onClick={() => history.push('/terms-and-conditions')}
+                style={{ 
+                  cursor: 'pointer',
+                  // border: '1px solid lime'
+                }}
+              >
+                Terms and Conditions
+              </p>
+            </div>
+
+            {/* <Col
+              lg={3}
+              md={1}
+              style={{
+                color: 'white',
+                fontSize: '20px',
+                fontWeight: '500',
+                marginTop: '50px',
+              }}
+            >
+              <IconButton
+                onClick={(event) =>
+                  (window.location.href =
+                    'https://www.facebook.com/ServingFresh')
+                }
+                edge="end"
+                className="link"
+                style={{
+                  color: 'white',
+                }}
+              >
+                <FacebookIcon
+                  fontSize="large"
+                  // onClick={(event) =>
+                  //   (window.location.href =
+                  //     'https://www.facebook.com/ServingFresh')
+                  // }
+                  aria-hidden="false"
+                  aria-label="Facebook"
+                  style={{ color: 'white' }}
+                />
+              </IconButton>
+              <IconButton
+                onClick={(event) =>
+                  (window.location.href =
+                    'https://www.instagram.com/servingfresh/')
+                }
+                edge="end"
+                className="link"
+                style={{
+                  color: 'white',
+                }}
+              >
+                <InstagramIcon
+                  fontSize="large"
+                  // onClick={(event) =>
+                  //   (window.location.href =
+                  //     'https://www.instagram.com/servingfresh/')
+                  // }
+                  aria-hidden="false"
+                  aria-label="Instagram"
+                  style={{ color: 'white' }}
+                />
+              </IconButton>
+            </Col> */}
+            <div
+              style={{
+                // color: 'white',
+                // fontSize: '20px',
+                // fontWeight: '500',
+                // border: '2px purple solid',
+                width: '50%'
+
+                // marginTop: '50px',
+              }}
+            >
+              <IconButton
+                onClick={(event) =>
+                  (window.location.href =
+                    'https://www.facebook.com/ServingFresh')
+                }
+                edge="end"
+                className="link"
+                style={{
+                  color: 'white',
+                  margin: '0'
+                }}
+              >
+                <FacebookIcon
+                  fontSize="large"
+                  // onClick={(event) =>
+                  //   (window.location.href =
+                  //     'https://www.facebook.com/ServingFresh')
+                  // }
+                  aria-hidden="false"
+                  aria-label="Facebook"
+                  style={{ 
+                    color: 'white',
+                    // border: '2px teal solid',
+                    margin: '0'
+                  }}
+                />
+              </IconButton>
+              <IconButton
+                onClick={(event) =>
+                  (window.location.href =
+                    'https://www.instagram.com/servingfresh/')
+                }
+                edge="end"
+                className="link"
+                style={{
+                  color: 'white',
+                  margin: '0'
+                }}
+              >
+                <InstagramIcon
+                  fontSize="large"
+                  // onClick={(event) =>
+                  //   (window.location.href =
+                  //     'https://www.instagram.com/servingfresh/')
+                  // }
+                  aria-hidden="false"
+                  aria-label="Instagram"
+                  style={{ 
+                    color: 'white',
+                    // border: '2px teal solid',
+                    margin: '0'
+                  }}
+                />
+              </IconButton>
+            </div>
+          </div>
+
     </div>
   );
 };

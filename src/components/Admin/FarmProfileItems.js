@@ -118,7 +118,7 @@ function FarmProfileItems (props){
         "item_photo":'',
         "item_unit":'',
         "bus_price":'',
-        "item_status":'',
+        "item_status":'Active',
         "bus_uid":props.id
     });
 
@@ -158,7 +158,7 @@ function FarmProfileItems (props){
             "item_photo":props.produceDict[idx]['item_photo'],
             "item_unit":props.produceDict[idx]['item_unit'],
             "bus_price":'',
-            "item_status":'',
+            "item_status":'Active',
             "bus_uid":props.id
         }
         setSelectedProduce(tmpDict)

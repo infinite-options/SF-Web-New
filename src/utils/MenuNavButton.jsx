@@ -154,7 +154,13 @@ function MenuListComposition(props) {
 
   // TEST: Configure Menu buttons
   return (
-    <div className={classes.root}>
+    <div 
+      className={classes.root}
+      style={{
+        // border: 'solid violet',
+        width: '18%'
+      }}
+    >
       <div>
         <IconButton
           ref={anchorRef}
@@ -401,7 +407,7 @@ function MenuListComposition(props) {
                       </MenuItem>
                     )}
                     <MenuItem
-                      disabled={isDisabled}
+                      // disabled={isDisabled}
                       onClick={(e) => {
                         handleMenuItem(e, 'Home');
                       }}

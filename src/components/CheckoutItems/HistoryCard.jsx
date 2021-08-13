@@ -152,6 +152,14 @@ const HistoryCard = (props) => {
       </Box>
 
       <Box
+        className={clsx(classes.items, classes.savingDetails, classes.section)}
+        display="flex"
+      >
+        Ambassador Code
+        <Box flexGrow={1} />-${Number(props.amb_code).toFixed(2)}
+      </Box>
+
+      <Box
         className={clsx(classes.items, classes.total, classes.section)}
         display="flex"
       >

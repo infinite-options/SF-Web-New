@@ -142,6 +142,59 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function updateSweepstakes(nextSweepStatus) {
+  const endpoint = `https://3o9ul2w8a1.execute-api.us-west-1.amazonaws.com/dev/api/v2/promotions`;
+  fetch(
+    `${endpoint}`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'SF',
+        status: nextSweepStatus,
+      }),
+    },
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+function fetchSweepstakes(setSweepstakeActive) {
+  const endpoint = `https://3o9ul2w8a1.execute-api.us-west-1.amazonaws.com/dev/api/v2/promotions`;
+  fetch(
+    `${endpoint}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({name: 'SF'}),
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json();
+    })
+    .then((json) => {
+      const sweeps = json;
+      setSweepstakeActive(sweeps === 'ACTIVE');
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
 function AdminDashboard() {
   const classes = useStyles();
   const auth = useContext(AuthContext);
@@ -152,7 +205,6 @@ function AdminDashboard() {
   const [newCustomers, setNewCustomers] = useState(0);
   const [newOrders, setNewOrders] = useState([]);
   const [open, setOpen] = useState(false);
-  console.log('Sweepstake in AdminDashboard:', auth.sweepstakeActive);
   useEffect(() => {
     axios
       .get(
@@ -188,6 +240,8 @@ function AdminDashboard() {
         }
         console.log(err);
       });
+    
+    fetchSweepstakes(auth.setSweepstakeActive);
   }, []);
   useEffect(() => {
     axios
@@ -220,10 +274,11 @@ function AdminDashboard() {
   }, []);
   const sweepstakeToggle = () => {
     console.log('Sweepstake in Toggle function:', auth.sweepstakeActive);
-    auth.sweepstakeActive = !auth.sweepstakeActive;
-    auth.setSweepstakeActive(auth.sweepstakeActive);
-    console.log('Sweepstake after toggle:', auth.sweepstakeActive);
+    const nextSweepsActive = !auth.sweepstakeActive;
+    auth.setSweepstakeActive(nextSweepsActive);
+    console.log('Sweepstake after toggle:', nextSweepsActive);
     setOpen(true);
+    updateSweepstakes(nextSweepsActive ? 'ACTIVE' : 'INACTIVE');
   };
 
   return (

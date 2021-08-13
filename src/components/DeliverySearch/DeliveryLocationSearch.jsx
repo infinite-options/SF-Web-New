@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     height: '150px',
   },
+  searchInput: {
+    color: 'red'
+  }
 }));
 
 // let guestProfile={
@@ -282,7 +285,15 @@ const DeliveryLocationSearch = ({ ...props }) => {
 
   // }
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
+    <Box 
+      display="flex" 
+      flexDirection="column" 
+      alignItems="center"
+      style={{
+        // border: 'solid lime',
+        maxWidth: '96%'
+      }}
+    >
       {modalError && (
         <Mymodal
           title={modalError.title}
@@ -299,13 +310,27 @@ const DeliveryLocationSearch = ({ ...props }) => {
           modalClear={errorHandleModal}
         ></SuccessModal>
       )}
-      <Box>
-        <div>
+      <Box
+        style={{
+          // border: 'solid cyan'
+          width: '100%'
+        }}
+      >
+        <div
+          style={{
+            // border: 'solid orange',
+            width: '100%'
+          }}
+        >
           <PlacesAutocomplete
             value={address}
             onChange={setAddress}
             onSelect={handleSelect}
-            style={{}}
+            style={{
+              // border: 'solid violet',
+              // color: 'red',
+              width: '100%'
+            }}
             // options={options}
             searchOptions={searchOptions}
           >
@@ -315,7 +340,13 @@ const DeliveryLocationSearch = ({ ...props }) => {
               getSuggestionItemProps,
               loading,
             }) => (
-              <div>
+              <div
+                style={{
+                  // border: 'dashed',
+                  width: '100%',
+                  // color: 'red'
+                }}
+              >
                 <CssTextField
                   className={classes.margin}
                   id="input-with-icon-textfield_top"
@@ -324,20 +355,33 @@ const DeliveryLocationSearch = ({ ...props }) => {
                   variant="outlined"
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start">
+                      <InputAdornment 
+                        position="start"
+                        // style={{
+                        //   color: 'red'
+                        // }}
+                      >
                         <LocationOnIcon
-                          style={{ color: 'rgb(74,124,133)' }}
+                          style={{ 
+                            color: 'rgb(74,124,133)'
+                          }}
                           aria-hidden="false"
                           aria-label="Enter delivery location"
                         />
                       </InputAdornment>
                     ),
                   }}
-                  {...getInputProps({ placeholder: 'Search for your address' })}
+                  {...getInputProps({ 
+                    placeholder: 'Search for your address',
+                    className: 'searchInput'
+                  })}
                   style={{
                     width: '500px',
+                    maxWidth: '90%',
                     border: '2px solid' + appColors.secondary,
                     borderRadius: '5px',
+                    // display: 'flex',
+                    // alignItems: 'center'
                   }}
                 />
 

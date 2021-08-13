@@ -76,7 +76,7 @@ function NotificationMain({
 
   let numCustomersSelected = selectedCustomers.length;
   let numCustomers = customerList.length;
-
+    console.log("in messages ",customerList)
   // Function to handle select all customers
   const handleSelectAllCustomersClick = (event) => {
     if (event.target.checked) {
@@ -159,6 +159,9 @@ function NotificationMain({
                                 );
                             },
                         },
+                        { title: 'Has_Guid', field: 'has_guid' },
+                        { title: 'Last Order', field: 'latest_order_date_in' },
+                        { title: '# Orders', field: 'number_of_orders' },
                         {
                             title: 'Name',
                             field: 'customer_first_name',
@@ -172,6 +175,8 @@ function NotificationMain({
                         },
                         { title: 'Email', field: 'customer_email' },
                         { title: 'Phone', field: 'customer_phone_num' },
+                        { title: 'Zip', field: 'customer_zip' },
+                        { title: 'City', field: 'customer_city' },
                         {
                             title: 'Address',
                             field: 'customer_first_name',
@@ -184,12 +189,12 @@ function NotificationMain({
                             },
                         },
                         
-                        { title: 'City', field: 'customer_city' },
-                        { title: 'Zip', field: 'customer_zip' },
+                        
+                        
                         // { title: 'Business', field: 'business_name' },
-                        { title: '# Orders', field: 'number_of_orders' },
-                        { title: 'Last Order', field: 'latest_order_date_in' },
-                        { title: 'Has_Guid', field: 'has_guid' },
+                        
+                        
+                        
                     ]}
                     data={customerList}
 
@@ -199,6 +204,7 @@ function NotificationMain({
                         pageSizeOptions: [40],
                         rowStyle: { height: 40 },
                         search: true,
+                        maxBodyHeight: 500,
                     }}
                 >
                 </MaterialTable>

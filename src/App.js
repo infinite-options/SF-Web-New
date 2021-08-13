@@ -12,6 +12,7 @@ import ReactGA from 'react-ga';
 import { AuthContext } from './auth/AuthContext';
 import axios from 'axios';
 import appColors from './styles/AppColors';
+import { SnoozeOutlined } from '@material-ui/icons';
 
 const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 const GA_TRCKING_CODE = process.env.REACT_APP_GA_TRACKING_CODE;
@@ -175,10 +176,10 @@ function App() {
       isMounted = false;
     };
   }, [isAuth]);
+
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
   }, []);
-  // console.log('profile in store = ', profile);
   return (
     <Router>
       <ThemeProvider theme={theme}>
