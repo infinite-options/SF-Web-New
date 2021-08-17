@@ -50,7 +50,7 @@ const ItemCategory = () => {
     //   type: 'dessert',
     // },
     {
-      onAsset: '../../footer_icon/OrangeHeart.png',
+      onAsset: '../../footer_icon/orangeHeart.png',
       offAsset: '../../footer_icon/tealHeart.png',
       altName: 'heart-img',
       label: 'Favorites',
