@@ -314,7 +314,7 @@ const Platform = () => {
             </div>
             <div
               style={{
-                marginLeft: '20',
+                marginLeft: '20%',
                 marginTop: '30px',
                 marginBottom: '30px',
                 backgroundSize: 'cover',
