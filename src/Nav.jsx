@@ -42,7 +42,7 @@ function Nav(authLevel, isAuth) {
         component={TermsAndConditions}
       />
       <Route exact path="/sweepstakes" component={Sweepstakes} />
-      <Route exact path="/platform" component={PlatformPage} />
+      <Route exact path="/platforms" component={PlatformPage} />
 
       <Route path="/payment/paypal:props" component={MobilePaypalCheckout} />
       <AuthAdminRoute

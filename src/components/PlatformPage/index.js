@@ -251,7 +251,8 @@ const Platform = () => {
 
         <Box
           style={{
-            display: 'flex'
+            display: 'flex',
+            flexWrap: 'wrap',
           }}
         >
           <div
@@ -261,7 +262,7 @@ const Platform = () => {
           >
             <div
               style={{
-                marginLeft: '200px',
+                marginLeft: '20%',
                 marginTop: '100px',
                 backgroundSize: 'cover',
                 backgroundImage: `url(${'Rectangle_191.png'})`,
@@ -313,7 +314,7 @@ const Platform = () => {
             </div>
             <div
               style={{
-                marginLeft: '200px',
+                marginLeft: '20',
                 marginTop: '30px',
                 marginBottom: '30px',
                 backgroundSize: 'cover',
@@ -329,7 +330,15 @@ const Platform = () => {
                 Or visit us on
               </div>
               <div className="downloadText">
-                ServingFresh.me
+                <a
+                  href='https://servingresh.me'
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                  }}
+                >
+                  ServingFresh.me
+                </a>
               </div>
             </div>
           </div>
@@ -340,6 +349,11 @@ const Platform = () => {
           >
             <img
               src='/home_mob.png'
+              alt='Serving Fresh App screen'
+              style={{
+                width: '100%',
+                minWidth: '375px',
+              }}
             />
           </div>
         </Box>
