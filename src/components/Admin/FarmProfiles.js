@@ -354,13 +354,15 @@ function FarmProfiles() {
   //farm item update
   
   const handleSave = (id, action) => {
+    console.log("test 123",selectedProduct)
     axios
       .post(
         'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_farmer_item_admin/' +
           action,
-        {
-          "supply_uid": id,
-        }
+          selectedProduct
+        // {
+        //   "supply_uid": id,
+        // }
       )
       .then((response) => {
         setDialogOpen(true);
@@ -686,6 +688,7 @@ function FarmProfiles() {
     } else {
       // Create new farm
       if(imageUpload.file) {
+        console.log("in image upload if",imageUpload.path)
         const formData = new FormData();
         formData.append('bus_photo', imageUpload.file);
         axios
@@ -702,6 +705,7 @@ function FarmProfiles() {
             console.log(err);
           })
       } else {
+        console.log("in image upload else",imageUpload.path)
         createFarm(imageUpload.path);
       }
     }
@@ -871,6 +875,7 @@ function FarmProfiles() {
         // );
         setRegularHours(JSON.parse(response.data.result[0].business_hours));
         var holdData = response.data.result[0];
+        console.log('farm profile',holdData)
         // Convert null values to empty string
         let keys = Object.keys(holdData);
         for (const key of keys) {
@@ -940,6 +945,18 @@ function FarmProfiles() {
             reusable: true,
             disposable: false,
           });
+        }
+        if (holdData.business_status === 'ACTIVE') {
+          setStatus({
+            ACTIVE:true,
+            INACTIVE:false,
+          })
+          
+        } else {
+          setStatus({
+            ACTIVE:false,
+            INACTIVE:true,
+          })
         }
         setImageUpload({
           file: null,

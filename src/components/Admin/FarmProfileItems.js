@@ -151,12 +151,13 @@ function FarmProfileItems (props){
     const handleSelection = (event) => {
         event.persist();
         const idx = event.target.value
-        console.log("key is", event.target.id)
+        console.log("key is", event.target.id,props)
         const tmpDict = {
             "itm_uid":props.produceDict[idx]['item_uid'],
             "item_name":props.produceDict[idx]['item_name'],
             "item_photo":props.produceDict[idx]['item_photo'],
             "item_unit":props.produceDict[idx]['item_unit'],
+            "item_price":props.produceDict[idx]['item_price'],
             "bus_price":'',
             "item_status":'Active',
             "bus_uid":props.id
@@ -204,6 +205,7 @@ function FarmProfileItems (props){
                                 <td className={classes.usrTitle}>Name</td>
                                 <td className={classes.usrTitle}>Photo</td>
                                 <td className={classes.usrTitle}>Unit </td>
+                                <td className={classes.usrTitle}>Item Price </td>
                                 <td className={classes.usrTitle}>Business Price</td>
                                 <td className={classes.usrTitle}>Status</td>
                                 
@@ -237,11 +239,31 @@ function FarmProfileItems (props){
                                         </img>
                                         
                                     </div>
-                                    </td> 
-                                    
+                                    </td>
+
                                     <td className={classes.usrDesc}>
                                     <TextField id="item_unit"  value = {selectedProduce['item_unit']}/> 
                                     </td>
+
+                                    <td className={classes.usrDesc}>
+                                    <TextField
+                                        id="item_price"
+                                        value = {selectedProduce['item_price']}
+                                        InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                            $
+                                            </InputAdornment>
+                                        ),
+                                        }}
+                                        
+                                        
+                                    />
+                                    {/* <TextField id="item_price"  value = {selectedProduce['item_price']}/>  */}
+                                    </td> 
+                                    
+                                    
+                                    
                                     <td className={classes.usrDesc}>
                                     {/* <TextField id="business_price"  onChange={handleChange}/>  */}
                                     <TextField

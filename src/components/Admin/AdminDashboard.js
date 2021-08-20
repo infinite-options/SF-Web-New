@@ -370,7 +370,7 @@ function AdminDashboard() {
           </Grid>
         </Grid>
       </div>
-      <div>
+      <div style={{width:'100%'}}>
         <Grid container spacing={3}>
           <Grid item>
             <Paper className={classes.paper1}>

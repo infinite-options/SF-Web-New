@@ -44,6 +44,17 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'start',
     padding: '10px',
   },
+  usrTitleLine: {
+    textAlign: 'center',
+    fontSize: '0.9rem',
+    fontWeight: 'bold',
+    letterSpacing: '0.25px',
+    color: '#00000',
+    opacity: 1,
+    justifyContent: 'start',
+    padding: '10px',
+    borderRight:'1px solid #0000001A',
+  },
   usrDesc: {
     textAlign: 'center',
     fontSize: '0.9rem',
@@ -52,6 +63,16 @@ const useStyles = makeStyles((theme) => ({
     opacity: 1,
     alignItems: 'center',
     padding: '10px',
+  },
+  usrDescLine: {
+    textAlign: 'center',
+    fontSize: '0.9rem',
+    letterSpacing: '-0.48px',
+    color: '#1C6D74',
+    opacity: 1,
+    alignItems: 'center',
+    padding: '10px',
+    borderRight:'1px solid #0000001A',
   },
   table: {
     marginLeft: '40px',
@@ -135,6 +156,7 @@ function OrderSummary() {
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalProfit, setTotalProfit] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
   const [globalProfit,setGlobalProfit] = useState(0);
   const [globalOrders,setGlobalOrders] = useState(0);
   const [globalRevenueSF,setGlobalRevenueSF] = useState(0);
@@ -183,15 +205,21 @@ function OrderSummary() {
             })
             .then((json) => {
 
+              if(json.code!=280){
+                json['result'] = []
+              }
               let temp_qty = 0
               let temp_rev = 0
               let temp_prof = 0
+              let temp_cost = 0
+
               let temp_json = []
               for (const vals of json.result){
                 
                 temp_qty = temp_qty + Number(vals['quantity']?vals['quantity']:0)
                 temp_rev = temp_rev + Number(vals['total_revenue']?vals['total_revenue']:0)
                 temp_prof = temp_prof + Number(vals['total_profit']?vals['total_profit']:0)
+                temp_cost = temp_cost + Number(vals['total_cp']?vals['total_cp']:0)
                 
                 for (const [key, value] of Object.entries(vals)){
                   if (key === "farms"){vals[key]=value?value:"No Business,No Business,0"}
@@ -200,9 +228,10 @@ function OrderSummary() {
                 temp_json.push(vals)
                 
               }
-              setTotalQuantity(Number(temp_qty).toFixed(2))
+              setTotalQuantity(Number(temp_qty))
               setTotalRevenue(Number(temp_rev).toFixed(2))
               setTotalProfit(Number(temp_prof).toFixed(2))
+              setTotalCost(Number(temp_cost).toFixed(2))
               json.result = temp_json
               //console.log("@#",json.result)
               setOrders(json.result);
@@ -350,12 +379,13 @@ function OrderSummary() {
                       <td className={classes.usrTitle}></td>
                       <td className={classes.usrTitle}></td>
                       <td className={classes.usrTitle}></td>
+                      <td className={classes.usrTitle}></td>
+                      <td className={classes.usrTitle}></td>
                       <td className={classes.usrTitle}>#{totalQuantity}</td>
                       <td className={classes.usrTitle}></td>
                       <td className={classes.usrTitle}></td>
                       <td className={classes.usrTitle}></td>
-                      <td className={classes.usrTitle}></td>
-                      <td className={classes.usrTitle}></td>
+                      <td className={classes.usrTitle}>${totalCost}</td>
                       <td className={classes.usrTitle}>${totalRevenue}</td>
                       <td className={classes.usrTitle}>${totalProfit}</td>
                     </tr>
@@ -364,12 +394,13 @@ function OrderSummary() {
                       <td className={classes.usrTitle}>Name</td>
                       <td className={classes.usrTitle}>Picture</td>
                       <td className={classes.usrTitle}>Unit</td>
-                      <td className={classes.usrTitle}>Quantity</td>
                       <td className={classes.usrTitle}>Farm Name </td>
-                      <td className={classes.usrTitle}>Suppliers</td>
+                      <td className={classes.usrTitleLine}>Suppliers</td>
+                      <td className={classes.usrTitle}>Quantity</td>
                       <td className={classes.usrTitle}>Cost Price</td>
                       <td className={classes.usrTitle}>Sales Price</td>
                       <td className={classes.usrTitle}>Profit</td>
+                      <td className={classes.usrTitle}>Total Cost Price</td>
                       <td className={classes.usrTitle}>Total Revenue</td>
                       <td className={classes.usrTitle}>Total Profit</td>
                     </tr>
@@ -383,7 +414,6 @@ function OrderSummary() {
                           </img>
                         </td>
                         <td className={classes.usrDesc}>{orderVal.unit}</td>
-                        <td className={classes.usrDesc}>{Number(orderVal.quantity).toFixed(2)}</td>
                         <td className={classes.usrDesc}>
 
                           <select style={{border:'0px',textAlign:'center',width:"auto"}} onChange={handleChangeFarm}>
@@ -429,10 +459,12 @@ function OrderSummary() {
                            
                         </td>
                 
-                        <td className={classes.usrDesc}>{orderVal.farms.split(",")[orderVal.farms.split(",").length-1]}</td>
+                        <td className={classes.usrDescLine}>{orderVal.farms.split(",")[orderVal.farms.split(",").length-1]}</td>
+                        <td className={classes.usrDesc}>{Number(orderVal.quantity)}</td>
                         <td className={classes.usrDesc}>${Number(orderVal.business_price).toFixed(2)}</td>
                         <td className={classes.usrDesc}>${Number(orderVal.price).toFixed(2)}</td>
                         <td className = {Number(orderVal.profit)>=0? classes.posProfit:classes.negProfit} >{Number(orderVal.profit)>=0?"":"-"}${Number(orderVal.profit).toFixed(2)}</td>
+                        <td className={classes.usrDesc}>${Number(orderVal.total_cp).toFixed(2)}</td>
                         <td className={classes.usrDesc}>${Number(orderVal.total_revenue).toFixed(2)}</td>
                         <td className={classes.usrDesc}>${Number(orderVal.total_profit).toFixed(2)}</td>
                       </tr>
