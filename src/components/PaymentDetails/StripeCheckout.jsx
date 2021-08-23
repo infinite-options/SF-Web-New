@@ -14,6 +14,34 @@ import CssTextField from '../../utils/CssTextField';
 import { AuthContext } from '../../auth/AuthContext';
 import storeContext from '../Store/storeContext';
 import checkoutContext from '../CheckoutPage/CheckoutContext';
+import { makeStyles} from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { green } from '@material-ui/core/colors';
+
+const useStyles = makeStyles((theme) => ({
+ 
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+ 
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -5,
+    marginLeft: -12,
+  },
+}));
+
+
 
 const cookies = new Cookies();
 const useOptions = () => {
@@ -41,7 +69,9 @@ const useOptions = () => {
   return options;
 };
 const StripeCheckout = (props) => {
+  const timer = React.useRef();
   const auth = useContext(AuthContext);
+  const classes = useStyles();
   const history = useHistory();
   const store = useContext(storeContext);
   const checkout = useContext(checkoutContext);
@@ -54,10 +84,11 @@ const StripeCheckout = (props) => {
     cartItems,
     startDeliveryDate,
   } = useContext(storeContext);
+  
 
   const { paymentDetails, setPaymentProcessing, chosenCoupon, chosenCode, ambDis } =
     useContext(checkoutContext);
-  console.log("in stripe cst 1",ambDis)
+  
   var couponIds = ''
   
   if(chosenCoupon==='' && chosenCode===''){
@@ -75,11 +106,13 @@ const StripeCheckout = (props) => {
     }
   } 
 
+  
+
   const onPay = async (event) => {
     event.preventDefault();
 
     setProcessing(true);
-
+    
     const billingDetails = {
       name: profile.firstName + ' ' + profile.lastName,
       email: profile.email,
@@ -271,23 +304,33 @@ const StripeCheckout = (props) => {
         />
         {/* </label> */}
       </Box>
-
-      <Button
-        //className={props.classes.buttonCheckout}
-        variant="contianed"
-        size="small"
-        color="paragraphText"
-        onClick={onPay}
-        disabled={processing}
-        style={{
-          marginBottom: '2rem',
-          color: appColors.buttonText,
-          width: '20rem',
-          backgroundColor: '#ff8500',
-        }}
-      >
-        Complete Payment with Stripe
-      </Button>
+      <div className={classes.wrapper}>
+        <Button
+          //className={props.classes.buttonCheckout}
+          variant="contianed"
+          className={processing?'':classes.buttonSuccess}
+          size="small"
+          color="paragraphText"
+          onClick={onPay}
+          disabled={processing}
+          
+          style={{
+            marginBottom: '2rem',
+            color: appColors.buttonText,
+            width: '20rem',
+            backgroundColor: '#ff8500',
+            display:processing?'none':'block',
+          }}
+        >
+          Complete Payment with Stripe
+        </Button>
+        <div style={{height:'100px',display:!processing?'none':'block',}}>
+          <b>Processing Payment</b>
+          {processing && <CircularProgress size={50} className={classes.buttonProgress} />}
+        </div>
+      </div>
+      
+      
     </>
   );
 };

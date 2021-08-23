@@ -234,6 +234,7 @@ export default function CheckoutTab(props) {
       }
       isInDay ? (result += item.count * item.price) : (result = result);
     }
+    
     return result;
   }
 
@@ -350,6 +351,7 @@ export default function CheckoutTab(props) {
 
   useEffect(() => {
     setCartItems(getItemsCart());
+    
   }, [store.cartItems]);
 
   //console.log("this is lat and long", userInfo.latitude, userInfo.longitude)
@@ -363,7 +365,7 @@ export default function CheckoutTab(props) {
     'SATURDAY',
   ];
   // TODO: Fee based on expected delivery day
-  const loadFees = async () => {
+  function loadFees() {
     if (store.expectedDelivery !== '') {
       const deliveryDay = store.expectedDelivery.split(',')[0];
       if (store.profile.zone !== '')
@@ -385,12 +387,14 @@ export default function CheckoutTab(props) {
               }
               setOrigDeliveryFee(deliveryFee);
               setOrigServiceFee(serviceFee);
+              setTaxRate(res.data.result.tax_rate)
             } catch {}
           })
           .catch((err) => {
             console.log(err);
             setOrigDeliveryFee(5);
             setOrigServiceFee(1.5);
+            
           });
     }
   };
@@ -415,6 +419,8 @@ export default function CheckoutTab(props) {
   // DONE: Add Delivery tip
   // DONE: apply promo to subtotal
   // DONE: make taxes not applied to the delivery fee
+  const [tax, setTax] = useState(0);
+  const [taxRate, setTaxRate] = useState(0);
   const [subtotal, setSubtotal] = useState(calculateSubTotal(cartItems));
   const [promoApplied, setPromoApplied] = useState(0);
   const [ambassadorDiscount, setAmbassadorDiscount] = useState(0);
@@ -426,7 +432,7 @@ export default function CheckoutTab(props) {
     cartItems.length > 0 ? origServiceFee : 0
   );
   const [driverTip, setDriverTip] = useState(2);
-  const [tax, setTax] = useState(0);
+
   const [total, setTotal] = useState(
     subtotal -
       promoApplied +
@@ -436,6 +442,7 @@ export default function CheckoutTab(props) {
       tax
   );
   useEffect(() => {
+    
     const total =
       subtotal > 0
         ? parseFloat(
@@ -466,10 +473,20 @@ export default function CheckoutTab(props) {
 
   useEffect(() => {
     setSubtotal(calculateSubTotal(cartItems));
+    var tempTax = 0
+    cartItems.map((item)=>{
+      
+      if(item.isTaxable){
+        tempTax = Number(tempTax)+(Number(taxRate)/100.00)*Number(item.price)
+        
+      }
+    })
+    setTax(tempTax)
+    
   }, [cartItems, store.dayClicked, store.products ]);
 
   useEffect(() => {
-    setTax(0);
+    
     setServiceFee(subtotal > 0 ? origServiceFee : 0);
     setPaymentDetails((prev) => ({
       ...prev,
