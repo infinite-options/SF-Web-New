@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function listItem(item) {
+  console.log("CartItems calling from history tab")
   return (
     <>
       <CartItem
@@ -58,8 +59,7 @@ function listItem(item) {
 }
 
 const HistoryCard = (props) => {
-  console.log("in history ",props)
-  const { profile } = useContext(storeContext);
+  // const { profile } = useContext(storeContext);
   const classes = useStyles();
 
   return (

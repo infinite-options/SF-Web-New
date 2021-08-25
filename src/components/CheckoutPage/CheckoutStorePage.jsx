@@ -1,10 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoadingOverlay from 'react-loading-overlay';
 
-import { Box } from '@material-ui/core';
+// import { Box } from '@material-ui/core';
 import CheckoutRight from './CheckoutStoreRight';
 import CheckoutContext from './CheckoutContext';
-import { Elements, CardElement, useStripe } from '@stripe/react-stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 // import storeContext from "customer/storeContext";
 // import axios from "axios";
@@ -29,19 +29,19 @@ export default function CheckoutPage() {
     taxes: 0,
   });
   const [purchaseMade, setPurchaseMade] = useState(0);
-  console.log(
-    'In Checkout Page Production: ',
-    process.env.NODE_ENV === 'production'
-  );
+  // console.log(
+  //   'In Checkout Page Production: ',
+  //   process.env.NODE_ENV === 'production'
+  // );
   const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [chosenCoupon, setChosenCoupon] = useState('');
   const [chosenCode, setChosenCode] = useState('');
   const [ambDis,setAmbDis] = useState(0)
   const [leftTabChosen, setLeftTabChosen] = useState(4);
   const [rightTabChosen, setRightTabChosen] = useState(0);
-  useEffect(() => {
-    console.log(chosenCoupon);
-  }, [chosenCoupon]);
+  // useEffect(() => {
+  //   console.log(chosenCoupon);
+  // }, [chosenCoupon]);
 
   const [guestInfo, setGuestInfo] = useState({
     firstName: '',

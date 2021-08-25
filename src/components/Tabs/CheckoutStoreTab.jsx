@@ -12,7 +12,7 @@ import CartItem from '../CheckoutItems/cartItem';
 import storeContext from '../Store/storeContext';
 import checkoutContext from '../CheckoutPage/CheckoutContext';
 import PaymentTab from './PaymentTab';
-import PlaceOrder from '../CheckoutPage/PlaceOrder';
+// import PlaceOrder from '../CheckoutPage/PlaceOrder';
 import Coupons from '../CheckoutItems/Coupons';
 import MapComponent from '../MapComponent/MapComponent';
 import { AuthContext } from '../../auth/AuthContext';
@@ -20,8 +20,8 @@ import FindLongLatWithAddr from '../../utils/FindLongLatWithAddr';
 import BusiApiReqs from '../../utils/BusiApiReqs';
 import { useConfirmation } from '../../services/ConfirmationService';
 import ProductSelectContext from '../ProductSelectionPage/ProdSelectContext';
-import AdminLogin from '../LogIn/AdminLogin';
-import Signup from '../SignUp/Signup';
+// import AdminLogin from '../LogIn/AdminLogin';
+// import Signup from '../SignUp/Signup';
 import AmbasadorModal from  '../Modal/AmbasadorModal';
 
 
@@ -33,13 +33,13 @@ import FormControl from '@material-ui/core/FormControl';
 import PayPal from '../PaymentDetails/Paypal';
 import StripeElement from '../PaymentDetails/StripeElement';
 
-import TermsAndConditions from './TermsAndConditions';
+// import TermsAndConditions from './TermsAndConditions';
 import Cookies from 'js-cookie';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
-import DeliveryInfoTab from './DeliveryInfoTab';
-import LocationSearchInput from '../../utils/LocationSearchInput';
-import { MyLocation, SettingsOverscanOutlined, StreetviewTwoTone } from '@material-ui/icons';
+// import DeliveryInfoTab from './DeliveryInfoTab';
+// import LocationSearchInput from '../../utils/LocationSearchInput';
+// import { MyLocation, SettingsOverscanOutlined, StreetviewTwoTone } from '@material-ui/icons';
 
 const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 
@@ -150,19 +150,29 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-function listItem(item) {
+function listItem(item, store, productSelect) {
+  // console.log("CartItems calling from checkout Store tab",item)
   return (
     <>
       <CartItem
-        name={item.name}
-        unit={item.unit}
-        price={item.price}
+        name={item.item_name}
+        unit={item.item_unit}
+        price={item.item_price}
         count={item.count}
-        img={item.img}
+        img={item.item_photo}
         isCountChangeable={true}
-        business_uid={item.business_uid}
-        id={item.id}
+        business_uid={item.itm_business_uid}
+        id={item.item_uid}
         key={item.item_uid}
+        products = {store.products}
+        cartItems = {store.cartItems}
+        setCartItems = {store.setCartItems}
+        cartTotal = {store.cartTotal}
+        setCartTotal = {store.setCartTotal}
+        farmDaytimeDict = {store.farmDaytimeDict}
+        dayClicked = {store.dayClicked}
+        farmsClicked = {productSelect.farmsClicked}
+        categoriesClicked = {productSelect.categoriesClicked}
       />
     </>
   );
@@ -172,6 +182,7 @@ function listItem(item) {
 // TODO: Get Delivery and service fee from zone
 // TODO: Add button to get to tab 4 of left side
 export default function CheckoutTab(props) {
+  // console.log("IN checkoutStoreTab")
   const history = useHistory();
   const classes = useStyles();
 
@@ -185,9 +196,10 @@ export default function CheckoutTab(props) {
 
   const [isInDay, setIsInDay] = useState(false);
   const [map, setMap] = React.useState(null);
+  const cartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
 
   // cartItems is a dictonary, need to convert it into an array
-  const [cartItems, setCartItems] = useState(getItemsCart());
+  // const [cartItems, setCartItems] = useState(getItemsCart());
   // Retrieve items from store context
   const [userInfo, setUserInfo] = useState(store.profile);
 
@@ -224,15 +236,23 @@ export default function CheckoutTab(props) {
   } = checkout;
 
   function calculateSubTotal(items) {
+    
     var result = 0;
     for (const item of items) {
       let isInDay = false;
-      if (store.farmDaytimeDict[item.business_uid] != undefined) {
-        store.farmDaytimeDict[item.business_uid].forEach((daytime) => {
-          if (store.dayClicked === daytime) isInDay = true;
+      
+      if (store.farmDaytimeDict[item['itm_business_uid']] != undefined) {
+        
+        store.farmDaytimeDict[item['itm_business_uid']].forEach((daytime) => {
+         
+          if (store.dayClicked === daytime) {
+            
+            isInDay = true;
+          }
+          
         });
       }
-      isInDay ? (result += item.count * item.price) : (result = result);
+      isInDay ? (result += item.count * item.item_price) : (result = result);
     }
     
     return result;
@@ -244,7 +264,7 @@ export default function CheckoutTab(props) {
   }
 
   const onCheckAddressClicked = () => {
-    console.log('Verifying longitude and latitude from Delivery Info');
+    // console.log('Verifying longitude and latitude from Delivery Info');
     FindLongLatWithAddr(
       userInfo.address,
       userInfo.city,
@@ -301,7 +321,7 @@ export default function CheckoutTab(props) {
     setLocErrorMessage('');
     if (isZoneUpdated) {
       localStorage.setItem('isProfileUpdated', store.profile.zone);
-      console.log('Zone should be updated');
+      // console.log('Zone should be updated');
       store.setFarmsClicked(new Set());
       store.setDayClicked('');
       localStorage.removeItem('selectedDay');
@@ -343,16 +363,16 @@ export default function CheckoutTab(props) {
     setErrorMessage('');
   }
 
+  // const cartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
   useEffect(() => {
     if (store.profile !== {}) {
       setUserInfo(store.profile);
     }
   }, [store.profile]);
 
-  useEffect(() => {
-    setCartItems(getItemsCart());
-    
-  }, [store.cartItems]);
+  // useEffect(() => {
+  //   setCartItems(getItemsCart());
+  // }, [store.cartItems]);
 
   //console.log("this is lat and long", userInfo.latitude, userInfo.longitude)
   var days = [
@@ -404,10 +424,23 @@ export default function CheckoutTab(props) {
   }, [store.profile.zone, store.expectedDelivery]);
 
   function getItemsCart() {
-    //var result = [store.cartItems['310-000481']];
+    let isEmpty = true;
+
+    for (const k in store.productDict)
+    {
+      isEmpty = false;
+      break;
+    }
+
+    if (isEmpty)
+      return [];
+
     var result = [];
-    for (const itemId in store.cartItems) {
-      result.push(store.cartItems[itemId]);
+    for (const [key, value] of Object.entries(cartItems)) {
+      var tempRes = store.productDict[key]
+      tempRes['count'] = value['count']
+      result.push(tempRes)      
+      
     }
     return result;
   }
@@ -421,7 +454,8 @@ export default function CheckoutTab(props) {
   // DONE: make taxes not applied to the delivery fee
   const [tax, setTax] = useState(0);
   const [taxRate, setTaxRate] = useState(0);
-  const [subtotal, setSubtotal] = useState(calculateSubTotal(cartItems));
+  // const [subtotal, setSubtotal] = useState(calculateSubTotal(cartItems));
+  const [subtotal, setSubtotal] = useState(calculateSubTotal(getItemsCart()));
   const [promoApplied, setPromoApplied] = useState(0);
   const [ambassadorDiscount, setAmbassadorDiscount] = useState(0);
   const [discountMessage,setDiscountMessage] = useState('')
@@ -472,17 +506,24 @@ export default function CheckoutTab(props) {
   }, [total]);
 
   useEffect(() => {
-    setSubtotal(calculateSubTotal(cartItems));
+    setSubtotal(calculateSubTotal(getItemsCart()));
+    // setSubtotal(calculateSubTotal(cartItems));
     var tempTax = 0
-    cartItems.map((item)=>{
-      
-      if(item.isTaxable){
-        tempTax = Number(tempTax)+(Number(taxRate)/100.00)*Number(item.price)
+    console.log("in cartitems@321 --",cartItems,typeof(cartItems))
+    if(Object.keys(cartItems).length!=0){
+      console.log("in cartitems@321 -- IN")
+      Object.entries(cartItems).map(([key,items])=>{
+      var item = store.productDict[key]
+      if(item.taxable==='TRUE'){
+        console.log("in cartitems@321 -- Taxable",tempTax,taxRate,item.item_price)
+        tempTax = Number(tempTax)+((Number(taxRate)/100.00)*Number(item.item_price)).toFixed(2)*items.count
         
       }
     })
-    setTax(tempTax)
     
+    
+  }
+  setTax(tempTax)
   }, [cartItems, store.dayClicked, store.products ]);
 
   useEffect(() => {
@@ -524,7 +565,7 @@ export default function CheckoutTab(props) {
 
   function onAddItemsClicked() {
     store.setStorePage(0);
-    const items = Object.values(store.cartItems).map((item) => {
+    const items = Object.values(cartItems).map((item) => {
       return {
         qty: item.count,
         name: item.name,
@@ -533,7 +574,6 @@ export default function CheckoutTab(props) {
         itm_business_uid: item.business_uid,
       };
     });
-    console.log('items: ', items);
   }
 
   function handleChangeAddress() {
@@ -633,7 +673,7 @@ useMemo(()=> {
   };
 
   const postAmbassadorRequest = async() => {
-    console.log("ambassador", reqBodyAmbassadorPost)
+    // console.log("ambassador", reqBodyAmbassadorPost)
     try{
       setTotal(subtotal -
         promoApplied +
@@ -893,7 +933,7 @@ useMemo(()=> {
         </Box>
 
         <Box my={1} px={1}>
-          {cartItems.map(listItem)}
+          {getItemsCart().map((item) => listItem(item, store, productSelect))}
         </Box>
 
         <Box display="flex" paddingTop="2rem">

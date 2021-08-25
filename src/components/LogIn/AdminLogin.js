@@ -43,10 +43,10 @@ function AdminLogin({ ...props }) {
       .then((response) => {
         let res = response;
         if (res.data.message === 'A temporary password has been sent') {
-          console.log(res);
+          // console.log(res);
           setpassModal(true);
         } else if (res.data.code === 280) {
-          console.log(res);
+          // console.log(res);
           alert('No account found with that email.');
         }
       });
@@ -77,7 +77,7 @@ function AdminLogin({ ...props }) {
       axios
         .get(process.env.REACT_APP_SERVER_BASE_URI + 'Profile/' + customerId)
         .then((response) => {
-          console.log('Account:', response);
+          // console.log('Account:', response);
           let newAccountType = response.data.result[0].role.toLowerCase();
           switch (newAccountType) {
             case 'admin':
@@ -105,9 +105,9 @@ function AdminLogin({ ...props }) {
     }
     // Log which media platform user should have signed in with instead of Apple
     // May eventually implement to display the message for which platform to Login
-    else if (urlParams.has('media')) {
-      console.log(urlParams.get('media'));
-    }
+    // else if (urlParams.has('media')) {
+    //   console.log(urlParams.get('media'));
+    // }
   }, []);
 
   useEffect(() => {
@@ -125,7 +125,7 @@ function AdminLogin({ ...props }) {
     let urlParams = new URLSearchParams(queryString);
     // Clear Query parameters
     window.history.pushState({}, document.title, window.location.pathname);
-    console.log(props, urlParams);
+    // console.log(props, urlParams);
     // Successful Log in with Apple, set cookies, context, redirect
     if (urlParams.has('id')) {
       let customerId = urlParams.get('id');
@@ -136,9 +136,9 @@ function AdminLogin({ ...props }) {
     }
     // Log which media platform user should have signed in with instead of Apple
     // May eventually implement to display the message for which platform to Login
-    else if (urlParams.has('media')) {
-      console.log(urlParams.get('media'));
-    }
+    // else if (urlParams.has('media')) {
+    //   console.log(urlParams.get('media'));
+    // }
   }, []);
 
   const handleEmailChange = (e) => {
@@ -194,14 +194,14 @@ function AdminLogin({ ...props }) {
                     return byte.toString(16).padStart(2, '0');
                   })
                   .join('');
-                console.log(hashedPassword);
+                // console.log(hashedPassword);
                 let loginObject = {
                   email: emailValue,
                   password: hashedPassword,
                   social_id: '',
                   signup_platform: '',
                 };
-                console.log(JSON.stringify(loginObject));
+                // console.log(JSON.stringify(loginObject));
                 axios
                   .post(API_URL + 'Login', loginObject, {
                     headers: {
@@ -211,10 +211,10 @@ function AdminLogin({ ...props }) {
                   //TODO: Tell Prashant social login has to be done from back end
                   .then((res) => {
                     //TODO: tell to please use Google/ Facebook login
-                    console.log(res);
+                    // console.log(res);
                     if (res.data.code === 200) {
                       setError('');
-                      console.log('Login success');
+                      // console.log('Login success');
                       let customerInfo = res.data.result[0];
                       Auth.setIsAuth(true);
                       Cookies.set('login-session', 'good');
@@ -240,21 +240,21 @@ function AdminLogin({ ...props }) {
                           break;
                       }
                     } else if (res.data.code === 404) {
-                      console.log('Invalid credentials');
+                      // console.log('Invalid credentials');
                       setError('credential');
                       setErrorMessage('Invalid credentials');
                       setemailError(true);
                     } else if (res.data.code === 406) {
-                      console.log('Wrong Password');
+                      // console.log('Wrong Password');
                       setError('Password');
                       setErrorMessage('Invalid Password');
                       setpasswordError(true);
                     } else if (res.data.code === 401) {
-                      console.log('Need to log in by social media');
+                      // console.log('Need to log in by social media');
                       setError('social');
                       setErrorMessage(res.data.message);
                     } else if (res.data.code === 407) {
-                      console.log('Need email verification');
+                      // console.log('Need email verification');
                       setError('email_verify');
                       axios
                         .post(
@@ -281,7 +281,7 @@ function AdminLogin({ ...props }) {
                           console.log(err);
                         });
                     } else {
-                      console.log('Unknown login error');
+                      // console.log('Unknown login error');
                       setError('unknown');
                       setErrorMessage(res.data.message);
                     }

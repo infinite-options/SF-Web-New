@@ -1,18 +1,15 @@
-import React, { useState, useContext, useEffect } from 'react';
-import storeContext from '../../Store/storeContext';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
   Card,
   Grid,
-  Icon,
   IconButton,
   Typography,
   SvgIcon,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import appColors from '../../../styles/AppColors';
-import ProduceSelectContext from '../ProdSelectContext';
 
 import { ReactComponent as AddIcon } from '../../../sf-svg-icons/sfcolored-plus.svg';
 import { ReactComponent as RemoveIcon } from '../../../sf-svg-icons/sfcolored-minus.svg';
@@ -123,110 +120,123 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Entry(props) {
-  console.log('entry');
-  const [hearted, setHearted] = useState(false);
+  // console.log('entry')
+  const [hearted, setHearted] = useState(props.products[props.index].favorite === 'TRUE');
   const [isShown, setIsShown] = useState(false);
   const [isInDay, setIsInDay] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-
-  const store = useContext(storeContext);
+  const currCartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
+  // const currCartTotal = parseInt(localStorage.getItem('cartTotal') || '0');
+  // console.log("@456qw In entry 1",currCartItems)
+  // console.log("@456qw In entry 2",currCartTotal)
 
   const stylesProps = {
-    id: props.id in store.cartItems ? store.cartItems[props.id]['count'] : 0,
+    id: props.id in currCartItems ? currCartItems[props.id]['count'] : 0,
     hearted: hearted,
     isInDay: isInDay,
   };
 
   const classes = useStyles(stylesProps);
 
-  const productSelect = useContext(ProduceSelectContext);
-
-  //const [isShown, setIsShown] = useState(false);
-
   useEffect(() => {
     let isInDay = false;
     let isInCategory = false;
 
     const isFavoritedAndInFavorites =
-      productSelect.categoriesClicked.has('favorite') &&
-      props.favorite === 'TRUE';
+      props.categoriesClicked.has('favorite') &&
+      props.favorite == 'TRUE';
 
     if (props.favorite === 'TRUE') {
       setHearted(true);
     }
 
     for (const farm in props.business_uids) {
-      store.farmDaytimeDict[farm].forEach((daytime) => {
-        if (store.dayClicked === daytime) isInDay = true;
+      props.farmDaytimeDict[farm].forEach((daytime) => {
+        if (props.dayClicked === daytime) isInDay = true;
       });
     }
 
-    if (productSelect.categoriesClicked.has(props.type)) isInCategory = true;
+    if (props.categoriesClicked.has(props.type)) isInCategory = true;
 
     setIsShown(
-      productSelect.categoriesClicked.size === 0 ||
+      props.categoriesClicked.size == 0 ||
         isInCategory ||
         isFavoritedAndInFavorites
     );
     setIsInDay(isInDay);
   }, [
-    store.dayClicked,
-    productSelect.farmsClicked,
-    productSelect.categoriesClicked,
+    props.dayClicked,
+    props.farmsClicked,
+    props.categoriesClicked,
     props.business_uids,
     props.favorite,
     props.type,
-    store.farmDaytimeDict,
+    props.farmDaytimeDict,
   //  store.cartItems,
   //  store.products
 
   ]);
 
   function decrease() {
-    if (props.id in store.cartItems) {
-      const itemCount = store.cartItems[props.id]['count'];
+    const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
+    const currCartTotal2 = parseInt(localStorage.getItem('cartTotal')|| '0')
+    if (props.id in currCartItems2) {
+      const itemCount = currCartItems2[props.id]['count'];
+      // console.log("@456qw In decrease 1 ",itemCount)
       if (itemCount > 0) {
         if (itemCount === 1) {
-          let clone = Object.assign({}, store.cartItems);
+          let clone = Object.assign({}, currCartItems2);
           delete clone[props.id];
-          store.setCartItems(clone);
+          localStorage.setItem('cartItems', JSON.stringify(clone));
+          props.setCartItems(clone);
+          // console.log("@456qw In decrease 2 --- deleted")
         } else {
           const item = {
-            ...props,
-            count: store.cartItems[props.id]['count'] - 1,
+            
+            count: currCartItems2[props.id]['count'] - 1,
           };
-          store.setCartItems({
-            ...store.cartItems,
+          localStorage.setItem('cartItems', JSON.stringify({
+            ...currCartItems2,
+            [props.id]: item,
+          }));
+
+          props.setCartItems({
+            ...currCartItems2,
             [props.id]: item,
           });
         }
-        store.setCartTotal(store.cartTotal - 1);
+        localStorage.setItem('cartTotal', currCartTotal2 - 1);
+        props.setCartTotal(currCartTotal2 - 1);
       }
     }
   }
 
   function increase() {
+    const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
+    const currCartTotal2 = parseInt(localStorage.getItem('cartTotal')|| '0')
+    // console.log("@456qw in increase 0 ",currCartItems2)
     const item =
-      props.id in store.cartItems
-        ? { ...props, count: store.cartItems[props.id]['count'] + 1 }
-        : { ...props, count: 1 };
-
-    store.setCartItems({
-      ...store.cartItems,
+      props.id in currCartItems2
+        ? {  count: currCartItems2[props.id]['count'] + 1 }
+        : {  count: 1 };
+    
+    // console.log("@456qw in increase 1 ",item)
+    // console.log("@123 before updating ",localStorage.getItem('cartItems'))
+    const newCartItems = {
+      ... currCartItems2,
       [props.id]: item,
-    });
-    store.setCartTotal(store.cartTotal + 1);
-
-    // console.warn(store.cartItems);
+    };
+    // console.log("@123 after updating ",localStorage.getItem('cartItems'))
+    // console.log("@456qw in increase 2 ",newCartItems)
+    localStorage.setItem('cartItems', JSON.stringify(newCartItems));
+    localStorage.setItem('cartTotal', `${currCartTotal2 + 1}`);
+    props.setCartItems(newCartItems);
+    props.setCartTotal(currCartTotal2 + 1);
   }
 
   const toggleHearted = () => {
-    for (let i = 0; i < store.products.length; i++) {
-      if (store.products[i].item_uid === props.id) {
-        store.products[i].favorite =
-          props.favorite === 'FALSE' ? 'TRUE' : 'FALSE';
-      }
-    }
+    props.products[props.index].favorite =
+          props.favorite == 'FALSE' ? 'TRUE' : 'FALSE';
     setHearted(!hearted);
   };
 
@@ -262,7 +272,7 @@ function Entry(props) {
             >
               <Button
                 className={classes.itemInfoBtn}
-                onClick={toggleHearted}
+                onClick={(toggleHearted)}
                 disabled={!isInDay}
               >
                 <img src={hearted ? FavoriteSrc : FavoriteBorderedSrc} alt = {''} />
@@ -286,10 +296,10 @@ function Entry(props) {
           </Box>
           <Box style={{ flexGrow: '1' }}>
             <Typography hidden={isInDay} style={{ fontWeight: 'bold' }}>
-              {store.dayClicked
+              {props.dayClicked
                 ? `Product unavailable on
-             ${store.dayClicked.split('&')[0]}
-            ${store.dayClicked.split('&')[1]}`
+             ${props.dayClicked.split('&')[0]}
+            ${props.dayClicked.split('&')[1]}`
                 : `Date not selected`}
             </Typography>
           </Box>
@@ -354,8 +364,8 @@ function Entry(props) {
             </IconButton>
 
             <Typography className={classes.itemCountTypog}>
-              {props.id in store.cartItems
-                ? store.cartItems[props.id]['count']
+              {props.id in currCartItems ?
+                currCartItems[props.id]['count']
                 : 0}
             </Typography>
 
@@ -382,4 +392,28 @@ function Entry(props) {
   );
 }
 
-export default Entry;
+const set_equality = (set1, set2) => {
+  if (set1.size !== set2.size)
+    return false;
+  
+  for (const e1 of set1)
+  {
+    if (!set2.has(e1))
+      return false;
+  }
+
+  return true;
+};
+
+export default React.memo(Entry, (prevProps, nextProps) => {
+  if (prevProps.itemCount != nextProps.itemCount ||
+    !set_equality(prevProps.categoriesClicked, nextProps.categoriesClicked) ||
+    prevProps.dayClicked !== nextProps.dayClicked ||
+    prevProps.favorite !== nextProps.favorite
+  ){
+    return false;
+  }
+
+  return true;
+}
+);

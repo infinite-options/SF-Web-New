@@ -18,7 +18,7 @@ const AmbasadorModal = (props) => {
   const context = useContext(AuthContext);
   console.log("in con",context.profile)
   AuthMethods.getProfile().then((response) => {
-    console.log(response.customer_first_name);
+    // console.log(response.customer_first_name);
     setCustomerName(response.customer_first_name);
   });
 

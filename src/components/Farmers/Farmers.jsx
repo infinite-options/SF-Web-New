@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 // import 'slick-carousel/slick/slick.css';
 // import 'slick-carousel/slick/slick-theme.css';
-import { makeStyles } from '@material-ui/core/styles';
-import { Button } from 'react-bootstrap';
-import Card from 'react-bootstrap/Card';
+// import { makeStyles } from '@material-ui/core/styles';
+// import { Button } from 'react-bootstrap';
+// import Card from 'react-bootstrap/Card';
 import fb from '../../icon/facebook.svg';
 import insta from '../../icon/instagram.svg';
 import globe from '../../icon/globe.svg';
 
-import Slider from 'react-slick';
+// import Slider from 'react-slick';
 import Carousel from 'react-multi-carousel';
 import axios from 'axios';
-import { get } from 'js-cookie';
+// import { get } from 'js-cookie';
 
 var responsive = {
   superLargeDesktop: {

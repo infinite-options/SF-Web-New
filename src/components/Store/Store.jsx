@@ -9,20 +9,20 @@ import { Box } from '@material-ui/core';
 import ProductSelectionPage from '../ProductSelectionPage';
 import AuthUtils from '../../utils/AuthUtils';
 import BusiApiReqs from '../../utils/BusiApiReqs';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 
-const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
+// const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
 const cookies = new Cookies();
 
 const testDate = new Date();
 const BusiMethods = new BusiApiReqs();
 
-const useStyles = makeStyles((theme) => ({
-  authModal: {
-    position: 'absolute',
-    width: '500px',
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   authModal: {
+//     position: 'absolute',
+//     width: '500px',
+//   },
+// }));
 
 const fullDaysUpper = [
   'SUNDAY',
@@ -125,10 +125,11 @@ function useOutsideAlerter(ref) {
 const weekdayDatesDict = findWeekdayDates();
 
 const Store = ({ ...props }) => {
+  // console.log('IN store');
   const Auth = useContext(AuthContext);
   const location = useLocation();
   const history = useHistory();
-  const classes = useStyles();
+  // const classes = useStyles();
   const [orderConfirmation, setOrderConfirmation] = useState(false);
   // const currenttime = setInterval(checkIfAccepting, 60000);
 
@@ -138,15 +139,15 @@ const Store = ({ ...props }) => {
 
   const { profile, setProfile } = useContext(AuthContext);
   const [products, setProducts] = useState([]);
-  const [productsFruit, setProductsFruit] = useState([]);
-  const [productsVegetable, setProductsVegetable] = useState([]);
-  const [productsDessert, setProductsDessert] = useState([]);
-  const [productsGiftCard, setProductsGiftCard] = useState([]);
+  // const [productsFruit, setProductsFruit] = useState([]);
+  // const [productsVegetable, setProductsVegetable] = useState([]);
+  // const [productsDessert, setProductsDessert] = useState([]);
+  // const [productsGiftCard, setProductsGiftCard] = useState([]);
 
   const [productsLoading, setProductsLoading] = useState(true);
 
   const [isInDay, setIsInDay] = useState(false);
-
+  const [productDict,setProductDict] = useState({})
   const [farmsList, setFarmsList] = useState([]);
   const [dayTimeDict, setDayTimeDict] = useState({});
   const [numDeliveryTimes, setNumDeliveryTimes] = useState(0);
@@ -168,6 +169,7 @@ const Store = ({ ...props }) => {
   const [isSignUpShown, setIsSignUpShown] = useState(false);
   const [isCheckoutLogin, setIsCheckoutLogin] = useState(false);
   const [isCheckoutSignUp, setIsCheckoutSignUp] = useState(false);
+  const [productCategoriesDict, setProductCategoriesDict] = useState({});
 
   const loginWrapperRef = useRef(null);
   useOutsideAlerter(loginWrapperRef, setIsLoginShown);
@@ -187,7 +189,7 @@ const Store = ({ ...props }) => {
   }, [dayClicked]);
 
   useEffect(() => {
-    console.log('profile updated: ', profile.latitude);
+    // console.log('profile updated: ', profile.latitude);
     getBusinesses(profile.longitude, profile.latitude, { ...profile });
   }, [profile.latitude]);
 
@@ -213,20 +215,24 @@ const Store = ({ ...props }) => {
     localStorage.setItem('currentStorePage', storePage);
   }, [storePage]);
 
+  // console.log('profile = ', profile, ' prof long = ', profile.longitude, ' profile.lat = ', profile.latitude);
+
   localStorage.setItem('currentStorePage', storePage);
   //const { cartTotal, setCartTotal } = useContext(AuthContext);
+
   const [cartTotal, setCartTotal] = useState(
     parseInt(localStorage.getItem('cartTotal') || '0')
   );
+
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem('cartItems') || '{}')
   );
 
-  useEffect(() => {
-    console.log('cartTotal: ', cartTotal);
-    localStorage.setItem('cartTotal', cartTotal);
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartTotal, cartItems]);
+  // useEffect(() => {
+  //   console.log('cartTotal: ', cartTotal);
+  //   // localStorage.setItem('cartTotal', `${cartTotal}`);
+  //   // localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  // }, [cartTotal, cartItems]);
 
   props.hidden = props.hidden !== null ? props.hidden : false;
 
@@ -235,8 +241,8 @@ const Store = ({ ...props }) => {
       setProductsLoading(true);
       const AuthMethods = new AuthUtils();
       AuthMethods.getProfile().then((authRes) => {
-        console.log('User profile and store items were retrieved');
-        console.log('authRes: ', authRes);
+        // console.log('User profile and store items were retrieved');
+        // console.log('authRes: ', authRes);
         const updatedProfile = {
           email: authRes.customer_email,
           firstName: authRes.customer_first_name,
@@ -303,21 +309,23 @@ const Store = ({ ...props }) => {
     }
   }
 
-  const checkIfAccepting = () => {
-    const today = new Date();
-    const dayString =
-      months[today.getMonth()] +
-      '&' +
-      today.getDate() +
-      '&' +
-      months[today.getDay()] +
-      '&';
-    if (today) {
-    }
-  };
+  // const checkIfAccepting = () => {
+  //   const today = new Date();
+  //   const dayString =
+  //     months[today.getMonth()] +
+  //     '&' +
+  //     today.getDate() +
+  //     '&' +
+  //     months[today.getDay()] +
+  //     '&';
+  //   if (today) {
+  //   }
+  // };
 
   function loadBusinesses(busiRes, updatedProfile) {
-    console.log('busiRes: ', busiRes);
+    // console.log('Dict');
+    // console.log('busiRes: ', busiRes);
+    // console.log('profile = ', profile);
     const businessesRes = busiRes.result;
     const businessUids = new Set();
     const dateDict = {};
@@ -365,7 +373,7 @@ const Store = ({ ...props }) => {
       } else if (acceptDate > deliveryDate) {
         deliveryDate.setDate(originalDeliveryDate.getDate() + 7);
       }
-      console.log(deliveryDate);
+      // console.log(deliveryDate);
 
       if (!businessUids.has(business.z_biz_id))
         businessUids.add(business.z_biz_id);
@@ -443,8 +451,11 @@ const Store = ({ ...props }) => {
       setProfile(updatedProfile);
     }
 
+
+
     BusiMethods.getProduceByLocation(
       profile.longitude,
+      
       profile.latitude
       // ['fruit', 'dessert', 'vegetable', 'other'],
       // Array.from(businessUids)
@@ -475,11 +486,11 @@ const Store = ({ ...props }) => {
 
                 // checks for if the current iterated business has a lower price than the one previously seen
                 if (bPrice < _products[itemIdx].lowest_price) {
-                  console.log(
-                    'in comparing*********',
-                    _products[itemIdx].item_uid,
-                    item.item_uid
-                  );
+                  // console.log(
+                  //   'in comparing*********',
+                  //   _products[itemIdx].item_uid,
+                  //   item.item_uid
+                  // );
                   _products[itemIdx].lowest_price = bPrice;
                   _products[itemIdx].lowest_price_business_uid =
                     item.itm_business_uid;
@@ -531,7 +542,7 @@ const Store = ({ ...props }) => {
       BusiMethods.getFavorite(cookies.get('customer_uid')).then((itemRes) => {
         if (itemRes !== undefined) {
           for (const item of itemRes) {
-            console.log('Favorite get', item);
+            // console.log('Favorite get', item);
 
             for (let i = 0; i < _products.length; i++) {
               if (
@@ -544,14 +555,23 @@ const Store = ({ ...props }) => {
         }
       });
 
+      // localStorage.setItem('products', JSON.stringify(_products.sort()));
+      var dictProductTemp = {}
+      for (const vals in _products){
+        dictProductTemp[_products[vals]['item_uid']]=_products[vals]
+      }
+      setProductDict(dictProductTemp)
       setProducts(_products.sort());
-      setProductsFruit(_fruit.sort());
-      setProductsVegetable(_vegetable.sort());
-      setProductsDessert(_dessert.sort());
-      setProductsGiftCard(_giftCard.sort());
+      const productCategoriesDict = {};
+      productCategoriesDict['vegetable'] = _vegetable.sort();
+      productCategoriesDict['fruit'] = _fruit.sort();
+      productCategoriesDict['dessert'] = _dessert.sort();
+      productCategoriesDict['gift-card'] = _giftCard.sort();
+      setProductCategoriesDict(productCategoriesDict);
       setProductsLoading(false);
     });
   }
+
 
   return (
     <div hidden={props.hidden}>
@@ -570,10 +590,7 @@ const Store = ({ ...props }) => {
           profile,
           setProfile,
           products,
-          productsFruit,
-          productsVegetable,
-          productsDessert,
-          productsGiftCard,
+          productCategoriesDict,
           productsLoading,
           storePage,
           setStorePage,
@@ -600,6 +617,7 @@ const Store = ({ ...props }) => {
           setIsCheckoutLogin,
           isCheckoutSignUp,
           setIsCheckoutSignUp,
+          productDict,  
         }}
       >
         <Box>

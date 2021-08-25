@@ -1,25 +1,25 @@
 import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Box, Button, IconButton, Badge } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 import { Container, Row, Col } from 'react-grid-system';
 import { Hidden } from 'react-grid-system';
 //import white from '@material-ui/core/colors/white';
 //import makeStyles from '@material-ui/core/styles/makeStyles';
-import appColors from '../../styles/AppColors';
+// import appColors from '../../styles/AppColors';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import InstagramIcon from '@material-ui/icons/Instagram';
-import Modal from '../Modal/Modal';
+// import Modal from '../Modal/Modal';
 import { AuthContext } from '../../auth/AuthContext';
 import AmbasadorModal from '../Modal/AmbasadorModal';
 import LoginAmbasador from '../Modal/loginAmbasador';
-import storeContext from '../Store/storeContext';
+// import storeContext from '../Store/storeContext';
 
 const Footer = ({ ...props }) => {
   let [ambasadorModal, ambasadorModalMessage] = useState('');
   let [loginambasadorModal, loginambasadorModalMessage] = useState('');
   const auth = useContext(AuthContext);
   const history = useHistory();
-  const [userInfo, setUserInfo] = useState(auth.profile);
+  // const [userInfo, setUserInfo] = useState(auth.profile);
 
   const loginClicked = () => {
     props.setIsSignUpShown(false);

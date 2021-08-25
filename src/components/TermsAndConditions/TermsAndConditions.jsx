@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import TermsAndConditionsNavBar from './TermsAndConditionsNavBar';
 import appColors from '../../styles/AppColors';
-import Background from '../../icon/Rectangle.svg';
+// import Background from '../../icon/Rectangle.svg';
 
 import { AuthContext } from 'auth/AuthContext';
 
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 export default function TermsAndConditions(props) {
   const classes = useStyles();
   const Auth = useContext(AuthContext);
-  const { profile, cartTotal } = Auth;
+  const { profile, cartTotal, isAuth } = Auth;
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
 
@@ -63,6 +63,7 @@ export default function TermsAndConditions(props) {
           cartTotal,
           setShowLogin,
           setShowSignup,
+          isAuth,
         }}
       >
         <TermsAndConditionsNavBar />

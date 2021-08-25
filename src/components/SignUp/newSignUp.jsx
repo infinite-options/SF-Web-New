@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import BusiApiReqs from '../../utils/BusiApiReqs';
 import axios from 'axios';
 import { Box, Button } from '@material-ui/core';
@@ -8,15 +8,15 @@ import CssTextField from '../../utils/CssTextField';
 import appColors from '../../styles/AppColors';
 import SocialLogin from '../LogIn/SocialLogin';
 import { useState } from 'react';
-import Signupmodal from './Signupmodal';
+// import Signupmodal from './Signupmodal';
 import PlacesAutocomplete, {
   geocodeByAddress,
   geocodeByPlaceId,
   getLatLng,
 } from 'react-places-autocomplete';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import ConfirmatioModal from './ConfirmationModal';
+// import InputAdornment from '@material-ui/core/InputAdornment';
+// import LocationOnIcon from '@material-ui/icons/LocationOn';
+// import ConfirmatioModal from './ConfirmationModal';
 import AlertModal from './alertModal';
 import Hooray from './Hooray';
 import { useHistory } from 'react-router-dom';

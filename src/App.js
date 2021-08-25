@@ -21,19 +21,19 @@ ReactGA.initialize(GA_TRCKING_CODE);
 const cookies = new Cookies();
 
 //this function calculate the number of items in the cart and set it to global hook context
-function calTotal() {
-  var amount = 0,
-    keys = Object.keys(localStorage),
-    index = keys.length;
-  for (var i = 0; i < index; i++) {
-    if (keys[i].length > 30) {
-      var quantity = window.localStorage.getItem(keys[i]);
-      amount += parseInt(quantity);
-      // arr.push(JSON.parse(keys[i]));
-    }
-  }
-  return amount;
-}
+// function calTotal() {
+//   var amount = 0,
+//     keys = Object.keys(localStorage),
+//     index = keys.length;
+//   for (var i = 0; i < index; i++) {
+//     if (keys[i].length > 30) {
+//       var quantity = window.localStorage.getItem(keys[i]);
+//       amount += parseInt(quantity);
+//       // arr.push(JSON.parse(keys[i]));
+//     }
+//   }
+//   return amount;
+// }
 
 /* TODO: 
 1. Service Fee and Delivery Fee from Zones endpoint
@@ -69,7 +69,30 @@ function App() {
       },
     },
   });
-  console.log('app started');
+  // console.log('app started');
+
+  // useEffect(() => {
+  //   // function checkUserData() {
+  //   //   const cartItems = JSON.parse(localStorage.getItem('cartItems') || '{}');
+  //   //   console.log('binky2');
+  
+  //   //   if (cartItems[props.id]['count'] !== currCartItems[props.id]['count']) {
+  //   //     console.log('binky');
+  //   //     setDummy(!dummy);
+  //   //   }
+  //   // }
+
+  //   console.log('binky2');
+  //   window.addEventListener('storage', () => {
+  //     // When local storage changes, dump the list to
+  //     // the console.
+  //      console.log('binky');
+  //   });
+  // }, []);
+
+  // const cartDiff = () => {
+    
+  // };
 
   let uid =
     cookies.get('customer_uid') == null ? '' : cookies.get('customer_uid');
@@ -82,7 +105,7 @@ function App() {
   const [isGuest, setIsGuest] = useState(guesProfile === '' ? false : true); // checks if user is logged in
   const [isAuth, setIsAuth] = useState(uid === '' ? false : true); // checks if user is logged in
   const [accountType, setAccountType] = useState();
-  const [isUserLoaded, setIsUserLoaded] = useState(false);
+  // const [isUserLoaded, setIsUserLoaded] = useState(false);
   const [sweepstakeActive, setSweepstakeActive] = useState(false);
   const [profile, setProfile] = useState({
     email: '',
@@ -127,13 +150,13 @@ function App() {
     axios
       .get(BASE_URL + 'Profile/' + cookies.get('customer_uid'))
       .then((response) => {
-        console.log('Account:', response);
+        // console.log('Account:', response);
         let newAccountType = response.data.result[0].role.toLowerCase();
         if (isMounted)
           setAccountType(response.data.result[0].role ? newAccountType : '');
         // Farmer is now string of businessId
         let newAuthLevel = (() => {
-          console.log(newAccountType);
+          // console.log(newAccountType);
           switch (newAccountType) {
             case 'customer':
               return 0;
@@ -143,7 +166,7 @@ function App() {
               return 1;
           }
         })();
-        console.log(newAuthLevel);
+        // console.log(newAuthLevel);
         if (isMounted) setAuthLevel(newAuthLevel);
       })
       .catch((err) => {
@@ -157,7 +180,6 @@ function App() {
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
   }, []);
-
   return (
     <Router>
       <ThemeProvider theme={theme}>

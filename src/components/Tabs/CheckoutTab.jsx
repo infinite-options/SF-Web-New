@@ -1,21 +1,21 @@
 import React, { useContext, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { useElements, CardElement } from '@stripe/react-stripe-js';
+// import { useElements, CardElement } from '@stripe/react-stripe-js';
 import { GoogleMap, LoadScript, useJsApiLoader } from '@react-google-maps/api';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { Box, TextField, Button, Paper, Dialog } from '@material-ui/core';
+import { Box, TextField, Button, Dialog } from '@material-ui/core';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 import AddIcon from '@material-ui/icons/Add';
 import appColors from '../../styles/AppColors';
 import CartItem from '../CheckoutItems/cartItem';
 import storeContext from '../Store/storeContext';
 import checkoutContext from '../CheckoutPage/CheckoutContext';
-import PaymentTab from './PaymentTab';
-import PlaceOrder from '../CheckoutPage/PlaceOrder';
+// import PaymentTab from './PaymentTab';
+// import PlaceOrder from '../CheckoutPage/PlaceOrder';
 import Coupons from '../CheckoutItems/Coupons';
 import MapComponent from '../MapComponent/MapComponent';
 //import TipImage from '../../../images/TipBackground.svg'
-import LocationSearchInput from '../../utils/LocationSearchInput';
+// import LocationSearchInput from '../../utils/LocationSearchInput';
 
 //import SignUp from '../SignUp/SignUp';
 
@@ -72,6 +72,7 @@ function calculateSubTotal(items) {
 }
 
 function listItem(item) {
+  console.log("CartItems calling from checkout tab")
   return (
     <>
       <CartItem

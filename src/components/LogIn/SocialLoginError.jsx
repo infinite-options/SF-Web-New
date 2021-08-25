@@ -15,9 +15,9 @@ import { AuthContext } from '../../auth/AuthContext';
 
 const SocialLoginError = ({ ...props }) => {
   const Auth = useContext(AuthContext);
-  const [passModal, setpassModal] = useState();
+  // const [passModal, setpassModal] = useState();
 
-  const API_URL = process.env.REACT_APP_SERVER_BASE_URI + '';
+  // const API_URL = process.env.REACT_APP_SERVER_BASE_URI + '';
 
   const onClear = () => {
     props.clear(false);
