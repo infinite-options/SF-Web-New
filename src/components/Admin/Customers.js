@@ -86,6 +86,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     padding: '10px',
   },
+ 
   infoTable: {
     marginLeft: '20px',
     borderCollapse: 'collapse',
@@ -240,7 +241,12 @@ const useStyles = makeStyles((theme) => ({
     '&:focus': {
       outline: 'none',
     },
+    "&::placeholder": {
+      fontSize:"14px",
+    },
+    
   },
+  
   btn: {
     background: ' #FF8500 0% 0% no-repeat padding-box',
     borderRadius: '8px',
@@ -269,6 +275,11 @@ const useStyles = makeStyles((theme) => ({
     borderColor: '#005cbf',
     color: 'white',
     outline: 'none',
+  },
+  tableCoupon: {
+    // marginLeft: '4px',
+    marginRight:'15px',
+    
   },
 }));
 
@@ -425,6 +436,7 @@ function fetchCoupons(setCoupons, custEmail) {
     .then((json) => {
       const coupons = json.result;
       setCoupons(coupons);
+      console.log('all coupons ',coupons)
     })
     .catch((error) => {
       console.error(error);
@@ -1428,7 +1440,7 @@ function Customers() {
                             onChange={(e) => handle(e)}
                             value={createCoupon.notes}
                             rows={4}
-                            style={{ margin: 6 }}
+                            
                           />
                         </Box>
                       </Box>
@@ -1444,112 +1456,77 @@ function Customers() {
                       alignItems="center"
                       style={{ padding: '10px' }}
                     >
-                      <Grid
-                        item
-                        xs={12}
-                        sm
-                        container
-                        className={classes.header}
-                      >
-                        Current Coupons
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        sm
-                        container
-                        direction="row"
-                        justify="space-between"
-                        alignItems="center"
-                        style={{ fontSize: '14px', fontWeight: 'bold' }}
-                      >
-                        <Grid item style={{ paddingLeft: '20px' }}>
-                          %
-                        </Grid>
-                        <Grid item>$</Grid>
-                        <Grid item>Shipping</Grid>
-                      </Grid>
-                    </Grid>
+                      <table className={classes.paymentTable} >
+                        <tbody>
+                          <tr className={classes.paymentHeader}>
+                            <td className={classes.td}>Current Coupons</td>
+                            <td className={classes.td}>For All</td>
+                            <td className={classes.td}>No. of Uses</td>
+                            <td className={classes.td}>%</td>
+                            <td className={classes.td}>$</td>
+                            <td className={classes.td}>Shipping</td>
+                            
+                          </tr>
+                      
+                      
 
                     {coupons.map((coupon) => (
-                      <Grid
-                        container
-                        direction="row"
-                        justify="space-between"
-                        alignItems="center"
-                        style={{ padding: '15px 0px' }}
-                      >
-                        <Grid item>
-                          <Box
-                            style={{
-                              width: '170px',
-                              height: '73px',
-                              backgroundImage: `url(${couponUnavaliable})`,
-                              backgroundSize: '100% 100%',
-                              backgroundPosition: 'center center',
-                              backgroundRepeat: 'no-repeat',
-                            }}
-                          >
+                      <tr className={classes.paymentInfo} styles={{border:"none"}}>
+                        <td className={classes.td}>
+                          <Grid item>
                             <Box
-                              display="flex"
-                              flexDirection="column"
-                              alignItems="flex-start"
-                              justifyContent="center"
-                              marginLeft="1.5rem"
+                              style={{
+                                width: '170px',
+                                height: '73px',
+                                backgroundImage: `url(${couponUnavaliable})`,
+                                backgroundSize: '100% 100%',
+                                backgroundPosition: 'center center',
+                                backgroundRepeat: 'no-repeat',
+                                
+                              }}
                             >
                               <Box
-                                fontSize="12px"
-                                pr={1}
-                                fontWeight="bold"
-                                marginTop="0.5rem"
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="flex-start"
+                                justifyContent="center"
+                                marginLeft="2rem"
+                                
                               >
-                                {coupon.coupon_title}
-                              </Box>
-                              <Box fontSize="10px">{coupon.notes}</Box>
-                              <Box fontSize="10px">
-                                Spend $ {coupon.threshold} more to use
-                              </Box>
-                              <Box fontSize="10px">
-                                Expires:{' '}
-                                {moment(coupon.expire_date).format('LL')}
+                                <Box
+                                  fontSize="12px"
+                                  pr={1}
+                                  fontWeight="bold"
+                                  paddingTop="0.5rem"
+                                >
+                                  {coupon.coupon_title}
+                                </Box>
+                                <Box fontSize="10px">{coupon.notes}</Box>
+                                <Box fontSize="10px">
+                                  Spend $ {coupon.threshold} more to use
+                                </Box>
+                                <Box fontSize="10px">
+                                  Expires:{' '}
+                                  {moment(coupon.expire_date).format('LL')}
+                                </Box>
                               </Box>
                             </Box>
-                          </Box>
-                        </Grid>
-                        <Grid item style={{ padding: '10px' }}>
-                          <Grid
-                            item
-                            xs={12}
-                            sm
-                            container
-                            direction="row"
-                            justify="space-between"
-                            alignItems="center"
-                            style={{ fontSize: '14px', paddingRight: '10px' }}
-                          >
-                            <Grid item>
-                              <Typography>
-                                {coupon.discount_percent}%{' '}
-                              </Typography>
-                            </Grid>
-                            <Grid item>
-                              <Typography>${coupon.discount_amount}</Typography>
-                            </Grid>
-                            <Grid item>
-                              <Typography>
-                                ${coupon.discount_shipping}
-                              </Typography>
-                            </Grid>
                           </Grid>
-                          <Grid item>
-                            {' '}
-                            <Typography>
-                              No. of uses:{coupon.num_used}
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
+                          
+                            
+                        </td>
+                        <td className={classes.td}>{coupon.email_id===""?"YES":"NO"}</td>
+                        <td className={classes.paymentInfo}>{coupon.num_used}</td>
+                        <td className={classes.td}>{coupon.discount_percent}%{' '}</td>
+                        <td className={classes.td}>${coupon.discount_amount}</td>
+                        <td className={classes.td}>${coupon.discount_shipping}</td>
+                        
+                          
+                    </tr>  
                     ))}
+                    </tbody>
+                    </table>
+                    </Grid>
                   </Box>
                 </Box>
                 <Box hidden={rightTabChosen !== 2}>
