@@ -204,7 +204,7 @@ function NotificationMain({
                         pageSizeOptions: [40],
                         rowStyle: { height: 40 },
                         search: true,
-                        maxBodyHeight: 500,
+                        maxBodyHeight: 1000,
                     }}
                 >
                 </MaterialTable>
