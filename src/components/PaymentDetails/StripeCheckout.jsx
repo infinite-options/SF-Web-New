@@ -200,9 +200,17 @@ const StripeCheckout = (props) => {
       // DONE: for Guest, put 'guest' in uid
       // TODO: Add Pay coupon ID
       console.log("in stripe cst 2",ambDis)
+      var uid = null
+      if(cookies.get('customer_uid')!=null){
+        var CryptoJS = require("crypto-js");
+        var bytes = CryptoJS.AES.decrypt(cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+        uid = bytes.toString(CryptoJS.enc.Utf8);
+        console.log("working on encryption",uid)
+    
+      }
       const data = {
         // pur_customer_uid: profile.customer_uid,
-        pur_customer_uid: auth.isAuth ? cookies.get('customer_uid') : 'GUEST',
+        pur_customer_uid: auth.isAuth ? uid : 'GUEST',
         pur_business_uid: 'WEB',
         items,
         order_instructions: '',

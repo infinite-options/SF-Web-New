@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import moment from 'moment';
+import axios from 'axios';
 
 
 
@@ -277,6 +278,54 @@ function OrderSummary() {
     setOpen(true)
     
   };
+
+  const handleTestClick = () => {
+
+    // axios
+    //   .get('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/email_info/parva.shah808@gmail.com',
+    //   {
+    //     auth: {
+    //       username: 'parva.shah808@gmail.com',
+    //       password: 'parva.shah808@gmail.com' // Bad password
+    //   }})
+    //   .then((res) => {
+    //     console.log('testing perfect',res);
+        
+    //   })
+    //   .catch((err) => {
+    //     if(err.response) {
+    //       console.log('testing perfect',err.response);
+    //     }
+    //     console.log('testing perfect',err);
+    //   })
+    var username = "parva.shah808@gmail.comm"
+    var password = "parva.shah808@gmail.com"
+    let headers = new Headers();
+    
+    headers.append('Authorization', 'Basic ' + window.btoa(username+":"+password));
+    
+    fetch('https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/email_info/parva.shah808@gmail.com', {
+          method: 'GET',
+          headers: headers,
+          
+        })
+        .then((response) => {
+          if (!response.ok) {
+            throw response;
+          }
+  
+          return response.json();
+        })
+            
+            .then((json) => {
+              console.log("fetch working! ",json)
+              
+            })
+            .catch((error) => {
+              console.error("fetch working! ",error);
+            })
+
+  };
   
   const handleDeliveryDate = (day) => {
     let tmp_ip_day = day.toLocaleDateString().split('/');
@@ -322,7 +371,7 @@ function OrderSummary() {
                       <td className={classes.usrTitle} style={{color:'#1C6D74'}}>Revenue for Farms</td>
                       <td className={classes.usrTitle} style={{color:'#1C6D74'}}>Revenue for SF</td>
                       <td className={classes.usrTitle} style={{color:'#1C6D74'}}>Select Delivery Date</td>
-                      
+                      {/* <td className={classes.usrTitle} style={{color:'#1C6D74'}}>Test Button</td> */}
                     </tr>
                     <tr className={classes.tr} style={{border:'0px'}}>
                       <td className={classes.usrTitle}>#{globalOrders}</td>
@@ -335,6 +384,13 @@ function OrderSummary() {
                           format="MM/DD/YYYY"
                           onDayChange={handleDeliveryDate}/>
                       </td>
+                      {/* <td className={classes.usrTitle}>
+                      <Button
+                        onClick = {handleTestClick}
+                      >
+                        Save Changes
+                      </Button>
+                      </td> */}
                       
                     </tr>
                     </tbody>

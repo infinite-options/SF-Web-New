@@ -539,7 +539,16 @@ const Store = ({ ...props }) => {
         }
       }
 
-      BusiMethods.getFavorite(cookies.get('customer_uid')).then((itemRes) => {
+      var uid = null
+      if(cookies.get('customer_uid')!=null){
+        var CryptoJS = require("crypto-js");
+        var bytes = CryptoJS.AES.decrypt(cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+        uid = bytes.toString(CryptoJS.enc.Utf8);
+        console.log("working on encryption",uid)
+    
+      }
+
+      BusiMethods.getFavorite(uid).then((itemRes) => {
         if (itemRes !== undefined) {
           for (const item of itemRes) {
             // console.log('Favorite get', item);

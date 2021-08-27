@@ -93,9 +93,17 @@ const PayPal = ({ value, deliveryInstructions }) => {
         amount={value}
         // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
         onSuccess={(details, data) => {
+          var uid = null
+          if(cookies.get('customer_uid')!=null){
+            var CryptoJS = require("crypto-js");
+            var bytes = CryptoJS.AES.decrypt(cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+            uid = bytes.toString(CryptoJS.enc.Utf8);
+            console.log("working on encryption",uid)
+        
+          }
           const dataSending = {
             pur_customer_uid: auth.isAuth
-              ? cookies.get('customer_uid')
+              ? uid
               : 'GUEST',
             pur_business_uid: 'WEB',
             items,

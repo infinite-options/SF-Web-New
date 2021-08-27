@@ -255,7 +255,14 @@ function AdminSocialSignup(props) {
               let customerInfo = res.data.result;
               Auth.setIsAuth(true);
               Cookies.set('login-session', 'good');
-              Cookies.set('customer_uid', customerInfo.customer_uid);
+              
+              
+              var CryptoJS = require("crypto-js");
+              console.log("working on encryption--in")
+              
+              var ciphertext = CryptoJS.AES.encrypt(customerInfo.customer_uid, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+              Cookies.set('customer_uid', ciphertext);
+
               // props.history.push("/admin");
             })
             .catch((err) => {

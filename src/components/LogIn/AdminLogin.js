@@ -73,7 +73,16 @@ function AdminLogin({ ...props }) {
       let customerId = urlParams.get('id');
       Auth.setIsAuth(true);
       Cookies.set('login-session', 'good');
-      Cookies.set('customer_uid', customerId);
+      console.log("working on encryption--first")
+      
+
+      var CryptoJS = require("crypto-js");
+      console.log("working on encryption--in")
+      var ciphertext = CryptoJS.AES.encrypt(customerId, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+      Cookies.set('customer_uid', ciphertext);
+
+      
+
       axios
         .get(process.env.REACT_APP_SERVER_BASE_URI + 'Profile/' + customerId)
         .then((response) => {
@@ -131,7 +140,13 @@ function AdminLogin({ ...props }) {
       let customerId = urlParams.get('id');
       Auth.setIsAuth(true);
       Cookies.set('login-session', 'good');
-      Cookies.set('customer_uid', customerId);
+      
+      var CryptoJS = require("crypto-js");
+      console.log("working on encryption--in")
+      var ciphertext = CryptoJS.AES.encrypt(customerId, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+      Cookies.set('customer_uid', ciphertext);
+
+      
       props.history.push('/admin');
     }
     // Log which media platform user should have signed in with instead of Apple
@@ -218,7 +233,13 @@ function AdminLogin({ ...props }) {
                       let customerInfo = res.data.result[0];
                       Auth.setIsAuth(true);
                       Cookies.set('login-session', 'good');
-                      Cookies.set('customer_uid', customerInfo.customer_uid);
+                      
+                      var CryptoJS = require("crypto-js");
+                      console.log("working on encryption--in-242")
+                      var ciphertext = CryptoJS.AES.encrypt(customerInfo.customer_uid, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+                      Cookies.set('customer_uid', ciphertext);
+
+                      
                       let newAccountType = customerInfo.role.toLowerCase();
                       switch (newAccountType) {
                         case 'admin':

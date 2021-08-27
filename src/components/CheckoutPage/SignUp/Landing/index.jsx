@@ -47,7 +47,15 @@ class Landing extends React.Component {
 
   componentDidMount() {
     //check for logedIn
-    const customerId = Cookies.get("customer_uid");
+    var uid = null
+    if(cookies.get('customer_uid')!=null){
+      var CryptoJS = require("crypto-js");
+      var bytes = CryptoJS.AES.decrypt(Cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+      uid = bytes.toString(CryptoJS.enc.Utf8);
+      console.log("working on encryption",uid)
+  
+    }
+    const customerId = uid;
     if (customerId) {
       // this.props.history.push("/select-meal");
     } else {

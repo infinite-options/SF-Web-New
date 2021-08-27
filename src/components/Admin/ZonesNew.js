@@ -125,8 +125,16 @@ function Zones ({history,...props}) {
         .split("; ")
         .find(row => row.startsWith("customer_uid"))
         .split("=")[1];
+      
+      
+      var CryptoJS = require("crypto-js");
+      var bytes = CryptoJS.AES.decrypt(customer_uid, process.env.REACT_APP_UID_ENCRYPT_CODE);
+      var uid = bytes.toString(CryptoJS.enc.Utf8);
+      console.log("working on encryption",uid)
+    
+      
       axios
-      .get(`${API_URL}Profile/${customer_uid}`)
+      .get(`${API_URL}Profile/${uid}`)
       .then((response) => {
         const role = response.data.result[0].role.toLowerCase();
         if(role === 'admin') {

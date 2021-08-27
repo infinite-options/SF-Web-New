@@ -174,7 +174,10 @@ export const loginAttempt = (email, password, callback) => dispatch => {
                 if (res.data.code === 200) {
                   let customerInfo = res.data.result[0];
 
-                  document.cookie = "customer_uid=" + customerInfo.customer_uid;
+                  var CryptoJS = require("crypto-js");
+                  console.log("working on encryption--in")
+                  var ciphertext = CryptoJS.AES.encrypt(customerInfo.customer_uid, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+                  document.cookie = "customer_uid=" + ciphertext;
 
                   dispatch({
                     type: SUBMIT_PASSWORD
@@ -265,7 +268,12 @@ export const socialLoginAttempt = (
         let customerInfo = res.data.result[0];
         console.log(customerInfo);
         console.log("cookie", document.cookie);
-        document.cookie = "customer_uid=" + customerInfo.customer_uid;
+        var CryptoJS = require("crypto-js");
+        console.log("working on encryption--in")
+        var ciphertext = CryptoJS.AES.encrypt(customerInfo.customer_uid, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+        
+
+        document.cookie = "customer_uid=" + ciphertext;
         console.log("cookie", document.cookie);
         axios
           .post(API_URL + "token_fetch_update/update_web", {
@@ -319,7 +327,12 @@ export const bypassLogin = (email, hashedPassword, callback) => dispatch => {
         let customerInfo = res.data.result[0];
         console.log(customerInfo);
         console.log("cookie", document.cookie);
-        document.cookie = "customer_uid=" + customerInfo.customer_uid;
+        var CryptoJS = require("crypto-js");
+        console.log("working on encryption--in")
+        var ciphertext = CryptoJS.AES.encrypt(customerInfo.customer_uid, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+        
+
+        document.cookie = "customer_uid=" + ciphertext;
         console.log("cookie", document.cookie);
         preCallback(customerInfo, callback);
       }
@@ -749,7 +762,12 @@ export const submitSocialSignUp = (
               type: SUBMIT_SIGNUP
             });
             console.log("cookie", document.cookie);
-            document.cookie = "customer_uid=" + customerId;
+            var CryptoJS = require("crypto-js");
+            console.log("working on encryption--in")
+            var ciphertext = CryptoJS.AES.encrypt(customerId, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+            
+
+            document.cookie = "customer_uid=" + ciphertext;
             console.log("cookie", document.cookie);
             callback();
           })

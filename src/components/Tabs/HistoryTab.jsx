@@ -48,11 +48,19 @@ const HistoryTab = () => {
   const [historyLoading, setHistoryLoading] = useState(true);
   const [message, setMessage] = useState(true);
   function loadHistory(setHistoryList, setHistoryLoading) {
+    var uid = null
+    if(cookies.get('customer_uid')!=null){
+      var CryptoJS = require("crypto-js");
+      var bytes = CryptoJS.AES.decrypt(cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+      uid = bytes.toString(CryptoJS.enc.Utf8);
+      console.log("working on encryption",uid)
+  
+    }
     axios
       .get(
         process.env.REACT_APP_SERVER_BASE_URI +
           'history/' +
-          cookies.get('customer_uid')
+          uid
       )
       .then((res) => {
         if (res && res.data && res.data.result) {
@@ -63,7 +71,15 @@ const HistoryTab = () => {
   }
 
   useEffect(() => {
-    if (cookies.get('customer_uid') !== '')
+    var uid = null
+    if(cookies.get('customer_uid')!=null){
+      var CryptoJS = require("crypto-js");
+      var bytes = CryptoJS.AES.decrypt(cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+      uid = bytes.toString(CryptoJS.enc.Utf8);
+      console.log("working on encryption",uid)
+  
+    }
+    if (uid !== '')
       loadHistory(setHistoryList, setHistoryLoading);
   }, [profile.email, purchaseMade]);
 

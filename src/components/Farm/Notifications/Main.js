@@ -200,8 +200,8 @@ function NotificationMain({
 
                     options={{
                         // selection: true,
-                        pageSize: 40,
-                        pageSizeOptions: [40],
+                        pageSize: 100,
+                        pageSizeOptions: [100],
                         rowStyle: { height: 40 },
                         search: true,
                         maxBodyHeight: 1000,

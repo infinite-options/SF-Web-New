@@ -242,7 +242,16 @@ class Signup extends Component {
             .then((res) => {
               console.log(res);
               let customerInfo = res.data.result;
-              Cookies.set('customer_uid', customerInfo.customer_uid);
+              console.log("working on encryption--first")
+              
+              
+              var CryptoJS = require("crypto-js");
+              console.log("working on encryption--in")
+              var ciphertext = CryptoJS.AES.encrypt(customerInfo.customer_uid, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+              Cookies.set('customer_uid', ciphertext);
+
+              
+      
               auth.setIsAuth(true);
               auth.setAuthLevel(0);
               this.props.history.push('/store');

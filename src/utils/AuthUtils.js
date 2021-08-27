@@ -6,8 +6,16 @@ export default class AuthUtils {
   cookies = new Cookies();
 
   getProfile = async function () {
+    var uid = null
+    if(this.cookies.get('customer_uid')!=null){
+      var CryptoJS = require("crypto-js");
+      var bytes = CryptoJS.AES.decrypt(this.cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+      uid = bytes.toString(CryptoJS.enc.Utf8);
+      console.log("working on encryption",uid)
+  
+    }
     return await axios
-      .get(this.BASE_URL + 'Profile/' + this.cookies.get('customer_uid'))
+      .get(this.BASE_URL + 'Profile/' + uid)
       .then((response) => {
         if (response.data.result.length !== 0)
           return Promise.resolve(response.data.result[0]);
@@ -54,7 +62,15 @@ export default class AuthUtils {
           if (res.data.code >= 200 && res.data.code < 300) {
             let customerInfo = res.data.result;
             this.cookies.set('login-session', 'good');
+            console.log("working on encryption--first")
             this.cookies.set('customer_uid', customerInfo.customer_uid);
+            
+            var CryptoJS = require("crypto-js");
+            console.log("working on encryption--in")
+            var ciphertext = CryptoJS.AES.encrypt(customerInfo.customer_uid, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+            this.cookies.set('customer_uid', ciphertext);
+
+            
             if (res.data.code === 200) {
               axios
                 .post(
@@ -91,6 +107,14 @@ export default class AuthUtils {
   };
 
   updateProfile = async function (profile) {
+    var uid = null
+    if(this.cookies.get('customer_uid')!=null){
+      var CryptoJS = require("crypto-js");
+      var bytes = CryptoJS.AES.decrypt(this.cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+      uid = bytes.toString(CryptoJS.enc.Utf8);
+      console.log("working on encryption",uid)
+  
+    }
     const profileData = {
       customer_first_name: profile.firstName,
       customer_last_name: profile.lastName,
@@ -103,7 +127,7 @@ export default class AuthUtils {
       customer_zip: profile.zip,
       customer_lat: profile.latitude,
       customer_long: profile.longitude,
-      customer_uid: this.cookies.get('customer_uid'),
+      customer_uid: uid,
     };
 
     return await axios
@@ -130,7 +154,15 @@ export default class AuthUtils {
   };
 
   updatePassword = async function (credentials) {
-    credentials.customer_uid = this.cookies.get('customer_uid');
+    var uid = null
+    if(this.cookies.get('customer_uid')!=null){
+      var CryptoJS = require("crypto-js");
+      var bytes = CryptoJS.AES.decrypt(this.cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+      uid = bytes.toString(CryptoJS.enc.Utf8);
+      console.log("working on encryption",uid)
+  
+    }
+    credentials.customer_uid = uid;
     return await axios
       .post(this.BASE_URL + 'update_email_password', credentials, {
         headers: {
@@ -155,8 +187,16 @@ export default class AuthUtils {
   };
 
   updatePushNotifications = async function (notificationValue) {
+    var uid = null
+    if(this.cookies.get('customer_uid')!=null){
+      var CryptoJS = require("crypto-js");
+      var bytes = CryptoJS.AES.decrypt(this.cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+      uid = bytes.toString(CryptoJS.enc.Utf8);
+      console.log("working on encryption",uid)
+  
+    }
     const notificationData = {
-      uid: this.cookies.get('customer_uid'),
+      uid: uid,
       notification: notificationValue ? 'TRUE' : 'FALSE',
     };
 
@@ -188,11 +228,19 @@ export default class AuthUtils {
   };
 
   getLastDeliveryDate = async function (notificationValue) {
+    var uid = null
+    if(this.cookies.get('customer_uid')!=null){
+      var CryptoJS = require("crypto-js");
+      var bytes = CryptoJS.AES.decrypt(this.cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+      uid = bytes.toString(CryptoJS.enc.Utf8);
+      console.log("working on encryption",uid)
+  
+    }
     return await axios
       .get(
         this.BASE_URL +
           'last_delivery_instruction/' +
-          this.cookies.get('customer_uid')
+          uid
       )
       .then((response) => {
         try {

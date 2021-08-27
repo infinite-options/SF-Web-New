@@ -94,8 +94,17 @@ function App() {
     
   // };
 
-  let uid =
+  var uid =
     cookies.get('customer_uid') == null ? '' : cookies.get('customer_uid');
+  
+  if(uid!=''){
+    var CryptoJS = require("crypto-js");
+    var bytes = CryptoJS.AES.decrypt(uid, process.env.REACT_APP_UID_ENCRYPT_CODE);
+    uid = bytes.toString(CryptoJS.enc.Utf8);
+    console.log("working on encryption",uid)
+
+  }
+  
 
   let guesProfile =
     localStorage.getItem('guestProfile') == null
@@ -147,8 +156,16 @@ function App() {
 
   useEffect(() => {
     let isMounted = true; // note this flag denote mount status
+    var uid = null
+    if(cookies.get('customer_uid')!=null){
+      var CryptoJS = require("crypto-js");
+      var bytes = CryptoJS.AES.decrypt(cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+      uid = bytes.toString(CryptoJS.enc.Utf8);
+      console.log("working on encryption",uid)
+  
+    }
     axios
-      .get(BASE_URL + 'Profile/' + cookies.get('customer_uid'))
+      .get(BASE_URL + 'Profile/' + uid)
       .then((response) => {
         // console.log('Account:', response);
         let newAccountType = response.data.result[0].role.toLowerCase();

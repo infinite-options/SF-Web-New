@@ -590,8 +590,17 @@ export default function CheckoutTab(props) {
 
   const { profile } = useContext(storeContext);
 
+  var uid = null
+  if(Cookies.get('customer_uid')!=null){
+    var CryptoJS = require("crypto-js");
+    var bytes = CryptoJS.AES.decrypt(Cookies.get('customer_uid'), process.env.REACT_APP_UID_ENCRYPT_CODE);
+    uid = bytes.toString(CryptoJS.enc.Utf8);
+    console.log("working on encryption",uid)
+
+  }
+
   let reqBodyPost = {
-    customer_uid: Cookies.get('customer_uid'),
+    customer_uid: uid,
     favorite: FavoritePost,
   };
 

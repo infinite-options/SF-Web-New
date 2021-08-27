@@ -34,7 +34,15 @@ function SocialLogin(props) {
       let customerId = urlParams.get('id');
       Auth.setIsAuth(true);
       Cookies.set('login-session', 'good');
-      Cookies.set('customer_uid', customerId);
+      console.log("working on encryption--first")
+      
+      var CryptoJS = require("crypto-js");
+      console.log("working on encryption--in",typeof(process.env.REACT_APP_UID_ENCRYPT_CODE))
+      var ciphertext = CryptoJS.AES.encrypt(customerId, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+      Cookies.set('customer_uid', ciphertext);
+
+      
+      
       props.history.push('/admin');
     }
     // Log which media platform user should have signed in with instead of Apple
@@ -104,7 +112,16 @@ function SocialLogin(props) {
             .finally(() => {
               console.log(customerInfo);
               Cookies.set('login-session', 'good');
-              Cookies.set('customer_uid', customerInfo.customer_uid);
+              
+              
+              var CryptoJS = require("crypto-js");
+              console.log("working on encryption--in",typeof(process.env.REACT_APP_UID_ENCRYPT_CODE))
+              var ciphertext = CryptoJS.AES.encrypt(customerInfo.customer_uid, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+              Cookies.set('customer_uid', ciphertext);
+
+              
+      
+              
               Auth.setIsAuth(true);
               let newAccountType = customerInfo.role.toLowerCase();
               switch (newAccountType) {

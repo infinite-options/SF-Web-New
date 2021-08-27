@@ -11,6 +11,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import {
   Grid,
   Typography,
@@ -281,6 +284,13 @@ const useStyles = makeStyles((theme) => ({
     marginRight:'15px',
     
   },
+  formControl: {
+    // margin: theme.spacing(1),
+    // minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
 }));
 
 const StyledTabs = withStyles({
@@ -419,7 +429,7 @@ function fetchProduce(setProduceOrdered, id) {
       console.error(error);
     });
 }
-function fetchCoupons(setCoupons, custEmail) {
+function fetchCoupons(setCoupons, custEmail,setValidOptions,setCouponIDOptions) {
   fetch(
     `https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/available_Coupons/${custEmail}`,
     {
@@ -436,7 +446,9 @@ function fetchCoupons(setCoupons, custEmail) {
     .then((json) => {
       const coupons = json.result;
       setCoupons(coupons);
-      console.log('all coupons ',coupons)
+      setValidOptions(json.valid)
+      setCouponIDOptions(json.coupon_id)
+      console.log('all coupons ',coupons,json.valid,json.coupon_id)
     })
     .catch((error) => {
       console.error(error);
@@ -467,6 +479,10 @@ function Customers() {
   const [orderBy, setOrderBy] = useState();
   const [clicked, setClicked] = useState([]);
   const [custClicked, setCustClicked] = useState([]);
+  const [validOptions, setValidOptions] = useState([]);
+  const [couponIDOptions, setCouponIDOptions] = useState([]);
+  const [couponIDVal, setCouponIDVal] = useState('');
+  const [validVal, setValidVal] = useState('');
 
   const farmerObj = async () => {
     await axios
@@ -490,9 +506,10 @@ function Customers() {
         );
         fetchFarm(setFarms, response.data.result[0].customer_uid);
         fetchProduce(setProduceOrdered, response.data.result[0].customer_uid);
-        fetchCoupons(setCoupons, response.data.result[0].customer_email);
+        fetchCoupons(setCoupons, response.data.result[0].customer_email,setValidOptions,setCouponIDOptions);
         setEmail(response.data.result[0].customer_email);
       });
+      console.log("all coupons --",validOptions,couponIDOptions)
   };
   const customerlist = () => {
     if (Auth.authLevel >= 2) {
@@ -773,6 +790,18 @@ function Customers() {
   function handle(e) {
     const newCoupon = { ...createCoupon };
     newCoupon[e.target.id] = e.target.value;
+    setCreateCoupon(newCoupon);
+  }
+  function handleChangeCouponID(e) {
+    setCouponIDVal(e.target.value)
+    const newCoupon = { ...createCoupon };
+    newCoupon['coupon_id'] = e.target.value;
+    setCreateCoupon(newCoupon);
+  }
+  function handleChangeValid(e) {
+    setValidVal(e.target.value)
+    const newCoupon = { ...createCoupon };
+    newCoupon['valid'] = e.target.value;
     setCreateCoupon(newCoupon);
   }
   //farm stats table head
@@ -1302,7 +1331,7 @@ function Customers() {
                           <input
                             className={classes.couponInput}
                             type="text"
-                            placeholder="Coupon Title"
+                            placeholder="Title (14 char)"
                             id="coupon_title"
                             onChange={(e) => handle(e)}
                             value={createCoupon.coupon_title}
@@ -1315,7 +1344,7 @@ function Customers() {
                           </Typography>
                           <input
                             className={classes.couponInput}
-                            placeholder="Order Subtotal "
+                            placeholder="Min $ spent (30) "
                             type="text"
                             id="threshold"
                             onChange={(e) => handle(e)}
@@ -1329,7 +1358,7 @@ function Customers() {
                           <Typography className={classes.paymentHeader}>
                             Coupon ID
                           </Typography>
-                          <input
+                          {/* <input
                             className={classes.couponInput}
                             type="text"
                             placeholder="CouponID"
@@ -1337,7 +1366,26 @@ function Customers() {
                             onChange={(e) => handle(e)}
                             value={createCoupon.coupon_id}
                             style={{ margin: 6 }}
-                          />
+                          /> */}
+                          <FormControl variant ="filled" className={classes.formControl}>
+                            <Select
+                              value={couponIDVal}
+                              onChange={handleChangeCouponID}
+                              displayEmpty
+                              className={classes.selectEmpty}
+                              inputProps={{ 'aria-label': 'Without label' }}
+                            >
+                              <MenuItem value="" disabled>
+                                Select Option
+                              </MenuItem>
+                              {couponIDOptions.map((opts) => (
+                                  <MenuItem value={opts}>{opts}</MenuItem>
+                              ))}
+                              
+                              
+                            </Select>
+                            
+                          </FormControl>
                         </Box>
                         <Box width="50%">
                           <Typography className={classes.paymentHeader}>
@@ -1346,7 +1394,7 @@ function Customers() {
                           <input
                             className={classes.couponInput}
                             type="text"
-                            placeholder="% discount"
+                            placeholder="% discount (20)"
                             id="discount_percent"
                             onChange={(e) => handle(e)}
                             value={createCoupon.discount_percent}
@@ -1359,7 +1407,7 @@ function Customers() {
                           <Typography className={classes.paymentHeader}>
                             Valid
                           </Typography>
-                          <input
+                          {/* <input
                             className={classes.couponInput}
                             type="text"
                             id="valid"
@@ -1367,7 +1415,27 @@ function Customers() {
                             onChange={(e) => handle(e)}
                             value={createCoupon.valid}
                             style={{ margin: 6 }}
-                          />
+                          /> */}
+                          
+                          <FormControl variant ="filled" className={classes.formControl}>
+                            <Select
+                              value={validVal}
+                              onChange={handleChangeValid}
+                              displayEmpty
+                              className={classes.selectEmpty}
+                              inputProps={{ 'aria-label': 'Without label' }}
+                            >
+                              <MenuItem value="" disabled>
+                                Select Option
+                              </MenuItem>
+                              {validOptions.map((opts) => (
+                                  <MenuItem value={opts}>{opts}</MenuItem>
+                              ))}
+                              
+                              
+                            </Select>
+                            
+                          </FormControl>
                         </Box>
                         <Box width="50%">
                           <Typography className={classes.paymentHeader}>
@@ -1377,7 +1445,7 @@ function Customers() {
                             className={classes.couponInput}
                             type="text"
                             id="discount_amount"
-                            placeholder="$ discount"
+                            placeholder="$ discount (10)"
                             onChange={(e) => handle(e)}
                             value={createCoupon.discount_amount}
                             style={{ margin: 6 }}
@@ -1406,7 +1474,7 @@ function Customers() {
                             className={classes.couponInput}
                             type="text"
                             id="discount_shipping"
-                            placeholder="$ shipping"
+                            placeholder="$ shipping (5)"
                             onChange={(e) => handle(e)}
                             value={createCoupon.discount_shipping}
                             style={{ margin: 6 }}
@@ -1422,7 +1490,7 @@ function Customers() {
                             className={classes.couponInput}
                             type="text"
                             id="limits"
-                            placeholder="No. of coupons"
+                            placeholder="No. of uses (2)"
                             onChange={(e) => handle(e)}
                             value={createCoupon.limits}
                             style={{ margin: 6 }}
@@ -1460,11 +1528,11 @@ function Customers() {
                         <tbody>
                           <tr className={classes.paymentHeader}>
                             <td className={classes.td}>Current Coupons</td>
-                            <td className={classes.td}>For All</td>
-                            <td className={classes.td}>No. of Uses</td>
+                            <td className={classes.td}>USE</td>
+                            <td className={classes.td}>#</td>
                             <td className={classes.td}>%</td>
                             <td className={classes.td}>$</td>
-                            <td className={classes.td}>Shipping</td>
+                            <td className={classes.td}>Delivery</td>
                             
                           </tr>
                       
@@ -1515,7 +1583,7 @@ function Customers() {
                           
                             
                         </td>
-                        <td className={classes.td}>{coupon.email_id===""?"YES":"NO"}</td>
+                        <td className={classes.td}>{coupon.email_id===""?"ALL":"USER"}</td>
                         <td className={classes.paymentInfo}>{coupon.num_used}</td>
                         <td className={classes.td}>{coupon.discount_percent}%{' '}</td>
                         <td className={classes.td}>${coupon.discount_amount}</td>
