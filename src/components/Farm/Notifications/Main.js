@@ -190,6 +190,7 @@ function NotificationMain({
             >
             
             <Grid item 
+                    
                     style={{
                         display: 'flex',
                         marginBottom: '1rem',
@@ -202,6 +203,7 @@ function NotificationMain({
                         height: 'auto',
                         overflowY: 'hidden',
                         width: '70%',
+                        border: '3px solid green',
                         }}
             >
             <MaterialTable
@@ -300,7 +302,8 @@ function NotificationMain({
                         minHeight: '80vh',
                         height: 'auto',
                         width: '20%',
-                        marginLeft: '8%'
+                        marginLeft: '8%',
+                        border: '3px solid green',
                         // overflowY: 'hidden',
                         }}
             >

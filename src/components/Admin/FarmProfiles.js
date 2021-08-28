@@ -354,17 +354,32 @@ function FarmProfiles() {
   //farm item update
   
   const handleSave = (id, action) => {
-    console.log("test 123",selectedProduct)
+    console.log("test 123",selectedProduct,id)
+    var input = selectedProduct
+
+    if(action==='delete'){
+      input = {
+        "supply_uid": id
+      }
+
+    }
     axios
       .post(
         'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/update_farmer_item_admin/' +
           action,
-          selectedProduct
-        // {
-        //   "supply_uid": id,
-        // }
+          input
+        
       )
       .then((response) => {
+        if(action==='delete'){
+          console.log('test 123 prod',products)
+          // let tmpDic = [];
+          // products.map((items)=>{
+          //   if (items['item_uid'] != id){
+          //     tmpDic[index][id] = val;
+          //   }
+          // })
+        }
         setDialogOpen(true);
       })
       .catch((er) => {

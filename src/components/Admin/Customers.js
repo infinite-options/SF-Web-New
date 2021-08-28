@@ -1358,22 +1358,15 @@ function Customers() {
                           <Typography className={classes.paymentHeader}>
                             Coupon ID
                           </Typography>
-                          {/* <input
-                            className={classes.couponInput}
-                            type="text"
-                            placeholder="CouponID"
-                            id="coupon_id"
-                            onChange={(e) => handle(e)}
-                            value={createCoupon.coupon_id}
-                            style={{ margin: 6 }}
-                          /> */}
-                          <FormControl variant ="filled" className={classes.formControl}>
+                          
+                          <FormControl  className={classes.formControl}>
                             <Select
                               value={couponIDVal}
                               onChange={handleChangeCouponID}
                               displayEmpty
                               className={classes.selectEmpty}
                               inputProps={{ 'aria-label': 'Without label' }}
+                             
                             >
                               <MenuItem value="" disabled>
                                 Select Option
@@ -1407,17 +1400,8 @@ function Customers() {
                           <Typography className={classes.paymentHeader}>
                             Valid
                           </Typography>
-                          {/* <input
-                            className={classes.couponInput}
-                            type="text"
-                            id="valid"
-                            placeholder="TRUE/FALSE"
-                            onChange={(e) => handle(e)}
-                            value={createCoupon.valid}
-                            style={{ margin: 6 }}
-                          /> */}
-                          
-                          <FormControl variant ="filled" className={classes.formControl}>
+                         
+                          <FormControl  className={classes.formControl}>
                             <Select
                               value={validVal}
                               onChange={handleChangeValid}
