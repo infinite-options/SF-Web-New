@@ -9,6 +9,10 @@ import Draggable from 'react-draggable';
 import AuthUtils from '../../utils/AuthUtils';
 import axios from 'axios';
 import { AuthContext } from '../../auth/AuthContext';
+import Cookies from 'js-cookie';
+import { useHistory } from 'react-router-dom';
+
+
 
 const AmbasadorModal = (props) => {
   const BASE_URL = process.env.REACT_APP_SERVER_BASE_URI;
@@ -16,7 +20,25 @@ const AmbasadorModal = (props) => {
   const BusiMethods = new BusiApiReqs();
   const AuthMethods = new AuthUtils();
   const context = useContext(AuthContext);
+  const auth = useContext(AuthContext);
+  const history = useHistory();
+
   console.log("in con",context.profile)
+  if(Cookies.get('customer_uid')!=null){
+    if(Cookies.get('customer_uid').startsWith("100-")){
+      console.log('working on encryption-- in if for cookies')
+      localStorage.removeItem('currentStorePage');
+      localStorage.removeItem('cartTotal');
+      localStorage.removeItem('cartItems');
+      Cookies.remove('login-session');
+      Cookies.remove('customer_uid');
+      
+      auth.setIsAuth(false);
+      auth.setAuthLevel(0);
+      history.push('/');
+    }
+
+  }
   AuthMethods.getProfile().then((response) => {
     // console.log(response.customer_first_name);
     setCustomerName(response.customer_first_name);

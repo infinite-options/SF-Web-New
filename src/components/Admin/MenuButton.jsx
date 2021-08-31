@@ -107,6 +107,7 @@ function MenuListComposition(props) {
           pathname: '/store',
           state: { rightTabChosen: 4 },
         });
+        break;
       case 'Home':
         history.push('/');
         break;

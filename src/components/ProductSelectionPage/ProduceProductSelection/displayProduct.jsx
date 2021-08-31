@@ -467,10 +467,7 @@ function DisplayProduct() {
         </Box>
       
         <Box marginLeft="1rem" marginRight="0.2rem">
-          <Box fontSize={22} color={appColors.paragraphText}>
-            {displayMessage}
-          </Box>
-
+          
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h1
               style={{

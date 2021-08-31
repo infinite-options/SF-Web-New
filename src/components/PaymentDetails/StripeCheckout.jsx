@@ -138,8 +138,13 @@ const StripeCheckout = (props) => {
           },
         }
       );
-      const items = Object.entries(JSON.parse(localStorage.getItem('cartItems'))).map(([key,vals]) => {
+      var items = []
+      for (const [key, vals] of Object.entries(JSON.parse(localStorage.getItem('cartItems')))) {
         var itemVals = {}
+        console.log(localStorage.getItem('cartItemsAvail'),typeof(JSON.parse(localStorage.getItem('cartItemsAvail'))))
+        console.log("OUT",key)
+        if(JSON.parse(localStorage.getItem('cartItemsAvail'))[key]['isInDay']===true){
+          console.log("IN",key)
         for (const valsInProduct in store.products){
           
           if(store.products[valsInProduct]['item_uid']===key){
@@ -148,7 +153,8 @@ const StripeCheckout = (props) => {
             itemVals['count'] = vals['count']
           }
         } 
-        return {
+      
+         items.push({
           qty: itemVals.count,
           name: itemVals.item_name,
           unit: itemVals.item_unit,
@@ -158,9 +164,10 @@ const StripeCheckout = (props) => {
           itm_business_uid: itemVals.itm_business_uid,
           description: itemVals.item_desc,
           img: itemVals.item_photo,
-        };
-      });
-
+        })
+      }
+      }
+      
       const cardElement = await elements.getElement(CardElement);
 
       // const IntentStripe = Stripe(

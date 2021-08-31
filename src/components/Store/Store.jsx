@@ -127,6 +127,7 @@ const weekdayDatesDict = findWeekdayDates();
 const Store = ({ ...props }) => {
   // console.log('IN store');
   const Auth = useContext(AuthContext);
+  const auth = useContext(AuthContext);
   const location = useLocation();
   const history = useHistory();
   // const classes = useStyles();
@@ -240,6 +241,22 @@ const Store = ({ ...props }) => {
     if (Auth.isAuth) {
       setProductsLoading(true);
       const AuthMethods = new AuthUtils();
+      if(cookies.get('customer_uid')!=null){
+        if(cookies.get('customer_uid').startsWith("100-")){
+          console.log('working on encryption-- in if for cookies')
+          localStorage.removeItem('currentStorePage');
+          localStorage.removeItem('cartTotal');
+          localStorage.removeItem('cartItems');
+          localStorage.clear();
+          cookies.remove('login-session');
+          cookies.remove('customer_uid');
+          
+          auth.setIsAuth(false);
+          auth.setAuthLevel(0);
+          history.push('/');
+        }
+    
+      }
       AuthMethods.getProfile().then((authRes) => {
         // console.log('User profile and store items were retrieved');
         // console.log('authRes: ', authRes);

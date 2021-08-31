@@ -512,14 +512,19 @@ export default function CheckoutTab(props) {
     console.log("in cartitems@321 --",cartItems,typeof(cartItems))
     if(Object.keys(cartItems).length!=0){
       console.log("in cartitems@321 -- IN")
-      Object.entries(cartItems).map(([key,items])=>{
-      var item = store.productDict[key]
-      if(item.taxable==='TRUE'){
-        console.log("in cartitems@321 -- Taxable",tempTax,taxRate,item.item_price)
-        tempTax = Number(tempTax)+((Number(taxRate)/100.00)*Number(item.item_price)).toFixed(2)*items.count
-        
+      if(Object.keys(store.productDict).length!=0){
+
+        Object.entries(cartItems).map(([key,items])=>{
+          var item = store.productDict[key]
+          if(item.taxable==='TRUE'){
+            console.log("in cartitems@321 -- Taxable",tempTax,taxRate,item.item_price)
+            tempTax = Number(tempTax)+((Number(taxRate)/100.00)*Number(item.item_price)).toFixed(2)*items.count
+            
+          }
+        })
+
       }
-    })
+      
     
     
   }

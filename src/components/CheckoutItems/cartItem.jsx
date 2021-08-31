@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-// import storeContext from '../Store/storeContext';
+import React, { useState, useEffect, useContext } from 'react';
+import storeContext from '../Store/storeContext';
 // import { Box, IconButton } from '@material-ui/core';
 import { Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -15,7 +15,7 @@ import appColors from '../../styles/AppColors';
 
 const CartItem = (props) => {
   // console.log('CartItems props',props);
-  // const store = useContext(storeContext);
+  const store = useContext(storeContext);
   // const products = props.products;
   // const productSelect = useContext(ProductSelectContext);
   var itemPrice = parseFloat(props.price);
@@ -46,6 +46,7 @@ const CartItem = (props) => {
           const item = {
             
             count: currCartItems2[props.id]['count'] - 1,
+            
           };
           localStorage.setItem('cartItems', JSON.stringify({
             ...currCartItems2,
@@ -65,11 +66,12 @@ const CartItem = (props) => {
   
   function increase() {
     const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
+    
     const currCartTotal2 = parseInt(localStorage.getItem('cartTotal')|| '0')
     
     const item =
       props.id in currCartItems2
-        ? { count: currCartItems2[props.id]['count'] + 1 }
+        ? { count: currCartItems2[props.id]['count'] + 1}
         : {  count: 1 };
     
     const newCartItems = {
@@ -77,7 +79,10 @@ const CartItem = (props) => {
       [props.id]: item,
     };
 
+    
+
     localStorage.setItem('cartItems', JSON.stringify(newCartItems));
+    
     localStorage.setItem('cartTotal', `${currCartTotal2 + 1}`);
     // store.cartItems[props.id] = item;
     props.setCartItems(newCartItems);
@@ -104,13 +109,20 @@ const CartItem = (props) => {
 
   useEffect(() => {
     let  isInDay = false;
-
+    console.log("CartItems calling from checkout Store tab--0",props.dayClicked)
     // for (const farm in props.itm_business_uid) {
     // console.log("storeitems",props)
     if(props.business_uid){
+      console.log("CartItems calling from checkout Store tab--1",props.business_uid)
       if (props.farmDaytimeDict[props.business_uid] != undefined) {
+        console.log("CartItems calling from checkout Store tab--2")
         props.farmDaytimeDict[props.business_uid].forEach((daytime) => {
-          if (props.dayClicked === daytime) isInDay = true;
+          console.log("CartItems calling from checkout Store tab--3",daytime)
+          if (props.dayClicked === daytime) {
+            console.log("CartItems calling from checkout Store tab--4")
+            isInDay = true;
+          }
+            
         });
       }
     }
@@ -118,6 +130,27 @@ const CartItem = (props) => {
     // }
 
     setIsInDay(isInDay);
+    const currCartItemsAvail2 = JSON.parse(localStorage.getItem('cartItemsAvail')|| '{}')
+    const itemAvail =
+       { isInDay: isInDay}
+        
+    
+    const newCartItemsAvail = {
+      ... currCartItemsAvail2,
+      [props.id]: itemAvail,
+    };
+    localStorage.setItem('cartItemsAvail', JSON.stringify(newCartItemsAvail));
+
+    // const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
+    // const item = {
+            
+    //   isInDay: isInDay,
+      
+    // };
+    // localStorage.setItem('cartItems', JSON.stringify({
+    //   ...currCartItems2,
+    //   [props.id]: item,
+    // }));
     // console.log('props name', props.name, isInDay);
   }, [
     props.dayClicked,
@@ -280,7 +313,8 @@ const CartItem = (props) => {
 }
 
 export default React.memo(CartItem, (prevProps, nextProps) => {
-    if (prevProps.count != nextProps.count) {
+  console.log("CartItems calling from checkout Store tab--memo",prevProps.name)
+    if (prevProps.count != nextProps.count || prevProps.dayClicked != nextProps.dayClicked) {
       return false;
     }
 

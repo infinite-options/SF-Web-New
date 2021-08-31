@@ -138,6 +138,7 @@ function ProfileInfo() {
   const classes = useStyles();
   const history = useHistory();
   const Auth = React.useContext(AuthContext);
+  const auth = React.useContext(AuthContext);
   const { profile, setProfile, isAuth, setIsAuth, setAuthLevel, cartTotal } =
     Auth;
   const [showLogin, setShowLogin] = useState(false);
@@ -179,6 +180,21 @@ function ProfileInfo() {
     console.warn('In useEffect');
     if (Auth.isAuth) {
       const AuthMethods = new AuthUtils();
+    if(Cookies.get('customer_uid')!=null){
+    if(Cookies.get('customer_uid').startsWith("100-")){
+      console.log('working on encryption-- in if for cookies')
+      localStorage.removeItem('currentStorePage');
+      localStorage.removeItem('cartTotal');
+      localStorage.removeItem('cartItems');
+      Cookies.remove('login-session');
+      Cookies.remove('customer_uid');
+      
+      auth.setIsAuth(false);
+      auth.setAuthLevel(0);
+      history.push('/');
+    }
+
+  }
       AuthMethods.getProfile().then((authRes) => {
         console.warn('AuthRes = ', authRes);
         const updatedProfile = {

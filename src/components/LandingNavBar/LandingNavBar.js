@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 // import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 
+
 // import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 // import StorefrontIcon from '@material-ui/icons/Storefront';
 import { makeStyles } from '@material-ui/core/styles';
@@ -41,6 +42,23 @@ export default function LandingNavBar({ ...props }) {
   // const BusiMethods = new BusiApiReqs();
   let [loggedIn, setLoggedIn] = useState(null);
   const AuthMethods = new AuthUtils();
+  
+  if(Cookies.get('customer_uid')!=null){
+    if(Cookies.get('customer_uid').startsWith("100-")){
+      console.log('working on encryption-- in if for cookies')
+      localStorage.removeItem('currentStorePage');
+      localStorage.removeItem('cartTotal');
+      localStorage.removeItem('cartItems');
+      Cookies.remove('login-session');
+      Cookies.remove('customer_uid');
+  
+      auth.setIsAuth(false);
+      auth.setAuthLevel(0);
+      history.push('/');
+    }
+
+  }
+  
   AuthMethods.getProfile().then((response) => {
     console.log("(LNB) response: ", response);
     // if(response && response.customer_first_name) {
