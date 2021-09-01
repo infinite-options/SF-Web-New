@@ -188,10 +188,11 @@ const HistoryCard = (props) => {
               variant="contained"
               color="primary"
               onClick={reorder}
-              style={{height:'10%'}}
+              style={{height:'10%',textTransform: 'none'}}
+              
               
             >
-              EZ Order
+              EZ Reorder
               </Button>
               
         
