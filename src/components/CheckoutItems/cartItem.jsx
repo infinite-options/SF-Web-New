@@ -87,27 +87,7 @@ const CartItem = (props) => {
     // store.cartItems[props.id] = item;
     props.setCartItems(newCartItems);
     props.setCartTotal(currCartTotal2 + 1);
-  }
 
-  // const {
-  //   setIsInDay,
-  //  } = useContext(storeContext);
-
-  const [isInDay, setIsInDay] = useState(true);
-  // const [dummy, setDummy] = useState(false);
-
-  // useEffect(() => {
-  
-  //   window.addEventListener('storage', () => {
-  //     console.log('In cart item with id: ', props.id);
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log('props id', props.id);
-  // }, [store.cartItems[props.id]['count']]);
-
-  useEffect(() => {
     let  isInDay = false;
     console.log("CartItems calling from checkout Store tab--0",props.dayClicked)
     // for (const farm in props.itm_business_uid) {
@@ -134,13 +114,69 @@ const CartItem = (props) => {
     const itemAvail =
        { isInDay: isInDay}
         
-    
+    console.log("cartitem final",isInDay,props.id)
     const newCartItemsAvail = {
       ... currCartItemsAvail2,
       [props.id]: itemAvail,
     };
     localStorage.setItem('cartItemsAvail', JSON.stringify(newCartItemsAvail));
 
+  }
+
+  // const {
+  //   setIsInDay,
+  //  } = useContext(storeContext);
+
+  const [isInDay, setIsInDay] = useState(true);
+  // const [dummy, setDummy] = useState(false);
+
+  // useEffect(() => {
+  
+  //   window.addEventListener('storage', () => {
+  //     console.log('In cart item with id: ', props.id);
+  //   });
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log('props id', props.id);
+  // }, [store.cartItems[props.id]['count']]);
+
+  useEffect(() => {
+
+    let  isInDay = false;
+    console.log("CartItems calling from checkout Store tab--0",props.dayClicked)
+    // for (const farm in props.itm_business_uid) {
+    // console.log("storeitems",props)
+    if(props.business_uid){
+      console.log("CartItems calling from checkout Store tab--1",props.business_uid)
+      if (props.farmDaytimeDict[props.business_uid] != undefined) {
+        console.log("CartItems calling from checkout Store tab--2")
+        props.farmDaytimeDict[props.business_uid].forEach((daytime) => {
+          console.log("CartItems calling from checkout Store tab--3",daytime)
+          if (props.dayClicked === daytime) {
+            console.log("CartItems calling from checkout Store tab--4")
+            isInDay = true;
+          }
+            
+        });
+      }
+    }
+    
+    // }
+
+    setIsInDay(isInDay);
+    const currCartItemsAvail2 = JSON.parse(localStorage.getItem('cartItemsAvail')|| '{}')
+    const itemAvail =
+       { isInDay: isInDay}
+        
+    console.log("cartitem final",isInDay,props.id)
+    const newCartItemsAvail = {
+      ... currCartItemsAvail2,
+      [props.id]: itemAvail,
+    };
+    localStorage.setItem('cartItemsAvail', JSON.stringify(newCartItemsAvail));
+
+    
     // const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
     // const item = {
             
@@ -253,9 +289,16 @@ const CartItem = (props) => {
               )}
             </Box>
           )}
+          {props.isCountChangeable?
           <Box mx={1} color="#000000" fontWeight="500" fontSize="14px">
             {isInDay && props.id in currCartItems ? currCartItems[props.id]['count'] : ' '}
           </Box>
+          :
+          <Box mx={1} style={{marginLeft:'120%'}}>
+            {props.count}
+          </Box>
+
+          }
           {props.isCountChangeable && (
             <Box>
               {isInDay ? (
@@ -303,7 +346,7 @@ const CartItem = (props) => {
             </Box>
           ) : (
             <Box>
-              <Box>${totalPrice.toFixed(2)}</Box>
+              <Box style={{marginRight:'18%'}}>${totalPrice.toFixed(2)}</Box>
             </Box>
           )}
         </Box>
@@ -314,7 +357,7 @@ const CartItem = (props) => {
 
 export default React.memo(CartItem, (prevProps, nextProps) => {
   console.log("CartItems calling from checkout Store tab--memo",prevProps.name)
-    if (prevProps.count != nextProps.count || prevProps.dayClicked != nextProps.dayClicked) {
+    if (prevProps.count != nextProps.count || prevProps.dayClicked != nextProps.dayClicked)  {
       return false;
     }
 

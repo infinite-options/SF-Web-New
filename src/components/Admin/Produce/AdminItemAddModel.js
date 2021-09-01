@@ -308,9 +308,10 @@ function AdminItemAddModel (props){
                                           onChange={handleChange}
                                           id = 'item_type'
                                           >
+                                            <option disabled selected>Select an option</option>
                                             {distinctVals['item_type'].map((item,index) => {
                                                 return (<option id = {item} value={item}
-                                                        selected = {index===0?"selected":""}
+                                                        // selected = {index===0?"selected":""}
                                                 > 
                                                 {item} 
                                                 </option>)
@@ -323,9 +324,10 @@ function AdminItemAddModel (props){
                                           onChange={handleChange}
                                           id = 'item_desc'
                                           >
+                                            <option disabled selected>Select an option</option>
                                             {distinctVals['item_desc'].map((item,index) => {
                                                 return (<option id = {item} value={item}
-                                                        selected = {index===0?"selected":""}
+                                                        // selected = {index===0?"selected":""}
                                                 > 
                                                 {item} 
                                                 </option>)
@@ -338,9 +340,10 @@ function AdminItemAddModel (props){
                                           onChange={handleChange}
                                           id = 'item_unit'
                                           >
+                                            <option disabled selected>Select an option</option>
                                             {distinctVals['item_unit'].map((item,index) => {
                                                 return (<option id = {item} value={item}
-                                                        selected = {index===0?"selected":""}
+                                                        // selected = {index===0?"selected":""}
                                                 > 
                                                 {item} 
                                                 </option>)
@@ -364,9 +367,10 @@ function AdminItemAddModel (props){
                                           onChange={handleChange}
                                           id = 'item_sizes'
                                           >
+                                            <option disabled selected>Select an option</option>
                                             {distinctVals['item_sizes'].map((item,index) => {
                                                 return (<option id = {item} value={item}
-                                                        selected = {index===0?"selected":""}
+                                                        // selected = {index===0?"selected":""}
                                                 > 
                                                 {item} 
                                                 </option>)
@@ -379,9 +383,10 @@ function AdminItemAddModel (props){
                                           onChange={handleChange}
                                           id = 'taxable'
                                           >
+                                            <option disabled selected>Select an option</option>
                                             {distinctVals['taxable'].map((item,index) => {
                                                 return (<option id = {item} value={item}
-                                                        selected = {index===0?"selected":""}
+                                                        // selected = {index===0?"selected":""}
                                                 > 
                                                 {item} 
                                                 </option>)
@@ -394,9 +399,10 @@ function AdminItemAddModel (props){
                                           onChange={handleChange}
                                           id = 'item_display'
                                           >
+                                            <option disabled selected>Select an option</option>
                                             {distinctVals['item_display'].map((item,index) => {
                                                 return (<option id = {item} value={item}
-                                                        selected = {index===0?"selected":""}
+                                                        // selected = {index===0?"selected":""}
                                                 > 
                                                 {item} 
                                                 </option>)

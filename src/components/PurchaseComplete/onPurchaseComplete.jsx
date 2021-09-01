@@ -8,6 +8,7 @@ export function onPurchaseComplete(props) {
   localStorage.removeItem('selectedDay');
   localStorage.removeItem('cartTotal');
   localStorage.removeItem('cartItems');
+  localStorage.removeItem('cartItemsAvail');
   localStorage.removeItem('startDeliveryDate');
 
   //before adding order confirmation page this section gives an alert box

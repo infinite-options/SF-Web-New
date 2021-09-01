@@ -247,6 +247,7 @@ const Store = ({ ...props }) => {
           localStorage.removeItem('currentStorePage');
           localStorage.removeItem('cartTotal');
           localStorage.removeItem('cartItems');
+          localStorage.removeItem('cartItemsAvail');
           localStorage.clear();
           cookies.remove('login-session');
           cookies.remove('customer_uid');

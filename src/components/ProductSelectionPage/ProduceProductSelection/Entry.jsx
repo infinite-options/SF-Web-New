@@ -177,6 +177,29 @@ function Entry(props) {
 
   ]);
 
+  useEffect(() => {
+    
+    // const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
+    // const item = {
+            
+    //   isInDay: isInDay,
+      
+    // };
+    // localStorage.setItem('cartItems', JSON.stringify({
+    //   ...currCartItems2,
+    //   [props.id]: item,
+    // }));
+    // console.log('props name', props.name, isInDay);
+  }, [
+    props.dayClicked,
+    props.farmsClicked,
+    props.categoriesClicked,
+   // props.cartItems,
+    props.products,
+   // store.cartTotal
+  ]);
+
+
   function decrease() {
     const currCartItems2 = JSON.parse(localStorage.getItem('cartItems')|| '{}')
     const currCartTotal2 = parseInt(localStorage.getItem('cartTotal')|| '0')
@@ -232,6 +255,40 @@ function Entry(props) {
     localStorage.setItem('cartTotal', `${currCartTotal2 + 1}`);
     props.setCartItems(newCartItems);
     props.setCartTotal(currCartTotal2 + 1);
+
+    let  isInDay = false;
+    console.log("CartItems calling from checkout Store tab--0",props.dayClicked)
+    // for (const farm in props.itm_business_uid) {
+    // console.log("storeitems",props)
+    if(props.business_uid){
+      console.log("CartItems calling from checkout Store tab--1",props.business_uid)
+      if (props.farmDaytimeDict[props.business_uid] != undefined) {
+        console.log("CartItems calling from checkout Store tab--2")
+        props.farmDaytimeDict[props.business_uid].forEach((daytime) => {
+          console.log("CartItems calling from checkout Store tab--3",daytime)
+          if (props.dayClicked === daytime) {
+            console.log("CartItems calling from checkout Store tab--4")
+            isInDay = true;
+          }
+            
+        });
+      }
+    }
+    
+    // }
+
+    setIsInDay(isInDay);
+    const currCartItemsAvail2 = JSON.parse(localStorage.getItem('cartItemsAvail')|| '{}')
+    const itemAvail =
+       { isInDay: isInDay}
+        
+    console.log("cartitem final",isInDay,props.id)
+    const newCartItemsAvail = {
+      ... currCartItemsAvail2,
+      [props.id]: itemAvail,
+    };
+    localStorage.setItem('cartItemsAvail', JSON.stringify(newCartItemsAvail));
+
   }
 
   const toggleHearted = () => {

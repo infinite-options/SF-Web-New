@@ -687,7 +687,7 @@ export default function FarmerReport({
 
 function OrdersTable({ orders, type, farmID, ...props }) {
   const auth = useContext(AuthContext);
-
+  console.log('farm orders working',orders)
   return (
     <TableContainer component={Paper}>
       <Table aria-label="simple table">

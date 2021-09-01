@@ -327,6 +327,7 @@ export default function CheckoutTab(props) {
       localStorage.removeItem('selectedDay');
       localStorage.removeItem('cartTotal');
       localStorage.removeItem('cartItems');
+      localStorage.removeItem('cartItemsAvail');
     }
   }
 

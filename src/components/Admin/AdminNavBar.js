@@ -84,6 +84,7 @@ function AdminNavBar({ tab, setTab, ...props }) {
     localStorage.removeItem('currentStorePage');
     localStorage.removeItem('cartTotal');
     localStorage.removeItem('cartItems');
+    localStorage.removeItem('cartItemsAvail');
     Cookies.remove('login-session');
     Cookies.remove('customer_uid');
 

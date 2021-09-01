@@ -274,6 +274,7 @@ export default function DeliveryInfoTab() {
       localStorage.removeItem('selectedDay');
       localStorage.removeItem('cartTotal');
       localStorage.removeItem('cartItems');
+      localStorage.removeItem('cartItemsAvail');
     }
   }
 

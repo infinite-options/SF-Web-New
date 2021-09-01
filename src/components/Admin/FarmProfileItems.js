@@ -216,10 +216,10 @@ function FarmProfileItems (props){
                                         <select style={{border:'0px',textAlign:'center',width:"auto"}}
                                         onChange={handleSelection}
                                         >
-                                        
+                                            <option disabled selected>Select an option</option>
                                             {props.produceDict.map((item,index) => (
                                                     <option 
-                                                    selected={index===0 ? "selected":"nothing"} 
+                                                    // selected={index===0 ? "selected":"nothing"} 
                                                                 
                                                                 name = {item['item_uid']}
                                                                 value={index}
