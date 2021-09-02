@@ -538,6 +538,10 @@ const Store = ({ ...props }) => {
                 item.lowest_price = bPrice;
 
                 // Push to products to have distinct products
+                if(item.item_name.includes(':')){
+                  // console.log("item working321",item.item_name,item.item_name.split(':'))
+                  item.item_name = item.item_name.split(':')[0]
+                }
                 _products.push(item);
 
                 if (item.item_type.toString() === 'vegetable') {
