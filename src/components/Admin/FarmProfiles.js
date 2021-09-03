@@ -38,6 +38,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import blankImg from '../../images/blank_img.svg';
 import styles from './farmprofile.module.css';
 import FarmProfileItems from './FarmProfileItems';
+import Cookies from 'universal-cookie';
 
 
 const BUSINESS_DETAILS_URL =
@@ -300,6 +301,7 @@ function FarmProfiles() {
 
   // To determine if editing farm or creating new farm
   const [newFarm, setNewFarm] = useState(false);
+  const cookies = new Cookies();
 
   useEffect(() => {
     farmerObj();
@@ -996,6 +998,7 @@ function FarmProfiles() {
       });
   };
   const farmerObj = () => {
+    
     axios
       .get(
         'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/businesses'
@@ -1004,8 +1007,31 @@ function FarmProfiles() {
         
         setfarmerInfo(response.data.result.result)
         setFarmerID(response.data.result.result[0].business_uid);
-        setBusiSelect(response.data.result.result[0]);
-        setNewFarm(false);
+        console.log("I'm called--1")
+        if(cookies.get('admin_business_uid')!=null){
+          console.log("I'm called--1.2",cookies.get('admin_business_uid'))
+
+
+          setBusiSelect(response.data.result.result[cookies.get('admin_business_uid')]);
+          setNewFarm(false);
+        fetchBusinessInfo(
+          setselectedBusiness,
+          response.data.result.result[cookies.get('admin_business_uid')].business_uid,
+          setProfit1
+        );
+        getFarmSettings(response.data.result.result[cookies.get('admin_business_uid')].business_uid);
+        fetchProducts(response.data.result.result[cookies.get('admin_business_uid')].business_uid);
+        // fetchDeliveryDetails(
+        //   setDeliveryDetails,
+        //   response.data.result.result[0].business_uid
+        // );
+        fetchBusinessZones(response.data.result.result[cookies.get('admin_business_uid')].business_uid);
+        }
+        else{
+          console.log("I'm called--1.2",cookies.get('admin_business_uid'))
+          cookies.set('admin_business_uid',0)
+          setBusiSelect(response.data.result.result[0]);
+          setNewFarm(false);
         fetchBusinessInfo(
           setselectedBusiness,
           response.data.result.result[0].business_uid,
@@ -1018,6 +1044,10 @@ function FarmProfiles() {
         //   response.data.result.result[0].business_uid
         // );
         fetchBusinessZones(response.data.result.result[0].business_uid);
+        }
+
+        
+        
       });
   };
 
@@ -1038,7 +1068,7 @@ function FarmProfiles() {
                 <td className={classes.usrTitle}>Business Image</td>
               </tr>
             </thead>
-            {farmerInfo.map((profile) => (
+            {farmerInfo.map((profile,i) => (
               <tbody>
                 <tr
                   key={profile.business_uid}
@@ -1046,6 +1076,8 @@ function FarmProfiles() {
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
                     setFarmerID(profile.business_uid);
+                    console.log("I'm called--2")
+                    cookies.set('admin_business_uid',i)
                     setBusiSelect(profile);
                     fetchBusinessInfo(
                       setselectedBusiness,
@@ -1366,6 +1398,7 @@ function FarmProfiles() {
                 }}
                 onClick={() => {
                   setNewFarm(true);
+                  console.log("I'm called--3")
                   setBusiSelect(newFarmBusiSelect);
                   setProducts([]);
                   setBusFarm(newFarmDetail)

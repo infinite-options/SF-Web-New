@@ -24,6 +24,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Cookies from 'universal-cookie';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -307,8 +308,13 @@ function FarmOrders() {
   let [packing, setPacking] = useState([]);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
+  const cookies = new Cookies();
 
   const [deliveryDate, setDeliveryDate] = useState(() => {
+    if(cookies.get('admin_delivery_date')!=null){
+      return cookies.get('admin_delivery_date')
+    }
+    else{
     let currDate = moment().format('YYYY-MM-DD');
     let wedDate = moment().isoWeekday(3).format('YYYY-MM-DD');
     let sunDate = moment()
@@ -323,6 +329,7 @@ function FarmOrders() {
       resDate = wedDate;
     }
     return resDate;
+  }
   });
 
   const handleDeliveryDate = (day) => {
@@ -339,6 +346,7 @@ function FarmOrders() {
     }
     //console.log(res_day);
     res_day = res_day.slice(0, -1);
+    cookies.set('admin_delivery_date',res_day)
     setDeliveryDate(res_day);
     //console.log(ip_day);
   };
@@ -362,18 +370,40 @@ function FarmOrders() {
         console.log(response);
         console.log('gotcha');
         setfarmerInfo(response.data.result.result);
-        setBusiSelect(response.data.result.result[1]);
-        fetchBusinessInfo(
-          setselectedBusiness,
-          response.data.result.result[1].business_uid,
-          setProfit1,
-          deliveryDate
-        );
-        fetchBusinessPackingInfo(
-          setPacking,
-          response.data.result.result[1].business_uid,
-          deliveryDate
-        );
+        if(cookies.get('admin_business_uid')!=null){
+          console.log("I'm called--1.2",cookies.get('admin_business_uid'))
+
+
+          setBusiSelect(response.data.result.result[cookies.get('admin_business_uid')]);
+          fetchBusinessInfo(
+            setselectedBusiness,
+            response.data.result.result[cookies.get('admin_business_uid')].business_uid,
+            setProfit1,
+            deliveryDate
+          );
+          fetchBusinessPackingInfo(
+            setPacking,
+            response.data.result.result[cookies.get('admin_business_uid')].business_uid,
+            deliveryDate
+          );
+        }
+        else{
+          cookies.set('admin_business_uid',0)
+          setBusiSelect(response.data.result.result[0]);
+          fetchBusinessInfo(
+            setselectedBusiness,
+            response.data.result.result[0].business_uid,
+            setProfit1,
+            deliveryDate
+          );
+          fetchBusinessPackingInfo(
+            setPacking,
+            response.data.result.result[0].business_uid,
+            deliveryDate
+          );
+        }
+        
+        
 
         interObj();
       });
@@ -399,13 +429,14 @@ function FarmOrders() {
                 <td className={classes.usrTitle}>Business Image</td>
               </tr>
             </thead>
-            {farmerInfo.map((profile) => (
+            {farmerInfo.map((profile,i) => (
               <tbody>
                 <tr
                   key={profile.business_uid}
                   className={classes.tr}
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
+                    cookies.set('admin_business_uid',i)
                     setBusiSelect(profile);
                     fetchBusinessInfo(
                       setselectedBusiness,

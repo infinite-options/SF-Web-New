@@ -10,7 +10,8 @@ import Button from "@material-ui/core/Button";
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import moment from 'moment';
-import axios from 'axios';
+import Cookies from 'universal-cookie';
+
 
 
 
@@ -140,20 +141,29 @@ function OrderSummary() {
   const [open, setOpen] = useState(false);
   const [farm, setFarm] = useState();
   const [produce, setProduce] = useState();
+  const cookies = new Cookies();
   
-  const [deliveryDate, setDeliveryDate] = useState(() => { 
-    let currDate = moment().format('YYYY-MM-DD')
-    let wedDate = moment().isoWeekday(3).format('YYYY-MM-DD')
-    let sunDate = moment().clone().add(1, 'weeks').startOf('week').format('YYYY-MM-DD')
-    let resDate = ''
-    if (currDate > wedDate){
-      resDate = sunDate
-    }  
-    else{
-      resDate = wedDate
+  const [deliveryDate, setDeliveryDate] = useState(() => {
+    if(cookies.get('admin_delivery_date')!=null){
+      return cookies.get('admin_delivery_date')
     }
-    return (resDate) 
-  })
+    else{
+    let currDate = moment().format('YYYY-MM-DD');
+    let wedDate = moment().isoWeekday(3).format('YYYY-MM-DD');
+    let sunDate = moment()
+      .clone()
+      .add(1, 'weeks')
+      .startOf('week')
+      .format('YYYY-MM-DD');
+    let resDate = '';
+    if (currDate > wedDate) {
+      resDate = sunDate;
+    } else {
+      resDate = wedDate;
+    }
+    return resDate;
+  }
+  });
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalProfit, setTotalProfit] = useState(0);
@@ -341,6 +351,7 @@ function OrderSummary() {
     }
     //console.log(res_day);
     res_day = res_day.slice(0, -1);
+    cookies.set('admin_delivery_date',res_day)
     setDeliveryDate(res_day);
     //console.log(ip_day);
   };
