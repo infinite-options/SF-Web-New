@@ -17,12 +17,19 @@ import Box from '@material-ui/core/Box';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Modal from '@material-ui/core/Modal';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles} from '@material-ui/core/styles';
 import axios from 'axios';
 import { useConfirmation } from '../../services/ConfirmationService';
 import { AdminFarmContext } from '../Admin/AdminFarmContext';
 import { AuthContext } from 'auth/AuthContext';
+import FarmReportRoute from './FarmReportRoute';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 
 const BASE_URL =
   'https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/';
@@ -110,6 +117,8 @@ export default function FarmerReport({
   const [orders, setOrders] = useState([]);
   const [deliveryDays, setDeliveryDays] = useState([]);
   const [selectedDay, setSelectedDay] = useState('');
+  const [openDiag, setOpenDiag] = useState(false);
+  const [openModel, setOpenModel] = useState(false);
 
   useEffect(() => {
     axios
@@ -152,6 +161,28 @@ export default function FarmerReport({
         console.log(err);
       });
   }, [farmID]);
+
+  const closeModel = (action) => {
+    if(action==='yes'){
+      setOpenModel(false); 
+      setOpenDiag(true);
+    }
+    else{
+      setOpenModel(false); 
+     
+    }
+    
+  }
+  const closeDiag = () => {
+    setOpenDiag(false);
+    
+  }
+
+  const modelBody = (
+    <div> 
+      <FarmReportRoute handleClose={closeModel} deliveryDay={weekdayDatesDict[selectedDay]} weekDay = {selectedDay}/>
+    </div>
+  );
 
   const handleDaySelect = (event) => {
     const { value } = event.target;
@@ -435,52 +466,54 @@ export default function FarmerReport({
 
   const handleDriverRoute = () => {
     console.log("In driver route", selectedDay, weekdayDatesDict[selectedDay])
-    axios
-      .post('https://0ig1dbpx3k.execute-api.us-west-1.amazonaws.com/dev/api/v2/GetRoutes', {
+    setOpenModel(true)
+
+    // axios
+    //   .post('https://0ig1dbpx3k.execute-api.us-west-1.amazonaws.com/dev/api/v2/GetRoutes', {
         
-          "farm_address":"1375 Blossom Hill Road",
-          "farm_city":"San Jose",
-          "farm_state":"CA",
-          "farm_zip":"95118",
-          "delivery_date": weekdayDatesDict[selectedDay] + " 10:00:00",
-          //"delivery_date" : "2021-02-24 10:00:00",
-          "db":"sf"
+    //       "farm_address":"1375 Blossom Hill Road",
+    //       "farm_city":"San Jose",
+    //       "farm_state":"CA",
+    //       "farm_zip":"95118",
+    //       "delivery_date": weekdayDatesDict[selectedDay] + " 10:00:00",
+    //       //"delivery_date" : "2021-02-24 10:00:00",
+    //       "db":"sf"
       
-      })
-      .then((response) => {
-        console.log(response);
-        console.log("hello", response["data"])
-        if (response['data']['code'] == 280){
-        confirm({
-          variant: 'info',
-          catchOnCancel: true,
-          title: 'Route Generated',
-          description:
-            response['data']['message']
-        });
-      }
-      else{
-        confirm({
-          variant: 'info',
-          catchOnCancel: true,
-          title: 'Error',
-          description:
-          response['message']
-        });
-      }
-      })
-      .catch((err) => {
-        console.log("xxx",err.response["data"]["code"]);
-        console.log(err.response || err);
-        confirm({
-          variant: 'info',
-          catchOnCancel: true,
-          title: 'Error',
-          description:
-          err.response['data']['message']
-        });
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //     console.log("hello", response["data"])
+    //     if (response['data']['code'] == 280){
+    //     confirm({
+    //       variant: 'info',
+    //       catchOnCancel: true,
+    //       title: 'Route Generated',
+    //       description:
+    //         response['data']['message']
+    //     });
+    //   }
+    //   else{
+    //     confirm({
+    //       variant: 'info',
+    //       catchOnCancel: true,
+    //       title: 'Error',
+    //       description:
+    //       response['message']
+    //     });
+    //   }
+    //   })
+    //   .catch((err) => {
+    //     console.log("xxx",err.response["data"]["code"]);
+    //     console.log(err.response || err);
+    //     confirm({
+    //       variant: 'info',
+    //       catchOnCancel: true,
+    //       title: 'Error',
+    //       description:
+    //       err.response['data']['message']
+    //     });
         
-      });
+    //   });
 
   }
 
@@ -681,6 +714,28 @@ export default function FarmerReport({
           functions={buttonFunctions}
         />
       </Box>
+      <Modal open={openModel}  onClose={()=>setOpenModel(false)} >
+            {modelBody}
+      </Modal>
+      <div>
+          <Dialog open={openDiag} onClose={closeDiag}>
+            <DialogTitle>{"Successful!!"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Route has been generated for delivery date
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button 
+              onClick={closeDiag}
+                      
+                      color="primary" autoFocus>
+                Okay
+              </Button>
+              
+            </DialogActions>
+          </Dialog>
+      </div>
     </div>
   );
 }
