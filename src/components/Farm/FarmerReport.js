@@ -57,6 +57,22 @@ const useStyles = makeStyles((theme) => ({
   reportButtons: {
     marginLeft: theme.spacing(2),
   },
+  select: {
+   
+    "& .MuiSvgIcon-root": {
+      display: 'none',
+    },
+    border:'none',
+    borderBottom:'solid',
+    borderBottomWidth:'thin',
+    webkitAppearance: 'none',
+    mozAppearance: 'none',
+    appearance: 'none',
+    height:'100%',
+    fontSize:'100%'
+
+    
+  },
 }));
 
 function formatDate(date) {
@@ -210,7 +226,7 @@ export default function FarmerReport({
         .get(ADMIN_ORDER_URL + farmID)
         .then((res) => {
           let orders = res.data.result;
-          console.log('All Report', orders);
+          // console.log('All Report', orders);
           // setResponseData(orders);
           setOrders(orders);
         })
@@ -235,7 +251,7 @@ export default function FarmerReport({
   // };
 
   const handleShowOrders = (event, order, setHidden) => {
-    console.log(JSON.parse(order.items));
+    // console.log(JSON.parse(order.items));
     setHidden((prevBool) => !prevBool);
   };
   const handleDeliver = (event, order, index) => {
@@ -244,11 +260,11 @@ export default function FarmerReport({
         purchase_uid: order.purchase_uid,
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
 
         const updatedOrder = { ...order };
         updatedOrder.delivery_status = 'TRUE';
-        console.log(updatedOrder);
+        // console.log(updatedOrder);
 
         setOrders((prevOrders) => {
           const updatedOrders = [...prevOrders];
@@ -266,11 +282,11 @@ export default function FarmerReport({
         purchase_uid: order.purchase_uid,
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
 
         const updatedOrder = { ...order };
         updatedOrder.delivery_status = 'FALSE';
-        console.log(updatedOrder);
+        // console.log(updatedOrder);
 
         setOrders((prevOrders) => {
           const updatedOrders = [...prevOrders];
@@ -317,11 +333,11 @@ export default function FarmerReport({
       payment_type: '',
       isCopy: 'True',
     };
-    console.log(copiedOrder);
+    // console.log(copiedOrder);
     axios
       .post(INSERT_ORDER_URL, copiedOrder)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         // append orders list with new copied order
         getFarmOrders(true); // calls orders_info endpoint again
       })
@@ -333,7 +349,7 @@ export default function FarmerReport({
     axios
       .post(ORDER_ACTIONS_URL + 'Delete', { purchase_uid: order.purchase_uid })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
 
         setOrders((prevOrders) => {
           const updatedOrders = [...prevOrders];
@@ -351,17 +367,17 @@ export default function FarmerReport({
       items.splice(itemIndex, 1);
       return items;
     })();
-    console.log(order.purchase_uid, updatedItemData);
+    // console.log(order.purchase_uid, updatedItemData);
     axios
       .post(ORDER_ACTIONS_URL + 'item_delete', {
         purchase_uid: order.purchase_uid,
         item_data: updatedItemData,
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         const updatedOrder = { ...order };
         updatedOrder.items = JSON.stringify(updatedItemData);
-        console.log(updatedOrder);
+        // console.log(updatedOrder);
 
         setOrders((prevOrders) => {
           const updatedOrders = [...prevOrders];
@@ -465,7 +481,7 @@ export default function FarmerReport({
 
 
   const handleDriverRoute = () => {
-    console.log("In driver route", selectedDay, weekdayDatesDict[selectedDay])
+    // console.log("In driver route", selectedDay, weekdayDatesDict[selectedDay])
     setOpenModel(true)
 
     // axios
@@ -666,6 +682,7 @@ export default function FarmerReport({
                 name="business"
                 value={selectedDay}
                 onChange={handleDaySelect}
+                
               >
                 {deliveryDays.map((day) => {
                   return (
@@ -703,6 +720,10 @@ export default function FarmerReport({
           farmID={farmID}
           type="FALSE"
           functions={buttonFunctions}
+          selectedDay={selectedDay}
+          handleDaySelect={handleDaySelect}
+          deliveryDays={deliveryDays}
+          classes={classes}
         />
         <div style={labelStyle}>
           <h2>Delivered Orders</h2>
@@ -712,6 +733,11 @@ export default function FarmerReport({
           farmID={farmID}
           type="TRUE"
           functions={buttonFunctions}
+          selectedDay={selectedDay}
+          handleDaySelect={handleDaySelect}
+          deliveryDays={deliveryDays}
+          classes={classes}
+          
         />
       </Box>
       <Modal open={openModel}  onClose={()=>setOpenModel(false)} >
@@ -742,7 +768,7 @@ export default function FarmerReport({
 
 function OrdersTable({ orders, type, farmID, ...props }) {
   const auth = useContext(AuthContext);
-  console.log('farm orders working',orders)
+  // console.log('farm orders working',orders)
   return (
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
@@ -766,8 +792,9 @@ function OrdersTable({ orders, type, farmID, ...props }) {
           {orders.map((order, idx) => {
             // !order.delivery_status && order.delivery_status.toLowerCase() !== "yes" :
             // order.delivery_status || order.delivery_status.toLowerCase() === "yes";
-
+            
             if (type === order.delivery_status) {
+              
               return (
                 <OrderRow
                   key={idx}
@@ -776,6 +803,10 @@ function OrdersTable({ orders, type, farmID, ...props }) {
                   order={order}
                   type={type}
                   functions={props.functions}
+                  selectedDay={props.selectedDay}
+                  handleDaySelect={props.handleDaySelect}
+                  deliveryDays={props.deliveryDays}
+                  classes={props.classes}
                 />
               );
             } else {
@@ -853,6 +884,28 @@ function OrderRow({ order, type, farmID, ...props }) {
 
   const purchaseDate = new Date(order.purchase_date + ' UTC');
 
+  const handleDeliverDateChange = (event) => {
+
+    console.log("in frjs@123",event.target.key,event.target.value)
+    var paymentUID = event.target.value.split(":")[0]
+    var deliveryDate = event.target.value.split(":")[1]
+
+    axios
+      .get(BASE_URL + 'change_delivery_date/' + deliveryDate + ' 10:00:00' + ',' + paymentUID)
+      .then((res) => {
+        try {
+          console.log("Delivery date has been changed")
+        } catch {
+          console.log('Error in changing delivery date');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+
+  }
+  
   return (
     <React.Fragment>
       <TableRow>
@@ -860,8 +913,59 @@ function OrderRow({ order, type, farmID, ...props }) {
         <TableCell component="th" scope="row">
           {formatAmPm(purchaseDate)}
         </TableCell>
+        
         <TableCell component="th" scope="row">
-          {formatAmPm(new Date(order.start_delivery_date))}
+          
+              
+                {/* <Select
+                  labelId="demo-controlled-open-select-label"
+                  id="demo-controlled-open-select"
+                  name={order.payment_uid}
+                  // value={order.payment_uid+':'+order.start_delivery_date.slice(0,10)}
+                  onChange={handleDeliverDateChange}
+                  className={props.classes.select}
+                  style={{display: order.delivery_status==='TRUE'?'none':''}}
+                >
+                    <MenuItem key='default' value={order.payment_uid+':'+order.start_delivery_date.slice(0,10)}>
+                        {order.start_delivery_date.slice(0,10)}
+                    </MenuItem>
+                  {props.deliveryDays.map((day,index) => {
+                    if(weekdayDatesDict[day]!=order.start_delivery_date.slice(0,10)){
+                      return (
+                        <MenuItem key={index} value={order.payment_uid+':'+weekdayDatesDict[day]}>
+                          {weekdayDatesDict[day]}
+                        </MenuItem>
+                      )
+                    }
+                    
+                  })}
+                </Select> */}
+
+                <select
+                  className={props.classes.select}
+                  onChange={handleDeliverDateChange}
+                  style={{display: order.delivery_status==='TRUE'?'none':''}}
+                >
+                  <option id='default' value={order.payment_uid+':'+order.start_delivery_date.slice(0,10)} selected>
+                    {formatAmPm(new Date(order.start_delivery_date))}
+                  </option>
+                {props.deliveryDays.map((day,index) => {
+                    if(weekdayDatesDict[day]!=order.start_delivery_date.slice(0,10)){
+                      return (
+                        <option id={index} value={order.payment_uid+':'+weekdayDatesDict[day]}>
+                          {formatAmPm(new Date(weekdayDatesDict[day]+' 10:00:00'))}
+                        </option>
+                      )
+                    }
+                    
+                  })}
+
+                </select>
+          
+                {
+                  order.delivery_status==='TRUE'?formatAmPm(new Date(order.start_delivery_date)):''
+                }
+        
         </TableCell>
         <TableCell>
           {order.delivery_first_name + ' ' + order.delivery_last_name}
