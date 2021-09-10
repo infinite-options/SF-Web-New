@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import { Grid, TextField, Button, Box } from '@material-ui/core';
+import { Button} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import { Form } from 'react-bootstrap';
-import { Divider } from 'rsuite';
+
 // import FarmerReport from './FarmerReport';
 
 
@@ -390,8 +388,16 @@ function FarmerReportRoute (props){
                             </>
                             
                         ))}
-                        <img src='/createRouteButton.png' id='newProduce' height="50px" width="150px" style={{marginLeft:'20%',marginTop:'5%',cursor:"pointer", paddingBottom:'2%'}}
-                        onClick={()=> {handleSave()}}/>
+                        {/* <img src='/createRouteButton.png' id='newProduce' height="50px" width="150px" style={{marginLeft:'20%',marginTop:'5%',cursor:"pointer", paddingBottom:'2%'}}
+                        onClick={()=> {handleSave()}}/> */}
+                        <Button
+                          size="medium"
+                          variant="contained"
+                          style={{marginLeft:'20%',marginTop:'5%',cursor:"pointer",marginBottom:'3%', backgroundColor:'#FF8500', color:'white', borderRadius:'10px'}}
+                          onClick={()=> {handleSave()}}
+                        >
+                          Create Route
+                        </Button>
                     
                         
                             
