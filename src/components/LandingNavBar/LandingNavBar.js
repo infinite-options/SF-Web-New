@@ -17,6 +17,7 @@ import sf from '../../icon/sfnav.svg';
 import AuthUtils from '../../utils/AuthUtils';
 import BusiApiReqs from '../../utils/BusiApiReqs';
 import Cookies from 'js-cookie';
+import ReactGA from 'react-ga';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,6 +81,11 @@ export default function LandingNavBar({ ...props }) {
   console.log('badgeContent: ' + badgeContent);
 
   const loginClicked = () => {
+    ReactGA.modalview('/login');
+    ReactGA.event({
+      category: 'Login Modal',
+      action: 'Login button click (modal open)',
+    });
     props.setIsSignUpShown(false);
     props.setIsLoginShown(!props.isLoginShown);
     // setIsSignUpShown(false);
@@ -87,6 +93,11 @@ export default function LandingNavBar({ ...props }) {
   };
 
   const signUpClicked = () => {
+    ReactGA.modalview('/signup');
+    ReactGA.event({
+      category: 'Signup Modal',
+      action: 'Signup button click (modal open)',
+    });
     props.setIsLoginShown(false);
     props.setIsSignUpShown(!props.isSignUpShown);
     // setIsLoginShown(false);
@@ -115,76 +126,71 @@ export default function LandingNavBar({ ...props }) {
   };
 
   return (
-    <div 
-      className={classes.root} 
+    <div
+      className={classes.root}
       style={{
-        backgroundColor:'#2F787F',
+        backgroundColor: '#2F787F',
         // border: 'red solid'
       }}
     >
-    <AppBar
-     
-      position="static"
-      elevation={0}
-      style={{
-        borderBottom: '1px solid ' + appColors.secondary,
-        // border: 'solid red',
-        height: '100%'
-      }}
-    >
-      
-
-      <Toolbar 
+      <AppBar
+        position="static"
+        elevation={0}
         style={{
-          backgroundColor:'#2F787F',
+          borderBottom: '1px solid ' + appColors.secondary,
+          // border: 'solid red',
           height: '100%',
-          // border: 'dashed'
         }}
       >
-      
-        <MenuNavButton 
+        <Toolbar
           style={{
-            color:'white',
-            // border: 'solid lime'
-          }}
-        />
-        
-        <Box flexGrow={1} >
-          <div 
-            style={{
-              // marginRight:'50px',
-              // marginLeft:'150px'
-              // border: 'solid lime'
-            }}
-          >
-          
-            <img 
-              onClick={() => history.push('/')}
-              style={{
-                // marginRight:'50px',
-                // marginLeft:'150px'
-                cursor: 'pointer'
-              }} 
-              src={sf}
-            />
-          
-          </div>
-        </Box>
-        
-        {loggedIn === false ? (
-        <Box 
-          hidden={auth.isAuth} 
-          style={{
-            width: '18%',
+            backgroundColor: '#2F787F',
             height: '100%',
-            // border: 'solid cyan',
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center'
+            // border: 'dashed'
           }}
         >
-        
-          {/* <Button
+          <MenuNavButton
+            style={{
+              color: 'white',
+              // border: 'solid lime'
+            }}
+          />
+
+          <Box flexGrow={1}>
+            <div
+              style={
+                {
+                  // marginRight:'50px',
+                  // marginLeft:'150px'
+                  // border: 'solid lime'
+                }
+              }
+            >
+              <img
+                onClick={() => history.push('/')}
+                style={{
+                  // marginRight:'50px',
+                  // marginLeft:'150px'
+                  cursor: 'pointer',
+                }}
+                src={sf}
+              />
+            </div>
+          </Box>
+
+          {loggedIn === false ? (
+            <Box
+              hidden={auth.isAuth}
+              style={{
+                width: '18%',
+                height: '100%',
+                // border: 'solid cyan',
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              {/* <Button
             className={classes.authButton}
             variant="contained"
             size="small"
@@ -211,103 +217,97 @@ export default function LandingNavBar({ ...props }) {
             Login
           </Button> */}
 
-          {/* {loggedIn === false ? (<> */}
-            <Button
-              className={classes.authButton}
-              variant="contained"
-              size="small"
-              color="primary"
-              onClick={signUpClicked}
-              style={{
-                position: 'absolute',
-                right: '0'
-              }}
-            >
-              Sign Up
-            </Button>
-            <Button
-              className={classes.authButton}
-              variant="contained"
-              size="small"
-              color="primary"
-              onClick={loginClicked}
-              style={{
-                position: 'absolute',
-                right: '87px'
-              }}
-            >
-              Login
-            </Button>
-          {/* </>) : (
+              {/* {loggedIn === false ? (<> */}
+              <Button
+                className={classes.authButton}
+                variant="contained"
+                size="small"
+                color="primary"
+                onClick={signUpClicked}
+                style={{
+                  position: 'absolute',
+                  right: '0',
+                }}
+              >
+                Sign Up
+              </Button>
+              <Button
+                className={classes.authButton}
+                variant="contained"
+                size="small"
+                color="primary"
+                onClick={loginClicked}
+                style={{
+                  position: 'absolute',
+                  right: '87px',
+                }}
+              >
+                Login
+              </Button>
+              {/* </>) : (
             null
           )} */}
-          
-        </Box>
-        ) : (
-          null
-        )}
+            </Box>
+          ) : null}
 
-        {loggedIn === null ? (
-          <div 
-            style={{
-              // border: '1px solid lime',
-              width: '18%'
-            }}
-          />
-        ) : (
-          null
-        )}
+          {loggedIn === null ? (
+            <div
+              style={{
+                // border: '1px solid lime',
+                width: '18%',
+              }}
+            />
+          ) : null}
 
-        {loggedIn === true ? (
-        <Box 
-          // hidden={!auth.isAuth} 
-          style={{
-            width: '18%',
-            // border: '1px solid violet',
-            display: 'flex',
-            height: '100%',
-            position: 'relative'
-          }}
-        >
-
-          <div 
-            style={{
-              // width:'50%',
-              // float:'left',
-              // border: '1px dashed',
-              position: 'absolute',
-              right: '93px',
-              height: '100%',
-              color:'white',
-              display: 'flex',
-              alignItems: 'center'
-            }} 
-            hidden={(window.width < 1024) ? true : false}
-          >
-            {/* <p 
+          {loggedIn === true ? (
+            <Box
+              // hidden={!auth.isAuth}
+              style={{
+                width: '18%',
+                // border: '1px solid violet',
+                display: 'flex',
+                height: '100%',
+                position: 'relative',
+              }}
+            >
+              <div
+                style={{
+                  // width:'50%',
+                  // float:'left',
+                  // border: '1px dashed',
+                  position: 'absolute',
+                  right: '93px',
+                  height: '100%',
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                hidden={window.width < 1024 ? true : false}
+              >
+                {/* <p 
               style={{
                 color:'white'
               }}
             >
               {customerName}
             </p> */}
-            {customerName}
-          </div>
-          
-          <div 
-            style={{
-              // width: '50%',
-              width: '87px',
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              position: 'absolute',
-              right: '0',
-              // float: 'right',
-              // border: '1px dashed'
-            }}
-          >  
-            {/* <Button
+                {customerName}
+              </div>
+
+              <div
+                style={{
+                  // width: '50%',
+                  width: '87px',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  right: '0',
+                  // float: 'right',
+                  // border: '1px dashed'
+                }}
+              >
+                {/* <Button
               className={classes.authButton}
               variant="contained"
               size="small"
@@ -322,29 +322,26 @@ export default function LandingNavBar({ ...props }) {
             >
               Log Out
             </Button> */}
-            <Button
-              className={classes.authButton}
-              variant="contained"
-              size="small"
-              color="primary"
-              onClick={handleClickLogOut}
-              style={{
-                // marginTop:'.5rem'
-                position: 'absolute',
-                right: '0'
-              }}
-            >
-              Logout
-            </Button>
-          </div>
+                <Button
+                  className={classes.authButton}
+                  variant="contained"
+                  size="small"
+                  color="primary"
+                  onClick={handleClickLogOut}
+                  style={{
+                    // marginTop:'.5rem'
+                    position: 'absolute',
+                    right: '0',
+                  }}
+                >
+                  Logout
+                </Button>
+              </div>
+            </Box>
+          ) : null}
 
-        </Box>
-        ) : (
-          null
-        )}
-
-        <Box hidden={!(auth.isAuth || auth.isGuest)}>
-          {/* <IconButton edge="end" className="link">
+          <Box hidden={!(auth.isAuth || auth.isGuest)}>
+            {/* <IconButton edge="end" className="link">
             <StorefrontIcon
                 fontSize="large"
                 color={'default'}
@@ -364,9 +361,9 @@ export default function LandingNavBar({ ...props }) {
               />
             </Badge>
           </IconButton> */}
-        </Box>
-      </Toolbar>
-    </AppBar>
-  </div>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 }

@@ -26,6 +26,7 @@ import BusiApiReqs from '../../utils/BusiApiReqs';
 import { AuthContext } from '../../auth/AuthContext';
 import Mymodal from '../Modal/Modal';
 import SuccessModal from '../Modal/SuccessModal';
+import ReactGA from 'react-ga';
 // import TextField from '@material-ui/core/TextField';
 
 // let google1=new google.maps;
@@ -130,6 +131,10 @@ const DeliveryLocationSearch = ({ ...props }) => {
   //   });
 
   const handleSelect = async (value) => {
+    ReactGA.event({
+      category: 'search for address',
+      action: 'Search for address for delivery',
+    });
     const results = await geocodeByAddress(value);
     const latLng = await getLatLng(results[0]);
     setAddress(value);
@@ -242,6 +247,7 @@ const DeliveryLocationSearch = ({ ...props }) => {
     //        };
     // localStorage.setItem('guestProfile', JSON.stringify(guestProfile));
     // auth.setIsGuest(true);
+
     if (auth.isAuth) {
       history.push('/store');
     } else {
@@ -269,6 +275,11 @@ const DeliveryLocationSearch = ({ ...props }) => {
   };
 
   const signUpClicked = () => {
+    ReactGA.modalview('/signup');
+    ReactGA.event({
+      category: 'Signup Modal',
+      action: 'Signup button click (modal open)',
+    });
     props.setIsLoginShown(false);
     setModalSuccessMessage(null);
     props.setIsSignUpShown(!props.isSignUpShown);

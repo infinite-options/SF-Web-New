@@ -14,6 +14,7 @@ import EmailModal from './emailModal';
 import PassModal from './passwordModal';
 import IncorrectPasswordModal from './incorrectPasswordModal';
 import SocialLoginErrorModal from './SocialLoginError';
+import ReactGA from 'react-ga';
 const API_URL = process.env.REACT_APP_SERVER_BASE_URI + '';
 
 // TODO: if farmer default to home page
@@ -168,6 +169,11 @@ function AdminLogin({ ...props }) {
   const verifyLoginInfo = (e) => {
     // Attempt to login
     // Get salt for account
+    ReactGA.event({
+      category: 'Login Button',
+      action: 'Login button clicked to log in',
+    });
+
     axios
       .post(API_URL + 'AccountSalt', {
         // params: {

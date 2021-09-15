@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Container, Row, Col } from 'react-grid-system';
-
+import ReactGA from 'react-ga';
 import { useHistory } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 

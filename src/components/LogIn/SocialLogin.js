@@ -9,7 +9,7 @@ import { withRouter } from 'react-router';
 import Google from '../../icon/Google/Glogin.png';
 import Fb_Login from '../../icon/Facebook/Flogin.png';
 import Apple_Login from '../../icon/Apple/Alogin.png';
-
+import ReactGA from 'react-ga';
 function SocialLogin(props) {
   const Auth = useContext(AuthContext);
 
@@ -53,6 +53,11 @@ function SocialLogin(props) {
   }, [Auth, props]);
 
   const responseGoogle = (response) => {
+
+    ReactGA.event({
+      category: 'Social Google Login',
+      action: 'Google Login Button Clicked',
+    });
     // console.log(response);
     if (response.profileObj) {
       // console.log('Google login successful');
@@ -64,6 +69,10 @@ function SocialLogin(props) {
   };
 
   const responseFacebook = (response) => {
+    ReactGA.event({
+      category: 'Social Facebook Login',
+      action: 'Facebook Login Button Clicked',
+    });
     // console.log(response);
     if (response.email) {
       // console.log('Facebook login successful');

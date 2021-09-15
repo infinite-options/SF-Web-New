@@ -12,6 +12,7 @@ import { Box, Button } from '@material-ui/core';
 import appColors from 'styles/AppColors';
 import MenuNavButton from '../../utils/MenuNavButton';
 import { AuthContext } from '../../auth/AuthContext';
+import ReactGA from 'react-ga';
 import sf from '../icon/sfnav.svg';
 
 const useStyles = makeStyles((theme) => ({
@@ -52,6 +53,14 @@ export default function LoginNavBar({ ...props }) {
     localStorage.setItem('currentStorePage', 0);
     history.push('/store');
   }
+
+  const trackOpenLoginModal = () => {
+    ReactGA.modalview('/login');
+    ReactGA.event({
+      category: 'Properties - Location (CM)',
+      action: 'Login button click (modal open)',
+    });
+  };
 
   return (
     <div className={classes.root} style={{ backgroundColor: '#2F787F' }}>

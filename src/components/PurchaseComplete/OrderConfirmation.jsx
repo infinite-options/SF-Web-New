@@ -10,6 +10,11 @@ import CssTextField from '../../utils/CssTextField';
 import AuthUtils from '../../utils/AuthUtils';
 import { useConfirmation } from '../../services/ConfirmationService';
 import { AuthContext } from '../../auth/AuthContext';
+import ReactGA from 'react-ga';
+
+const GA_TRCKING_CODE = process.env.REACT_APP_GA_TRACKING_CODE;
+
+ReactGA.initialize(GA_TRCKING_CODE);
 
 const useStyles = makeStyles((theme) => ({
   labelRoot: {
@@ -51,6 +56,10 @@ const OrderConfirmation = (props) => {
       setUserInfo(store.profile);
     }
   }, [store.profile]);
+
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, []);
 
   const { setProfile } = store;
 

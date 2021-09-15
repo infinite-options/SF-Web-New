@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import appColors from '../../styles/AppColors';
 import storeContext from '../Store/storeContext';
 import CartItem from './cartItem';
-
+import ReactGA from 'react-ga';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -74,6 +74,11 @@ const HistoryCard = (props) => {
 
   console.log("history work in order--1",props)
   function reorder() {
+
+    ReactGA.event({
+      category: 'EZ Order',
+      action: 'Reorder from history',
+    });
 
     var tempCI = {}
     var tempCIA = {}

@@ -6,6 +6,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import appColors from '../../styles/AppColors';
 import CssTextField from '../../utils/CssTextField';
 import { AuthContext } from '../../auth/AuthContext';
+import ReactGA from 'react-ga';
 import PlacesAutocomplete, {
   geocodeByAddress,
   geocodeByPlaceId,
@@ -213,6 +214,11 @@ const Order = ({ ...props }) => {
   };
 
   const signUpClicked = () => {
+    ReactGA.modalview('/signup');
+    ReactGA.event({
+      category: 'Signup Modal',
+      action: 'Signup button click (modal open)',
+    });
     props.setIsLoginShown(false);
     setModalSuccessMessage(null);
     props.setIsSignUpShown(!props.isSignUpShown);

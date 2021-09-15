@@ -17,6 +17,7 @@ import checkoutContext from '../CheckoutPage/CheckoutContext';
 import { makeStyles} from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { green } from '@material-ui/core/colors';
+import ReactGA from 'react-ga';
 
 const useStyles = makeStyles((theme) => ({
  
@@ -112,7 +113,12 @@ const StripeCheckout = (props) => {
     event.preventDefault();
 
     setProcessing(true);
-    
+
+    ReactGA.event({
+      category: 'Payment complete',
+      action: 'Payment complete with stripe',
+    });
+
     const billingDetails = {
       name: profile.firstName + ' ' + profile.lastName,
       email: profile.email,
