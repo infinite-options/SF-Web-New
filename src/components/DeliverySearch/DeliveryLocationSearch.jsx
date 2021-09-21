@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     width: '500px',
     zIndex: '10040',
     height: 'auto',
+    maxWidth: '100%'
   },
   infoSection: {
     width: '33.33%',
@@ -376,7 +377,8 @@ const DeliveryLocationSearch = ({ ...props }) => {
                     className: 'searchInput'
                   })}
                   style={{
-                    width: '500px',
+                    width: '50%',
+                    height: '80%',
                     maxWidth: '90%',
                     border: '2px solid' + appColors.secondary,
                     borderRadius: '5px',
@@ -428,6 +430,7 @@ const DeliveryLocationSearch = ({ ...props }) => {
           onClick={login}
           style={{
             width: '300px',
+            maxWidth: '90%',
             textTransform: 'none',
             borderRadius: '20px',
             marginTop: '20px',

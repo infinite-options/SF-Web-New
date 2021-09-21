@@ -280,7 +280,7 @@ const Footer = ({ ...props }) => {
                   // border: 'inset'
                   height: "130px",
                   width: "130px",
-                  maxHeight: "90%",
+                  maxHeight: "100%",
                   maxWidth: "90%"
                 }}
               />

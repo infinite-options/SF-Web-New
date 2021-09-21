@@ -954,6 +954,7 @@ function Customers() {
                           Total no. of Orders
                         </td>
                         <td className={classes.infoTitle}>Total Revenue</td>
+                        
                       </tr>
                     </thead>
                     {selectedCustomer.map((info) => (
@@ -973,12 +974,36 @@ function Customers() {
                           </td>
                           <td className={classes.desc}>{info.total_orders} </td>
                           <td className={classes.desc}>{info.total_revenue}</td>
+                          
                         </tr>
                       </tbody>
                     ))}
+                   
+                  </table>
+                  
+                </Box>
+                <Box
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    marginLeft: '20%',
+                  }}
+                >
+                  <table>
+                    <thead>
+                      <tr>
+                        <td className={classes.infoTitle}>Customer UID</td>
+                      </tr>
+                    </thead>
+                      <tr>
+                      <td className={classes.desc}>{selectedCustomer.map((info) => (info.customer_uid))}</td>
+                          {/* <td className={classes.desc}>{selectedCustomer!='[]'?selectedCustomer[0]['customer_uid']:''}</td> */}
+                      </tr>
                   </table>
                 </Box>
               </Box>
+              
             </div>
           </Grid>
         </Grid>
@@ -1271,6 +1296,9 @@ function Customers() {
                         <Box width="22%" textAlign="right">
                           Price
                         </Box>
+                        <Box width="22%" textAlign="right">
+                          Revenue
+                        </Box>
                       </Box>
                       <Box className={classes.items}>
                         {JSON.parse(history['items']).map((item) => {
@@ -1307,6 +1335,13 @@ function Customers() {
                                 paddingTop="10px"
                               >
                                 ${item['price'].toFixed(2)}
+                              </Box>
+                              <Box
+                                width="20%"
+                                textAlign="right"
+                                paddingTop="10px"
+                              >
+                                ${(item['price']*item['qty']).toFixed(2)}
                               </Box>
                             </Box>
                           );

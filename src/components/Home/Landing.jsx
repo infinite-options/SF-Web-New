@@ -68,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: '4px solid ' + appColors.secondary,
     marginBottom: '50px',
     width: '410px',
+    maxWidth: '100%',
   },
   root: {
     backgroundColor: appColors.buttonText,
@@ -106,6 +107,24 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '30px',
     paddingBottom: '30px',
   },
+
+  imgSFSJ:{
+    '&:hover':{
+      msTransform: 'scale(1.3)', /* IE 9 */
+      webkitTransform: 'scale(1.3)', /* Safari 3-8 */
+      transform: 'scale(1.3)',
+    }
+  },
+
+  linkDiv: {
+      
+      background: 'url(landing/linkBackground.png) no-repeat center center', 
+      webkitBackgroundSize: '100%',
+      mozBackgroundSize: '100%',
+      oBackgroundSize: '100%',
+      backgroundSize: '100%',
+    
+  }
 }));
 
 function fetchSweepstakes(setSweepstakeActive) {
@@ -196,6 +215,21 @@ const Landing = ({ ...props }) => {
   useEffect(() => {
     console.log("(UE) logginWrapperRef ", loginWrapperRef);
   }, [loginWrapperRef])
+
+  const [dimensions, setDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+  
+  const handleResize = () => {
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  }
+  useEffect(() => {
+    window.addEventListener("resize", handleResize, false);
+  }, []);
 
   // const handleClose = () => {
   //   console.log('close');
@@ -671,89 +705,115 @@ const Landing = ({ ...props }) => {
           minHeight: '200px',
           // maxHeight: '300px',
           // width: 'auto',
-          width: '100%',
-          maxWidth: '100%',
+          // width: '1000%',
+          // maxWidth: '100%',
+          textAlign: 'left',
           // border: 'dashed'
         }}
       >
         {/* <ZipcodeSearch/> */}
         <div
           className="addrSearchContainer"
-          // style={{
-          //   border: '1px solid yellow',
-          //   width: 
-          // }}
+          style={{
+            // border: '1px solid yellow',
+            // width: '150%',
+          }}
         >
           <Box 
             className="addrSearchLeft"
             style={{ 
-              // width: '50%',
-              // minWidth: '300px',
-              // border: '1px solid cyan'
+              width: '100%',
+              // minWidth: '500px',
+              
+              
             }}
           >
-            <p
+            <h2
               style={{
                 color: appColors.buttonText,
                 fontSize: '45px',
-                textAlign: 'left',
                 fontWeight: '700',
-                marginLeft: '20px',
+                marginLeft: '20%',
                 letterSpacing: '0.95px',
               }}
             >
               {/* Local produce delivered <br />
               to your doorstep */}
-              Local produce delivered
+              Local produce delivered<br/>
               to your doorstep
-            </p>
+            </h2>
           </Box>
           <Box 
-            className="addrSearchRight"
+            className={classes.title}
             style={{ 
-              // width: '50%',
-              // border: '1px solid red'
+              width: '100%',
+              textAlign:'right',
+              // minWidth: '500px',
+              marginRight: '10%',
+              marginTop: '3%'
+              
             }}
+           
           >
-            <DeliveryLocationSearch
-              isLoginShown={isLoginShown}
-              setIsLoginShown={setIsLoginShown}
-              isSignUpShown={isSignUpShown}
-              setIsSignUpShown={setIsSignUpShown}
-            />
+            <a href="#searchAddress" style={{textDecoration: 'none'}}>
+            <Button
+              size="large"
+              variant="contained"
+              color="primary"
+              // onClick={login}
+              style={{
+                width: '50%',
+                height: '40%',
+                textTransform: 'none',
+                borderRadius: '20px',
+                // marginTop: '20px',
+                textAlign: 'center',
+                // font: 'normal normal 400 26px/18px SF Pro Display',
+                fontSize: '23px',
+                letterSpacing: '0.51px',
+                color: '#FFFFFF',
+                opacity: 1,
+                // marginTop: '6%',
+                margin:'0',
+                
+              }}
+          >
+          See if we deliver to you
+        </Button>
+        </a>
           </Box>
         </div>
       </Box>
       <Box
         className={classes.title}
         style={{
-          textAlign: 'left',
+          textAlign: 'center',
           paddingBottom: '00px',
           backgroundColor: '#2F787F26',
           paddingTop: '20px',
         }}
       >
-        <u style={{ marginLeft: '50px' }}>Weekly Fresh Produce</u>
+        <u style={{ textAlign: 'center' }}>Weekly Fresh Produce</u>
       </Box>
       <ProductDisplay />
       {/* START: Info Section */}
-      <Box className={classes.root} style={{}}>
+      <Box className={classes.root} style={{paddingBottom:'0'}}>
         <Box
-          // display="flex"
+          //display="flex"
           className="info-container"
         >
-          <Box className={classes.infoSection} id="mobileInfoSection">
+          <Box className={classes.infoSection} id="mobileInfoSection" style={{marginBottom:'2.5%',marginTop:'1%'}}> 
             <div className={classes.infoDesc}>
               <p
                 style={{
-                  color: appColors.secondary,
+                  color: appColors.primary,
                   fontSize: '40px',
                   textAlign: 'center',
-                  fontWeight: '600',
+                  fontWeight: '700',
                   marginLeft: '20px',
                 }}
               >
-                55+ items
+                100+ items
               </p>
               <p
                 style={{
@@ -762,6 +822,7 @@ const Landing = ({ ...props }) => {
                   letterSpacing: '0.45px',
                   color: appColors.secondary,
                   opacity: 1,
+                  marginBottom: '20px'
                 }}
               >
                 Fruits, vegetables and other organic produce to choose from
@@ -769,14 +830,14 @@ const Landing = ({ ...props }) => {
             </div>
           </Box>
 
-          <Box className={classes.infoSection} id="mobileInfoSection">
+          <Box className={classes.infoSection} id="mobileInfoSection" style={{marginBottom:'2.5%',marginTop:'1%'}}>
             <div className={classes.infoDesc}>
               <p
                 style={{
-                  color: appColors.secondary,
+                  color: appColors.primary,
                   fontSize: '40px',
                   textAlign: 'center',
-                  fontWeight: '600',
+                  fontWeight: '700',
                   marginLeft: '20px',
                 }}
               >
@@ -785,7 +846,7 @@ const Landing = ({ ...props }) => {
               <p
                 style={{
                   textAlign: 'center',
-                  font: 'normal normal 600 24px ',
+                  font: 'normal normal 600',
                   letterSpacing: '0.45px',
                   color: appColors.secondary,
                   opacity: 1,
@@ -796,14 +857,14 @@ const Landing = ({ ...props }) => {
               </p>
             </div>
           </Box>
-          <Box className={classes.infoSection} id="mobileInfoSection">
+          <Box className={classes.infoSection} id="mobileInfoSection" style={{marginBottom:'2.5%',marginTop:'1%'}}>
             <div className={classes.infoDesc}>
               <p
                 style={{
-                  color: appColors.secondary,
+                  color: appColors.primary,
                   fontSize: '40px',
                   textAlign: 'center',
-                  fontWeight: '600',
+                  fontWeight: '700',
                   marginLeft: '20px',
                 }}
               >
@@ -825,56 +886,103 @@ const Landing = ({ ...props }) => {
           </Box>
         </Box>
         <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <p
-            style={{
-              textAlign: 'center',
-              font: 'normal normal 600 24px SF Pro Display',
-              letterSpacing: '0.45px',
-              color: appColors.secondary,
-              opacity: 1,
+        className={classes.farmer}
+        id="searchAddress"
+        style={{
+          // paddingBottom: '00px',
+          backgroundColor: '#2F787F',
+          display:'flex',
+          paddingBottom: '0',
+         
+        }}
+      >
+       
+        <Box style={{width:'100%'}}>
+          <Box className={classes.title}
+            style= {{
+                      color:'white',
+                      font: 'normal normal 600 24px ',
+                      // font:'SFProText-Semibold',
+                      fontSize: '40px',
+                      textAlign: 'center',
+                      fontWeight: '600',
+                      marginLeft: '20px',
+                      marginBottom:'2%',
             }}
           >
-            We are currently Serving <br />
-            Sunnyvale, Cupertino, Saratoga, Los Gatos, Willow Glen, San Jose
-          </p>
-          <Button
-            size="large"
-            variant="contained"
-            color="primary"
-            onClick={() => history.push('/store')}
+          Look at the map below to see the areas we deliver to
+          </Box>
+          <Box 
             style={{
-              width: '300px',
-              textTransform: 'none',
-              float: 'center',
-              color: 'white',
-              borderRadius: '15px',
+              float:'left',
+              width:'50%',
+              
+              
+            }}>
+          <img
+            className = {classes.imgSFSJ}
+            style={{height:'80%',width:'80%',transition: 'transform .2s'}}
+            src="./zonesLeft.png" alt="vegetables info" 
+            
+            />
+            <p style={{marginTop:'2%', fontSize: '24px ', color:'white',}}>
+            Now serving the above marked areas in  
+              <p style={{fontSize: '40px ', color:'white',margin:'0'}}><b>San Francisco</b></p>
+            </p>
+          </Box>
+          <Box
+            style={{
+              float:'right',
+              width:'50%',
+              
             }}
           >
-            Shop Fresh Produce
-          </Button>
+            <img 
+              className = {classes.imgSFSJ}
+              style={{height:'80%',width:'80%',transition: 'transform .2s'}}
+              src="./zonesRight.png" alt="vegetables info" 
+            />
+            <p style={{marginTop:'2%', fontSize: '24px ', color:'white',}}>
+            Sunnyvale, Cupertino, Saratoga, Los Gatos, Willow Glen, <br/>South San Jose
+            </p>
+          </Box>
         </Box>
+      </Box>
+
+      <Box 
+            
+            style={{backgroundColor:'#2F787F', paddingBottom:'10px',paddingTop:'2%',}}
+          >
+          <DeliveryLocationSearch
+              isLoginShown={isLoginShown}
+              setIsLoginShown={setIsLoginShown}
+              isSignUpShown={isSignUpShown}
+              setIsSignUpShown={setIsSignUpShown}
+            />
+      </Box>
+      
+      <Box 
+      // className={classes.title}
+            id="test"
+            style={{backgroundColor:'#2F787F', paddingTop:'2%', paddingBottom:'10px', color:'white', fontSize:'2.5rem',
+                    paddingRight:'5%',fontWeight:'650'
+          }}
+          >
+         No Minimums <span style={{color: "#FF8500"}}> I </span> No Subscriptions
+      </Box>
+      <Box 
+      // className={classes.title}
+            id="test"
+            style={{backgroundColor:'#2F787F', paddingBottom:'2.5%', color:'white', fontSize:'1.8rem',
+                    paddingRight:'5%', fontWeight:'600'
+          }}
+          >
+         Free delivery on all orders over $30
+      </Box>
+        
       </Box>
       {/* END: Info Section */}
-      {/* START: Farmer information */}
-      <Box className={classes.farmer}>
-        <Box
-          className={classes.title}
-          style={{
-            textAlign: 'left',
-            marginLeft: '50px',
-            paddingBottom: '20px',
-          }}
-        >
-          <u>Meet the Farmers</u>
-        </Box>
-        <Farmers />
-      </Box>
-      {/* END: Farmer Information */}
+      
       <Box
         className={classes.testimonial}
         style={{
@@ -897,6 +1005,22 @@ const Landing = ({ ...props }) => {
         </Box>
         <Testimonial></Testimonial>
       </Box>
+
+      {/* START: Farmer information */}
+      <Box className={classes.farmer}>
+        <Box
+          className={classes.title}
+          style={{
+            textAlign: 'left',
+            marginLeft: '50px',
+            paddingBottom: '20px',
+          }}
+        >
+          <u>Meet the Farmers</u>
+        </Box>
+        <Farmers />
+      </Box>
+      {/* END: Farmer Information */}
       {/* START: Info Section */}
       <Box style={{ backgroundImage: `url(${bg})` }}>
         <Box
@@ -944,91 +1068,7 @@ const Landing = ({ ...props }) => {
         </Box>
       </Box>
       {/* END: Info Section */}
-      {/* START: Local Produce Search */}
-      {/* END: Local Produce Search */}
-      {/* <Container
-            fluid
-            style={{
-              paddingLeft: 0,
-              paddingRight: 0,
-              paddingBottom: '50px',
-              backgroundSize: 'cover',
-              backgroundColor: `white`,
-              overflow: 'hidden',
-              width: '100%',
-            }}
-          >
-            <Box
-              className={classes.title}
-              style={{
-                textAlign: 'left',
-                marginLeft: '150px',
-                paddingBottom: '50px',
-              }}
-            >
-              Featured Farmer
-            </Box>
-            <Row>
-              <Col lg={4}>
-                <img
-                  src="./landing/farmer_pic.jpg"
-                  alt="farmer info"
-                  style={{ width: '400px', height: '510px' }}
-                />
-                <Box
-                  className={classes.farmTitle}
-                  style={{ marginLeft: '150px' }}
-                >
-                  Rodriguez Farms
-                  <div className={classes.farmDesc}>
-                    City: <br></br>
-                    Contact:
-                  </div>
-                </Box>
-              </Col>
-              <Hidden md sm xs>
-                <Col md={8}>
-                  <img
-                    src="./landing/farm_pic.jpg"
-                    alt="farm info"
-                    style={{ width: '869px', height: '518px' }}
-                  />
-                </Col>
-              </Hidden>
-            </Row>
-            <Row style={{ paddingTop: '50px' }}>
-              <Hidden md sm xs>
-                <Col md={4}></Col>
-                <Col md={4}>
-                  <img
-                    src="./landing/produce.jpg"
-                    alt="farm info"
-                    style={{
-                      width: '435px',
-                      height: '518px',
-                      paddingLeft: '180px',
-                    }}
-                  />
-                </Col>
-              </Hidden>
-
-              <Col md={4}>
-                <div
-                  className={classes.farmTitle}
-                  style={{ marginLeft: '100px' }}
-                >
-                  Featured Produce
-                  <div className={classes.farmDesc}>
-                    Item1 <br></br>
-                    Item2 <br></br>
-                    Item3
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </Container> */}
-      {/* </Box> */}
-      <div>
+      
         <Box style={{ marginBottom: '20px' }}>
           <Order
             isLoginShown={isLoginShown}
@@ -1037,8 +1077,111 @@ const Landing = ({ ...props }) => {
             setIsSignUpShown={setIsSignUpShown}
           />
         </Box>
+      
 
-        <Box style={{ backgroundColor: 'rgb(251,132,0)' }}>
+        {/* START: Info Section */}
+        
+        {
+          
+          dimensions['width'] >= 400 ?(
+            <div
+            style={{
+              display: "flex",
+              width: "100%",
+              height:'100%',
+              marginTop: "30px",
+              backgroundImage: `url(${'links/backFruits1.png'})`,
+              backgroundRepeat: 'no-repeat',
+              backgroundSize:'cover' 
+            }}
+          >
+                <Box
+                      style={{
+                        float:'left',
+                        width:'50%',
+                        display:'flex',
+                        alignItems: 'flex-end',
+                        
+                      }}
+                    >
+                      <img src='links/qrScan.png'  width="60%" height="90%" style={{marginLeft:'40%'}} />
+                    </Box>
+
+                    <Box 
+                      style={{
+                        float:'right',
+                        width:'50%',
+                        textAlign:'left',
+                        marginTop:'7%',
+                        
+                      }}>
+                          <Box style={{margin:'0'}}>
+                            <img src='links/displayText.png' width="50%" />
+                          </Box>
+                          
+                          <Box style={{display:'block', margin:'0'}}>
+                            <a href="https://play.google.com/store/apps/details?id=com.servingfresh">
+                            <img src='links/googlePlay.png' width="20%" style={{marginLeft:'13%'}}/> 
+                            </a>                            
+                          </Box>
+                          
+                          <Box style={{display:'block',margin:'0'}}>
+                            <a href="https://apps.apple.com/us/app/serving-fresh/id1488267727">
+                            <img src='links/appStore.png' width="18%" style={{marginLeft:'14%'}} />
+                            </a>
+                          </Box>
+
+                         
+            
+                    </Box>
+ 
+                
+                </div>
+              
+            ):
+          (   
+            <div
+            style={{
+              
+              display: "block",
+              width: "100%",
+              height:'570px',
+              marginTop: "30px",
+              backgroundImage: `url(${'links/mobileBack2.png'})`,
+              backgroundRepeat: 'no-repeat',
+              backgroundSize:'cover'
+            }}
+          >
+               
+            <Box style={{marginTop:'0',textAlign:'center'}}>
+              <img src='links/displayTextMobile.png' width="255px" style={{marginTop:'10%'}}/>
+            </Box>
+            
+            <Box style={{ margin:'0',textAlign:'center'}}>
+            <a href="https://play.google.com/store/apps/details?id=com.servingfresh">
+            <img src='links/googlePlay.png' width="60%" style={{marginTop:'10%'}}/> 
+            </a>                            
+            </Box>
+            <Box style={{margin:'0',textAlign:'center'}}>
+            <a href="https://apps.apple.com/us/app/serving-fresh/id1488267727">
+            <img src='links/appStore.png' width="55%" style={{marginTop:'0%'}}/>
+            </a>
+            </Box>
+            
+            <Box style={{margin:'0',textAlign:'center'}}>
+              <img src='links/qrScan.png'  width="60%" height="100%"  style={{postion:'absolute',left:'0',bottom:'0'}}/>
+            </Box>
+ 
+                
+          </div>
+            
+            )
+          
+        }
+      
+      {/* END: Info Section */}
+        <div>
+        <Box style={{ backgroundColor: 'rgb(251,132,0)',marginTop:'0px' }}>
           <Footer
             isLoginShown={isLoginShown}
             setIsLoginShown={setIsLoginShown}
@@ -1046,7 +1189,7 @@ const Landing = ({ ...props }) => {
             setIsSignUpShown={setIsSignUpShown}
           />
         </Box>
-      </div>
+        </div>
     </div>
   );
 };

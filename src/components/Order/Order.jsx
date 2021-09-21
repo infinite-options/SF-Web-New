@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
   authModal: {
     position: 'absolute',
     width: '500px',
+    maxWidth: '100%',
   },
   infoSection: {
     width: '33.33%',
@@ -368,6 +369,7 @@ const Order = ({ ...props }) => {
         onClick={handleSelect}
         style={{
           width: '300px',
+          maxWidth: '100%',
           textTransform: 'none',
           float: 'center',
           color: 'white',

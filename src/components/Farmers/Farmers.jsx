@@ -132,7 +132,13 @@ export default function Farmers() {
       )
       .then((response) => {
         console.log(response);
-        setfarmerInfo(response.data.result.result);
+        var tempFarms = []
+        for(var vals of response.data.result.result){
+          if(vals['business_status']==='ACTIVE'){
+            tempFarms.push(vals)
+          }
+        }
+        setfarmerInfo(tempFarms);
       });
   };
 
@@ -240,29 +246,7 @@ export default function Farmers() {
           >
             {x.business_city}
           </div>
-          <div
-            style={{
-              marginRight: '20%',
-              float: 'right',
-              padding: '2px',
-              width: '20px',
-              maxHeight: '10px',
-            }}
-          >
-            <a href={`mailto:${x.business_email}`}>
-              <img
-                alt="email"
-                src={globe}
-                style={{ height: '20px', width: '20px' }}
-              ></img>
-            </a>
-          </div>
-          <div style={{ float: 'right', padding: '2px' }}>
-            <img src={insta} style={{ height: '20px', width: '20px' }}></img>
-          </div>
-          <div style={{ float: 'right', padding: '2px' }}>
-            <img src={fb} style={{ height: '20px', width: '20px' }}></img>
-          </div>
+          
         </div>
       </div>
     ));
