@@ -1178,8 +1178,8 @@ const Landing = ({ ...props }) => {
             )
           
         }
-      
-      {/* END: Info Section */}
+        
+        {/* END: Info Section */}
         <div>
         <Box style={{ backgroundColor: 'rgb(251,132,0)',marginTop:'0px' }}>
           <Footer

@@ -1,10 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import clsx from 'clsx';
 import {Box,Button} from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import appColors from '../../styles/AppColors';
 import storeContext from '../Store/storeContext';
 import CartItem from './cartItem';
+import RateOrderModal from './RateOrderModal';
+import AfterRateModal from './AfterRateModal';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import Modal from '@material-ui/core/Modal';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +58,8 @@ const useStyles = makeStyles((theme) => ({
 function listItem(item) {
   console.log("CartItems calling from history tab")
 
+
+
   
   return (
     <>
@@ -71,8 +81,13 @@ const HistoryCard = (props) => {
   // const { profile } = useContext(storeContext);
   const classes = useStyles();
   const store = useContext(storeContext);
+  const [openModel, setOpenModel] = useState(false);
+  const [openModelSecond, setOpenModelSecond] = useState(false);
+  const [openDiag, setOpenDiag] = useState(false);
+  const [ratingNum, setRatingNum] = useState(0)
 
   console.log("history work in order--1",props)
+  
   function reorder() {
 
     var tempCI = {}
@@ -171,6 +186,52 @@ const HistoryCard = (props) => {
 
   }
 
+  const closeModel = (action) => {
+    console.log("rating is")
+    console.log("rating is", ratingNum)
+    if(action==='yes'){
+      setOpenModel(false); 
+      setOpenModelSecond(true);
+    }
+    else{
+      setOpenModel(false); 
+    }
+  }
+  const closeDiag = () => {
+    setOpenDiag(false);
+  }
+
+  const modelBody = (
+    <div> 
+      <RateOrderModal handleClose={closeModel} purchaseID={props.id} setRatingNum = {setRatingNum}/>
+    </div>
+  );
+
+  const closeModelSecond = (action) => {
+    console.log("Close second modal")
+    
+    if(action==='yes'){
+      setOpenModelSecond(false); 
+      
+    }
+    else{
+      setOpenModel(false); 
+    }
+  }
+  
+
+  const modelBodySecond = (
+    <div> 
+      <AfterRateModal handleClose={closeModelSecond} mode = {ratingNum>3?1:0}/>
+    </div>
+  );
+
+
+
+  const rateFunction = () => {
+    // console.log("In driver route", selectedDay, weekdayDatesDict[selectedDay])
+    setOpenModel(true)
+  }
 
 
   return (
@@ -182,18 +243,16 @@ const HistoryCard = (props) => {
         {props.deliveryDate.toLocaleString('default', { day: 'numeric' })},{' '}
         {props.deliveryDate.getFullYear()}
         <Box flexGrow={1} />
-        <Button
+          <Button
               className={classes.buttonCheckout}
               size="small"
               variant="contained"
               color="primary"
               onClick={reorder}
-              style={{height:'10%',textTransform: 'none'}}
-              
-              
+              style={{maxWidth: '93px', maxHeight: '30px', minWidth: '93px', minHeight: '30px',textTransform: 'none', float:'right'}}
             >
               EZ Reorder
-              </Button>
+          </Button>
               
         
       </Box>
@@ -208,6 +267,43 @@ const HistoryCard = (props) => {
           minute: 'numeric',
           hour12: true,
         })}
+
+            <Button
+              className={classes.buttonCheckout}
+              size="small"
+              variant="contained"
+              color="primary"
+              onClick={rateFunction}
+              style={{maxWidth: '93px', maxHeight: '30px', minWidth: '93px', minHeight: '30px', textTransform: 'none', marginTop:'2%', float:'right'}}
+            >
+              Rate Order
+            </Button>
+
+            <Modal open={openModel}  onClose={()=>setOpenModel(false)} >
+              {modelBody}
+            </Modal>
+            <Modal open={openModelSecond}  onClose={()=>setOpenModelSecond(false)} >
+              {modelBodySecond}
+            </Modal>
+            <div>
+              <Dialog open={openDiag} onClose={closeDiag}>
+                <DialogTitle>{"Successful!!"}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Thank you for the rating -- {ratingNum.toFixed(2)}
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button 
+                  onClick={closeDiag}
+                          
+                          color="primary" autoFocus>
+                    Okay
+                  </Button>
+                  
+                </DialogActions>
+              </Dialog>
+            </div>
       </Box>
       <Box className={classes.date}>
         Delivery Address: {props.address}, {props.city}, {props.city}{' '}

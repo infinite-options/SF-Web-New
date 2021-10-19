@@ -492,6 +492,7 @@ const Footer = ({ ...props }) => {
               >
                 Terms and Conditions
               </p>
+              
             </div>
 
             {/* <Col
@@ -614,7 +615,26 @@ const Footer = ({ ...props }) => {
                   }}
                 />
               </IconButton>
-            </div>
+            
+            <p
+                style={{ 
+                  cursor: 'pointer',
+                  marginTop:'0',
+                  // border: '1px solid lime'
+                }}
+              >
+                <a href="https://drive.google.com/file/d/1Ht3Mn0JWHyDSMzPYlvKaFEoMTOVMTeM6/view?usp=sharing"
+                style={{ 
+                  textDecoration: 'none', 
+                  color: 'white',
+                  
+                  fontSize:'18px'
+                }}>
+                    Privacy Policy
+                </a>
+                
+              </p>
+              </div>
           </div>
 
     </div>
