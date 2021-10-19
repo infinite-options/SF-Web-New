@@ -187,8 +187,7 @@ const HistoryCard = (props) => {
   }
 
   const closeModel = (action) => {
-    console.log("rating is")
-    console.log("rating is", ratingNum)
+    props.useForceUpdate()
     if(action==='yes'){
       setOpenModel(false); 
       setOpenModelSecond(true);
@@ -198,6 +197,7 @@ const HistoryCard = (props) => {
     }
   }
   const closeDiag = () => {
+    
     setOpenDiag(false);
   }
 
@@ -268,7 +268,9 @@ const HistoryCard = (props) => {
           hour12: true,
         })}
 
-            <Button
+            {
+              props.feedback_rating === -1 || props.feedback_rating === 0  ?
+              <Button
               className={classes.buttonCheckout}
               size="small"
               variant="contained"
@@ -278,6 +280,26 @@ const HistoryCard = (props) => {
             >
               Rate Order
             </Button>
+            :
+            <div style={{marginTop:'2%', float:'right',width:'24%'}}>
+              <img src='SecondModalPics/historyStarRating.svg' id='first_1' height="15px" width="15px" style={{cursor:"pointer",paddingLeft:'20%'}}
+                              onClick={rateFunction}
+                          />
+              <img src='SecondModalPics/historyStarRating.svg' id='first_1' height="15px" width="15px" style={{cursor:"pointer",marginLeft:'3px',visibility: props.feedback_rating>1?'visible':'hidden'}}
+                              onClick={rateFunction}
+                          />
+              <img src='SecondModalPics/historyStarRating.svg' id='first_1' height="15px" width="15px" style={{cursor:"pointer",marginLeft:'3px',visibility: props.feedback_rating>2?'visible':'hidden'}}
+                              onClick={rateFunction}
+                          />
+              <img src='SecondModalPics/historyStarRating.svg' id='first_1' height="15px" width="15px" style={{cursor:"pointer",marginLeft:'3px',visibility: props.feedback_rating>3?'visible':'hidden'}}
+                              onClick={rateFunction}
+                          />
+              <img src='SecondModalPics/historyStarRating.svg' id='first_1' height="15px" width="15px" style={{cursor:"pointer",marginLeft:'3px',visibility: props.feedback_rating>4?'visible':'hidden'}}
+                              onClick={rateFunction}
+                          />
+            </div>
+}
+            
 
             <Modal open={openModel}  onClose={()=>setOpenModel(false)} >
               {modelBody}

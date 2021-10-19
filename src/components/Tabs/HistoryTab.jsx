@@ -9,33 +9,7 @@ import checkoutContext from '../CheckoutPage/CheckoutContext';
 import HistoryCard from '../CheckoutItems/HistoryCard';
 
 const cookies = new Cookies();
-const CreateHistoryCard = (props) => {
-  console.log("props in createhistorycard ",props)
-  return (
-    <HistoryCard
-      id={props.purchase_uid}
-      items={JSON.parse(props.items)}
-      purchaseDate={new Date(props.purchase_date + '  UTC')}
-      deliveryDate={new Date(props.start_delivery_date)}
-      subtotal={props.subtotal}
-      amountPaid={props.amount_paid}
-      savings={props.amount_discount}
-      driverTip={props.driver_tip}
-      serviceFee={props.service_fee}
-      deliveryFee={props.delivery_fee}
-      taxes={props.taxes}
-      address={props.delivery_address}
-      unit={props.delivery_unit}
-      city={props.delivery_city}
-      state={props.delivery_state}
-      zip={props.delivery_zip}
-      paymentMethod={props.payment_type}
-      deliveryInstructions={props.delivery_instructions}
-      key={props.purchase_uid}
-      amb_code={props.ambassador_code}
-    />
-  );
-};
+
 
 // TODO: headers for item values
 // TODO: Give individual price for items
@@ -47,6 +21,41 @@ const HistoryTab = () => {
   const [historyList, setHistoryList] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [message, setMessage] = useState(true);
+  const [flag, setFlag] = useState(0);
+  console.log('check flag in tab',flag)
+  const CreateHistoryCard = (props) => {
+    return (
+      <HistoryCard
+        id={props.purchase_uid}
+        items={JSON.parse(props.items)}
+        purchaseDate={new Date(props.purchase_date + '  UTC')}
+        deliveryDate={new Date(props.start_delivery_date)}
+        subtotal={props.subtotal}
+        amountPaid={props.amount_paid}
+        savings={props.amount_discount}
+        driverTip={props.driver_tip}
+        serviceFee={props.service_fee}
+        deliveryFee={props.delivery_fee}
+        taxes={props.taxes}
+        address={props.delivery_address}
+        unit={props.delivery_unit}
+        city={props.delivery_city}
+        state={props.delivery_state}
+        zip={props.delivery_zip}
+        paymentMethod={props.payment_type}
+        deliveryInstructions={props.delivery_instructions}
+        key={props.purchase_uid}
+        amb_code={props.ambassador_code}
+        feedback_rating={props.feedback_rating}
+        useForceUpdate = {useForceUpdate()}
+      />
+    );
+  };
+
+  function useForceUpdate(){
+    return () => setFlag(flag => flag + 1); // update the state to force render
+}
+  
   function loadHistory(setHistoryList, setHistoryLoading) {
     var uid = null
     if(cookies.get('customer_uid')!=null){
@@ -63,6 +72,7 @@ const HistoryTab = () => {
           uid
       )
       .then((res) => {
+        console.log('in history tab',res.data)
         if (res && res.data && res.data.result) {
           setHistoryList(res.data.result);
         }
@@ -81,7 +91,7 @@ const HistoryTab = () => {
     }
     if (uid !== '')
       loadHistory(setHistoryList, setHistoryLoading);
-  }, [profile.email, purchaseMade]);
+  }, [profile.email, purchaseMade,flag]);
 
   useEffect(() => {
     if (isAuth) {

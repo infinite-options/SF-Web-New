@@ -98,8 +98,9 @@ function AfterRateModal (props){
 
             <div style={{
                 alignItems:'center',
-                font: 'normal normal bold 22px/32px SF Pro Text',
-                letterSpacing: '-0.43px',
+                fontWeight:'bold',
+                fontSize:'20px',
+                letterSpacing: '0.43px',
                 color: '#2F787F',
                 textAlign:'center',
                 marginTop:'8%'}}>
@@ -114,7 +115,7 @@ function AfterRateModal (props){
                         local farmers.
                     </div>
                     <div>
-                    <img src='SecondModalPics/historyButton.svg' id='second_5' height="60%" width="60%" style={{cursor:"pointer", marginLeft:'3%',marginTop:'5%'}}
+                    <img src='SecondModalPics/historyButton.png' id='second_5' height="60%" width="60%" style={{cursor:"pointer", marginLeft:'3%',marginTop:'5%'}}
                                 onClick={()=> {props.handleClose("yes")}}/>
                     </div>
             </div>
@@ -150,8 +151,9 @@ function AfterRateModal (props){
             <br/>
             <div style={{
                 alignItems:'center',
-                font: 'normal normal bold 22px/32px SF Pro Text',
-                letterSpacing: '-0.43px',
+                fontWeight:'bold',
+                fontSize:'20px',
+                letterSpacing: '0.43px',
                 color: '#2F787F',
                 textAlign:'center',
                 marginTop:'8%'}}>

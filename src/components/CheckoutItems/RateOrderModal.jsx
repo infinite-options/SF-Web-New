@@ -133,7 +133,7 @@ function RateOrderModal (props){
         <div id="mainDiv"
             style={{
             height: "55%",
-            width: "20%",
+            width: "23%",
             zIndex: "99999",
             marginLeft: "35%",
             marginTop: "10%",
@@ -146,12 +146,13 @@ function RateOrderModal (props){
 
             <div style={{
                 alignItems:'center',
-                font: 'normal normal bold 22px/32px SF Pro Text',
-                letterSpacing: '-0.43px',
+                fontWeight:'bold',
+                fontSize:'20px',
+                letterSpacing: '0.43px',
                 color: '#2F787F',
                 textAlign:'center',
                 marginTop:'5%'}}>
-                    <div>
+                    <div style={{}}>
                     How was your overall experience?
                     </div>
                     
@@ -178,8 +179,9 @@ function RateOrderModal (props){
 
              <div style={{
                 alignItems:'center',
-                font: 'normal normal bold 22px/32px SF Pro Text',
-                letterSpacing: '-0.43px',
+                fontWeight:'bold',
+                fontSize:'20px',
+                letterSpacing: '0.43px',
                 color: '#2F787F',
                 textAlign:'center',
                 marginTop:'5%'}}>
@@ -210,8 +212,9 @@ function RateOrderModal (props){
 
              <div style={{
                 alignItems:'center',
-                font: 'normal normal bold 22px/32px SF Pro Text',
-                letterSpacing: '-0.43px',
+                fontWeight:'bold',
+                fontSize:'20px',
+                letterSpacing: '0.43px',
                 color: '#2F787F',
                 textAlign:'center',
                 marginTop:'5%'}}>
@@ -241,8 +244,9 @@ function RateOrderModal (props){
 
             <div style={{
                 alignItems:'center',
-                font: 'normal normal bold 22px/32px SF Pro Text',
-                letterSpacing: '-0.43px',
+                fontWeight:'bold',
+                fontSize:'20px',
+                letterSpacing: '0.43px',
                 color: '#2F787F',
                 textAlign:'center',
                 marginTop:'5%'}}>
@@ -259,14 +263,15 @@ function RateOrderModal (props){
             
                 <div style={{
                 alignItems:'center',
-                font: 'normal normal bold 22px/32px SF Pro Text',
-                letterSpacing: '-0.43px',
+                fontWeight:'bold',
+                fontSize:'20px',
+                letterSpacing: '0.43px',
                 color: '#2F787F',
                 textAlign:'center',
                 marginTop:'5%',
                 marginRight: '5%'}}>
                     <div>
-                    <img src='starSaveButton.svg' id='second_5' height="70%" width="70%" style={{cursor:"pointer", marginLeft:'5%'}}
+                    <img src='SecondModalPics/starSaveButton.png' id='second_5' height="70%" width="70%" style={{cursor:"pointer", marginLeft:'5%'}}
                                 onClick={(event)=> {handleSubmit(event)}}/>
                     </div>
                 </div>
