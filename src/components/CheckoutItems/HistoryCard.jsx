@@ -236,8 +236,95 @@ const HistoryCard = (props) => {
 
   return (
     <Box className={classes.card}>
+
+      <table style={{alignItems:'left',textAlign:'left'}}>
+        <tbody>
+          <tr >
+            <td style={{width:'60%'}}>
+
+            <b>Expected Delivery Date:</b>{' '}
+            {props.deliveryDate.toLocaleString('default', { month: 'long' })}{' '}
+            {props.deliveryDate.toLocaleString('default', { day: 'numeric' })},{' '}
+            {props.deliveryDate.getFullYear()}
+
+            </td>
+
+            <td>
+              <Button
+                className={classes.buttonCheckout}
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={reorder}
+                style={{maxWidth: '93px', maxHeight: '30px', minWidth: '93px', minHeight: '30px',textTransform: 'none',float:'right'}}
+              >
+                EZ Reorder
+            </Button>
+            </td>
+          </tr>
+          <tr>
+            <td style={{width:'60%'}}>
+            <b>Purchase Date:</b>{' '}
+              {props.purchaseDate.toLocaleString('default', { month: 'long' })}{' '}
+              {props.purchaseDate.toLocaleString('default', { day: 'numeric' })},{' '}
+              {props.purchaseDate.getFullYear()}
+              {' at '}
+              {props.purchaseDate.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true,
+              })}
+            </td>
+            <td>
+              {
+                props.feedback_rating === -1 || props.feedback_rating === 0  ?
+                <Button
+                className={classes.buttonCheckout}
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={rateFunction}
+                style={{maxWidth: '93px', maxHeight: '30px', minWidth: '93px', minHeight: '30px', textTransform: 'none',float:'right'}}
+              >
+                Rate Order
+              </Button>
+              :
+              <div >
+                <img src='SecondModalPics/1Star.svg' id='first_1' style={{float:"right",cursor:"pointer",display: props.feedback_rating===1?'inline':'none'}}
+                                onClick={rateFunction}
+                            />
+                <img src='SecondModalPics/2Star.svg' id='first_1' style={{float:"right",cursor:"pointer",display: props.feedback_rating===2?'inline':'none'}}
+                                onClick={rateFunction}
+                            />
+                <img src='SecondModalPics/3Star.svg' id='first_1' style={{float:"right",cursor:"pointer",display: props.feedback_rating===3?'inline':'none'}}
+                                onClick={rateFunction}
+                            />
+                <img src='SecondModalPics/4Star.svg' id='first_1' style={{float:"right",cursor:"pointer",display: props.feedback_rating===4?'inline':'none'}}
+                                onClick={rateFunction}
+                            />
+                <img src='SecondModalPics/5Star.svg' id='first_1'  style={{float:"right",cursor:"pointer",display: props.feedback_rating===5?'inline':'none'}}
+                                onClick={rateFunction}
+                            />
+              </div>
+              } 
+            </td>
+          </tr>
+          <tr>
+            <td>
+            <b>Delivery Instructions:</b>{' '}
+            {props.deliveryInstructions === ''
+              ? 'None provided.'
+              : props.deliveryInstructions}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <b>Order ID:</b> {props.id}
+            </td>
+          </tr>
+        
       
-      <Box className={clsx(classes.items)} display="flex">
+      {/* <Box className={clsx(classes.items)} display="flex">
         Expected Delivery Date:{' '}
         {props.deliveryDate.toLocaleString('default', { month: 'long' })}{' '}
         {props.deliveryDate.toLocaleString('default', { day: 'numeric' })},{' '}
@@ -301,7 +388,18 @@ const HistoryCard = (props) => {
 }
             
 
-            <Modal open={openModel}  onClose={()=>setOpenModel(false)} >
+            
+      </Box>
+      <Box className={classes.date}>
+        Delivery Instructions:{' '}
+        {props.deliveryInstructions === ''
+          ? 'None provided.'
+          : props.deliveryInstructions}
+      </Box>
+      <Box className={classes.date}>Order ID: {props.id}</Box> */}
+      </tbody>
+      </table>
+      <Modal open={openModel}  onClose={()=>setOpenModel(false)} >
               {modelBody}
             </Modal>
             <Modal open={openModelSecond}  onClose={()=>setOpenModelSecond(false)} >
@@ -326,19 +424,6 @@ const HistoryCard = (props) => {
                 </DialogActions>
               </Dialog>
             </div>
-      </Box>
-      <Box className={classes.date}>
-        Delivery Address: {props.address}, {props.city}, {props.city}{' '}
-        {props.zip}
-      </Box>
-      <Box className={classes.date}>
-        Delivery Instructions:{' '}
-        {props.deliveryInstructions === ''
-          ? 'None provided.'
-          : props.deliveryInstructions}
-      </Box>
-      <Box className={classes.date}>Order ID: {props.id}</Box>
-
       <Box className={classes.section} display="flex">
         <Box width="50%" textAlign="left">
           Name
