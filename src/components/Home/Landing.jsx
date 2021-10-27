@@ -922,7 +922,7 @@ const Landing = ({ ...props }) => {
           <img
             className = {classes.imgSFSJ}
             style={{height:'80%',width:'80%',transition: 'transform .2s'}}
-            src="./zonesLeft.png" alt="vegetables info" 
+            src="./ZonesLeft.png" alt="vegetables info" 
             
             />
             <p style={{marginTop:'2%', fontSize: '24px ', color:'white',}}>
@@ -940,7 +940,7 @@ const Landing = ({ ...props }) => {
             <img 
               className = {classes.imgSFSJ}
               style={{height:'80%',width:'80%',transition: 'transform .2s'}}
-              src="./zonesRight.png" alt="vegetables info" 
+              src="./ZonesRight.png" alt="vegetables info" 
             />
             <p style={{marginTop:'2%', fontSize: '24px ', color:'white',}}>
             Sunnyvale, Cupertino, Saratoga, Los Gatos, Willow Glen, <br/>South San Jose
