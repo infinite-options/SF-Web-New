@@ -21,6 +21,9 @@ import ConfirmatioModal from 'components/SignUp/ConfirmationModal';
 // import { AdminFarmContext } from '../Admin/AdminFarmContext';
 import { AuthContext } from '../../auth/AuthContext';
 
+import zonesLeft from '../../images/ZonesLeft.png';
+import zonesRight from '../../images/ZonesRight.png';
+
 const useStyles = makeStyles((theme) => ({
   authModal: {
     position: 'absolute',
@@ -247,7 +250,6 @@ const Landing = ({ ...props }) => {
       {/* <Box
           style={{
             backgroundSize: 'cover',
-
             // backgroundImage: `url(${'transparent-landing-bg.png'})`,
             opacity: 1,
             paddingBottom: '100px',
@@ -592,7 +594,6 @@ const Landing = ({ ...props }) => {
                   />
                 </Col>
               </Hidden>
-
               <Col md={4}>
                 <div
                   className={classes.farmTitle}
@@ -922,8 +923,8 @@ const Landing = ({ ...props }) => {
           <img
             className = {classes.imgSFSJ}
             style={{height:'80%',width:'80%',transition: 'transform .2s'}}
-            src="./ZonesLeft.png" alt="vegetables info" 
-            
+            // src="./zonesLeft.png" alt="vegetables info" 
+            src={zonesLeft} alt="vegetables info" 
             />
             <p style={{marginTop:'2%', fontSize: '24px ', color:'white',}}>
             Now serving the above marked areas in  
@@ -940,7 +941,8 @@ const Landing = ({ ...props }) => {
             <img 
               className = {classes.imgSFSJ}
               style={{height:'80%',width:'80%',transition: 'transform .2s'}}
-              src="./ZonesRight.png" alt="vegetables info" 
+              // src="./zonesRight.png" alt="vegetables info" 
+              src={zonesRight} alt="vegetables info" 
             />
             <p style={{marginTop:'2%', fontSize: '24px ', color:'white',}}>
             Sunnyvale, Cupertino, Saratoga, Los Gatos, Willow Glen, <br/>South San Jose
