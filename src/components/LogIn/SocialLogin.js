@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
-import GoogleLogin from 'react-google-login';
+// import GoogleLogin from 'react-google-login';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Grid, Button } from '@material-ui/core';
@@ -9,6 +9,7 @@ import { withRouter } from 'react-router';
 import Google from '../../icon/Google/Glogin.png';
 import Fb_Login from '../../icon/Facebook/Flogin.png';
 import Apple_Login from '../../icon/Apple/Alogin.png';
+import GoogleLogin from './GoogleLogin';
 
 function SocialLogin(props) {
   const Auth = useContext(AuthContext);
@@ -34,15 +35,19 @@ function SocialLogin(props) {
       let customerId = urlParams.get('id');
       Auth.setIsAuth(true);
       Cookies.set('login-session', 'good');
-      console.log("working on encryption--first")
-      
-      var CryptoJS = require("crypto-js");
-      console.log("working on encryption--in",typeof(process.env.REACT_APP_UID_ENCRYPT_CODE))
-      var ciphertext = CryptoJS.AES.encrypt(customerId, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+      console.log('working on encryption--first');
+
+      var CryptoJS = require('crypto-js');
+      console.log(
+        'working on encryption--in',
+        typeof process.env.REACT_APP_UID_ENCRYPT_CODE
+      );
+      var ciphertext = CryptoJS.AES.encrypt(
+        customerId,
+        process.env.REACT_APP_UID_ENCRYPT_CODE
+      ).toString();
       Cookies.set('customer_uid', ciphertext);
 
-      
-      
       props.history.push('/admin');
     }
     // Log which media platform user should have signed in with instead of Apple
@@ -112,16 +117,18 @@ function SocialLogin(props) {
             .finally(() => {
               console.log(customerInfo);
               Cookies.set('login-session', 'good');
-              
-              
-              var CryptoJS = require("crypto-js");
-              console.log("working on encryption--in",typeof(process.env.REACT_APP_UID_ENCRYPT_CODE))
-              var ciphertext = CryptoJS.AES.encrypt(customerInfo.customer_uid, process.env.REACT_APP_UID_ENCRYPT_CODE).toString();
+
+              var CryptoJS = require('crypto-js');
+              console.log(
+                'working on encryption--in',
+                typeof process.env.REACT_APP_UID_ENCRYPT_CODE
+              );
+              var ciphertext = CryptoJS.AES.encrypt(
+                customerInfo.customer_uid,
+                process.env.REACT_APP_UID_ENCRYPT_CODE
+              ).toString();
               Cookies.set('customer_uid', ciphertext);
 
-              
-      
-              
               Auth.setIsAuth(true);
               let newAccountType = customerInfo.role.toLowerCase();
               switch (newAccountType) {
@@ -203,7 +210,11 @@ function SocialLogin(props) {
         />
       </Grid>
       <Grid item xs={12}>
-        <Button style={{}}>
+        <GoogleLogin
+          setError={props.setError}
+          setErrorMessage={props.setErrorMessage}
+        />
+        {/* <Button style={{}}>
           <GoogleLogin
             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
             onSuccess={responseGoogle}
@@ -221,7 +232,7 @@ function SocialLogin(props) {
               ></img>
             )}
           />
-        </Button>
+        </Button> */}
       </Grid>
 
       <Grid item xs={12}>
